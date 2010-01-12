@@ -85,7 +85,7 @@ public class Model2D {
 	private boolean sunny;
 	private int photonEmissionInterval = 20;
 
-	private int nx = 100;
+	private int nx = 200;
 	private int ny = 100;
 
 	// length in x direction (unit: meter)
