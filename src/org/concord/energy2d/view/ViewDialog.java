@@ -45,7 +45,8 @@ class ViewDialog extends JDialog {
 		JButton button = new JButton("Close");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewDialog.this.dispose();
+				view.repaint();
+				dispose();
 			}
 		});
 		buttonPanel.add(button);
@@ -76,7 +77,7 @@ class ViewDialog extends JDialog {
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
-				view.setIsothermOn(src.isSelected());
+				view.setVelocityOn(src.isSelected());
 				view.repaint();
 			}
 		});
