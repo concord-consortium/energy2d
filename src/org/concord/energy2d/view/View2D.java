@@ -312,7 +312,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					d.setVisible(true);
 			}
 		});
+		popupMenu.add(mi);
 
+		mi = new JMenuItem("View Options");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JDialog d = dialogFactory.createDialog(View2D.this);
+				if (d != null)
+					d.setVisible(true);
+			}
+		});
 		popupMenu.add(mi);
 
 	}
