@@ -135,10 +135,17 @@ class PartDialog extends JDialog {
 								ycenter - 0.5f * height, width, height);
 					}
 				}
-				if (!Float.isNaN(power))
+				if (Float.isNaN(power)) {
+					part.setPower(0);
+				} else {
 					part.setPower(power);
-				if (!Float.isNaN(temperature))
+				}
+				if (Float.isNaN(temperature)) {
+					part.setTemperature(-300);
+				} else {
 					part.setTemperature(temperature);
+				}
+
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
 				part.setConductivity(conductivity);

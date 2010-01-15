@@ -246,8 +246,7 @@ public class System2D extends JApplet implements MwService,
 			Part p = (Part) target;
 			model.refreshMaterialPropertyArrays();
 			model.refreshPowerArray();
-			if (!Float.isNaN(p.getTemperature()))
-				model.refreshTemperatureBoundaryArray();
+			model.refreshTemperatureBoundaryArray();
 			if (p.getEmissivity() > 0)
 				model.getPhotons().clear();
 		}
