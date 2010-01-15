@@ -100,6 +100,7 @@ public class Model2D {
 	private boolean running;
 	private boolean notifyReset;
 	private int viewUpdateInterval = 100;
+	private int measurementInterval = 100;
 
 	// optimization flags
 	private boolean hasPartPower;
@@ -605,10 +606,6 @@ public class Model2D {
 	}
 
 	private void nextStep() {
-		if (indexOfStep % viewUpdateInterval == 0) {
-			notifyVisualizationListeners();
-			takeMeasurement();
-		}
 		if (radiative) {
 			if (indexOfStep % photonEmissionInterval == 0) {
 				refreshPowerArray();
@@ -622,6 +619,13 @@ public class Model2D {
 			fluidSolver.solve(u, v);
 		}
 		heatSolver.solve(convective, t);
+		if (indexOfStep
+				% (Math.round(measurementInterval / heatSolver.getTimeStep())) == 0) {
+			takeMeasurement();
+		}
+		if (indexOfStep % viewUpdateInterval == 0) {
+			notifyVisualizationListeners();
+		}
 		indexOfStep++;
 	}
 
@@ -631,6 +635,14 @@ public class Model2D {
 
 	public int getViewUpdateInterval() {
 		return viewUpdateInterval;
+	}
+
+	public void setMeasurementInterval(int measurementInterval) {
+		this.measurementInterval = measurementInterval;
+	}
+
+	public int getMeasurementInterval() {
+		return measurementInterval;
 	}
 
 	public float getTime() {
