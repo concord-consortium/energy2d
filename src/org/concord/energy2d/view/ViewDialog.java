@@ -86,7 +86,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		count++;
 
 		checkBox = new JCheckBox("Grid");
 		checkBox.setSelected(view.isGridOn());
@@ -98,6 +97,7 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
+		count++;
 
 		checkBox = new JCheckBox("Ruler");
 		checkBox.setSelected(view.isRulerOn());
@@ -109,9 +109,31 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
+
+		checkBox = new JCheckBox("Graph");
+		checkBox.setSelected(view.isGraphOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setGraphOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+
+		checkBox = new JCheckBox("Outline");
+		checkBox.setSelected(view.isOutlineOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setOutlineOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
 		count++;
 
-		MiscUtil.makeCompactGrid(p, count, 2, 5, 5, 10, 2);
+		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
 		p.setBorder(BorderFactory.createTitledBorder("Measurement"));

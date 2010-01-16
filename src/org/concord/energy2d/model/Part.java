@@ -48,15 +48,18 @@ public class Part extends Manipulable {
 	 * 
 	 * q = - k dT/dx
 	 * 
-	 * Unit: W/(mK). The default value is air's.
+	 * Unit: W/(mK). The default value is water's.
 	 */
-	private float conductivity = 0.025f;
+	private float conductivity = 0.6f;
 
-	// the specific heat capacity: J/(kg*K). The default value is air's.
-	private float capacity = 1012f;
+	/*
+	 * the specific heat capacity: J/(kgK). The default value is about 10 times
+	 * of the air's.
+	 */
+	private float capacity = 10000f;
 
-	// density kg/m^3. The default value is air's.
-	private float density = 1.204f;
+	// density kg/m^3. The default value is foam's.
+	private float density = 20f;
 
 	private float absorption = 1;
 

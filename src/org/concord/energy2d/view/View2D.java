@@ -230,6 +230,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return gridRenderer != null;
 	}
 
+	public void setGraphOn(boolean b) {
+		showGraph = b;
+	}
+
+	public boolean isGraphOn() {
+		return showGraph;
+	}
+
 	public void setVelocityOn(boolean b) {
 		velocityRenderer = b ? new VectorDistributionRenderer(nx, ny) : null;
 	}
@@ -261,6 +269,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (isotherms == null)
 			return 5;
 		return isotherms.getResolution();
+	}
+
+	public void setOutlineOn(boolean b) {
+		List<Part> parts = model.getParts();
+		synchronized (parts) {
+			for (Part p : parts) {
+				p.setFilled(!b);
+			}
+		}
+	}
+
+	public boolean isOutlineOn() {
+		if (model.getPartCount() == 0)
+			return false;
+		return !model.getPart(0).isFilled();
 	}
 
 	public JPopupMenu getPopupMenu() {
