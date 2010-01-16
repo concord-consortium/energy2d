@@ -286,6 +286,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return !model.getPart(0).isFilled();
 	}
 
+	public void setSmooth(boolean smooth) {
+		temperatureRenderer.setSmooth(smooth);
+	}
+
+	public boolean isSmooth() {
+		return temperatureRenderer.isSmooth();
+	}
+
 	public JPopupMenu getPopupMenu() {
 		return popupMenu;
 	}

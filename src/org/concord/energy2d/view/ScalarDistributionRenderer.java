@@ -27,6 +27,14 @@ class ScalarDistributionRenderer {
 		this.rgbScale = rgbScale;
 	}
 
+	void setSmooth(boolean smooth) {
+		this.smooth = smooth;
+	}
+
+	boolean isSmooth() {
+		return smooth;
+	}
+
 	void setIntensityScale(float scale) {
 		this.scale = scale;
 	}

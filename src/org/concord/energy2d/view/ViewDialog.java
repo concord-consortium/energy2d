@@ -133,6 +133,20 @@ class ViewDialog extends JDialog {
 		p.add(checkBox);
 		count++;
 
+		checkBox = new JCheckBox("Smooth");
+		checkBox.setSelected(view.isSmooth());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setSmooth(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+		p.add(new JPanel());
+		p.add(new JPanel());
+		count++;
+
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
