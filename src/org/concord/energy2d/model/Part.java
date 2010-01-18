@@ -14,6 +14,8 @@ import java.awt.geom.Rectangle2D;
 import org.concord.energy2d.math.Polygon2D;
 
 /**
+ * Default properties set to be that of polystyrene. See
+ * http://en.wikipedia.org/wiki/Polystyrene
  * 
  * @author Charles Xie
  * 
@@ -50,16 +52,15 @@ public class Part extends Manipulable {
 	 * 
 	 * Unit: W/(mK). The default value is water's.
 	 */
-	private float conductivity = 0.6f;
+	private float conductivity = 0.08f;
 
 	/*
-	 * the specific heat capacity: J/(kgK). The default value is about 10 times
-	 * of the air's.
+	 * the specific heat capacity: J/(kgK).
 	 */
-	private float capacity = 10000f;
+	private float capacity = 1300f;
 
 	// density kg/m^3. The default value is foam's.
-	private float density = 20f;
+	private float density = 25f;
 
 	private float absorption = 1;
 
