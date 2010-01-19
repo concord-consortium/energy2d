@@ -232,8 +232,6 @@ abstract class FluidSolver2D {
 		}
 		setObstacleVelocity(u, v);
 		if (viscosity > 0) { // inviscid case
-			MiscUtil.copy(u0, u);
-			MiscUtil.copy(v0, v);
 			diffuse(1, u0, u);
 			diffuse(2, v0, v);
 			conserve(u, v, u0, v0);

@@ -57,72 +57,40 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 	}
 
-	void advect(float[][] t) {
+	private void advect(float[][] t) {
 		macCormack(t);
 	}
 
-	void eulerImplicit(float[][] t) {
-
-		// TODO: swap the two arrays instead of copying them every time?
-		MiscUtil.copy(t0, t);
-
-		float tx = 0.5f * timeStep / deltaX;
-		float ty = 0.5f * timeStep / deltaY;
-
-		for (int k = 0; k < relaxationSteps; k++) {
-			for (int i = 1; i < nx1; i++) {
-				for (int j = 1; j < ny1; j++) {
-					if (fluidity[i][j]) {
-						t[i][j] = t0[i][j]
-								- tx
-								* (u[i + 1][j] * t[i + 1][j] - u[i - 1][j]
-										* t[i - 1][j])
-								- ty
-								* (v[i][j + 1] * t[i][j + 1] - v[i][j - 1]
-										* t[i][j - 1]);
-					}
-				}
-			}
-			applyBoundary(t);
-		}
-
-	}
-
 	// MacCormack
-	void macCormack(float[][] t) {
-
-		// TODO: swap the two arrays instead of copying them every time?
-		MiscUtil.copy(t0, t);
+	private void macCormack(float[][] t) {
 
 		float tx = 0.5f * timeStep / deltaX;
 		float ty = 0.5f * timeStep / deltaY;
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					t[i][j] = t0[i][j]
+					t0[i][j] = t[i][j]
 							- tx
-							* (u[i + 1][j] * t0[i + 1][j] - u[i - 1][j]
-									* t0[i - 1][j])
+							* (u[i + 1][j] * t[i + 1][j] - u[i - 1][j]
+									* t[i - 1][j])
 							- ty
-							* (v[i][j + 1] * t0[i][j + 1] - v[i][j - 1]
-									* t0[i][j - 1]);
+							* (v[i][j + 1] * t[i][j + 1] - v[i][j - 1]
+									* t[i][j - 1]);
 				}
 			}
 		}
 
-		applyBoundary(t);
+		applyBoundary(t0);
 
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					t0[i][j] = 0.5f * (t0[i][j] + t[i][j]) - 0.5f * tx
-							* u[i][j] * (t[i + 1][j] - t[i - 1][j]) - 0.5f * ty
-							* v[i][j] * (t[i][j + 1] - t[i][j - 1]);
+					t[i][j] = 0.5f * (t[i][j] + t0[i][j]) - 0.5f * tx * u[i][j]
+							* (t0[i + 1][j] - t0[i - 1][j]) - 0.5f * ty
+							* v[i][j] * (t0[i][j + 1] - t0[i][j - 1]);
 				}
 			}
 		}
-
-		MiscUtil.copy(t, t0);
 
 		applyBoundary(t);
 

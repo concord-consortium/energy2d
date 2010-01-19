@@ -43,7 +43,13 @@ public class Model2D {
 
 	private float backgroundTemperature;
 
-	// temperature array
+	/*
+	 * temperature array. On Java 6, using a 1D array and then a convenience
+	 * function I(i, j) =i + j x ny to find t(i, j) is about 12% faster than
+	 * using a 2D array directly. Hence, using 1D array for 2D functions doesn't
+	 * result in significant performance improvements (the JRE probably have
+	 * already optimized this for us).
+	 */
 	private float[][] t;
 
 	// velocity x-component array (m/s)

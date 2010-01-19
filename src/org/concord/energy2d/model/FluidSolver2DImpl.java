@@ -20,6 +20,8 @@ class FluidSolver2DImpl extends FluidSolver2D {
 
 	void diffuse(int b, float[][] f0, float[][] f) {
 
+		MiscUtil.copy(f0, f);
+
 		float hx = timeStep * viscosity * idxsq;
 		float hy = timeStep * viscosity * idysq;
 		float dn = 1f / (1 + 2 * (hx + hy));
@@ -43,32 +45,8 @@ class FluidSolver2DImpl extends FluidSolver2D {
 		macCormack(b, f0, f);
 	}
 
-	void eulerImplicit(int b, float[][] f0, float[][] f) {
-
-		float tx = 0.5f * timeStep / deltaX;
-		float ty = 0.5f * timeStep / deltaY;
-
-		for (int k = 0; k < relaxationSteps; k++) {
-			for (int i = 1; i < nx1; i++) {
-				for (int j = 1; j < ny1; j++) {
-					if (fluidity[i][j]) {
-						f[i][j] = f0[i][j]
-								- tx
-								* (u0[i + 1][j] * f[i + 1][j] - u0[i - 1][j]
-										* f[i - 1][j])
-								- ty
-								* (v0[i][j + 1] * f[i][j + 1] - v0[i][j - 1]
-										* f[i][j - 1]);
-					}
-				}
-			}
-			applyBoundary(b, f);
-		}
-
-	}
-
 	// MacCormack
-	void macCormack(int b, float[][] f0, float[][] f) {
+	private void macCormack(int b, float[][] f0, float[][] f) {
 
 		float tx = 0.5f * timeStep / deltaX;
 		float ty = 0.5f * timeStep / deltaY;
