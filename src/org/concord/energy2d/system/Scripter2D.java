@@ -373,11 +373,17 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("velocity")) {
 					s2d.view.setVelocityOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("clock")) {
+					s2d.view.setClockOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("ruler")) {
 					s2d.view.setRulerOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("grid")) {
 					s2d.view.setGridOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("outline")) {
+					s2d.view.setOutlineOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("isotherm")) {
 					s2d.view.setIsothermOn("true".equalsIgnoreCase(t[1]));

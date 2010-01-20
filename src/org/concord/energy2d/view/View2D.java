@@ -90,6 +90,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
 	private boolean showGraph;
+	private boolean clockOn = true;
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
@@ -286,6 +287,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return !model.getPart(0).isFilled();
 	}
 
+	public void setClockOn(boolean b) {
+		clockOn = b;
+	}
+
+	public boolean isClockOn() {
+		return clockOn;
+	}
+
 	public void setSmooth(boolean smooth) {
 		temperatureRenderer.setSmooth(smooth);
 	}
@@ -428,10 +437,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		g2.setColor(Color.white);
-		g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
-		g2.setStroke(stroke);
+		if (clockOn) {
+			g2.setColor(Color.white);
+			g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
+		}
 
+		g2.setStroke(stroke);
 		drawFrank(g2, getWidth() - 85, getHeight() - 16);
 
 	}
