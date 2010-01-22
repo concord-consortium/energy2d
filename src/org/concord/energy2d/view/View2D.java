@@ -850,13 +850,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		selectManipulable(x, y);
-		if (e.isShiftDown()) {
-			if (selectedManipulable instanceof Part) {
-				selectedManipulable.setFilled(!selectedManipulable.isFilled());
-			} else if (selectedManipulable instanceof Thermometer) {
-				showGraph = true;
-			}
-		}
 		if (selectedManipulable != null) {
 			Point2D.Float center = selectedManipulable.getCenter();
 			pressedPointRelative.x = x - convertPointToPixelX(center.x);

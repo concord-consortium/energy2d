@@ -115,7 +115,7 @@ class GraphRenderer {
 	void render(JComponent c, Graphics2D g, List<TimedData> data,
 			boolean highlight) {
 
-		if (!c.isVisible() || data.isEmpty())
+		if (!c.isVisible())
 			return;
 
 		if (drawFrame) {
@@ -203,29 +203,30 @@ class GraphRenderer {
 		g.setColor(highlight ? Color.yellow : fgColor);
 
 		int n = data.size();
-		int m = Math.max(1, (int) (n / w));
-
-		TimedData d = data.get(0);
-		float t1 = d.getTime();
-		float v1 = d.getValue();
-		float t2, v2;
-		int x1, y1, x2, y2;
-		float scaleX = w / scopeX;
-		float scaleY = h / scopeY;
-		synchronized (data) {
-			for (int i = m; i < n - m; i += m) {
-				x1 = (int) (x + t1 * scaleX);
-				y1 = (int) (y + h - v1 * scaleY);
-				if (x1 > x + w)
-					break;
-				d = data.get(i);
-				t2 = d.getTime();
-				v2 = d.getValue();
-				x2 = (int) (x + t2 * scaleX);
-				y2 = (int) (y + h - v2 * scaleY);
-				g.drawLine(x1, y1, x2, y2);
-				t1 = t2;
-				v1 = v2;
+		if (n > 0) {
+			int m = Math.max(1, (int) (n / w));
+			TimedData d = data.get(0);
+			float t1 = d.getTime();
+			float v1 = d.getValue();
+			float t2, v2;
+			int x1, y1, x2, y2;
+			float scaleX = w / scopeX;
+			float scaleY = h / scopeY;
+			synchronized (data) {
+				for (int i = m; i < n - m; i += m) {
+					x1 = (int) (x + t1 * scaleX);
+					y1 = (int) (y + h - v1 * scaleY);
+					if (x1 > x + w)
+						break;
+					d = data.get(i);
+					t2 = d.getTime();
+					v2 = d.getValue();
+					x2 = (int) (x + t2 * scaleX);
+					y2 = (int) (y + h - v2 * scaleY);
+					g.drawLine(x1, y1, x2, y2);
+					t1 = t2;
+					v1 = v2;
+				}
 			}
 		}
 

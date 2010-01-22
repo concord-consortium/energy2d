@@ -70,6 +70,8 @@ public class Part extends Manipulable {
 
 	private float emissivity;
 
+	private float unitSurfaceArea = 100;
+
 	private float windSpeed;
 	private float windAngle;
 
@@ -259,7 +261,7 @@ public class Part extends Manipulable {
 			return 0;
 		float t2 = 273 + temperature;
 		t2 *= t2;
-		return emissivity * STEFAN_CONSTANT * t2 * t2;
+		return emissivity * STEFAN_CONSTANT * unitSurfaceArea * t2 * t2;
 	}
 
 	private void radiate(Model2D model, Line2D.Float line) {
