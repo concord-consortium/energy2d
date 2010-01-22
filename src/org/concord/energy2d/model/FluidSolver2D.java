@@ -8,6 +8,7 @@ package org.concord.energy2d.model;
 
 import java.util.Arrays;
 
+import org.concord.energy2d.math.MathUtil;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -19,6 +20,7 @@ abstract class FluidSolver2D {
 	static byte relaxationSteps = 5;
 	private float thermalBuoyancy = 0.00025f;
 	private float gravity = 0;
+	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
 
 	/*
 	 * By default, air's kinematic viscosity = 1.568 x 10^-5 m^2/s at 27 C is
@@ -54,6 +56,14 @@ abstract class FluidSolver2D {
 			Arrays.fill(u0[i], 0);
 			Arrays.fill(v0[i], 0);
 		}
+	}
+
+	void setBuoyancyApproximation(byte buoyancyApproximation) {
+		this.buoyancyApproximation = buoyancyApproximation;
+	}
+
+	byte getBuoyancyApproximation() {
+		return buoyancyApproximation;
 	}
 
 	void setThermalBuoyancy(float thermalBuoyancy) {
@@ -211,13 +221,27 @@ abstract class FluidSolver2D {
 		float g = gravity * timeStep;
 		float b = thermalBuoyancy * timeStep;
 		float t0;
-		for (int i = 1; i < nx1; i++) {
-			for (int j = 1; j < ny1; j++) {
-				if (fluidity[i][j]) {
-					t0 = getMeanTemperature(i, j);
-					f[i][j] += (g - b) * t[i][j] + b * t0;
+		switch (buoyancyApproximation) {
+		case Model2D.BUOYANCY_AVERAGE_ALL:
+			t0 = MathUtil.getAverage(t);
+			for (int i = 1; i < nx1; i++) {
+				for (int j = 1; j < ny1; j++) {
+					if (fluidity[i][j]) {
+						f[i][j] += (g - b) * t[i][j] + b * t0;
+					}
 				}
 			}
+			break;
+		case Model2D.BUOYANCY_AVERAGE_COLUMN:
+			for (int i = 1; i < nx1; i++) {
+				for (int j = 1; j < ny1; j++) {
+					if (fluidity[i][j]) {
+						t0 = getMeanTemperature(i, j);
+						f[i][j] += (g - b) * t[i][j] + b * t0;
+					}
+				}
+			}
+			break;
 		}
 	}
 

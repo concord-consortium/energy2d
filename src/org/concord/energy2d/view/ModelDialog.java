@@ -80,6 +80,8 @@ class ModelDialog extends JDialog {
 	private JSlider sunAngleSlider;
 	private JCheckBox sunnyCheckBox;
 	private JCheckBox convectiveCheckBox;
+	private JLabel buoyancyApproximationLabel;
+	private JComboBox buoyancyApproximationComboBox;
 	private Window owner;
 	private ActionListener okListener;
 
@@ -184,6 +186,9 @@ class ModelDialog extends JDialog {
 
 				model.setSunny(sunnyCheckBox.isSelected());
 				model.setConvective(convectiveCheckBox.isSelected());
+				model
+						.setBuoyancyApproximation((byte) buoyancyApproximationComboBox
+								.getSelectedIndex());
 
 				model.refreshMaterialPropertyArrays();
 
@@ -231,6 +236,8 @@ class ModelDialog extends JDialog {
 				viscosityField.setEnabled(b);
 				buoyancyLabel.setEnabled(b);
 				buoyancyField.setEnabled(b);
+				buoyancyApproximationLabel.setEnabled(b);
+				buoyancyApproximationComboBox.setEnabled(b);
 			}
 		});
 		p.add(convectiveCheckBox);
@@ -339,6 +346,17 @@ class ModelDialog extends JDialog {
 		p.add(buoyancyField);
 		label = new JLabel(
 				"<html><i>m/(s<sup><font size=2>2</font></sup>\u00b7\u2103)</html>)");
+		p.add(label);
+		count++;
+
+		buoyancyApproximationLabel = new JLabel("Buoyancy approximation");
+		p.add(buoyancyApproximationLabel);
+		buoyancyApproximationComboBox = new JComboBox(new String[] {
+				"All-cell average", "Column average" });
+		buoyancyApproximationComboBox.setSelectedIndex(model
+				.getBuoyancyApproximation());
+		p.add(buoyancyApproximationComboBox);
+		label = new JLabel();
 		p.add(label);
 		count++;
 

@@ -362,6 +362,15 @@ class Scripter2D extends Scripter {
 						return;
 					}
 					s2d.model.setThermalBuoyancy(thermalBuoyancy);
+				} else if (t[0].equalsIgnoreCase("buoyancy_approximation")) {
+					int buoyancyApproximation = 0;
+					try {
+						buoyancyApproximation = Integer.parseInt(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.model
+							.setBuoyancyApproximation((byte) buoyancyApproximation);
 				} else if (t[0].equalsIgnoreCase("viscosity")) {
 					float viscosity = 0;
 					try {

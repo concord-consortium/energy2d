@@ -30,6 +30,9 @@ import org.concord.energy2d.math.Polygon2D;
  */
 public class Model2D {
 
+	public final static byte BUOYANCY_AVERAGE_ALL = 0;
+	public final static byte BUOYANCY_AVERAGE_COLUMN = 1;
+
 	private int indexOfStep;
 
 	// Air's thermal conductivity = 0.025 W/(m*K)
@@ -175,6 +178,14 @@ public class Model2D {
 
 	public float getThermalBuoyancy() {
 		return fluidSolver.getThermalBuoyancy();
+	}
+
+	public void setBuoyancyApproximation(byte buoyancyApproximation) {
+		fluidSolver.setBuoyancyApproximation(buoyancyApproximation);
+	}
+
+	public byte getBuoyancyApproximation() {
+		return fluidSolver.getBuoyancyApproximation();
 	}
 
 	public void setViscosity(float viscosity) {
