@@ -470,6 +470,15 @@ class Scripter2D extends Scripter {
 					}
 					s2d.model.setBackgroundCapacity(x);
 					arrayUpdateRequested = true;
+				} else if (t[0].equalsIgnoreCase("background_density")) {
+					float x = 0;
+					try {
+						x = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.model.setBackgroundDensity(x);
+					arrayUpdateRequested = true;
 				} else if (t[0].equalsIgnoreCase("background_temperature")) {
 					float x = 0;
 					try {
