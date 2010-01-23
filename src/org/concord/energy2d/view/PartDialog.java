@@ -67,7 +67,7 @@ class PartDialog extends JDialog {
 	PartDialog(final View2D view, final Part part, boolean modal) {
 
 		super(JOptionPane.getFrameForComponent(view), "Part (#"
-				+ view.model.getParts().indexOf(part) + ")", modal);
+				+ view.model.getParts().indexOf(part) + ") Properties", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 

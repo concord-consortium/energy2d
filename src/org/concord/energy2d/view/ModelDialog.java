@@ -47,6 +47,7 @@ class ModelDialog extends JDialog {
 			"####.########");
 
 	private JTextField steplengthField;
+	private JTextField bgTemperatureField;
 	private JTextField conductivityField;
 	private JTextField capacityField;
 	private JTextField densityField;
@@ -87,13 +88,16 @@ class ModelDialog extends JDialog {
 
 	ModelDialog(final View2D view, final Model2D model, boolean modal) {
 
-		super(JOptionPane.getFrameForComponent(view), "Model", modal);
+		super(JOptionPane.getFrameForComponent(view), "Model Properties", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				float bgTemperature = parse(bgTemperatureField.getText());
+				if (Float.isNaN(bgTemperature))
+					return;
 				float conductivity = parse(conductivityField.getText());
 				if (Float.isNaN(conductivity))
 					return;
@@ -151,6 +155,7 @@ class ModelDialog extends JDialog {
 				}
 
 				model.setTimeStep(steplength);
+				model.setBackgroundTemperature(bgTemperature);
 				model.setBackgroundConductivity(conductivity);
 				model.setBackgroundCapacity(capacity);
 				model.setBackgroundDensity(density);
@@ -297,6 +302,16 @@ class ModelDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
+		label = new JLabel("Background temperature");
+		p.add(label);
+		bgTemperatureField = new JTextField(FORMAT.format(model
+				.getBackgroundTemperature()), 16);
+		bgTemperatureField.addActionListener(okListener);
+		p.add(bgTemperatureField);
+		label = new JLabel("<html><i>\u2103)");
+		p.add(label);
+		count++;
+
 		label = new JLabel("Conductivity");
 		p.add(label);
 		conductivityField = new JTextField(FORMAT.format(model
@@ -329,8 +344,10 @@ class ModelDialog extends JDialog {
 		count++;
 
 		viscosityLabel = new JLabel("Kinematic viscosity");
+		viscosityLabel.setEnabled(model.isConvective());
 		p.add(viscosityLabel);
 		viscosityField = new JTextField(FORMAT.format(model.getViscosity()), 16);
+		viscosityField.setEnabled(model.isConvective());
 		viscosityField.addActionListener(okListener);
 		p.add(viscosityField);
 		label = new JLabel(
@@ -339,9 +356,11 @@ class ModelDialog extends JDialog {
 		count++;
 
 		buoyancyLabel = new JLabel("Thermal buoyancy");
+		buoyancyLabel.setEnabled(model.isConvective());
 		p.add(buoyancyLabel);
 		buoyancyField = new JTextField(FORMAT
 				.format(model.getThermalBuoyancy()), 16);
+		buoyancyField.setEnabled(model.isConvective());
 		buoyancyField.addActionListener(okListener);
 		p.add(buoyancyField);
 		label = new JLabel(
@@ -350,9 +369,11 @@ class ModelDialog extends JDialog {
 		count++;
 
 		buoyancyApproximationLabel = new JLabel("Buoyancy approximation");
+		buoyancyApproximationLabel.setEnabled(model.isConvective());
 		p.add(buoyancyApproximationLabel);
 		buoyancyApproximationComboBox = new JComboBox(new String[] {
 				"All-cell average", "Column average" });
+		buoyancyApproximationComboBox.setEnabled(model.isConvective());
 		buoyancyApproximationComboBox.setSelectedIndex(model
 				.getBuoyancyApproximation());
 		p.add(buoyancyApproximationComboBox);
