@@ -15,6 +15,8 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 	private static byte relaxationSteps = 5;
 
+	private boolean crankNicolson;
+
 	HeatSolver2DImpl(int nx, int ny) {
 		super(nx, ny);
 	}
@@ -26,7 +28,7 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 		float hx = 0.5f / (deltaX * deltaX);
 		float hy = 0.5f / (deltaY * deltaY);
-		float rij, sij, axij, bxij, ayij, byij;
+		float rij, sij, axij, bxij, ayij, byij, qij, t0ij;
 		float invTimeStep = 1f / timeStep;
 
 		for (int k = 0; k < relaxationSteps; k++) {
@@ -39,10 +41,23 @@ class HeatSolver2DImpl extends HeatSolver2D {
 						bxij = hx * (rij + conductivity[i + 1][j]);
 						ayij = hy * (rij + conductivity[i][j - 1]);
 						byij = hy * (rij + conductivity[i][j + 1]);
-						t[i][j] = (t0[i][j] * sij + q[i][j] + axij
-								* t[i - 1][j] + bxij * t[i + 1][j] + ayij
-								* t[i][j - 1] + byij * t[i][j + 1])
-								/ (sij + axij + bxij + ayij + byij);
+						qij = q[i][j];
+						if (crankNicolson) {
+							t0ij = t0[i][j];
+							qij += 0.5f * (axij * (t0[i - 1][j] - t0ij) + bxij
+									* (t0[i + 1][j] - t0ij) + ayij
+									* (t0[i][j - 1] - t0ij) + byij
+									* (t0[i][j + 1] - t0ij));
+							t[i][j] = (t0[i][j] * sij + qij + 0.5f * (axij
+									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
+									* t[i][j - 1] + byij * t[i][j + 1]))
+									/ (sij + 0.5f * (axij + bxij + ayij + byij));
+						} else {
+							t[i][j] = (t0[i][j] * sij + qij + axij
+									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
+									* t[i][j - 1] + byij * t[i][j + 1])
+									/ (sij + axij + bxij + ayij + byij);
+						}
 					} else {
 						t[i][j] = tb[i][j];
 					}

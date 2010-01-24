@@ -308,7 +308,7 @@ class ModelDialog extends JDialog {
 				.getBackgroundTemperature()), 16);
 		bgTemperatureField.addActionListener(okListener);
 		p.add(bgTemperatureField);
-		label = new JLabel("<html><i>\u2103)");
+		label = new JLabel("<html><i>\u2103");
 		p.add(label);
 		count++;
 
