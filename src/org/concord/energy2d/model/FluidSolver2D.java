@@ -342,6 +342,9 @@ abstract class FluidSolver2D {
 
 	private void calculateStreamFunction() {
 		float s = 0.5f / (idxsq + idysq);
+		for (int i = 0; i < nx; i++) {
+			Arrays.fill(stream[i], 0);
+		}
 		for (int k = 0; k < relaxationSteps; k++) {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {

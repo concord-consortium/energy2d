@@ -87,16 +87,16 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		checkBox = new JCheckBox("Streamline");
-		checkBox.setSelected(view.isStreamOn());
-		checkBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				JCheckBox src = (JCheckBox) e.getSource();
-				view.setStreamOn(src.isSelected());
-				view.repaint();
-			}
-		});
-		p.add(checkBox);
+		// checkBox = new JCheckBox("Streamline");
+		// checkBox.setSelected(view.isStreamOn());
+		// checkBox.addItemListener(new ItemListener() {
+		// public void itemStateChanged(ItemEvent e) {
+		// JCheckBox src = (JCheckBox) e.getSource();
+		// view.setStreamOn(src.isSelected());
+		// view.repaint();
+		// }
+		// });
+		// p.add(checkBox);
 
 		checkBox = new JCheckBox("Grid");
 		checkBox.setSelected(view.isGridOn());
