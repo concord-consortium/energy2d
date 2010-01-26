@@ -33,6 +33,10 @@ class VectorDistributionRenderer {
 		this.ny = ny;
 	}
 
+	void setSpacing(int spacing) {
+		this.spacing = spacing;
+	}
+
 	static void drawVector(Graphics2D g, int x, int y, float vx, float vy,
 			float scale) {
 		float r = 1f / (float) Math.hypot(vx, vy);

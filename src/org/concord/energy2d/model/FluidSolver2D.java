@@ -36,6 +36,7 @@ abstract class FluidSolver2D {
 	Boundary boundary;
 	float[][] t;
 	float[][] uWind, vWind;
+	private float[][] vorticity, stream;
 
 	private float i2dx, i2dy;
 	float idxsq, idysq;
@@ -55,6 +56,16 @@ abstract class FluidSolver2D {
 		for (int i = 0; i < nx; i++) {
 			Arrays.fill(u0[i], 0);
 			Arrays.fill(v0[i], 0);
+		}
+		if (vorticity != null) {
+			for (int i = 0; i < nx; i++) {
+				Arrays.fill(vorticity[i], 0);
+			}
+		}
+		if (stream != null) {
+			for (int i = 0; i < nx; i++) {
+				Arrays.fill(stream[i], 0);
+			}
 		}
 	}
 
@@ -317,6 +328,50 @@ abstract class FluidSolver2D {
 		applyBoundary(1, u);
 		applyBoundary(2, v);
 
+	}
+
+	float[][] getStreamFunction(float[][] u, float[][] v) {
+		if (vorticity == null)
+			vorticity = new float[nx][ny];
+		if (stream == null)
+			stream = new float[nx][ny];
+		calculateVorticity(u, v);
+		calculateStreamFunction();
+		return stream;
+	}
+
+	private void calculateStreamFunction() {
+		float s = 0.5f / (idxsq + idysq);
+		for (int k = 0; k < relaxationSteps; k++) {
+			for (int i = 1; i < nx1; i++) {
+				for (int j = 1; j < ny1; j++) {
+					if (fluidity[i][j]) {
+						stream[i][j] = s
+								* ((stream[i - 1][j] + stream[i + 1][j])
+										* idxsq
+										+ (stream[i][j - 1] + stream[i][j + 1])
+										* idysq + vorticity[i][j]);
+					}
+				}
+			}
+			applyBoundary(0, stream);
+			setObstacleBoundary(stream);
+		}
+	}
+
+	private void calculateVorticity(float[][] u, float[][] v) {
+		float du_dy, dv_dx;
+		for (int i = 1; i < nx1; i++) {
+			for (int j = 1; j < ny1; j++) {
+				if (fluidity[i][j]) {
+					du_dy = (u[i][j + 1] - u[i][j - 1]) / (2 * deltaY);
+					dv_dx = (v[i + 1][j] - v[i - 1][j]) / (2 * deltaX);
+					vorticity[i][j] = du_dy - dv_dx;
+				}
+			}
+		}
+		applyBoundary(0, vorticity);
+		setObstacleBoundary(vorticity);
 	}
 
 }

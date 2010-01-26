@@ -89,6 +89,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private ScalarDistributionRenderer temperatureRenderer;
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
+	private boolean streamOn;
 	private boolean showGraph;
 	private boolean clockOn = true;
 
@@ -110,6 +111,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point anchorPoint = new Point();
 	private AffineTransform scale, translate;
 	private ContourMap isotherms;
+	private ContourMap streams;
 	private Polygon polygon;
 	private float photonLength = 10;
 
@@ -247,6 +249,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return velocityRenderer != null;
 	}
 
+	public void setVelocitySpacing(int spacing) {
+		if (velocityRenderer != null)
+			velocityRenderer.setSpacing(spacing);
+	}
+
 	public void setIsothermOn(boolean b) {
 		isothermOn = b;
 		if (b) {
@@ -259,6 +266,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public boolean isIsothermOn() {
 		return isothermOn;
+	}
+
+	public void setStreamOn(boolean b) {
+		streamOn = b;
+		if (b) {
+			if (streams == null)
+				streams = new ContourMap();
+		} else {
+			streams = null;
+		}
+	}
+
+	public boolean isStreamOn() {
+		return streamOn;
 	}
 
 	public void setContourResolution(float resolution) {
@@ -396,6 +417,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (isotherms != null) {
 			g2.setStroke(thinStroke);
 			isotherms.render(g2, getSize(), model.getTemperature());
+		}
+		if (streams != null) {
+			g2.setStroke(thinStroke);
+			streams.render(g2, getSize(), model.getStreamFunction());
 		}
 		if (selectedManipulable != null) {
 			for (Rectangle r : handle) {

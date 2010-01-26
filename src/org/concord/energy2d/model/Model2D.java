@@ -749,6 +749,10 @@ public class Model2D {
 		return v;
 	}
 
+	public float[][] getStreamFunction() {
+		return fluidSolver.getStreamFunction(u, v);
+	}
+
 	private void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
 			int ix, iy;
