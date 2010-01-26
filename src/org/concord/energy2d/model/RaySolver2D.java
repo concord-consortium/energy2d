@@ -31,7 +31,15 @@ class RaySolver2D {
 	private float raySpeed = .1f;
 
 	RaySolver2D(float lx, float ly) {
+		setLx(lx);
+		setLy(ly);
+	}
+
+	void setLx(float lx) {
 		this.lx = lx;
+	}
+
+	void setLy(float ly) {
 		this.ly = ly;
 	}
 

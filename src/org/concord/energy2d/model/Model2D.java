@@ -278,6 +278,7 @@ public class Model2D {
 		this.lx = lx;
 		deltaX = lx / nx;
 		setGridCellSize();
+		raySolver.setLx(lx);
 	}
 
 	public float getLx() {
@@ -288,6 +289,7 @@ public class Model2D {
 		this.ly = ly;
 		deltaY = ly / ny;
 		setGridCellSize();
+		raySolver.setLy(ly);
 	}
 
 	public float getLy() {
