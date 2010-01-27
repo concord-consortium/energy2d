@@ -87,17 +87,6 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		// checkBox = new JCheckBox("Streamline");
-		// checkBox.setSelected(view.isStreamOn());
-		// checkBox.addItemListener(new ItemListener() {
-		// public void itemStateChanged(ItemEvent e) {
-		// JCheckBox src = (JCheckBox) e.getSource();
-		// view.setStreamOn(src.isSelected());
-		// view.repaint();
-		// }
-		// });
-		// p.add(checkBox);
-
 		checkBox = new JCheckBox("Grid");
 		checkBox.setSelected(view.isGridOn());
 		checkBox.addItemListener(new ItemListener() {
@@ -108,7 +97,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		count++;
 
 		checkBox = new JCheckBox("Ruler");
 		checkBox.setSelected(view.isRulerOn());
@@ -120,6 +108,7 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
+		count++;
 
 		checkBox = new JCheckBox("Graph");
 		checkBox.setSelected(view.isGraphOn());
@@ -142,7 +131,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		count++;
 
 		checkBox = new JCheckBox("Smooth");
 		checkBox.setSelected(view.isSmooth());
@@ -168,6 +156,52 @@ class ViewDialog extends JDialog {
 		p.add(new JPanel());
 		count++;
 
+		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
+
+		p = new JPanel(new SpringLayout());
+		p.setBorder(BorderFactory.createTitledBorder("Visualization"));
+		box.add(p);
+		count = 0;
+
+		JLabel label = new JLabel("Lowest temperature for coloring");
+		p.add(label);
+
+		JTextField textField = new JTextField(
+				view.getMinimumTemperature() + "", 8);
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField src = (JTextField) e.getSource();
+				float x = parse(src.getText());
+				if (Float.isNaN(x))
+					return;
+				view.setMinimumTemperature(x);
+				view.repaint();
+			}
+		});
+		p.add(textField);
+		label = new JLabel("<html><i>&deg;C");
+		p.add(label);
+		count++;
+
+		label = new JLabel("Highest temperature for coloring");
+		p.add(label);
+
+		textField = new JTextField(view.getMaximumTemperature() + "", 8);
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField src = (JTextField) e.getSource();
+				float x = parse(src.getText());
+				if (Float.isNaN(x))
+					return;
+				view.setMaximumTemperature(x);
+				view.repaint();
+			}
+		});
+		p.add(textField);
+		label = new JLabel("<html><i>&deg;C");
+		p.add(label);
+		count++;
+
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
@@ -175,12 +209,10 @@ class ViewDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
-		JLabel label = new JLabel("Reading period");
+		label = new JLabel("Reading period");
 		p.add(label);
 
-		JTextField textField = new JTextField(view.model
-				.getMeasurementInterval()
-				+ "", 2);
+		textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextField src = (JTextField) e.getSource();
