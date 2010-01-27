@@ -19,7 +19,8 @@ class ScalarDistributionRenderer {
 	private BufferedImage image;
 	private int[] pixels;
 	private int w, h;
-	private float scale = 40f / 255f;
+	private float min = 0, max = 40;
+	private float scale = (max - min) / 255f, shift = min / 255f;
 	private short[][] rgbScale;
 	private boolean smooth = true;
 
@@ -35,16 +36,27 @@ class ScalarDistributionRenderer {
 		return smooth;
 	}
 
-	void setIntensityScale(float scale) {
-		this.scale = scale;
+	void setMaximum(float max) {
+		this.max = max;
+		scale = (max - min) / 255f;
 	}
 
-	float getIntensityScale() {
-		return scale;
+	float getMaximum() {
+		return max;
+	}
+
+	void setMinimum(float min) {
+		this.min = min;
+		scale = (max - min) / 255f;
+		shift = min / 255f;
+	}
+
+	float getMinimum() {
+		return min;
 	}
 
 	int getColor(float value) {
-		float v = value * scale;
+		float v = shift + value * scale;
 		if (v > rgbScale.length - 2)
 			v = rgbScale.length - 2;
 		else if (v < 0)
@@ -94,12 +106,12 @@ class ScalarDistributionRenderer {
 						j1 = n - 1;
 					t1 = y - j0;
 					t0 = 1 - t1;
-					v = (s0
-							* (t0 * distribution[i0][j0] + t1
-									* distribution[i0][j1]) + s1
-							* (t0 * distribution[i1][j0] + t1
-									* distribution[i1][j1]))
-							* scale;
+					v = shift
+							+ (s0
+									* (t0 * distribution[i0][j0] + t1
+											* distribution[i0][j1]) + s1
+									* (t0 * distribution[i1][j0] + t1
+											* distribution[i1][j1])) * scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
 					else if (v < 0)
@@ -122,7 +134,7 @@ class ScalarDistributionRenderer {
 				i0 = (int) (i * dx);
 				for (int j = 0; j < h; j++) {
 					j0 = (int) (j * dy);
-					v = distribution[i0][j0] * scale;
+					v = shift + distribution[i0][j0] * scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
 					else if (v < 0)

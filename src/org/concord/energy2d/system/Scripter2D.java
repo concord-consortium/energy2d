@@ -397,6 +397,24 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("isotherm")) {
 					s2d.view.setIsothermOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("minimum_temperature")) {
+					float min = 0;
+					try {
+						min = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.view.setMinimumTemperature(min);
+					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("maximum_temperature")) {
+					float max = 0;
+					try {
+						max = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.view.setMaximumTemperature(max);
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("contour_resolution")) {
 					float resolution = 0;
 					try {

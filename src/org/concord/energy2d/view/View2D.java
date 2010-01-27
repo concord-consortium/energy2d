@@ -308,6 +308,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return temperatureRenderer.isSmooth();
 	}
 
+	public void setMinimumTemperature(float min) {
+		temperatureRenderer.setMinimum(min);
+	}
+
+	public void setMaximumTemperature(float max) {
+		temperatureRenderer.setMaximum(max);
+	}
+
 	public JPopupMenu getPopupMenu() {
 		return popupMenu;
 	}
