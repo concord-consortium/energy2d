@@ -20,12 +20,13 @@ class ScalarDistributionRenderer {
 	private int[] pixels;
 	private int w, h;
 	private float min = 0, max = 40;
-	private float scale = (max - min) / 255f, shift = min / 255f;
+	private float scale;
 	private short[][] rgbScale;
 	private boolean smooth = true;
 
 	ScalarDistributionRenderer(short[][] rgbScale) {
 		this.rgbScale = rgbScale;
+		scale = rgbScale.length / (max - min);
 	}
 
 	void setSmooth(boolean smooth) {
@@ -38,7 +39,7 @@ class ScalarDistributionRenderer {
 
 	void setMaximum(float max) {
 		this.max = max;
-		scale = (max - min) / 255f;
+		scale = rgbScale.length / (max - min);
 	}
 
 	float getMaximum() {
@@ -47,8 +48,7 @@ class ScalarDistributionRenderer {
 
 	void setMinimum(float min) {
 		this.min = min;
-		scale = (max - min) / 255f;
-		shift = min / 255f;
+		scale = rgbScale.length / (max - min);
 	}
 
 	float getMinimum() {
@@ -56,7 +56,7 @@ class ScalarDistributionRenderer {
 	}
 
 	int getColor(float value) {
-		float v = shift + value * scale;
+		float v = (value - min) * scale;
 		if (v > rgbScale.length - 2)
 			v = rgbScale.length - 2;
 		else if (v < 0)
@@ -106,12 +106,13 @@ class ScalarDistributionRenderer {
 						j1 = n - 1;
 					t1 = y - j0;
 					t0 = 1 - t1;
-					v = shift
-							+ (s0
-									* (t0 * distribution[i0][j0] + t1
-											* distribution[i0][j1]) + s1
-									* (t0 * distribution[i1][j0] + t1
-											* distribution[i1][j1])) * scale;
+					v = (s0
+							* (t0 * distribution[i0][j0] + t1
+									* distribution[i0][j1])
+							+ s1
+							* (t0 * distribution[i1][j0] + t1
+									* distribution[i1][j1]) - min)
+							* scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
 					else if (v < 0)
@@ -134,7 +135,7 @@ class ScalarDistributionRenderer {
 				i0 = (int) (i * dx);
 				for (int j = 0; j < h; j++) {
 					j0 = (int) (j * dy);
-					v = shift + distribution[i0][j0] * scale;
+					v = (distribution[i0][j0] - min) * scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
 					else if (v < 0)

@@ -75,7 +75,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	final static byte RIGHT = 7;
 
 	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 },
-			{ 0, 225, 255 }, { 255, 175, 0 }, { 255, 0, 0 }, { 150, 0, 0 } };
+			{ 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 },
+			{ 255, 255, 255 } };
 
 	private static final long serialVersionUID = 1L;
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
