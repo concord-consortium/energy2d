@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -117,6 +118,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	Model2D model;
 	private Manipulable selectedManipulable;
 	private List<TextBox> textBoxes;
+	private List<Picture> pictures;
 
 	private JPopupMenu tipPopupMenu;
 	private boolean runToggle;
@@ -172,12 +174,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void clear() {
 		if (textBoxes != null)
 			textBoxes.clear();
+		if (pictures != null)
+			pictures.clear();
 	}
 
 	public void addText(String text, int x, int y) {
 		if (textBoxes == null)
 			textBoxes = new ArrayList<TextBox>();
 		textBoxes.add(new TextBox(text, x, y));
+	}
+
+	public void addPicture(ImageIcon image, int x, int y) {
+		if (pictures == null)
+			pictures = new ArrayList<Picture>();
+		pictures.add(new Picture(image, x, y));
 	}
 
 	public void addManipulationListener(ManipulationListener l) {
@@ -448,6 +458,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawThermometers(g2);
 		drawPhotons(g2);
 		drawTextBoxes(g2);
+		drawPictures(g2);
 		if (showGraph) {
 			if (!model.getThermometers().isEmpty()) {
 				graphRenderer.setDrawFrame(true);
@@ -611,6 +622,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
+	}
+
+	private void drawPictures(Graphics2D g) {
+		if (pictures == null || pictures.isEmpty())
+			return;
+		for (Picture x : pictures) {
+			x.getImage().paintIcon(this, g, x.getX(), x.getY());
+		}
 	}
 
 	private void drawPhotons(Graphics2D g) {

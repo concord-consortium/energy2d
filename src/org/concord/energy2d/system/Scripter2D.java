@@ -13,8 +13,12 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.ImageIcon;
 
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletHeatBoundary;
@@ -130,6 +134,26 @@ class Scripter2D extends Scripter {
 					if (z != null) {
 						s2d.view.addText(s.substring(j + 1), (int) z[0],
 								(int) z[1]);
+					}
+				}
+			} else if (s.toLowerCase().startsWith("image")) {
+				s = s.substring(5).trim();
+				int i = s.indexOf("(");
+				int j = s.indexOf(")");
+				if (i != -1 && j != -1) {
+					float[] z = parseArray(2, s.substring(i + 1, j));
+					if (z != null) {
+						String filename = s.substring(j + 1);
+						URL url = null;
+						try {
+							url = new URL(s2d.getCodeBase(), filename);
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						if (url != null) {
+							ImageIcon image = new ImageIcon(url);
+							s2d.view.addPicture(image, (int) z[0], (int) z[1]);
+						}
 					}
 				}
 			}
