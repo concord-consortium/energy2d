@@ -87,6 +87,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
+	private RainbowRenderer rainbowRenderer;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer;
 	private VectorDistributionRenderer velocityRenderer;
@@ -268,6 +269,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public boolean isGridOn() {
 		return gridRenderer != null;
+	}
+
+	public void setRainbowOn(boolean b) {
+		rainbowRenderer = b ? new RainbowRenderer(TEMPERATURE_COLOR_SCALE)
+				: null;
+		if (b)
+			rainbowRenderer.setRect(20, 20, getWidth() - 40, 20);
+	}
+
+	public boolean isRainbowOn() {
+		return rainbowRenderer != null;
 	}
 
 	public void setGraphOn(boolean b) {
@@ -480,6 +492,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.setColor(Color.white);
 			rulerRenderer.render(this, g2);
 		}
+		if (rainbowRenderer != null)
+			rainbowRenderer.render(g2, temperatureRenderer.getMaximum(),
+					temperatureRenderer.getMinimum());
 		if (velocityRenderer != null)
 			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(),
 					this, g2);

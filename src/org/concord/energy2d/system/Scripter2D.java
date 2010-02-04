@@ -430,6 +430,9 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("grid")) {
 					s2d.view.setGridOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("rainbow")) {
+					s2d.view.setRainbowOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("outline")) {
 					s2d.view.setOutlineOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
