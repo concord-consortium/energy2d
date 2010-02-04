@@ -140,13 +140,18 @@ class Scripter2D extends Scripter {
 			if (s.toLowerCase().startsWith("text")) {
 				s = s.substring(4).trim();
 				int i = s.indexOf("(");
-				int j = s.indexOf(")");
+				final int j = s.indexOf(")");
 				if (i != -1 && j != -1) {
-					float[] z = parseArray(2, s.substring(i + 1, j));
+					final float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
-						s2d.view.addText(s.substring(j + 1), s2d.view
-								.convertPointToPixelX(z[0]), s2d.view
-								.convertPointToPixelY(z[1]));
+						final String s2 = s;
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								s2d.view.addText(s2.substring(j + 1), s2d.view
+										.convertPointToPixelX(z[0]), s2d.view
+										.convertPointToPixelY(z[1]));
+							}
+						});
 					}
 				}
 			} else if (s.toLowerCase().startsWith("image")) {
@@ -154,7 +159,7 @@ class Scripter2D extends Scripter {
 				int i = s.indexOf("(");
 				int j = s.indexOf(")");
 				if (i != -1 && j != -1) {
-					float[] z = parseArray(2, s.substring(i + 1, j));
+					final float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
 						String filename = s.substring(j + 1);
 						URL url = null;
@@ -164,10 +169,18 @@ class Scripter2D extends Scripter {
 							e.printStackTrace();
 						}
 						if (url != null) {
-							ImageIcon image = new ImageIcon(url);
-							s2d.view.addPicture(image, s2d.view
-									.convertPointToPixelX(z[0]), s2d.view
-									.convertPointToPixelX(z[1]));
+							final ImageIcon image = new ImageIcon(url);
+							EventQueue.invokeLater(new Runnable() {
+								public void run() {
+									s2d.view
+											.addPicture(
+													image,
+													s2d.view
+															.convertPointToPixelX(z[0]),
+													s2d.view
+															.convertPointToPixelY(z[1]));
+								}
+							});
 						}
 					}
 				}
@@ -345,7 +358,7 @@ class Scripter2D extends Scripter {
 		if (matcher.find()) {
 			String s = ci.substring(matcher.end()).trim();
 			String[] t = s.split(REGEX_WHITESPACE);
-			if (t.length == 2) {
+			if (t.length >= 2) {
 				if (t[0].equalsIgnoreCase("sunny")) {
 					s2d.model.setSunny("true".equalsIgnoreCase(t[1]));
 					arrayUpdateRequested = true;
@@ -439,6 +452,26 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("isotherm")) {
 					s2d.view.setIsothermOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("rainbow_rectangle")) {
+					System.out.println(java.util.Arrays.asList(t));
+					if (t.length > 4) {
+						float x = 0, y = 0, w = 0, h = 0;
+						try {
+							x = Float.parseFloat(t[1]);
+							y = Float.parseFloat(t[2]);
+							w = Float.parseFloat(t[3]);
+							h = Float.parseFloat(t[4]);
+						} catch (NumberFormatException e) {
+							return;
+						}
+						x = s2d.view.convertPointToPixelX(x);
+						y = s2d.view.convertPointToPixelY(y);
+						w = s2d.view.convertLengthToPixelX(w);
+						h = s2d.view.convertLengthToPixelY(h);
+						s2d.view.setRainbowRectangle((int) x, (int) y, (int) w,
+								(int) h);
+						s2d.view.repaint();
+					}
 				} else if (t[0].equalsIgnoreCase("minimum_temperature")) {
 					float min = 0;
 					try {
@@ -586,6 +619,7 @@ class Scripter2D extends Scripter {
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
 						setTextField(s1, s2, s3);
+						s2d.view.repaint();
 						return;
 					}
 					// image field
@@ -601,6 +635,7 @@ class Scripter2D extends Scripter {
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
 						setImageField(s1, s2, s3);
+						s2d.view.repaint();
 						return;
 					}
 				}
@@ -740,7 +775,7 @@ class Scripter2D extends Scripter {
 		if (i < 0 || i >= s2d.view.getTextBoxCount()) {
 			return;
 		}
-		TextBox text = s2d.view.getTextBox(i);
+		final TextBox text = s2d.view.getTextBox(i);
 		if (text == null)
 			return;
 		String s = str2.toLowerCase().intern();
@@ -772,9 +807,19 @@ class Scripter2D extends Scripter {
 			if (s == "color") {
 				text.setColor(new Color((int) z));
 			} else if (s == "x") {
-				text.setX(s2d.view.convertPointToPixelX(z));
+				final float z2 = z;
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						text.setX(s2d.view.convertPointToPixelX(z2));
+					}
+				});
 			} else if (s == "y") {
-				text.setY(s2d.view.convertPointToPixelY(z));
+				final float z2 = z;
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						text.setY(s2d.view.convertPointToPixelY(z2));
+					}
+				});
 			}
 		}
 	}
@@ -800,13 +845,23 @@ class Scripter2D extends Scripter {
 			return;
 		}
 		String s = str2.toLowerCase().intern();
-		Picture picture = s2d.view.getPicture(i);
+		final Picture picture = s2d.view.getPicture(i);
 		if (picture == null)
 			return;
 		if (s == "x") {
-			picture.setX(s2d.view.convertPointToPixelX(z));
+			final float z2 = z;
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					picture.setX(s2d.view.convertPointToPixelX(z2));
+				}
+			});
 		} else if (s == "y") {
-			picture.setY(s2d.view.convertPointToPixelY(z));
+			final float z2 = z;
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					picture.setY(s2d.view.convertPointToPixelY(z2));
+				}
+			});
 		}
 	}
 

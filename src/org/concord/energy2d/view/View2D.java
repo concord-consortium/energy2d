@@ -87,12 +87,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
-	private RainbowRenderer rainbowRenderer;
+	private Rainbow rainbow;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer;
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
 	private boolean showGraph;
+	private boolean showRainbow;
 	private boolean clockOn = true;
 
 	private static Stroke thinStroke = new BasicStroke(1);
@@ -169,6 +170,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		temperatureRenderer = new ScalarDistributionRenderer(
 				TEMPERATURE_COLOR_SCALE);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
+		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
 	}
 
@@ -272,14 +274,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setRainbowOn(boolean b) {
-		rainbowRenderer = b ? new RainbowRenderer(TEMPERATURE_COLOR_SCALE)
-				: null;
-		if (b)
-			rainbowRenderer.setRect(20, 20, getWidth() - 40, 20);
+		showRainbow = b;
 	}
 
 	public boolean isRainbowOn() {
-		return rainbowRenderer != null;
+		return showRainbow;
+	}
+
+	public void setRainbowRectangle(int x, int y, int w, int h) {
+		rainbow.setRect(x, y, w, h);
 	}
 
 	public void setGraphOn(boolean b) {
@@ -492,8 +495,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.setColor(Color.white);
 			rulerRenderer.render(this, g2);
 		}
-		if (rainbowRenderer != null)
-			rainbowRenderer.render(g2, temperatureRenderer.getMaximum(),
+		if (rainbow != null)
+			rainbow.render(this, g2, temperatureRenderer.getMaximum(),
 					temperatureRenderer.getMinimum());
 		if (velocityRenderer != null)
 			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(),
