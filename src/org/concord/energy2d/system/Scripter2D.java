@@ -145,11 +145,16 @@ class Scripter2D extends Scripter {
 					final float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
 						final String s2 = s;
-						EventQueue.invokeLater(new Runnable() {
+						final Runnable r = new Runnable() {
 							public void run() {
 								s2d.view.addText(s2.substring(j + 1), s2d.view
 										.convertPointToPixelX(z[0]), s2d.view
 										.convertPointToPixelY(z[1]));
+							}
+						};
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								EventQueue.invokeLater(r);
 							}
 						});
 					}
@@ -170,7 +175,7 @@ class Scripter2D extends Scripter {
 						}
 						if (url != null) {
 							final ImageIcon image = new ImageIcon(url);
-							EventQueue.invokeLater(new Runnable() {
+							final Runnable r = new Runnable() {
 								public void run() {
 									s2d.view
 											.addPicture(
@@ -179,6 +184,11 @@ class Scripter2D extends Scripter {
 															.convertPointToPixelX(z[0]),
 													s2d.view
 															.convertPointToPixelY(z[1]));
+								}
+							};
+							EventQueue.invokeLater(new Runnable() {
+								public void run() {
+									EventQueue.invokeLater(r);
 								}
 							});
 						}
@@ -463,14 +473,23 @@ class Scripter2D extends Scripter {
 						} catch (NumberFormatException e) {
 							return;
 						}
-						final int x2 = s2d.view.convertPointToPixelX(x);
-						final int y2 = s2d.view.convertPointToPixelY(y);
-						final int w2 = s2d.view.convertLengthToPixelX(w);
-						final int h2 = s2d.view.convertLengthToPixelY(h);
-						EventQueue.invokeLater(new Runnable() {
+						final float x1 = x;
+						final float y1 = y;
+						final float w1 = w;
+						final float h1 = h;
+						final Runnable r = new Runnable() {
 							public void run() {
+								int x2 = s2d.view.convertPointToPixelX(x1);
+								int y2 = s2d.view.convertPointToPixelY(y1);
+								int w2 = s2d.view.convertLengthToPixelX(w1);
+								int h2 = s2d.view.convertLengthToPixelY(h1);
 								s2d.view.setRainbowRectangle(x2, y2, w2, h2);
 								s2d.view.repaint();
+							}
+						};
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								EventQueue.invokeLater(r);
 							}
 						});
 					}
@@ -810,16 +829,26 @@ class Scripter2D extends Scripter {
 				text.setColor(new Color((int) z));
 			} else if (s == "x") {
 				final float z2 = z;
-				EventQueue.invokeLater(new Runnable() {
+				final Runnable r = new Runnable() {
 					public void run() {
 						text.setX(s2d.view.convertPointToPixelX(z2));
+					}
+				};
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						EventQueue.invokeLater(r);
 					}
 				});
 			} else if (s == "y") {
 				final float z2 = z;
-				EventQueue.invokeLater(new Runnable() {
+				final Runnable r = new Runnable() {
 					public void run() {
 						text.setY(s2d.view.convertPointToPixelY(z2));
+					}
+				};
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						EventQueue.invokeLater(r);
 					}
 				});
 			}
@@ -852,16 +881,26 @@ class Scripter2D extends Scripter {
 			return;
 		if (s == "x") {
 			final float z2 = z;
-			EventQueue.invokeLater(new Runnable() {
+			final Runnable r = new Runnable() {
 				public void run() {
 					picture.setX(s2d.view.convertPointToPixelX(z2));
+				}
+			};
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					EventQueue.invokeLater(r);
 				}
 			});
 		} else if (s == "y") {
 			final float z2 = z;
-			EventQueue.invokeLater(new Runnable() {
+			final Runnable r = new Runnable() {
 				public void run() {
 					picture.setY(s2d.view.convertPointToPixelY(z2));
+				}
+			};
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					EventQueue.invokeLater(r);
 				}
 			});
 		}

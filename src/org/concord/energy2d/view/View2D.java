@@ -1305,19 +1305,31 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public int convertPointToPixelX(float x) {
-		return Math.round((x - xmin) / (xmax - xmin) * getWidth());
+		int w = getWidth();
+		if (w == 0)
+			w = getPreferredSize().width;
+		return Math.round((x - xmin) / (xmax - xmin) * w);
 	}
 
 	public int convertPointToPixelY(float y) {
-		return Math.round((y - ymin) / (ymax - ymin) * getHeight());
+		int h = getHeight();
+		if (h == 0)
+			h = getPreferredSize().height;
+		return Math.round((y - ymin) / (ymax - ymin) * h);
 	}
 
 	public int convertLengthToPixelX(float l) {
-		return Math.round(l / (xmax - xmin) * getWidth());
+		int w = getWidth();
+		if (w == 0)
+			w = getPreferredSize().width;
+		return Math.round(l / (xmax - xmin) * w);
 	}
 
 	public int convertLengthToPixelY(float l) {
-		return Math.round(l / (ymax - ymin) * getHeight());
+		int h = getHeight();
+		if (h == 0)
+			h = getPreferredSize().height;
+		return Math.round(l / (ymax - ymin) * h);
 	}
 
 	private void showTip(String msg, int x, int y, int time) {
