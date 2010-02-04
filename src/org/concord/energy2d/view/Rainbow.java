@@ -21,6 +21,7 @@ class Rainbow {
 	private short[][] rgbScale;
 	private Font font = new Font(null, Font.PLAIN | Font.BOLD, 8);
 	private int x, y, w, h;
+	private int labelCount = 5;
 
 	Rainbow(short[][] rgbScale) {
 		this.rgbScale = rgbScale;
@@ -70,9 +71,10 @@ class Rainbow {
 			g.setColor(Color.white);
 			g.draw3DRect(x, y, w, h, true);
 			String s = null;
-			for (int i = 0; i < 11; i++) {
-				s = (int) (min + i * 0.1f * (max - min)) + "\u2103";
-				g.drawString(s, x + w + 15, y + h * 0.1f * i + 2.5f);
+			for (int i = 0; i < labelCount + 1; i++) {
+				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				g.drawString(s, x + w + 15, y + h * (float) i
+						/ (float) labelCount + 2.5f);
 			}
 		} else {
 			for (int i = 0; i < w; i++) {
@@ -83,12 +85,13 @@ class Rainbow {
 			g.draw3DRect(x, y, w, h, true);
 			String s = null;
 			FontMetrics fm = g.getFontMetrics();
-			for (int i = 0; i < 11; i++) {
-				s = (int) (min + i * 0.1f * (max - min)) + "\u2103";
-				g.drawString(s, x + w * 0.1f * i - fm.stringWidth(s) * 0.5f, y
-						+ h + 15);
+			for (int i = 0; i < labelCount + 1; i++) {
+				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				g.drawString(s, x + w * (float) i / (float) labelCount
+						- fm.stringWidth(s) * 0.5f, y + h + 15);
 			}
 		}
 		g.setFont(oldFont);
 	}
+
 }

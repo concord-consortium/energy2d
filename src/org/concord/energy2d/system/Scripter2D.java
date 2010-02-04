@@ -463,13 +463,16 @@ class Scripter2D extends Scripter {
 						} catch (NumberFormatException e) {
 							return;
 						}
-						x = s2d.view.convertPointToPixelX(x);
-						y = s2d.view.convertPointToPixelY(y);
-						w = s2d.view.convertLengthToPixelX(w);
-						h = s2d.view.convertLengthToPixelY(h);
-						s2d.view.setRainbowRectangle((int) x, (int) y, (int) w,
-								(int) h);
-						s2d.view.repaint();
+						final int x2 = s2d.view.convertPointToPixelX(x);
+						final int y2 = s2d.view.convertPointToPixelY(y);
+						final int w2 = s2d.view.convertLengthToPixelX(w);
+						final int h2 = s2d.view.convertLengthToPixelY(h);
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								s2d.view.setRainbowRectangle(x2, y2, w2, h2);
+								s2d.view.repaint();
+							}
+						});
 					}
 				} else if (t[0].equalsIgnoreCase("minimum_temperature")) {
 					float min = 0;

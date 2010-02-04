@@ -39,8 +39,11 @@ class GridRenderer {
 		float dx = (float) w / (float) nx;
 		float dy = (float) h / (float) ny;
 
+		Color oldColor = g.getColor();
+		Stroke oldStroke = g.getStroke();
 		g.setColor(color);
 		g.setStroke(stroke);
+
 		int k;
 		for (int i = 0; i < nx; i += 10) {
 			k = Math.round(i * dx);
@@ -50,6 +53,9 @@ class GridRenderer {
 			k = Math.round(i * dy);
 			g.drawLine(0, k, w, k);
 		}
+
+		g.setColor(oldColor);
+		g.setStroke(oldStroke);
 
 	}
 
