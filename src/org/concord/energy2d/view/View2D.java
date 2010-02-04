@@ -184,10 +184,38 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		textBoxes.add(new TextBox(text, x, y));
 	}
 
+	public int getTextBoxCount() {
+		if (textBoxes == null)
+			return 0;
+		return textBoxes.size();
+	}
+
+	public TextBox getTextBox(int i) {
+		if (textBoxes == null)
+			return null;
+		if (i < 0 || i >= textBoxes.size())
+			return null;
+		return textBoxes.get(i);
+	}
+
 	public void addPicture(ImageIcon image, int x, int y) {
 		if (pictures == null)
 			pictures = new ArrayList<Picture>();
 		pictures.add(new Picture(image, x, y));
+	}
+
+	public int getPictureCount() {
+		if (pictures == null)
+			return 0;
+		return pictures.size();
+	}
+
+	public Picture getPicture(int i) {
+		if (pictures == null)
+			return null;
+		if (i < 0 || i >= pictures.size())
+			return null;
+		return pictures.get(i);
 	}
 
 	public void addManipulationListener(ManipulationListener l) {
@@ -1258,19 +1286,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return (ymax - ymin) * (float) l / (float) getHeight();
 	}
 
-	int convertPointToPixelX(float x) {
+	public int convertPointToPixelX(float x) {
 		return Math.round((x - xmin) / (xmax - xmin) * getWidth());
 	}
 
-	int convertPointToPixelY(float y) {
+	public int convertPointToPixelY(float y) {
 		return Math.round((y - ymin) / (ymax - ymin) * getHeight());
 	}
 
-	int convertLengthToPixelX(float l) {
+	public int convertLengthToPixelX(float l) {
 		return Math.round(l / (xmax - xmin) * getWidth());
 	}
 
-	int convertLengthToPixelY(float l) {
+	public int convertLengthToPixelY(float l) {
 		return Math.round(l / (ymax - ymin) * getHeight());
 	}
 

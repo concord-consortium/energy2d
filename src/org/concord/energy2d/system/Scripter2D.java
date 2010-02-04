@@ -27,6 +27,8 @@ import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.Scripter;
+import org.concord.energy2d.view.Picture;
+import org.concord.energy2d.view.TextBox;
 
 /**
  * @author Charles Xie
@@ -39,6 +41,16 @@ class Scripter2D extends Scripter {
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}"
+			+ REGEX_WHITESPACE
+			+ "*"
+			+ REGEX_NONNEGATIVE_DECIMAL
+			+ REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}"
+			+ REGEX_WHITESPACE
+			+ "*"
+			+ REGEX_NONNEGATIVE_DECIMAL
+			+ REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}"
 			+ REGEX_WHITESPACE
 			+ "*"
 			+ REGEX_NONNEGATIVE_DECIMAL
@@ -132,8 +144,9 @@ class Scripter2D extends Scripter {
 				if (i != -1 && j != -1) {
 					float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
-						s2d.view.addText(s.substring(j + 1), (int) z[0],
-								(int) z[1]);
+						s2d.view.addText(s.substring(j + 1), s2d.view
+								.convertPointToPixelX(z[0]), s2d.view
+								.convertPointToPixelY(z[1]));
 					}
 				}
 			} else if (s.toLowerCase().startsWith("image")) {
@@ -152,7 +165,9 @@ class Scripter2D extends Scripter {
 						}
 						if (url != null) {
 							ImageIcon image = new ImageIcon(url);
-							s2d.view.addPicture(image, (int) z[0], (int) z[1]);
+							s2d.view.addPicture(image, s2d.view
+									.convertPointToPixelX(z[0]), s2d.view
+									.convertPointToPixelX(z[1]));
 						}
 					}
 				}
@@ -555,6 +570,36 @@ class Scripter2D extends Scripter {
 						setPartField(s1, s2, s3);
 						return;
 					}
+					// text field
+					matcher = TEXT_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0) {
+							return;
+						}
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setTextField(s1, s2, s3);
+						return;
+					}
+					// image field
+					matcher = IMAGE_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0) {
+							return;
+						}
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setImageField(s1, s2, s3);
+						return;
+					}
 				}
 			}
 			return;
@@ -675,6 +720,90 @@ class Scripter2D extends Scripter {
 				arrayUpdateRequested = true;
 			}
 		} else if (shape instanceof Area) {
+		}
+	}
+
+	private void setTextField(String str1, String str2, String str3) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		float z = 0;
+		try {
+			z = Float.parseFloat(str1.substring(lb + 1, rb));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		int i = (int) Math.round(z);
+		if (i < 0 || i >= s2d.view.getTextBoxCount()) {
+			return;
+		}
+		TextBox text = s2d.view.getTextBox(i);
+		if (text == null)
+			return;
+		String s = str2.toLowerCase().intern();
+		if (s == "name") {
+			text.setName(str3);
+		} else {
+			if (str3.startsWith("#")) {
+				try {
+					z = Integer.parseInt(str3.substring(1), 16);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+			} else if (str3.startsWith("0X") || str3.startsWith("0x")) {
+				try {
+					z = Integer.parseInt(str3.substring(2), 16);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+			} else {
+				try {
+					z = Float.parseFloat(str3);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+			}
+			if (s == "color") {
+				text.setColor(new Color((int) z));
+			} else if (s == "x") {
+				text.setX(s2d.view.convertPointToPixelX(z));
+			} else if (s == "y") {
+				text.setY(s2d.view.convertPointToPixelY(z));
+			}
+		}
+	}
+
+	private void setImageField(String str1, String str2, String str3) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		float z = 0;
+		try {
+			z = Float.parseFloat(str1.substring(lb + 1, rb));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		int i = (int) Math.round(z);
+		if (i < 0 || i >= s2d.view.getPictureCount()) {
+			return;
+		}
+		try {
+			z = Float.parseFloat(str3);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		String s = str2.toLowerCase().intern();
+		Picture picture = s2d.view.getPicture(i);
+		if (picture == null)
+			return;
+		if (s == "x") {
+			picture.setX(s2d.view.convertPointToPixelX(z));
+		} else if (s == "y") {
+			picture.setY(s2d.view.convertPointToPixelY(z));
 		}
 	}
 
