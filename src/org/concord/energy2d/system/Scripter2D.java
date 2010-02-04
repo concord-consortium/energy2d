@@ -453,7 +453,6 @@ class Scripter2D extends Scripter {
 					s2d.view.setIsothermOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("rainbow_rectangle")) {
-					System.out.println(java.util.Arrays.asList(t));
 					if (t.length > 4) {
 						float x = 0, y = 0, w = 0, h = 0;
 						try {

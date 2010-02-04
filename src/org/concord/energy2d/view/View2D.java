@@ -495,7 +495,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.setColor(Color.white);
 			rulerRenderer.render(this, g2);
 		}
-		if (rainbow != null)
+		if (showRainbow)
 			rainbow.render(this, g2, temperatureRenderer.getMaximum(),
 					temperatureRenderer.getMinimum());
 		if (velocityRenderer != null)
