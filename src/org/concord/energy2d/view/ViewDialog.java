@@ -87,12 +87,12 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		checkBox = new JCheckBox("Grid");
-		checkBox.setSelected(view.isGridOn());
+		checkBox = new JCheckBox("Streamline");
+		checkBox.setSelected(view.isStreamlineOn());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
-				view.setGridOn(src.isSelected());
+				view.setStreamlineOn(src.isSelected());
 				view.repaint();
 			}
 		});
@@ -155,6 +155,17 @@ class ViewDialog extends JDialog {
 		p.add(checkBox);
 		count++;
 
+		checkBox = new JCheckBox("Grid");
+		checkBox.setSelected(view.isGridOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setGridOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+
 		checkBox = new JCheckBox("Rainbow");
 		checkBox.setSelected(view.isRainbowOn());
 		checkBox.addItemListener(new ItemListener() {
@@ -165,7 +176,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		p.add(new JPanel());
 		p.add(new JPanel());
 		p.add(new JPanel());
 		count++;

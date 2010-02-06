@@ -92,6 +92,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private ScalarDistributionRenderer temperatureRenderer;
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
+	private boolean streamlineOn;
 	private boolean showGraph;
 	private boolean showRainbow;
 	private boolean clockOn = true;
@@ -114,6 +115,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point anchorPoint = new Point();
 	private AffineTransform scale, translate;
 	private ContourMap isotherms;
+	private ContourMap streamlines;
 	private Polygon polygon;
 	private float photonLength = 10;
 
@@ -306,6 +308,32 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			velocityRenderer.setSpacing(spacing);
 	}
 
+	public void setStreamlineOn(boolean b) {
+		streamlineOn = b;
+		if (b) {
+			if (streamlines == null)
+				streamlines = new ContourMap();
+			streamlines.setResolution(0.0001f);
+		} else {
+			streamlines = null;
+		}
+	}
+
+	public boolean isStreamlineOn() {
+		return streamlineOn;
+	}
+
+	public void setStreamlineResolution(float resolution) {
+		if (streamlines != null)
+			streamlines.setResolution(resolution);
+	}
+
+	public float getStreamlineResolution() {
+		if (streamlines == null)
+			return 5;
+		return streamlines.getResolution();
+	}
+
 	public void setIsothermOn(boolean b) {
 		isothermOn = b;
 		if (b) {
@@ -320,12 +348,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return isothermOn;
 	}
 
-	public void setContourResolution(float resolution) {
+	public void setIsothermResolution(float resolution) {
 		if (isotherms != null)
 			isotherms.setResolution(resolution);
 	}
 
-	public float getContourResolution() {
+	public float getIsothermResolution() {
 		if (isotherms == null)
 			return 5;
 		return isotherms.getResolution();
@@ -471,6 +499,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (isotherms != null) {
 			g2.setStroke(thinStroke);
 			isotherms.render(g2, getSize(), model.getTemperature());
+		}
+		if (streamlines != null) {
+			g2.setStroke(thinStroke);
+			streamlines.render(g2, getSize(), model.getStreamFunction());
 		}
 		if (selectedManipulable != null) {
 			for (Rectangle r : handle) {

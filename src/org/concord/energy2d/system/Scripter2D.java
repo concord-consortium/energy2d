@@ -462,6 +462,9 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("isotherm")) {
 					s2d.view.setIsothermOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("streamline")) {
+					s2d.view.setStreamlineOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("rainbow_rectangle")) {
 					if (t.length > 4) {
 						float x = 0, y = 0, w = 0, h = 0;
@@ -511,14 +514,23 @@ class Scripter2D extends Scripter {
 					}
 					s2d.view.setMaximumTemperature(max);
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("contour_resolution")) {
+				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {
 					float resolution = 0;
 					try {
 						resolution = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
 						return;
 					}
-					s2d.view.setContourResolution(resolution);
+					s2d.view.setIsothermResolution(resolution);
+					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("streamline_resolution")) {
+					float resolution = 0;
+					try {
+						resolution = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.view.setStreamlineResolution(resolution);
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("timestep")) {
 					float timestep = 0;
