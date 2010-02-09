@@ -110,7 +110,6 @@ public class System2D extends JApplet implements MwService,
 
 	@Override
 	public void init() {
-
 		String s = null;
 		try {
 			s = getParameter("script");
@@ -120,15 +119,17 @@ public class System2D extends JApplet implements MwService,
 		if (s != null) {
 			runNativeScript(s);
 		}
-
 		view.repaint();
+	}
 
+	void executeInThreadService(Runnable r) {
+		if (threadService == null)
+			threadService = Executors.newFixedThreadPool(1);
+		threadService.execute(r);
 	}
 
 	public void run() {
-		if (threadService == null)
-			threadService = Executors.newFixedThreadPool(1);
-		threadService.execute(new Runnable() {
+		executeInThreadService(new Runnable() {
 			public void run() {
 				model.run();
 			}
@@ -136,9 +137,7 @@ public class System2D extends JApplet implements MwService,
 	}
 
 	public void runSteps(final int n) {
-		if (threadService == null)
-			threadService = Executors.newFixedThreadPool(1);
-		threadService.execute(new Runnable() {
+		executeInThreadService(new Runnable() {
 			public void run() {
 			}
 		});
