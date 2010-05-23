@@ -1147,6 +1147,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				}
+			} else {
+				showTip(
+						"<html><font color=red>The selected object is not draggable!</font></html>",
+						x, y, 500);
 			}
 		} else {
 			selectManipulable(x, y);

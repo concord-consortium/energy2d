@@ -709,6 +709,10 @@ class Scripter2D extends Scripter {
 				e.printStackTrace();
 				return;
 			}
+		} else if (str3.equalsIgnoreCase("true")) {
+			z = 1;
+		} else if (str3.equalsIgnoreCase("false")) {
+			z = 0;
 		} else {
 			try {
 				z = Float.parseFloat(str3);
@@ -746,6 +750,8 @@ class Scripter2D extends Scripter {
 			part.setColor(new Color((int) z));
 		} else if (s == "filled") {
 			part.setFilled(z > 0);
+		} else if (s == "draggable") {
+			part.setDraggable(z > 0);
 		} else if (s == "transmission") {
 			part.setTransmission(z);
 			arrayUpdateRequested = true;
