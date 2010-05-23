@@ -980,9 +980,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void processMouseDragged(MouseEvent e) {
-		mouseBeingDragged = true;
 		if (MiscUtil.isRightClick(e))
 			return;
+		mouseBeingDragged = true;
 		if (System.currentTimeMillis() - mousePressedTime < MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL)
 			return;
 		mousePressedTime = System.currentTimeMillis();
@@ -1095,10 +1095,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (MiscUtil.isRightClick(e)) {
 			selectManipulable(x, y);
 			repaint();
-			if (!mouseBeingDragged) {
-				createPopupMenu();
-				popupMenu.show(this, x, y);
-			}
+			createPopupMenu();
+			popupMenu.show(this, x, y);
 			return;
 		}
 		if (movingShape != null && mouseBeingDragged
