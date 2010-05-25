@@ -668,8 +668,7 @@ public class Model2D {
 	}
 
 	public void setTimeStep(float timeStep) {
-		if (getTimeStep() != timeStep)
-			notifyPropertyChangeListeners("Time step", getTimeStep(), timeStep);
+		notifyPropertyChangeListeners("Time step", getTimeStep(), timeStep);
 		heatSolver.setTimeStep(timeStep);
 		fluidSolver.setTimeStep(timeStep);
 	}
