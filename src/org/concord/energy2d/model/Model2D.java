@@ -445,6 +445,7 @@ public class Model2D {
 	}
 
 	public void refreshPowerArray() {
+		checkPartPower();
 		float x, y;
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
