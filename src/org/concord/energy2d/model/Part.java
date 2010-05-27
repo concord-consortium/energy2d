@@ -6,6 +6,8 @@
 package org.concord.energy2d.model;
 
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -36,7 +38,7 @@ public class Part extends Manipulable {
 	 * imposed, this part becomes an internal boundary. Set it to Float.NaN to
 	 * disable this and allow heat to flow through this part.
 	 */
-	private float temperature = Float.NaN;
+	private float temperature = java.lang.Float.NaN;
 
 	/*
 	 * when this flag is true, temperature is maintained at the set value.
@@ -70,10 +72,10 @@ public class Part extends Manipulable {
 
 	private float emissivity;
 
-	private float unitSurfaceArea = 100;
-
 	private float windSpeed;
 	private float windAngle;
+
+	private float unitSurfaceArea = 100;
 
 	private static int polygonize = 50;
 	private static float radiatorSpacing = .5f;
@@ -85,6 +87,39 @@ public class Part extends Manipulable {
 
 	public Part(Shape shape) {
 		super(shape);
+	}
+
+	public Part duplicate() {
+		Shape s = getShape();
+		float dx = s.getBounds().width * 0.1f;
+		float dy = s.getBounds().height * 0.1f;
+		if (s instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) s;
+			s = new Rectangle2D.Float(r.x + dx, r.y + dy, r.width, r.height);
+		} else if (s instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) s;
+			s = new Ellipse2D.Float(e.x + dx, e.y + dy, e.width, e.height);
+		} else if (s instanceof Area) {
+			s = new Area(s);
+			((Area) s).transform(AffineTransform.getTranslateInstance(dx, dy));
+		} else if (s instanceof Polygon2D) {
+			s = ((Polygon2D) s).duplicate();
+			((Polygon2D) s).translateBy(dx, dy);
+		}
+		Part p = new Part(s);
+		p.power = power;
+		p.temperature = temperature;
+		p.constantTemperature = constantTemperature;
+		p.conductivity = conductivity;
+		p.capacity = capacity;
+		p.density = density;
+		p.absorption = absorption;
+		p.reflection = reflection;
+		p.transmission = transmission;
+		p.emissivity = emissivity;
+		p.windAngle = windAngle;
+		p.windSpeed = windSpeed;
+		return p;
 	}
 
 	public void setWindSpeed(float windSpeed) {
@@ -146,7 +181,7 @@ public class Part extends Manipulable {
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
 		if (this.temperature <= -273)
-			this.temperature = Float.NaN;
+			this.temperature = java.lang.Float.NaN;
 	}
 
 	public float getTemperature() {

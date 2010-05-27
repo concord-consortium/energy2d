@@ -28,6 +28,8 @@ public abstract class Manipulable {
 		setShape(shape);
 	}
 
+	public abstract Manipulable duplicate();
+
 	public boolean contains(float x, float y) {
 		return shape.contains(x, y);
 	}

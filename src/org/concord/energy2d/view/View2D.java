@@ -120,7 +120,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private float photonLength = 10;
 
 	Model2D model;
-	private Manipulable selectedManipulable;
+	private Manipulable selectedManipulable, copiedManipulable;
 	private List<TextBox> textBoxes;
 	private List<Picture> pictures;
 
@@ -421,6 +421,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		JMenuItem mi = new JMenuItem("Copy");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				copiedManipulable = selectedManipulable;
 			}
 		});
 		popupMenu.add(mi);
@@ -433,6 +434,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							ManipulationEvent.DELETE);
 					setSelectedManipulable(null);
 				}
+				copiedManipulable = selectedManipulable;
 			}
 		});
 		popupMenu.add(mi);
@@ -440,6 +442,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mi = new JMenuItem("Paste");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (copiedManipulable instanceof Part) {
+					Part p = (Part) copiedManipulable;
+					model.addPart(p.duplicate());
+					model.refreshPowerArray();
+					model.refreshTemperatureBoundaryArray();
+					model.refreshMaterialPropertyArrays();
+					model.setInitialTemperature();
+				} else if (copiedManipulable instanceof Thermometer) {
+					Thermometer t = (Thermometer) copiedManipulable;
+					model.addThermometer(t.getX(), t.getY());
+				}
 			}
 		});
 		popupMenu.add(mi);

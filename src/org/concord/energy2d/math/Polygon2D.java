@@ -38,6 +38,17 @@ public class Polygon2D implements Shape {
 		path = new GeneralPath();
 	}
 
+	public Polygon2D duplicate() {
+		int n = vertex.length;
+		float[] x = new float[n];
+		float[] y = new float[n];
+		for (int i = 0; i < n; i++) {
+			x[i] = vertex[i].x;
+			y[i] = vertex[i].y;
+		}
+		return new Polygon2D(x, y);
+	}
+
 	private void updatePath() {
 		path.reset();
 		path.moveTo(vertex[0].x, vertex[0].y);

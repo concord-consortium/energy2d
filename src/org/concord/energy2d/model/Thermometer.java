@@ -30,6 +30,20 @@ public class Thermometer extends Manipulable {
 		setLocation(x, y);
 	}
 
+	public Thermometer duplicate() {
+		return new Thermometer(getX() + getXOffset(), getY() + getYOffset());
+	}
+
+	private float getXOffset() {
+		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+		return 0.1f * r.width;
+	}
+
+	private float getYOffset() {
+		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+		return 0.1f * r.height;
+	}
+
 	public void setLocation(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.x = x - r.width * 0.5f;
