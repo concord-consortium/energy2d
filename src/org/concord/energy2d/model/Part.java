@@ -89,21 +89,27 @@ public class Part extends Manipulable {
 		super(shape);
 	}
 
-	public Part duplicate() {
+	public Part duplicate(float x, float y) {
 		Shape s = getShape();
-		float dx = s.getBounds().width * 0.1f;
-		float dy = s.getBounds().height * 0.1f;
 		if (s instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) s;
-			s = new Rectangle2D.Float(r.x + dx, r.y + dy, r.width, r.height);
+			s = new Rectangle2D.Float(x - 0.5f * r.width, y - 0.5f * r.height,
+					r.width, r.height);
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) s;
-			s = new Ellipse2D.Float(e.x + dx, e.y + dy, e.width, e.height);
+			s = new Ellipse2D.Float(x - 0.5f * e.width, y - 0.5f * e.height,
+					e.width, e.height);
 		} else if (s instanceof Area) {
 			s = new Area(s);
+			Rectangle2D r = s.getBounds2D();
+			float dx = x - (float) r.getCenterX();
+			float dy = y - (float) r.getCenterY();
 			((Area) s).transform(AffineTransform.getTranslateInstance(dx, dy));
 		} else if (s instanceof Polygon2D) {
 			s = ((Polygon2D) s).duplicate();
+			Rectangle2D r = s.getBounds2D();
+			float dx = x - (float) r.getCenterX();
+			float dy = y - (float) r.getCenterY();
 			((Polygon2D) s).translateBy(dx, dy);
 		}
 		Part p = new Part(s);

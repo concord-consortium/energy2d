@@ -111,6 +111,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private MovingShape movingShape;
 	private Point pressedPointRelative = new Point();
 	private long mousePressedTime;
+	private Point mouseReleasedPoint = new Point();
 	private byte selectedSpot = -1;
 	private Point anchorPoint = new Point();
 	private AffineTransform scale, translate;
@@ -444,15 +445,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				if (copiedManipulable instanceof Part) {
 					Part p = (Part) copiedManipulable;
-					model.addPart(p.duplicate());
+					model.addPart(p.duplicate(
+							convertPixelToPointX(mouseReleasedPoint.x),
+							convertPixelToPointY(mouseReleasedPoint.y)));
 					model.refreshPowerArray();
 					model.refreshTemperatureBoundaryArray();
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
 				} else if (copiedManipulable instanceof Thermometer) {
-					Thermometer t = (Thermometer) copiedManipulable;
-					model.addThermometer(t.getX(), t.getY());
+					model.addThermometer(
+							convertPixelToPointX(mouseReleasedPoint.x),
+							convertPixelToPointY(mouseReleasedPoint.y));
 				}
+				repaint();
 			}
 		});
 		popupMenu.add(mi);
@@ -1085,6 +1090,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseReleased(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+		mouseReleasedPoint.setLocation(x, y);
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
