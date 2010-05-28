@@ -431,11 +431,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selectedManipulable != null) {
+					copiedManipulable = selectedManipulable;
 					notifyManipulationListeners(selectedManipulable,
 							ManipulationEvent.DELETE);
 					setSelectedManipulable(null);
 				}
-				copiedManipulable = selectedManipulable;
 			}
 		});
 		popupMenu.add(mi);
