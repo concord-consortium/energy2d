@@ -113,6 +113,8 @@ public class Part extends Manipulable {
 			((Polygon2D) s).translateBy(dx, dy);
 		}
 		Part p = new Part(s);
+		p.setFilled(isFilled());
+		p.setColor(getColor());
 		p.power = power;
 		p.temperature = temperature;
 		p.constantTemperature = constantTemperature;

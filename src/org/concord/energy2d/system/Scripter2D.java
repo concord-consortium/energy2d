@@ -29,6 +29,7 @@ import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.view.Picture;
 import org.concord.energy2d.view.TextBox;
+import org.concord.energy2d.view.View2D;
 
 /**
  * @author Charles Xie
@@ -372,6 +373,20 @@ class Scripter2D extends Scripter {
 				if (t[0].equalsIgnoreCase("sunny")) {
 					s2d.model.setSunny("true".equalsIgnoreCase(t[1]));
 					arrayUpdateRequested = true;
+				} else if (t[0].equalsIgnoreCase("action")) {
+					byte mode = 0;
+					if ("selection".equalsIgnoreCase(t[1])) {
+						mode = View2D.SELECT_MODE;
+					} else if ("rectangle".equalsIgnoreCase(t[1])) {
+						mode = View2D.RECTANGLE_MODE;
+					} else if ("ellipse".equalsIgnoreCase(t[1])) {
+						mode = View2D.ELLIPSE_MODE;
+					} else if ("polygon".equalsIgnoreCase(t[1])) {
+						mode = View2D.POLYGON_MODE;
+					} else if ("thermometer".equalsIgnoreCase(t[1])) {
+						mode = View2D.THERMOMETER_MODE;
+					}
+					s2d.view.setActionMode(mode);
 				} else if (t[0].equalsIgnoreCase("sun_angle")) {
 					float angle = 0;
 					try {

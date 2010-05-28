@@ -66,6 +66,12 @@ import org.concord.energy2d.util.MiscUtil;
  */
 public class View2D extends JPanel implements PropertyChangeListener {
 
+	public final static byte SELECT_MODE = 0;
+	public final static byte RECTANGLE_MODE = 1;
+	public final static byte ELLIPSE_MODE = 2;
+	public final static byte POLYGON_MODE = 3;
+	public final static byte THERMOMETER_MODE = 11;
+
 	final static byte UPPER_LEFT = 0;
 	final static byte LOWER_LEFT = 1;
 	final static byte UPPER_RIGHT = 2;
@@ -119,6 +125,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private ContourMap streamlines;
 	private Polygon polygon;
 	private float photonLength = 10;
+	private byte actionMode = SELECT_MODE;
+	private Point mousePressedPoint = new Point();
+	private Rectangle rectangle = new Rectangle();
+	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -136,28 +146,34 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		for (int i = 0; i < handle.length; i++)
 			handle[i] = new Rectangle(0, 0, 6, 6);
 		addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				processKeyPressed(e);
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				processKeyReleased(e);
 			}
 		});
 		addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				processMousePressed(e);
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				processMouseReleased(e);
 			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				processMouseMoved(e);
 			}
 
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				processMouseDragged(e);
 			}
@@ -175,6 +191,27 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
+	}
+
+	public void setActionMode(byte mode) {
+		actionMode = mode;
+		switch (mode) {
+		case SELECT_MODE:
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			break;
+		case RECTANGLE_MODE:
+		case ELLIPSE_MODE:
+		case POLYGON_MODE:
+			setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			break;
+		case THERMOMETER_MODE:
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			break;
+		}
+	}
+
+	public byte getActionMode() {
+		return actionMode;
 	}
 
 	public void clear() {
@@ -569,6 +606,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (clockOn) {
 			g2.setColor(Color.white);
 			g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
+		}
+
+		switch (actionMode) {
+		case RECTANGLE_MODE:
+			g2.setColor(Color.white);
+			g2.setStroke(dashed);
+			g2.draw(rectangle);
+			break;
+		case ELLIPSE_MODE:
+			g2.setColor(Color.white);
+			g2.setStroke(dashed);
+			g2.draw(ellipse);
+			break;
 		}
 
 		g2.setStroke(stroke);
@@ -969,29 +1019,41 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMousePressed(MouseEvent e) {
 		mousePressedTime = System.currentTimeMillis();
 		requestFocusInWindow();
+		if (showGraph) {
+			e.consume();
+			return;
+		}
 		int x = e.getX();
 		int y = e.getY();
-		if (selectedManipulable != null) {
-			selectedSpot = -1;
-			for (byte i = 0; i < handle.length; i++) {
-				if (handle[i].x < -10 || handle[i].y < -10)
-					continue;
-				if (handle[i].contains(x, y)) {
-					selectedSpot = i;
-					break;
+		switch (actionMode) {
+		case SELECT_MODE:
+			if (selectedManipulable != null) {
+				selectedSpot = -1;
+				for (byte i = 0; i < handle.length; i++) {
+					if (handle[i].x < -10 || handle[i].y < -10)
+						continue;
+					if (handle[i].contains(x, y)) {
+						selectedSpot = i;
+						break;
+					}
+				}
+				if (selectedSpot != -1) {
+					setMovingShape(true);
+					return;
 				}
 			}
-			if (selectedSpot != -1) {
-				setMovingShape(true);
-				return;
+			selectManipulable(x, y);
+			if (selectedManipulable != null) {
+				Point2D.Float center = selectedManipulable.getCenter();
+				pressedPointRelative.x = x - convertPointToPixelX(center.x);
+				pressedPointRelative.y = y - convertPointToPixelY(center.y);
+				setMovingShape(false);
 			}
-		}
-		selectManipulable(x, y);
-		if (selectedManipulable != null) {
-			Point2D.Float center = selectedManipulable.getCenter();
-			pressedPointRelative.x = x - convertPointToPixelX(center.x);
-			pressedPointRelative.y = y - convertPointToPixelY(center.y);
-			setMovingShape(false);
+			break;
+		case RECTANGLE_MODE:
+		case ELLIPSE_MODE:
+			mousePressedPoint.setLocation(x, y);
+			break;
 		}
 		repaint();
 		e.consume();
@@ -1000,88 +1062,130 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseDragged(MouseEvent e) {
 		if (MiscUtil.isRightClick(e))
 			return;
+		if (showGraph) {
+			e.consume();
+			return;
+		}
 		mouseBeingDragged = true;
 		if (System.currentTimeMillis() - mousePressedTime < MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL)
 			return;
 		mousePressedTime = System.currentTimeMillis();
 		int x = e.getX();
 		int y = e.getY();
-		if (movingShape != null && selectedManipulable != null) {
-			Shape[] shape = movingShape.getShapes();
-			if (shape[0] instanceof RectangularShape) {
-				if (selectedManipulable instanceof Thermometer) {
-					if (x < 8)
-						x = 8;
-					else if (x > getWidth() - 8)
-						x = getWidth() - 8;
-					if (y < 8)
-						y = 8;
-					else if (y > getHeight() - 8)
-						y = getHeight() - 8;
-				}
-				RectangularShape s = (RectangularShape) shape[0];
-				double a = s.getX(), b = s.getY(), c = s.getWidth(), d = s
-						.getHeight();
-				if (selectedSpot == -1) {
-					// x+width/2+pressedPointRelative.x=mouse_x
-					a = x - pressedPointRelative.x - c * 0.5;
-					b = y - pressedPointRelative.y - d * 0.5;
-					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-				} else {
-					if (selectedManipulable instanceof Part) {
-						switch (selectedSpot) {
-						case LOWER_LEFT:
-						case LOWER_RIGHT:
-						case UPPER_LEFT:
-						case UPPER_RIGHT:
-							a = Math.min(x, anchorPoint.x);
-							b = Math.min(y, anchorPoint.y);
-							c = Math.abs(x - anchorPoint.x);
-							d = Math.abs(y - anchorPoint.y);
-							break;
-						case TOP:
-						case BOTTOM:
-							b = Math.min(y, anchorPoint.y);
-							d = Math.abs(y - anchorPoint.y);
-							break;
-						case LEFT:
-						case RIGHT:
-							a = Math.min(x, anchorPoint.x);
-							c = Math.abs(x - anchorPoint.x);
-							break;
+		switch (actionMode) {
+		case SELECT_MODE:
+			if (movingShape != null && selectedManipulable != null) {
+				Shape[] shape = movingShape.getShapes();
+				if (shape[0] instanceof RectangularShape) {
+					if (selectedManipulable instanceof Thermometer) {
+						if (x < 8)
+							x = 8;
+						else if (x > getWidth() - 8)
+							x = getWidth() - 8;
+						if (y < 8)
+							y = 8;
+						else if (y > getHeight() - 8)
+							y = getHeight() - 8;
+					}
+					RectangularShape s = (RectangularShape) shape[0];
+					double a = s.getX(), b = s.getY(), c = s.getWidth(), d = s
+							.getHeight();
+					if (selectedSpot == -1) {
+						// x+width/2+pressedPointRelative.x=mouse_x
+						a = x - pressedPointRelative.x - c * 0.5;
+						b = y - pressedPointRelative.y - d * 0.5;
+						setCursor(Cursor
+								.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					} else {
+						if (selectedManipulable instanceof Part) {
+							switch (selectedSpot) {
+							case LOWER_LEFT:
+							case LOWER_RIGHT:
+							case UPPER_LEFT:
+							case UPPER_RIGHT:
+								a = Math.min(x, anchorPoint.x);
+								b = Math.min(y, anchorPoint.y);
+								c = Math.abs(x - anchorPoint.x);
+								d = Math.abs(y - anchorPoint.y);
+								break;
+							case TOP:
+							case BOTTOM:
+								b = Math.min(y, anchorPoint.y);
+								d = Math.abs(y - anchorPoint.y);
+								break;
+							case LEFT:
+							case RIGHT:
+								a = Math.min(x, anchorPoint.x);
+								c = Math.abs(x - anchorPoint.x);
+								break;
+							}
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
+					}
+					s.setFrame(a, b, c, d);
+				} else if (shape[0] instanceof Polygon) {
+					Polygon s = (Polygon) shape[0];
+					if (selectedSpot == -1) {
+						float xc = 0, yc = 0;
+						for (int i = 0; i < s.npoints; i++) {
+							xc += s.xpoints[i];
+							yc += s.ypoints[i];
+						}
+						xc /= s.npoints;
+						yc /= s.npoints;
+						xc = x - pressedPointRelative.x - xc;
+						yc = y - pressedPointRelative.y - yc;
+						s.translate((int) xc, (int) yc);
 						setCursor(Cursor
-								.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+								.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					} else {
+						if (selectedManipulable instanceof Part) {
+							s.xpoints[selectedSpot] = x;
+							s.ypoints[selectedSpot] = y;
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+						}
 					}
-				}
-				s.setFrame(a, b, c, d);
-			} else if (shape[0] instanceof Polygon) {
-				Polygon s = (Polygon) shape[0];
-				if (selectedSpot == -1) {
-					float xc = 0, yc = 0;
-					for (int i = 0; i < s.npoints; i++) {
-						xc += s.xpoints[i];
-						yc += s.ypoints[i];
-					}
-					xc /= s.npoints;
-					yc /= s.npoints;
-					xc = x - pressedPointRelative.x - xc;
-					yc = y - pressedPointRelative.y - yc;
-					s.translate((int) xc, (int) yc);
-					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				} else {
-					if (selectedManipulable instanceof Part) {
-						s.xpoints[selectedSpot] = x;
-						s.ypoints[selectedSpot] = y;
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-					}
+					showTip(
+							"<html><font color=red>The selected object is not draggable!</font></html>",
+							x, y, 500);
 				}
-			} else {
-				showTip(
-						"<html><font color=red>The selected object is not draggable!</font></html>",
-						x, y, 500);
 			}
+			break;
+		case RECTANGLE_MODE:
+			if (x > mousePressedPoint.x) {
+				rectangle.width = x - mousePressedPoint.x;
+				rectangle.x = mousePressedPoint.x;
+			} else {
+				rectangle.width = mousePressedPoint.x - x;
+				rectangle.x = mousePressedPoint.x - rectangle.width;
+			}
+			if (y > mousePressedPoint.y) {
+				rectangle.height = y - mousePressedPoint.y;
+				rectangle.y = mousePressedPoint.y;
+			} else {
+				rectangle.height = mousePressedPoint.y - y;
+				rectangle.y = mousePressedPoint.y - rectangle.height;
+			}
+			break;
+		case ELLIPSE_MODE:
+			if (x > mousePressedPoint.x) {
+				ellipse.width = x - mousePressedPoint.x;
+				ellipse.x = mousePressedPoint.x;
+			} else {
+				ellipse.width = mousePressedPoint.x - x;
+				ellipse.x = mousePressedPoint.x - ellipse.width;
+			}
+			if (y > mousePressedPoint.y) {
+				ellipse.height = y - mousePressedPoint.y;
+				ellipse.y = mousePressedPoint.y;
+			} else {
+				ellipse.height = mousePressedPoint.y - y;
+				ellipse.y = mousePressedPoint.y - ellipse.height;
+			}
+			break;
 		}
 		repaint();
 		e.consume();
@@ -1107,70 +1211,114 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.shrinkScopeY();
 			}
+			repaint();
+			e.consume();
+			movingShape = null;
+			mouseBeingDragged = false;
+			return;
 		}
 		if (e.getClickCount() >= 2) {
 			return;
 		}
-		if (MiscUtil.isRightClick(e)) {
-			selectManipulable(x, y);
-			repaint();
-			createPopupMenu();
-			popupMenu.show(this, x, y);
-			return;
-		}
-		if (movingShape != null && mouseBeingDragged
-				&& selectedManipulable != null) {
-			if (selectedManipulable.isDraggable()) {
-				Shape[] shape = movingShape.getShapes();
-				if (shape[0] instanceof RectangularShape) {
-					if (selectedSpot == -1) {
-						float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-						float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-						translateManipulableTo(selectedManipulable, x2, y2);
-						setSelectedManipulable(selectedManipulable);
-					} else {
-						if (selectedManipulable instanceof Part) {
-							RectangularShape r = (RectangularShape) shape[0];
-							float x2 = convertPixelToPointX((int) r.getX());
-							float y2 = convertPixelToPointY((int) r.getY());
-							float w2 = convertPixelToLengthX((int) r.getWidth());
-							float h2 = convertPixelToLengthY((int) r
-									.getHeight());
-							resizeManipulableTo(selectedManipulable, x2, y2,
-									w2, h2);
+		switch (actionMode) {
+		case SELECT_MODE:
+			if (MiscUtil.isRightClick(e)) {
+				selectManipulable(x, y);
+				repaint();
+				createPopupMenu();
+				popupMenu.show(this, x, y);
+				return;
+			}
+			if (movingShape != null && mouseBeingDragged
+					&& selectedManipulable != null) {
+				if (selectedManipulable.isDraggable()) {
+					Shape[] shape = movingShape.getShapes();
+					if (shape[0] instanceof RectangularShape) {
+						if (selectedSpot == -1) {
+							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+							translateManipulableTo(selectedManipulable, x2, y2);
 							setSelectedManipulable(selectedManipulable);
-						}
-					}
-				} else if (shape[0] instanceof Polygon) {
-					if (selectedSpot == -1) {
-						float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-						float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-						translateManipulableTo(selectedManipulable, x2, y2);
-						setSelectedManipulable(selectedManipulable);
-					} else {
-						Shape s = selectedManipulable.getShape();
-						if (s instanceof Polygon2D) {
-							Polygon2D p = (Polygon2D) s;
-							Polygon p0 = (Polygon) shape[0];
-							int n = p0.npoints;
-							for (int i = 0; i < n; i++) {
-								p.setVertex(i,
-										convertPixelToPointX(p0.xpoints[i]),
-										convertPixelToPointY(p0.ypoints[i]));
+						} else {
+							if (selectedManipulable instanceof Part) {
+								RectangularShape r = (RectangularShape) shape[0];
+								float x2 = convertPixelToPointX((int) r.getX());
+								float y2 = convertPixelToPointY((int) r.getY());
+								float w2 = convertPixelToLengthX((int) r
+										.getWidth());
+								float h2 = convertPixelToLengthY((int) r
+										.getHeight());
+								resizeManipulableTo(selectedManipulable, x2,
+										y2, w2, h2);
+								setSelectedManipulable(selectedManipulable);
 							}
+						}
+					} else if (shape[0] instanceof Polygon) {
+						if (selectedSpot == -1) {
+							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+							translateManipulableTo(selectedManipulable, x2, y2);
 							setSelectedManipulable(selectedManipulable);
-							notifyManipulationListeners(selectedManipulable,
-									ManipulationEvent.RESIZE);
+						} else {
+							Shape s = selectedManipulable.getShape();
+							if (s instanceof Polygon2D) {
+								Polygon2D p = (Polygon2D) s;
+								Polygon p0 = (Polygon) shape[0];
+								int n = p0.npoints;
+								for (int i = 0; i < n; i++) {
+									p
+											.setVertex(
+													i,
+													convertPixelToPointX(p0.xpoints[i]),
+													convertPixelToPointY(p0.ypoints[i]));
+								}
+								setSelectedManipulable(selectedManipulable);
+								notifyManipulationListeners(
+										selectedManipulable,
+										ManipulationEvent.RESIZE);
+							}
 						}
 					}
+				} else {
+					showTip(
+							"<html><font color=red>The selected object is not draggable!</font></html>",
+							x, y, 500);
 				}
 			} else {
-				showTip(
-						"<html><font color=red>The selected object is not draggable!</font></html>",
-						x, y, 500);
+				selectManipulable(x, y);
 			}
-		} else {
-			selectManipulable(x, y);
+			break;
+		case RECTANGLE_MODE:
+			if (rectangle.width * rectangle.height > 9) {
+				model.addRectangularPart(convertPixelToPointX(rectangle.x),
+						convertPixelToPointY(rectangle.y),
+						convertPixelToLengthX(rectangle.width),
+						convertPixelToLengthY(rectangle.height));
+				model.refreshPowerArray();
+				model.refreshTemperatureBoundaryArray();
+				model.refreshMaterialPropertyArrays();
+				model.setInitialTemperature();
+			}
+			rectangle.setRect(-1000, -1000, 0, 0);
+			break;
+		case ELLIPSE_MODE:
+			if (ellipse.width * ellipse.height > 9) {
+				float ex = convertPixelToPointX((int) ellipse.x);
+				float ey = convertPixelToPointY((int) ellipse.y);
+				float ew = convertPixelToLengthX((int) ellipse.width);
+				float eh = convertPixelToLengthY((int) ellipse.height);
+				model.addEllipticalPart(ex + 0.5f * ew, ey + 0.5f * eh, ew, eh);
+				model.refreshPowerArray();
+				model.refreshTemperatureBoundaryArray();
+				model.refreshMaterialPropertyArrays();
+				model.setInitialTemperature();
+			}
+			ellipse.setFrame(-1000, -1000, 0, 0);
+			break;
+		case THERMOMETER_MODE:
+			model.addThermometer(convertPixelToPointX(x),
+					convertPixelToPointY(y));
+			break;
 		}
 		repaint();
 		e.consume();
@@ -1181,82 +1329,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		int iSpot = -1;
-		if (selectedManipulable instanceof Part) {
-			for (int i = 0; i < handle.length; i++) {
-				if (handle[i].x < -10 || handle[i].y < -10)
-					continue;
-				if (handle[i].contains(x, y)) {
-					iSpot = i;
-					break;
-				}
-			}
-			if (iSpot >= 0) {
-				if (selectedManipulable.getShape() instanceof RectangularShape) {
-					switch (iSpot) {
-					case UPPER_LEFT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
-						break;
-					case LOWER_LEFT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
-						break;
-					case UPPER_RIGHT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-						break;
-					case LOWER_RIGHT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-						break;
-					case TOP:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
-						break;
-					case BOTTOM:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
-						break;
-					case LEFT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
-						break;
-					case RIGHT:
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-						break;
-					}
-				} else {
-					setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				}
-			}
-		}
-		if (iSpot == -1) {
-			float rx = convertPixelToPointX(x);
-			float ry = convertPixelToPointY(y);
-			boolean contained = false;
-			synchronized (model.getThermometers()) {
-				for (Thermometer t : model.getThermometers()) {
-					if (t.contains(rx, ry)) {
-						contained = true;
-						break;
-					}
-				}
-			}
-			if (!contained) {
-				synchronized (model.getParts()) {
-					for (Part p : model.getParts()) {
-						if (p.contains(rx, ry)) {
-							contained = true;
-							break;
-						}
-					}
-				}
-			}
-			setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
-					: Cursor.DEFAULT_CURSOR));
-		}
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -1273,6 +1345,89 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
+			return;
+		}
+		switch (actionMode) {
+		case SELECT_MODE:
+			int iSpot = -1;
+			if (selectedManipulable instanceof Part) {
+				for (int i = 0; i < handle.length; i++) {
+					if (handle[i].x < -10 || handle[i].y < -10)
+						continue;
+					if (handle[i].contains(x, y)) {
+						iSpot = i;
+						break;
+					}
+				}
+				if (iSpot >= 0) {
+					if (selectedManipulable.getShape() instanceof RectangularShape) {
+						switch (iSpot) {
+						case UPPER_LEFT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+							break;
+						case LOWER_LEFT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+							break;
+						case UPPER_RIGHT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+							break;
+						case LOWER_RIGHT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+							break;
+						case TOP:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+							break;
+						case BOTTOM:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+							break;
+						case LEFT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+							break;
+						case RIGHT:
+							setCursor(Cursor
+									.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+							break;
+						}
+					} else {
+						setCursor(Cursor
+								.getPredefinedCursor(Cursor.HAND_CURSOR));
+					}
+				}
+			}
+			if (iSpot == -1) {
+				float rx = convertPixelToPointX(x);
+				float ry = convertPixelToPointY(y);
+				boolean contained = false;
+				synchronized (model.getThermometers()) {
+					for (Thermometer t : model.getThermometers()) {
+						if (t.contains(rx, ry)) {
+							contained = true;
+							break;
+						}
+					}
+				}
+				if (!contained) {
+					synchronized (model.getParts()) {
+						for (Part p : model.getParts()) {
+							if (p.contains(rx, ry)) {
+								contained = true;
+								break;
+							}
+						}
+					}
+				}
+				setCursor(Cursor
+						.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
+								: Cursor.DEFAULT_CURSOR));
+			}
+			break;
 		}
 		e.consume();
 	}
