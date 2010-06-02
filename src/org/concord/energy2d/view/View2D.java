@@ -117,18 +117,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private MovingShape movingShape;
 	private Point pressedPointRelative = new Point();
 	private long mousePressedTime;
-	private Point mouseReleasedPoint = new Point();
 	private byte selectedSpot = -1;
 	private Point anchorPoint = new Point();
 	private AffineTransform scale, translate;
 	private ContourMap isotherms;
 	private ContourMap streamlines;
-	private Polygon polygon;
+	private Polygon multigon;
 	private float photonLength = 10;
 	private byte actionMode = SELECT_MODE;
-	private Point mousePressedPoint = new Point();
 	private Rectangle rectangle = new Rectangle();
 	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
+	private Polygon polygon = new Polygon();
+	private Point mousePressedPoint = new Point(-1, -1);
+	private Point mouseReleasedPoint = new Point(-1, -1);
+	private Point mouseMovedPoint = new Point(-1, -1);
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -608,16 +610,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
 		}
 
+		g2.setColor(Color.white);
+		g2.setStroke(dashed);
 		switch (actionMode) {
 		case RECTANGLE_MODE:
-			g2.setColor(Color.white);
-			g2.setStroke(dashed);
 			g2.draw(rectangle);
 			break;
 		case ELLIPSE_MODE:
-			g2.setColor(Color.white);
-			g2.setStroke(dashed);
 			g2.draw(ellipse);
+			break;
+		case POLYGON_MODE:
+			g2.draw(polygon);
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0
+					&& mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0)
+				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
+						mouseReleasedPoint.x, mouseReleasedPoint.y);
 			break;
 		}
 
@@ -732,24 +739,24 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				} else if (s instanceof Polygon2D) {
 					Polygon2D q = (Polygon2D) s;
 					int n = q.getVertexCount();
-					if (polygon == null)
-						polygon = new Polygon();
+					if (multigon == null)
+						multigon = new Polygon();
 					else
-						polygon.reset();
+						multigon.reset();
 					int x, y;
 					Point2D.Float v;
 					for (int i = 0; i < n; i++) {
 						v = q.getVertex(i);
 						x = convertPointToPixelX(v.x);
 						y = convertPointToPixelY(v.y);
-						polygon.addPoint(x, y);
+						multigon.addPoint(x, y);
 					}
 					if (p.isFilled()) {
 						g.setColor(getPartColor(p));
-						g.fill(polygon);
+						g.fill(multigon);
 					}
 					g.setColor(Color.black);
-					g.draw(polygon);
+					g.draw(multigon);
 				}
 			}
 		}
@@ -1054,6 +1061,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case ELLIPSE_MODE:
 			mousePressedPoint.setLocation(x, y);
 			break;
+		case POLYGON_MODE:
+			polygon.addPoint(x, y);
+			break;
 		}
 		repaint();
 		e.consume();
@@ -1186,6 +1196,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				ellipse.y = mousePressedPoint.y - ellipse.height;
 			}
 			break;
+		case POLYGON_MODE:
+			polygon.addPoint(x, y);
+			break;
 		}
 		repaint();
 		e.consume();
@@ -1218,6 +1231,30 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		}
 		if (e.getClickCount() >= 2) {
+			switch (actionMode) {
+			case POLYGON_MODE:
+				mousePressedPoint.setLocation(-1, -1);
+				mouseReleasedPoint.setLocation(-1, -1);
+				mouseMovedPoint.setLocation(-1, -1);
+				int n = polygon.npoints;
+				if (n > 0) {
+					float[] px = new float[n];
+					float[] py = new float[n];
+					for (int i = 0; i < n; i++) {
+						px[i] = convertPixelToPointX(polygon.xpoints[i]);
+						py[i] = convertPixelToPointY(polygon.ypoints[i]);
+					}
+					model.addPolygonPart(px, py);
+					model.refreshPowerArray();
+					model.refreshTemperatureBoundaryArray();
+					model.refreshMaterialPropertyArrays();
+					model.setInitialTemperature();
+					polygon.reset();
+				}
+				break;
+			}
+			repaint();
+			e.consume();
 			return;
 		}
 		switch (actionMode) {
@@ -1314,6 +1351,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.setInitialTemperature();
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
+			break;
+		case POLYGON_MODE:
+			mouseReleasedPoint.setLocation(x, y);
 			break;
 		case THERMOMETER_MODE:
 			model.addThermometer(convertPixelToPointX(x),
@@ -1427,6 +1467,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
 								: Cursor.DEFAULT_CURSOR));
 			}
+			break;
+		case POLYGON_MODE:
+			mouseMovedPoint.setLocation(x, y);
+			repaint();
 			break;
 		}
 		e.consume();
