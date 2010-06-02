@@ -622,9 +622,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case POLYGON_MODE:
 			g2.draw(polygon);
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0
-					&& mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0)
+					&& mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
+				g2.setColor(Color.green);
 				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
 						mouseReleasedPoint.x, mouseReleasedPoint.y);
+			}
 			break;
 		}
 
@@ -1062,7 +1064,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			mousePressedPoint.setLocation(x, y);
 			break;
 		case POLYGON_MODE:
-			polygon.addPoint(x, y);
+			if (e.getClickCount() < 2)
+				addPolygonPoint(x, y);
 			break;
 		}
 		repaint();
@@ -1151,8 +1154,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
-							s.xpoints[selectedSpot] = x;
-							s.ypoints[selectedSpot] = y;
+							int k = s.npoints < handle.length ? selectedSpot
+									: (int) ((float) selectedSpot
+											* (float) s.npoints / (float) handle.length);
+							s.xpoints[k] = x;
+							s.ypoints[k] = y;
 							setCursor(Cursor
 									.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
@@ -1197,7 +1203,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case POLYGON_MODE:
-			polygon.addPoint(x, y);
+			if (e.getClickCount() < 2)
+				addPolygonPoint(x, y);
 			break;
 		}
 		repaint();
@@ -1250,6 +1257,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
 					polygon.reset();
+					System.out.println("***" + n);
 				}
 				break;
 			}
@@ -1485,6 +1493,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			float timeStep = (Float) e.getNewValue();
 			graphRenderer.setScopeX(3600 * timeStep);
 			photonLength = Math.max(5, timeStep * 0.1f);
+		}
+	}
+
+	private void addPolygonPoint(int x, int y) {
+		int n = polygon.npoints;
+		if (n > 0) {
+			int dx = x - polygon.xpoints[n - 1];
+			int dy = y - polygon.ypoints[n - 1];
+			if (dx * dx + dy * dy > 9)
+				polygon.addPoint(x, y);
+		} else {
+			polygon.addPoint(x, y);
 		}
 	}
 

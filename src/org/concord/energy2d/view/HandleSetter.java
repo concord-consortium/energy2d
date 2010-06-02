@@ -89,13 +89,22 @@ class HandleSetter {
 			Polygon2D p = (Polygon2D) s;
 			int n = p.getVertexCount();
 			Point2D.Float point;
-			for (int i = 0; i < handle.length; i++) {
-				if (i < n) {
-					point = p.getVertex(i);
+			if (n <= handle.length) {
+				for (int i = 0; i < handle.length; i++) {
+					if (i < n) {
+						point = p.getVertex(i);
+						handle[i].x = view.convertPointToPixelX(point.x) - h;
+						handle[i].y = view.convertPointToPixelY(point.y) - h;
+					} else {
+						handle[i].x = handle[i].y = -100;
+					}
+				}
+			} else {
+				float k = (float) n / (float) handle.length;
+				for (int i = 0; i < handle.length; i++) {
+					point = p.getVertex((int) (i * k));
 					handle[i].x = view.convertPointToPixelX(point.x) - h;
 					handle[i].y = view.convertPointToPixelY(point.y) - h;
-				} else {
-					handle[i].x = handle[i].y = -100;
 				}
 			}
 
