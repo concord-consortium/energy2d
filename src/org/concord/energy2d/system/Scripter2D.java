@@ -124,6 +124,12 @@ class Scripter2D extends Scripter {
 			return;
 		}
 
+		matcher = INIT.matcher(ci);
+		if (matcher.find()) {
+			s2d.initialize();
+			return;
+		}
+
 		matcher = DELAY.matcher(ci);
 		if (matcher.find()) {
 			String s = ci.substring(matcher.end()).trim();

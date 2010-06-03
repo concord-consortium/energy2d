@@ -153,6 +153,11 @@ public class System2D extends JApplet implements MwService,
 		view.repaint();
 	}
 
+	public void initialize() {
+		clear();
+		init();
+	}
+
 	public void clear() {
 		model.clear();
 		view.clear();

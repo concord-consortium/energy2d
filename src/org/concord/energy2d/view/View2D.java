@@ -196,6 +196,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setActionMode(byte mode) {
+		resetMousePoints();
 		actionMode = mode;
 		switch (mode) {
 		case SELECT_MODE:
@@ -1028,10 +1029,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMousePressed(MouseEvent e) {
 		mousePressedTime = System.currentTimeMillis();
 		requestFocusInWindow();
-		if (showGraph) {
-			e.consume();
-			return;
-		}
 		int x = e.getX();
 		int y = e.getY();
 		switch (actionMode) {
@@ -1061,9 +1058,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case RECTANGLE_MODE:
 		case ELLIPSE_MODE:
+			if (showGraph) {
+				e.consume();
+				return;
+			}
 			mousePressedPoint.setLocation(x, y);
 			break;
 		case POLYGON_MODE:
+			if (showGraph) {
+				e.consume();
+				return;
+			}
 			if (e.getClickCount() < 2)
 				addPolygonPoint(x, y);
 			break;
@@ -1240,9 +1245,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (e.getClickCount() >= 2) {
 			switch (actionMode) {
 			case POLYGON_MODE:
-				mousePressedPoint.setLocation(-1, -1);
-				mouseReleasedPoint.setLocation(-1, -1);
-				mouseMovedPoint.setLocation(-1, -1);
+				resetMousePoints();
 				int n = polygon.npoints;
 				if (n > 0) {
 					float[] px = new float[n];
@@ -1257,7 +1260,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
 					polygon.reset();
-					System.out.println("***" + n);
 				}
 				break;
 			}
@@ -1392,6 +1394,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (graphRenderer.buttonContains(
 					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			} else {
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 			return;
 		}
@@ -1506,6 +1510,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else {
 			polygon.addPoint(x, y);
 		}
+	}
+
+	private void resetMousePoints() {
+		mousePressedPoint.setLocation(-1, -1);
+		mouseReleasedPoint.setLocation(-1, -1);
+		mouseMovedPoint.setLocation(-1, -1);
 	}
 
 	private void setMovingShape(boolean anchor) {
