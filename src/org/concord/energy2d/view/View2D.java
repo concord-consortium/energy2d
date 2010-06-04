@@ -108,6 +108,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT,
 			BasicStroke.JOIN_MITER, 1, new float[] { 2 }, 0);
 	private static Color lightColor = new Color(255, 255, 255, 128);
+	private final static Color TRANSLUCENT_GRAY = new Color(128, 128, 128, 128);
 	private float xmin, xmax, ymin, ymax;
 	private int nx, ny;
 	private float time;
@@ -611,22 +612,35 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
 		}
 
-		g2.setColor(Color.white);
 		g2.setStroke(dashed);
 		switch (actionMode) {
 		case RECTANGLE_MODE:
+			g2.setColor(TRANSLUCENT_GRAY);
+			g2.fill(rectangle);
+			g2.setColor(Color.white);
 			g2.draw(rectangle);
 			break;
 		case ELLIPSE_MODE:
+			g2.setColor(TRANSLUCENT_GRAY);
+			g2.fill(ellipse);
+			g2.setColor(Color.white);
 			g2.draw(ellipse);
 			break;
 		case POLYGON_MODE:
+			g2.setColor(TRANSLUCENT_GRAY);
+			g2.fill(polygon);
+			g2.setColor(Color.white);
 			g2.draw(polygon);
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0
 					&& mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
 				g2.setColor(Color.green);
 				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
 						mouseReleasedPoint.x, mouseReleasedPoint.y);
+				int np = polygon.npoints;
+				if (np > 0) {
+					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
+							polygon.xpoints[0], polygon.ypoints[0]);
+				}
 			}
 			break;
 		}
