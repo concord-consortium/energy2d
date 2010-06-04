@@ -198,6 +198,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setActionMode(byte mode) {
 		resetMousePoints();
+		setSelectedManipulable(null);
 		actionMode = mode;
 		switch (mode) {
 		case SELECT_MODE:
@@ -212,6 +213,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			break;
 		}
+		repaint();
 	}
 
 	public byte getActionMode() {
