@@ -44,6 +44,8 @@ class GraphRenderer {
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
 	private Rectangle yExpandButton, yShrinkButton;
+	private String xLabel = "Time (hr)", yLabel = "Temperature (" + '\u2103'
+			+ ")";
 
 	GraphRenderer(int x, int y, int w, int h) {
 		closeButton = new Rectangle();
@@ -52,6 +54,14 @@ class GraphRenderer {
 		yExpandButton = new Rectangle();
 		yShrinkButton = new Rectangle();
 		setFrame(x, y, w, h);
+	}
+
+	void setLabelX(String xLabel) {
+		this.xLabel = xLabel;
+	}
+
+	void setLabelY(String yLabel) {
+		this.yLabel = yLabel;
 	}
 
 	void setScopeX(float scopeX) {
@@ -182,7 +192,7 @@ class GraphRenderer {
 					g.drawLine(k, y + h, k, y + h - 2);
 				}
 			}
-			centerString("Time (hr)", g, x + w - 10, y + h - 4);
+			centerString(xLabel, g, x + w - 10, y + h - 4);
 
 			for (int i = 1; i < 10; i++) {
 				k = y + Math.round(i * h * 0.1f);
@@ -194,7 +204,7 @@ class GraphRenderer {
 					g.drawLine(x, k, x + 2, k);
 				}
 			}
-			centerString("Temperature (" + '\u2103' + ")", g, x + 36, y + 10);
+			centerString(yLabel, g, x + 36, y + 10);
 			drawFrame = false;
 
 		}

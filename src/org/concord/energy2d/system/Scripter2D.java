@@ -474,6 +474,12 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("graph")) {
 					s2d.view.setGraphOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("graph_xlabel")) {
+					s2d.view.setGraphXLabel(t[1]);
+					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("graph_ylabel")) {
+					s2d.view.setGraphYLabel(t[1]);
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("grid")) {
 					s2d.view.setGridOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();

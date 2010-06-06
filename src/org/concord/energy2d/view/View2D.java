@@ -339,6 +339,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return showGraph;
 	}
 
+	public void setGraphXLabel(String xLabel) {
+		graphRenderer.setLabelX(xLabel);
+	}
+
+	public void setGraphYLabel(String yLabel) {
+		graphRenderer.setLabelY(yLabel);
+	}
+
 	public void setVelocityOn(boolean b) {
 		velocityRenderer = b ? new VectorDistributionRenderer(nx, ny) : null;
 	}
