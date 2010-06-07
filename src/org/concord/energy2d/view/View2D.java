@@ -292,7 +292,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void reset() {
-		showGraph = false;
 		runToggle = false;
 		setTime(0);
 	}

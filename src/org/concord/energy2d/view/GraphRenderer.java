@@ -33,7 +33,8 @@ class GraphRenderer {
 	private final static DecimalFormat FORMAT = new DecimalFormat("##.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 8);
 	private Stroke frameStroke = new BasicStroke(2);
-	private Stroke curveStroke = new BasicStroke(1);
+	private Stroke thinStroke = new BasicStroke(1);
+	private Stroke curveStroke = new BasicStroke(1.5f);
 	private Color bgColor = new Color(255, 255, 225, 128);
 	private Color fgColor = Color.black;
 	private Color frameColor = new Color(205, 205, 205, 128);
@@ -139,7 +140,7 @@ class GraphRenderer {
 
 			// draw close button
 			g.setColor(fgColor);
-			g.setStroke(curveStroke);
+			g.setStroke(thinStroke);
 			g.draw(closeButton);
 			g.drawLine(closeButton.x, closeButton.y, closeButton.x
 					+ closeButton.width, closeButton.y + closeButton.height);
