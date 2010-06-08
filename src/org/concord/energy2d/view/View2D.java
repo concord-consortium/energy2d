@@ -573,12 +573,23 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			streamlines.render(g2, getSize(), model.getStreamFunction());
 		}
 		if (selectedManipulable != null) {
-			for (Rectangle r : handle) {
-				if (r.x != 0 || r.y != 0) {
-					g2.setColor(Color.yellow);
-					g2.fill(r);
-					g2.setColor(Color.black);
-					g2.draw(r);
+			if (selectedManipulable instanceof Thermometer) {
+				Thermometer t = (Thermometer) selectedManipulable;
+				Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+				int wt = convertLengthToPixelX(r.width);
+				int ht = convertLengthToPixelY(r.height);
+				int xt = convertPointToPixelX(r.x);
+				int yt = convertPointToPixelY(r.y);
+				g2.setColor(Color.yellow);
+				g2.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+			} else {
+				for (Rectangle r : handle) {
+					if (r.x != 0 || r.y != 0) {
+						g2.setColor(Color.yellow);
+						g2.fill(r);
+						g2.setColor(Color.black);
+						g2.draw(r);
+					}
 				}
 			}
 		}
