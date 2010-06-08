@@ -1065,6 +1065,28 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
+		if (showGraph) {
+			boolean inGraph = false;
+			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
+				inGraph = true;
+			} else if (graphRenderer.buttonContains(
+					GraphRenderer.X_EXPAND_BUTTON, x, y)) {
+				inGraph = true;
+			} else if (graphRenderer.buttonContains(
+					GraphRenderer.X_SHRINK_BUTTON, x, y)) {
+				inGraph = true;
+			} else if (graphRenderer.buttonContains(
+					GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
+				inGraph = true;
+			} else if (graphRenderer.buttonContains(
+					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
+				inGraph = true;
+			}
+			if (inGraph) {
+				e.consume();
+				return;
+			}
+		}
 		switch (actionMode) {
 		case SELECT_MODE:
 			if (selectedManipulable != null) {
