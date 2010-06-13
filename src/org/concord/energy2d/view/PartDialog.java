@@ -44,8 +44,8 @@ class PartDialog extends JDialog {
 
 	private final static DecimalFormat FORMAT = new DecimalFormat("####.######");
 
-	private JTextField conductivityField;
-	private JTextField capacityField;
+	private JTextField thermalConductivityField;
+	private JTextField specificHeatField;
 	private JTextField densityField;
 	private JLabel powerLabel;
 	private JTextField powerField;
@@ -83,10 +83,10 @@ class PartDialog extends JDialog {
 				float transmission = parse(transmissionField.getText());
 				if (Float.isNaN(transmission))
 					return;
-				float conductivity = parse(conductivityField.getText());
+				float conductivity = parse(thermalConductivityField.getText());
 				if (Float.isNaN(conductivity))
 					return;
-				float capacity = parse(capacityField.getText());
+				float capacity = parse(specificHeatField.getText());
 				if (Float.isNaN(capacity))
 					return;
 				float density = parse(densityField.getText());
@@ -148,8 +148,8 @@ class PartDialog extends JDialog {
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
-				part.setConductivity(conductivity);
-				part.setCapacity(capacity);
+				part.setThermalConductivity(conductivity);
+				part.setSpecificHeat(capacity);
 				part.setDensity(density);
 				part.setAbsorption(absorption);
 				part.setReflection(reflection);
@@ -242,21 +242,21 @@ class PartDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
-		label = new JLabel("Conductivity");
+		label = new JLabel("Thermal conductivity");
 		p.add(label);
-		conductivityField = new JTextField(FORMAT
-				.format(part.getConductivity()), 8);
-		conductivityField.addActionListener(okListener);
-		p.add(conductivityField);
+		thermalConductivityField = new JTextField(FORMAT
+				.format(part.getThermalConductivity()), 8);
+		thermalConductivityField.addActionListener(okListener);
+		p.add(thermalConductivityField);
 		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
 		p.add(label);
 		count++;
 
 		label = new JLabel("Specific heat");
 		p.add(label);
-		capacityField = new JTextField(FORMAT.format(part.getCapacity()), 8);
-		capacityField.addActionListener(okListener);
-		p.add(capacityField);
+		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
+		specificHeatField.addActionListener(okListener);
+		p.add(specificHeatField);
 		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
 		p.add(label);
 		count++;

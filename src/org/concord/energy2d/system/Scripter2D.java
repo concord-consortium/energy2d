@@ -753,10 +753,16 @@ class Scripter2D extends Scripter {
 		if (part == null)
 			return;
 		if (s == "conductivity") {
-			part.setConductivity(z);
+			part.setThermalConductivity(z);
+			arrayUpdateRequested = true;
+		} else if (s == "thermal_conductivity") {
+			part.setThermalConductivity(z);
 			arrayUpdateRequested = true;
 		} else if (s == "capacity") {
-			part.setCapacity(z);
+			part.setSpecificHeat(z);
+			arrayUpdateRequested = true;
+		} else if (s == "specific_heat") {
+			part.setSpecificHeat(z);
 			arrayUpdateRequested = true;
 		} else if (s == "density") {
 			part.setDensity(z);

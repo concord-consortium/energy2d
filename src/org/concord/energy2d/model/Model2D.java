@@ -349,9 +349,10 @@ public class Model2D {
 		return thermometers;
 	}
 
-	public void addRectangularPart(float x, float y, float w, float h) {
+	public Part addRectangularPart(float x, float y, float w, float h) {
 		Part p = new Part(new Rectangle2D.Float(x, y, w, h));
 		addPart(p);
+		return p;
 	}
 
 	public void addEllipticalPart(float x, float y, float a, float b) {
@@ -419,8 +420,8 @@ public class Model2D {
 					for (Part p : parts) {
 						if (p.getShape().contains(x, y)) {
 							// no overlap of parts will be allowed
-							conductivity[i][j] = p.getConductivity();
-							capacity[i][j] = p.getCapacity();
+							conductivity[i][j] = p.getThermalConductivity();
+							capacity[i][j] = p.getSpecificHeat();
 							density[i][j] = p.getDensity();
 							if (!initial && p.getConstantTemperature()
 									&& !Float.isNaN(p.getTemperature()))

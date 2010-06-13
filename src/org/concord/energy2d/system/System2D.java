@@ -22,6 +22,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
@@ -32,6 +35,9 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.view.View2D;
 import org.concord.modeler.MwService;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Charles Xie
@@ -46,9 +52,14 @@ public class System2D extends JApplet implements MwService,
 	private Scripter2D scripter;
 	private ExecutorService threadService;
 
+	private SAXParser saxParser;
+	private DefaultHandler saxHandler;
+	private XmlEncoder encoder;
+
 	Runnable clickRun, clickStop, clickReset;
 
 	public System2D() {
+
 		model = new Model2D();
 		model.addVisualizationListener(this);
 		view = new View2D();
@@ -59,6 +70,17 @@ public class System2D extends JApplet implements MwService,
 		view.setArea(0, model.getLx(), 0, model.getLy());
 		model.addPropertyChangeListener(view);
 		getContentPane().add(view, BorderLayout.CENTER);
+
+		encoder = new XmlEncoder(this);
+		saxHandler = new XmlDecoder(this);
+		try {
+			saxParser = SAXParserFactory.newInstance().newSAXParser();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private JPanel createButtonPanel() {
@@ -183,6 +205,16 @@ public class System2D extends JApplet implements MwService,
 	}
 
 	public void loadState(InputStream is) throws IOException {
+		stop();
+		if (is == null)
+			return;
+		try {
+			saxParser.parse(new InputSource(is), saxHandler);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} finally {
+			is.close();
+		}
 	}
 
 	public boolean needExecutorService() {
@@ -199,6 +231,14 @@ public class System2D extends JApplet implements MwService,
 	}
 
 	public void saveState(OutputStream os) throws IOException {
+		stop();
+		if (os == null)
+			return;
+		try {
+			os.write(encoder.encode().getBytes());
+		} finally {
+			os.close();
+		}
 	}
 
 	public void setEditable(boolean b) {

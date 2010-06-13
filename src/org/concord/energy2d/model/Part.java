@@ -54,12 +54,12 @@ public class Part extends Manipulable {
 	 * 
 	 * Unit: W/(mK). The default value is water's.
 	 */
-	private float conductivity = 0.08f;
+	private float thermalConductivity = 0.08f;
 
 	/*
 	 * the specific heat capacity: J/(kgK).
 	 */
-	private float capacity = 1300f;
+	private float specificHeat = 1300f;
 
 	// density kg/m^3. The default value is foam's.
 	private float density = 25f;
@@ -118,8 +118,8 @@ public class Part extends Manipulable {
 		p.power = power;
 		p.temperature = temperature;
 		p.constantTemperature = constantTemperature;
-		p.conductivity = conductivity;
-		p.capacity = capacity;
+		p.thermalConductivity = thermalConductivity;
+		p.specificHeat = specificHeat;
 		p.density = density;
 		p.absorption = absorption;
 		p.reflection = reflection;
@@ -204,20 +204,20 @@ public class Part extends Manipulable {
 		return power;
 	}
 
-	public void setConductivity(float conductivity) {
-		this.conductivity = conductivity;
+	public void setThermalConductivity(float thermalConductivity) {
+		this.thermalConductivity = thermalConductivity;
 	}
 
-	public float getConductivity() {
-		return conductivity;
+	public float getThermalConductivity() {
+		return thermalConductivity;
 	}
 
-	public void setCapacity(float capacity) {
-		this.capacity = capacity;
+	public void setSpecificHeat(float specificHeat) {
+		this.specificHeat = specificHeat;
 	}
 
-	public float getCapacity() {
-		return capacity;
+	public float getSpecificHeat() {
+		return specificHeat;
 	}
 
 	public void setDensity(float density) {
@@ -330,7 +330,7 @@ public class Part extends Manipulable {
 				p.setVx(vx);
 				p.setVy(vy);
 				model.addPhoton(p);
-				model.setTemperatureAt(x, y, d - p.getEnergy() / getCapacity());
+				model.setTemperatureAt(x, y, d - p.getEnergy() / getSpecificHeat());
 			}
 		} else {
 			float[] vxi = new float[4], vyi = new float[4];
@@ -362,7 +362,7 @@ public class Part extends Manipulable {
 						model.addPhoton(p);
 					}
 					model.changeAverageTemperatureAt(x, y, -ir * nray
-							/ getCapacity());
+							/ getSpecificHeat());
 				}
 			}
 		}
