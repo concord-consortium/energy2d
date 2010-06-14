@@ -217,6 +217,17 @@ public class System2D extends JApplet implements MwService,
 		}
 	}
 
+	public void saveState(OutputStream os) throws IOException {
+		stop();
+		if (os == null)
+			return;
+		try {
+			os.write(encoder.encode().getBytes());
+		} finally {
+			os.close();
+		}
+	}
+
 	public boolean needExecutorService() {
 		return true;
 	}
@@ -228,17 +239,6 @@ public class System2D extends JApplet implements MwService,
 			scripter = new Scripter2D(this);
 		scripter.executeScript(script);
 		return null;
-	}
-
-	public void saveState(OutputStream os) throws IOException {
-		stop();
-		if (os == null)
-			return;
-		try {
-			os.write(encoder.encode().getBytes());
-		} finally {
-			os.close();
-		}
 	}
 
 	public void setEditable(boolean b) {

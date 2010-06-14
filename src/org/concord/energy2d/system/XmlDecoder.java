@@ -20,7 +20,8 @@ class XmlDecoder extends DefaultHandler {
 	private boolean ruler;
 	private boolean grid;
 	private boolean isotherm;
-	private float timeStep = 2;
+	private boolean rainbow;
+	private float timeStep = 1;
 
 	XmlDecoder(System2D box) {
 		this.box = box;
@@ -30,17 +31,17 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void endDocument() {
-		if (Float.isNaN(width)) {
+		if (!Float.isNaN(width)) {
 			box.model.setLx(width);
 			box.view.setArea(0, width, 0, box.model.getLy());
 			width = Float.NaN;
 		}
-		if (Float.isNaN(height)) {
+		if (!Float.isNaN(height)) {
 			box.model.setLy(height);
 			box.view.setArea(0, box.model.getLx(), 0, height);
 			height = Float.NaN;
 		}
-		if (timeStep != 2) {
+		if (timeStep != 1) {
 			box.model.setTimeStep(timeStep);
 		}
 		if (ruler) {
@@ -51,6 +52,9 @@ class XmlDecoder extends DefaultHandler {
 		}
 		if (isotherm) {
 			box.view.setIsothermOn(true);
+		}
+		if (rainbow) {
+			box.view.setRainbowOn(true);
 		}
 	}
 
@@ -118,6 +122,8 @@ class XmlDecoder extends DefaultHandler {
 			isotherm = Boolean.parseBoolean(str);
 		} else if (qName == "grid") {
 			grid = Boolean.parseBoolean(str);
+		} else if (qName == "rainbow") {
+			rainbow = Boolean.parseBoolean(str);
 		}
 
 	}
