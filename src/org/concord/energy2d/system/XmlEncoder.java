@@ -15,6 +15,7 @@ class XmlEncoder {
 	String encode() {
 		StringBuffer sb = new StringBuffer(1000);
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		sb.append("<state>\n");
 		sb.append("<view>\n");
 		if (box.view.isGridOn()) {
 			sb.append("<grid>true</grid>\n");
@@ -25,18 +26,32 @@ class XmlEncoder {
 		if (box.view.isRainbowOn()) {
 			sb.append("<rainbow>true</rainbow>\n");
 		}
+		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature()
+				+ "</minimum_temperature>\n");
+		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()
+				+ "</maximum_temperature>\n");
 		if (box.view.isOutlineOn()) {
 			sb.append("<outline>true</outline>\n");
 		}
 		if (box.view.isVelocityOn()) {
 			sb.append("<velocity>true</velocity>\n");
 		}
+		if (box.view.isStreamlineOn()) {
+			sb.append("<streamline>true</streamline>\n");
+		}
 		if (box.view.isGraphOn()) {
 			sb.append("<graph>true</graph>\n");
 		}
-		sb.append("</view>");
+		if (!box.view.isClockOn()) {
+			sb.append("<clock>false</clock>\n");
+		}
+		if (!box.view.isSmooth()) {
+			sb.append("<smooth>false</smooth>\n");
+		}
+		sb.append("</view>\n");
 		sb.append("<model>\n");
-		sb.append("</model>");
+		sb.append("</model>\n");
+		sb.append("</state>\n");
 		return sb.toString();
 	}
 

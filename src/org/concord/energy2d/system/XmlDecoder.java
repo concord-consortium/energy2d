@@ -15,12 +15,19 @@ class XmlDecoder extends DefaultHandler {
 
 	private System2D box;
 	private String str;
-	private float width = Float.NaN;
-	private float height = Float.NaN;
+	private float width = 10;
+	private float height = 10;
+	private float minimumTemperature;
+	private float maximumTemperature = 40;
 	private boolean ruler;
 	private boolean grid;
 	private boolean isotherm;
+	private boolean streamline;
+	private boolean outline;
 	private boolean rainbow;
+	private boolean velocity;
+	private boolean clock = true;
+	private boolean smooth = true;
 	private float timeStep = 1;
 
 	XmlDecoder(System2D box) {
@@ -31,31 +38,21 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void endDocument() {
-		if (!Float.isNaN(width)) {
-			box.model.setLx(width);
-			box.view.setArea(0, width, 0, box.model.getLy());
-			width = Float.NaN;
-		}
-		if (!Float.isNaN(height)) {
-			box.model.setLy(height);
-			box.view.setArea(0, box.model.getLx(), 0, height);
-			height = Float.NaN;
-		}
-		if (timeStep != 1) {
-			box.model.setTimeStep(timeStep);
-		}
-		if (ruler) {
-			box.view.setRulerOn(true);
-		}
-		if (grid) {
-			box.view.setGridOn(true);
-		}
-		if (isotherm) {
-			box.view.setIsothermOn(true);
-		}
-		if (rainbow) {
-			box.view.setRainbowOn(true);
-		}
+		box.model.setLx(width);
+		box.model.setLy(height);
+		box.view.setArea(0, width, 0, height);
+		box.model.setTimeStep(timeStep);
+		box.view.setRulerOn(ruler);
+		box.view.setOutlineOn(outline);
+		box.view.setGridOn(grid);
+		box.view.setIsothermOn(isotherm);
+		box.view.setStreamlineOn(streamline);
+		box.view.setVelocityOn(velocity);
+		box.view.setRainbowOn(rainbow);
+		box.view.setMinimumTemperature(minimumTemperature);
+		box.view.setMinimumTemperature(maximumTemperature);
+		box.view.setClockOn(clock);
+		box.view.setSmooth(smooth);
 	}
 
 	public void startElement(String uri, String localName, String qName,
@@ -120,10 +117,18 @@ class XmlDecoder extends DefaultHandler {
 			ruler = Boolean.parseBoolean(str);
 		} else if (qName == "isotherm") {
 			isotherm = Boolean.parseBoolean(str);
+		} else if (qName == "streamline") {
+			streamline = Boolean.parseBoolean(str);
+		} else if (qName == "velocity") {
+			velocity = Boolean.parseBoolean(str);
 		} else if (qName == "grid") {
 			grid = Boolean.parseBoolean(str);
 		} else if (qName == "rainbow") {
 			rainbow = Boolean.parseBoolean(str);
+		} else if (qName == "clock") {
+			clock = Boolean.parseBoolean(str);
+		} else if (qName == "smooth") {
+			smooth = Boolean.parseBoolean(str);
 		}
 
 	}
