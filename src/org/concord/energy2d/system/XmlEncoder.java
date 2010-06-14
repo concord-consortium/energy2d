@@ -13,9 +13,13 @@ class XmlEncoder {
 	}
 
 	String encode() {
+
 		StringBuffer sb = new StringBuffer(1000);
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		sb.append("<state>\n");
+
+		// view properties
+
 		sb.append("<view>\n");
 		if (box.view.isGridOn()) {
 			sb.append("<grid>true</grid>\n");
@@ -49,10 +53,25 @@ class XmlEncoder {
 			sb.append("<smooth>false</smooth>\n");
 		}
 		sb.append("</view>\n");
+
+		// model properties
+
 		sb.append("<model>\n");
+		if (box.model.getLx() != 10) {
+			sb.append("<model_width>" + box.model.getLx() + "</model_width>");
+		}
+		if (box.model.getLy() != 10) {
+			sb.append("<model_height>" + box.model.getLy() + "</model_height>");
+		}
+		if (box.model.getTimeStep() != 1) {
+			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>");
+		}
 		sb.append("</model>\n");
+
 		sb.append("</state>\n");
+
 		return sb.toString();
+
 	}
 
 }

@@ -15,8 +15,9 @@ class XmlDecoder extends DefaultHandler {
 
 	private System2D box;
 	private String str;
-	private float width = 10;
-	private float height = 10;
+	private float modelWidth = 10;
+	private float modelHeight = 10;
+	private float timeStep = 1;
 	private float minimumTemperature;
 	private float maximumTemperature = 40;
 	private boolean ruler;
@@ -28,7 +29,6 @@ class XmlDecoder extends DefaultHandler {
 	private boolean velocity;
 	private boolean clock = true;
 	private boolean smooth = true;
-	private float timeStep = 1;
 
 	XmlDecoder(System2D box) {
 		this.box = box;
@@ -38,9 +38,9 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void endDocument() {
-		box.model.setLx(width);
-		box.model.setLy(height);
-		box.view.setArea(0, width, 0, height);
+		box.model.setLx(modelWidth);
+		box.model.setLy(modelHeight);
+		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
 		box.view.setRulerOn(ruler);
 		box.view.setOutlineOn(outline);
@@ -50,7 +50,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setVelocityOn(velocity);
 		box.view.setRainbowOn(rainbow);
 		box.view.setMinimumTemperature(minimumTemperature);
-		box.view.setMinimumTemperature(maximumTemperature);
+		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
 		box.view.setSmooth(smooth);
 	}
@@ -107,12 +107,16 @@ class XmlDecoder extends DefaultHandler {
 
 	public void endElement(String uri, String localName, String qName) {
 
-		if (qName == "width") {
-			width = Float.parseFloat(str);
-		} else if (qName == "height") {
-			height = Float.parseFloat(str);
+		if (qName == "model_width") {
+			modelWidth = Float.parseFloat(str);
+		} else if (qName == "model_height") {
+			modelHeight = Float.parseFloat(str);
 		} else if (qName == "timestep") {
 			timeStep = Float.parseFloat(str);
+		} else if (qName == "minimum_temperature") {
+			minimumTemperature = Float.parseFloat(str);
+		} else if (qName == "maximum_temperature") {
+			maximumTemperature = Float.parseFloat(str);
 		} else if (qName == "ruler") {
 			ruler = Boolean.parseBoolean(str);
 		} else if (qName == "isotherm") {
@@ -127,6 +131,8 @@ class XmlDecoder extends DefaultHandler {
 			rainbow = Boolean.parseBoolean(str);
 		} else if (qName == "clock") {
 			clock = Boolean.parseBoolean(str);
+		} else if (qName == "outline") {
+			outline = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {
 			smooth = Boolean.parseBoolean(str);
 		}
