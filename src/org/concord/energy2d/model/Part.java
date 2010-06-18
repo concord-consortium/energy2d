@@ -5,6 +5,7 @@
 
 package org.concord.energy2d.model;
 
+import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -330,7 +331,8 @@ public class Part extends Manipulable {
 				p.setVx(vx);
 				p.setVy(vy);
 				model.addPhoton(p);
-				model.setTemperatureAt(x, y, d - p.getEnergy() / getSpecificHeat());
+				model.setTemperatureAt(x, y, d - p.getEnergy()
+						/ getSpecificHeat());
 			}
 		} else {
 			float[] vxi = new float[4], vyi = new float[4];
@@ -482,6 +484,42 @@ public class Part extends Manipulable {
 			return true;
 		}
 		return false;
+	}
+
+	public String toXml() {
+		String xml = "<";
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			xml += "rectangle";
+			xml += " x=\"" + r.x + "\"";
+			xml += " y=\"" + r.y + "\"";
+			xml += " width=\"" + r.width + "\"";
+			xml += " height=\"" + r.height + "\"";
+		}
+		xml += " thermal_conductivity=\"" + thermalConductivity + "\"";
+		xml += " specific_heat=\"" + specificHeat + "\"";
+		xml += " density=\"" + density + "\"";
+		if (!java.lang.Float.isNaN(temperature))
+			xml += " temperature=\"" + temperature + "\"";
+		if (!constantTemperature)
+			xml += " constant_temperature=\"false\"";
+		if (power != 0)
+			xml += " power=\"" + power + "\"";
+		if (!getColor().equals(Color.gray))
+			xml += " color=\""
+					+ Integer.toHexString(0x00ffffff & getColor().getRGB())
+					+ "\"";
+		if (!isVisible())
+			xml += " visible=\"false\"";
+		if (!isDraggable())
+			xml += " draggable=\"false\"";
+		xml += "/>\n";
+		return xml;
+	}
+
+	@Override
+	public String toString() {
+		return toXml();
 	}
 
 }

@@ -2,6 +2,7 @@ package org.concord.energy2d.system;
 
 import java.awt.Color;
 
+import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
@@ -20,6 +21,7 @@ class XmlDecoder extends DefaultHandler {
 	private float timeStep = 1;
 	private float minimumTemperature;
 	private float maximumTemperature = 40;
+	private int measurementInterval = 500;
 	private boolean ruler;
 	private boolean grid;
 	private boolean isotherm;
@@ -29,6 +31,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean velocity;
 	private boolean clock = true;
 	private boolean smooth = true;
+	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
 
 	XmlDecoder(System2D box) {
 		this.box = box;
@@ -38,10 +41,14 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void endDocument() {
+
 		box.model.setLx(modelWidth);
 		box.model.setLy(modelHeight);
 		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
+		box.model.setMeasurementInterval(measurementInterval);
+		box.model.setBuoyancyApproximation(buoyancyApproximation);
+
 		box.view.setRulerOn(ruler);
 		box.view.setOutlineOn(outline);
 		box.view.setGridOn(grid);
@@ -53,6 +60,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
 		box.view.setSmooth(smooth);
+
 	}
 
 	public void startElement(String uri, String localName, String qName,
@@ -60,17 +68,20 @@ class XmlDecoder extends DefaultHandler {
 
 		String attribName, attribValue;
 
+		float thermal_conductivity = Float.NaN;
+		float specific_heat = Float.NaN;
+		float density = Float.NaN;
+		float temperature = Float.NaN;
+		boolean visible = true;
+		boolean draggable = true;
+		Color color = Color.gray;
+
 		if (qName == "rectangle") {
 			if (attrib != null) {
 				float x = 0;
 				float y = 0;
 				float w = 1;
 				float h = 1;
-				float thermal_conductivity = -1;
-				float specific_heat = -1;
-				boolean visible = true;
-				boolean draggable = true;
-				Color color = null;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -78,6 +89,10 @@ class XmlDecoder extends DefaultHandler {
 						thermal_conductivity = Float.parseFloat(attribValue);
 					} else if (attribName == "specific_heat") {
 						specific_heat = Float.parseFloat(attribValue);
+					} else if (attribName == "density") {
+						density = Float.parseFloat(attribValue);
+					} else if (attribName == "temperature") {
+						temperature = Float.parseFloat(attribValue);
 					} else if (attribName == "x") {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
@@ -95,8 +110,14 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 				Part p = box.model.addRectangularPart(x, y, w, h);
-				p.setThermalConductivity(thermal_conductivity);
-				p.setSpecificHeat(specific_heat);
+				if (!Float.isNaN(thermal_conductivity))
+					p.setThermalConductivity(thermal_conductivity);
+				if (!Float.isNaN(specific_heat))
+					p.setSpecificHeat(specific_heat);
+				if (!Float.isNaN(density))
+					p.setDensity(density);
+				if (!Float.isNaN(temperature))
+					p.setTemperature(temperature);
 				p.setDraggable(draggable);
 				p.setVisible(visible);
 				p.setColor(color);
@@ -113,6 +134,8 @@ class XmlDecoder extends DefaultHandler {
 			modelHeight = Float.parseFloat(str);
 		} else if (qName == "timestep") {
 			timeStep = Float.parseFloat(str);
+		} else if (qName == "buoyancy_approximation") {
+			buoyancyApproximation = Byte.parseByte(str);
 		} else if (qName == "minimum_temperature") {
 			minimumTemperature = Float.parseFloat(str);
 		} else if (qName == "maximum_temperature") {
