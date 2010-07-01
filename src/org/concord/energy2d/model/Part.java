@@ -487,33 +487,50 @@ public class Part extends Manipulable {
 	}
 
 	public String toXml() {
-		String xml = "<";
+		String xml = "<part>";
 		if (getShape() instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-			xml += "rectangle";
-			xml += " x=\"" + r.x + "\"";
-			xml += " y=\"" + r.y + "\"";
-			xml += " width=\"" + r.width + "\"";
-			xml += " height=\"" + r.height + "\"";
+			xml += "<shape>rectangle</shape>\n";
+			xml += "<x>" + r.x + "</x>\n";
+			xml += "<y>" + r.y + "</y>\n";
+			xml += "<width>" + r.width + "</width>";
+			xml += "<height>" + r.height + "</height>";
+		} else if (getShape() instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+			xml += "<shape>rectangle</shape>\n";
+			xml += "<x>" + e.x + "</x>\n";
+			xml += "<y>" + e.y + "</y>\n";
+			xml += "<width>" + e.width + "</width>";
+			xml += "<height>" + e.height + "</height>";
+		} else if (getShape() instanceof Polygon2D) {
+			Polygon2D p = (Polygon2D) getShape();
+			xml += "<shape>polygon</shape>\n";
+			int n = p.getVertexCount();
+			for (int i = 0; i < n; i++) {
+				Point2D.Float p2d = p.getVertex(i);
+				xml += "<x>" + p2d.x + "</x>\n";
+				xml += "<y>" + p2d.y + "</y>\n";
+			}
 		}
-		xml += " thermal_conductivity=\"" + thermalConductivity + "\"";
-		xml += " specific_heat=\"" + specificHeat + "\"";
-		xml += " density=\"" + density + "\"";
+		xml += "<thermal_conductivity>" + thermalConductivity
+				+ "</thermal_conductivity>\n";
+		xml += "<specific_heat>" + specificHeat + "</specific_heat>\n";
+		xml += "<density>" + density + "</density>\n";
 		if (!java.lang.Float.isNaN(temperature))
-			xml += " temperature=\"" + temperature + "\"";
+			xml += "<temperature>" + temperature + "</temperature>\n";
 		if (!constantTemperature)
-			xml += " constant_temperature=\"false\"";
+			xml += "<constant_temperature>false</constant_temperature>\n";
 		if (power != 0)
-			xml += " power=\"" + power + "\"";
+			xml += "<power>" + power + "</power>\n";
 		if (!getColor().equals(Color.gray))
-			xml += " color=\""
+			xml += "<color>"
 					+ Integer.toHexString(0x00ffffff & getColor().getRGB())
-					+ "\"";
+					+ "</color>\n";
 		if (!isVisible())
-			xml += " visible=\"false\"";
+			xml += "<visibility>false</visibility>\n";
 		if (!isDraggable())
-			xml += " draggable=\"false\"";
-		xml += "/>\n";
+			xml += "<draggability>false</draggability>\n";
+		xml += "</part>\n";
 		return xml;
 	}
 

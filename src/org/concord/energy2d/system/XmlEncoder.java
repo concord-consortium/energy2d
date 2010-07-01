@@ -69,29 +69,30 @@ class XmlEncoder {
 		sb.append("<model>\n");
 
 		if (box.model.getLx() != 10) {
-			sb.append("<model_width>" + box.model.getLx() + "</model_width>");
+			sb.append("<model_width>" + box.model.getLx() + "</model_width>\n");
 		}
 		if (box.model.getLy() != 10) {
-			sb.append("<model_height>" + box.model.getLy() + "</model_height>");
+			sb.append("<model_height>" + box.model.getLy()
+					+ "</model_height>\n");
 		}
 		if (box.model.getTimeStep() != 1) {
-			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>");
+			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
 		}
 		if (box.model.getMeasurementInterval() != 500) {
 			sb.append("<measurement_interval>" + box.model.getTimeStep()
-					+ "</measurement_interval>");
+					+ "</measurement_interval>\n");
 		}
 		sb.append("<buoyancy_approximation>"
 				+ box.model.getBuoyancyApproximation()
-				+ "</buoyancy_approximation>");
+				+ "</buoyancy_approximation>\n");
 
 		List<Part> parts = box.model.getParts();
 		if (!parts.isEmpty()) {
-			sb.append("<part>\n");
+			sb.append("<structure>\n");
 			for (Part p : parts) {
 				sb.append(p.toXml());
 			}
-			sb.append("</part>\n");
+			sb.append("</structure>\n");
 		}
 
 		sb.append("</model>\n");
