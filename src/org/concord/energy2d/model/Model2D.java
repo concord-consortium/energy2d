@@ -355,23 +355,26 @@ public class Model2D {
 		return p;
 	}
 
-	public void addEllipticalPart(float x, float y, float a, float b) {
+	public Part addEllipticalPart(float x, float y, float a, float b) {
 		Part p = new Part(new Ellipse2D.Float(x - 0.5f * a, y - 0.5f * b, a, b));
 		addPart(p);
+		return p;
 	}
 
-	public void addRingPart(float x, float y, float inner, float outer) {
+	public Part addRingPart(float x, float y, float inner, float outer) {
 		Area area = new Area(new Ellipse2D.Float(x - 0.5f * outer, y - 0.5f
 				* outer, outer, outer));
 		area.subtract(new Area(new Ellipse2D.Float(x - 0.5f * inner, y - 0.5f
 				* inner, inner, inner)));
 		Part p = new Part(area);
 		addPart(p);
+		return p;
 	}
 
-	public void addPolygonPart(float[] x, float[] y) {
+	public Part addPolygonPart(float[] x, float[] y) {
 		Part p = new Part(new Polygon2D(x, y));
 		addPart(p);
+		return p;
 	}
 
 	public List<Part> getParts() {

@@ -490,27 +490,28 @@ public class Part extends Manipulable {
 		String xml = "<part>";
 		if (getShape() instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-			xml += "<shape>rectangle</shape>\n";
-			xml += "<x>" + r.x + "</x>\n";
-			xml += "<y>" + r.y + "</y>\n";
-			xml += "<width>" + r.width + "</width>";
-			xml += "<height>" + r.height + "</height>";
+			xml += "<rectangle ";
+			xml += " x=\"" + r.x + "\"";
+			xml += " y=\"" + r.y + "\"";
+			xml += " width=\"" + r.width + "\"";
+			xml += " height=\"" + r.height + "\"/>";
 		} else if (getShape() instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-			xml += "<shape>rectangle</shape>\n";
-			xml += "<x>" + e.x + "</x>\n";
-			xml += "<y>" + e.y + "</y>\n";
-			xml += "<width>" + e.width + "</width>";
-			xml += "<height>" + e.height + "</height>";
+			xml += "<ellipse ";
+			xml += " x=\"" + e.x + "\"";
+			xml += " y=\"" + e.y + "\"";
+			xml += " width=\"" + e.width + "\"";
+			xml += " height=\"" + e.height + "\"/>";
 		} else if (getShape() instanceof Polygon2D) {
 			Polygon2D p = (Polygon2D) getShape();
-			xml += "<shape>polygon</shape>\n";
+			xml += "<polygon>\n";
 			int n = p.getVertexCount();
 			for (int i = 0; i < n; i++) {
 				Point2D.Float p2d = p.getVertex(i);
 				xml += "<x>" + p2d.x + "</x>\n";
 				xml += "<y>" + p2d.y + "</y>\n";
 			}
+			xml += "</polygon>\n";
 		}
 		xml += "<thermal_conductivity>" + thermalConductivity
 				+ "</thermal_conductivity>\n";
@@ -527,9 +528,9 @@ public class Part extends Manipulable {
 					+ Integer.toHexString(0x00ffffff & getColor().getRGB())
 					+ "</color>\n";
 		if (!isVisible())
-			xml += "<visibility>false</visibility>\n";
+			xml += "<visible>false</visible>\n";
 		if (!isDraggable())
-			xml += "<draggability>false</draggability>\n";
+			xml += "<draggable>false</draggable>\n";
 		xml += "</part>\n";
 		return xml;
 	}

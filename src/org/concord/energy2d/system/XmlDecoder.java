@@ -16,6 +16,8 @@ class XmlDecoder extends DefaultHandler {
 
 	private System2D box;
 	private String str;
+
+	// model properties
 	private float modelWidth = 10;
 	private float modelHeight = 10;
 	private float timeStep = 1;
@@ -32,6 +34,18 @@ class XmlDecoder extends DefaultHandler {
 	private boolean clock = true;
 	private boolean smooth = true;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+
+	// part properties
+	private float partThermalConductivity = Float.NaN;
+	private float partSpecificHeat = Float.NaN;
+	private float partDensity = Float.NaN;
+	private float partTemperature = Float.NaN;
+	private boolean partConstantTemperature = true;
+	private float partPower = Float.NaN;
+	private boolean partVisible = true;
+	private boolean partDraggable = true;
+	private Color partColor = Color.gray;
+	private Part part;
 
 	XmlDecoder(System2D box) {
 		this.box = box;
@@ -61,6 +75,12 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setClockOn(clock);
 		box.view.setSmooth(smooth);
 
+		box.model.refreshPowerArray();
+		box.model.refreshTemperatureBoundaryArray();
+		box.model.refreshMaterialPropertyArrays();
+		box.model.setInitialTemperature();
+		box.view.repaint();
+
 	}
 
 	public void startElement(String uri, String localName, String qName,
@@ -68,32 +88,14 @@ class XmlDecoder extends DefaultHandler {
 
 		String attribName, attribValue;
 
-		float thermal_conductivity = Float.NaN;
-		float specific_heat = Float.NaN;
-		float density = Float.NaN;
-		float temperature = Float.NaN;
-		boolean visible = true;
-		boolean draggable = true;
-		Color color = Color.gray;
+		float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
 
 		if (qName == "rectangle") {
 			if (attrib != null) {
-				float x = 0;
-				float y = 0;
-				float w = 1;
-				float h = 1;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
-					if (attribName == "thermal_conductivity") {
-						thermal_conductivity = Float.parseFloat(attribValue);
-					} else if (attribName == "specific_heat") {
-						specific_heat = Float.parseFloat(attribValue);
-					} else if (attribName == "density") {
-						density = Float.parseFloat(attribValue);
-					} else if (attribName == "temperature") {
-						temperature = Float.parseFloat(attribValue);
-					} else if (attribName == "x") {
+					if (attribName == "x") {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
 						y = Float.parseFloat(attribValue);
@@ -101,26 +103,30 @@ class XmlDecoder extends DefaultHandler {
 						w = Float.parseFloat(attribValue);
 					} else if (attribName == "height") {
 						h = Float.parseFloat(attribValue);
-					} else if (attribName == "visible") {
-						visible = Boolean.parseBoolean(attribValue);
-					} else if (attribName == "draggable") {
-						draggable = Boolean.parseBoolean(attribValue);
-					} else if (attribName == "color") {
-						color = new Color(Integer.parseInt(attribValue, 16));
 					}
+					if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
+							&& !Float.isNaN(h))
+						part = box.model.addRectangularPart(x, y, w, h);
 				}
-				Part p = box.model.addRectangularPart(x, y, w, h);
-				if (!Float.isNaN(thermal_conductivity))
-					p.setThermalConductivity(thermal_conductivity);
-				if (!Float.isNaN(specific_heat))
-					p.setSpecificHeat(specific_heat);
-				if (!Float.isNaN(density))
-					p.setDensity(density);
-				if (!Float.isNaN(temperature))
-					p.setTemperature(temperature);
-				p.setDraggable(draggable);
-				p.setVisible(visible);
-				p.setColor(color);
+			}
+		} else if (qName == "ellipse") {
+			if (attrib != null) {
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "width") {
+						w = Float.parseFloat(attribValue);
+					} else if (attribName == "height") {
+						h = Float.parseFloat(attribValue);
+					}
+					if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
+							&& !Float.isNaN(h))
+						part = box.model.addEllipticalPart(x, y, w, h);
+				}
 			}
 		}
 
@@ -158,8 +164,56 @@ class XmlDecoder extends DefaultHandler {
 			outline = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {
 			smooth = Boolean.parseBoolean(str);
+		} else if (qName == "thermal_conductivity") {
+			partThermalConductivity = Float.parseFloat(str);
+		} else if (qName == "specific_heat") {
+			partSpecificHeat = Float.parseFloat(str);
+		} else if (qName == "density") {
+			partDensity = Float.parseFloat(str);
+		} else if (qName == "temperature") {
+			partTemperature = Float.parseFloat(str);
+		} else if (qName == "constant_temperature") {
+			partConstantTemperature = Boolean.parseBoolean(str);
+		} else if (qName == "power") {
+			partPower = Float.parseFloat(str);
+		} else if (qName == "color") {
+			partColor = new Color(Integer.parseInt(str, 16));
+		} else if (qName == "visible") {
+			partVisible = Boolean.parseBoolean(str);
+		} else if (qName == "draggable") {
+			partDraggable = Boolean.parseBoolean(str);
+		} else if (qName == "part") {
+			if (part != null) {
+				if (!Float.isNaN(partThermalConductivity))
+					part.setThermalConductivity(partThermalConductivity);
+				if (!Float.isNaN(partSpecificHeat))
+					part.setSpecificHeat(partSpecificHeat);
+				if (!Float.isNaN(partDensity))
+					part.setDensity(partDensity);
+				if (!Float.isNaN(partTemperature))
+					part.setTemperature(partTemperature);
+				if (!Float.isNaN(partPower))
+					part.setPower(partPower);
+				part.setConstantTemperature(partConstantTemperature);
+				part.setDraggable(partDraggable);
+				part.setVisible(partVisible);
+				part.setColor(partColor);
+				resetPartVariables();
+			}
 		}
 
+	}
+
+	private void resetPartVariables() {
+		partThermalConductivity = Float.NaN;
+		partSpecificHeat = Float.NaN;
+		partDensity = Float.NaN;
+		partTemperature = Float.NaN;
+		partConstantTemperature = true;
+		partPower = Float.NaN;
+		partVisible = true;
+		partDraggable = true;
+		partColor = Color.gray;
 	}
 
 	public void characters(char[] ch, int start, int length) {
