@@ -80,7 +80,8 @@ class XmlEncoder {
 			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
 		}
 		if (box.model.getMeasurementInterval() != 500) {
-			sb.append("<measurement_interval>" + box.model.getTimeStep()
+			sb.append("<measurement_interval>"
+					+ box.model.getMeasurementInterval()
 					+ "</measurement_interval>\n");
 		}
 
