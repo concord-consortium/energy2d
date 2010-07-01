@@ -157,7 +157,7 @@ class ModelDialog extends JDialog {
 				model.setTimeStep(steplength);
 				model.setBackgroundTemperature(bgTemperature);
 				model.setBackgroundConductivity(conductivity);
-				model.setBackgroundCapacity(capacity);
+				model.setBackgroundSpecificHeat(capacity);
 				model.setBackgroundDensity(density);
 				model.setViscosity(viscosity);
 				model.setThermalBuoyancy(buoyancy);
@@ -325,7 +325,7 @@ class ModelDialog extends JDialog {
 		label = new JLabel("Specific heat");
 		p.add(label);
 		capacityField = new JTextField(FORMAT.format(model
-				.getBackgroundCapacity()), 16);
+				.getBackgroundSpecificHeat()), 16);
 		capacityField.addActionListener(okListener);
 		p.add(capacityField);
 		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");

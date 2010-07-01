@@ -35,15 +35,9 @@ public class Model2D {
 
 	private int indexOfStep;
 
-	// Air's thermal conductivity = 0.025 W/(m*K)
-	private float backgroundConductivity = 0.025f;
-
-	// Air's specific heat capacity = 1012 J/(kg*K)
-	private float backgroundCapacity = 1012;
-
-	// Air's density = 1.204 kg/m^3 at 25 C
-	private float backgroundDensity = 1.204f;
-
+	private float backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
+	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
+	private float backgroundDensity = Constants.AIR_DENSITY;
 	private float backgroundTemperature;
 
 	/*
@@ -320,12 +314,12 @@ public class Model2D {
 		return backgroundConductivity;
 	}
 
-	public void setBackgroundCapacity(float backgroundCapacity) {
-		this.backgroundCapacity = backgroundCapacity;
+	public void setBackgroundSpecificHeat(float backgroundSpecificHeat) {
+		this.backgroundSpecificHeat = backgroundSpecificHeat;
 	}
 
-	public float getBackgroundCapacity() {
-		return backgroundCapacity;
+	public float getBackgroundSpecificHeat() {
+		return backgroundSpecificHeat;
 	}
 
 	public void setBackgroundDensity(float backgroundDensity) {
@@ -415,7 +409,7 @@ public class Model2D {
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
 				conductivity[i][j] = backgroundConductivity;
-				capacity[i][j] = backgroundCapacity;
+				capacity[i][j] = backgroundSpecificHeat;
 				density[i][j] = backgroundDensity;
 				fluidity[i][j] = true;
 				uWind[i][j] = vWind[i][j] = 0;
@@ -497,7 +491,7 @@ public class Model2D {
 	private void init() {
 		for (int i = 0; i < nx; i++) {
 			Arrays.fill(conductivity[i], backgroundConductivity);
-			Arrays.fill(capacity[i], backgroundCapacity);
+			Arrays.fill(capacity[i], backgroundSpecificHeat);
 			Arrays.fill(density[i], backgroundDensity);
 		}
 		setInitialTemperature();

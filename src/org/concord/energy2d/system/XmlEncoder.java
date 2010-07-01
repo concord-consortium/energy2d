@@ -2,6 +2,7 @@ package org.concord.energy2d.system;
 
 import java.util.List;
 
+import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Part;
 
 /**
@@ -75,6 +76,12 @@ class XmlEncoder {
 			sb.append("<model_height>" + box.model.getLy()
 					+ "</model_height>\n");
 		}
+		if (box.model.isSunny()) {
+			sb.append("<sunny>true</sunny>");
+		}
+		if (!box.model.isConvective()) {
+			sb.append("<convective>false</convective>");
+		}
 		if (box.model.getTimeStep() != 1) {
 			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
 		}
@@ -85,6 +92,25 @@ class XmlEncoder {
 		sb.append("<buoyancy_approximation>"
 				+ box.model.getBuoyancyApproximation()
 				+ "</buoyancy_approximation>\n");
+		if (box.model.getBackgroundConductivity() != Constants.AIR_THERMAL_CONDUCTIVITY) {
+			sb.append("<background_conductivity>"
+					+ box.model.getBackgroundConductivity()
+					+ "</background_conductivity>");
+		}
+		if (box.model.getBackgroundDensity() != Constants.AIR_DENSITY) {
+			sb.append("<background_density>" + box.model.getBackgroundDensity()
+					+ "</background_density>");
+		}
+		if (box.model.getBackgroundSpecificHeat() != Constants.AIR_SPECIFIC_HEAT) {
+			sb.append("<background_specific_heat>"
+					+ box.model.getBackgroundSpecificHeat()
+					+ "</background_specific_heat>");
+		}
+		if (box.model.getBackgroundTemperature() != 0) {
+			sb.append("<background_temperature>"
+					+ box.model.getBackgroundTemperature()
+					+ "</background_temperature>");
+		}
 
 		sb.append("<boundary>\n");
 		sb.append(box.model.getHeatBoundary().toXml());

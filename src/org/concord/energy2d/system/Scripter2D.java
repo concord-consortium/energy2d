@@ -624,7 +624,7 @@ class Scripter2D extends Scripter {
 					} catch (NumberFormatException e) {
 						return;
 					}
-					s2d.model.setBackgroundCapacity(x);
+					s2d.model.setBackgroundSpecificHeat(x);
 					arrayUpdateRequested = true;
 				} else if (t[0].equalsIgnoreCase("background_density")) {
 					float x = 0;
