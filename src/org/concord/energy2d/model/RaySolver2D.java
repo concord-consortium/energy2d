@@ -43,11 +43,11 @@ class RaySolver2D {
 		this.ly = ly;
 	}
 
-	void setRaySpeed(float raySpeed) {
+	void setSolarRaySpeed(float raySpeed) {
 		this.raySpeed = raySpeed;
 	}
 
-	float getRaySpeed() {
+	float getSolarRaySpeed() {
 		return raySpeed;
 	}
 

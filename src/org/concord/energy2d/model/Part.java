@@ -318,8 +318,8 @@ public class Part extends Manipulable {
 		float x, y;
 		Photon p;
 		float d;
-		float vx = model.getRaySpeed() * sin;
-		float vy = -model.getRaySpeed() * cos;
+		float vx = model.getSolarRaySpeed() * sin;
+		float vy = -model.getSolarRaySpeed() * cos;
 		if (n == 1) {
 			d = 0.5f * length;
 			x = line.x1 + d * cos;
@@ -327,7 +327,7 @@ public class Part extends Manipulable {
 			d = model.getAverageTemperatureAt(x, y);
 			if (d > MINIMUM_RADIATING_TEMPERATUE) {
 				d = model.getTemperatureAt(x, y);
-				p = new Photon(x, y, getIrradiance(d), model.getRaySpeed());
+				p = new Photon(x, y, getIrradiance(d), model.getSolarRaySpeed());
 				p.setVx(vx);
 				p.setVy(vy);
 				model.addPhoton(p);
@@ -353,12 +353,12 @@ public class Part extends Manipulable {
 				d = model.getAverageTemperatureAt(x, y);
 				ir = getIrradiance(d) / nray;
 				if (d > MINIMUM_RADIATING_TEMPERATUE) {
-					p = new Photon(x, y, ir, model.getRaySpeed());
+					p = new Photon(x, y, ir, model.getSolarRaySpeed());
 					p.setVx(vx);
 					p.setVy(vy);
 					model.addPhoton(p);
 					for (int k = 0; k < nray - 1; k++) {
-						p = new Photon(x, y, ir, model.getRaySpeed());
+						p = new Photon(x, y, ir, model.getSolarRaySpeed());
 						p.setVx(vxi[k]);
 						p.setVy(vyi[k]);
 						model.addPhoton(p);
@@ -520,12 +520,22 @@ public class Part extends Manipulable {
 				+ "</thermal_conductivity>\n";
 		xml += "<specific_heat>" + specificHeat + "</specific_heat>\n";
 		xml += "<density>" + density + "</density>\n";
+		xml += "<transmission>" + transmission + "</transmission>\n";
+		xml += "<reflection>" + reflection + "</reflection>\n";
+		xml += "<absorption>" + absorption + "</absorption>\n";
+		xml += "<emissivity>" + emissivity + "</emissivity>\n";
 		if (!java.lang.Float.isNaN(temperature))
 			xml += "<temperature>" + temperature + "</temperature>\n";
 		if (!constantTemperature)
 			xml += "<constant_temperature>false</constant_temperature>\n";
 		if (power != 0)
 			xml += "<power>" + power + "</power>\n";
+		if (windSpeed > 0) {
+			xml += "<wind_speed>" + windSpeed + "</wind_speed>\n";
+		}
+		if (windAngle != 0) {
+			xml += "<wind_angle>" + windAngle + "</wind_angle>\n";
+		}
 		if (!getColor().equals(Color.gray))
 			xml += "<color>"
 					+ Integer.toHexString(0x00ffffff & getColor().getRGB())

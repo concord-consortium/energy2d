@@ -425,7 +425,7 @@ class Scripter2D extends Scripter {
 					} catch (NumberFormatException e) {
 						return;
 					}
-					s2d.model.setRaySpeed(raySpeed);
+					s2d.model.setSolarRaySpeed(raySpeed);
 				} else if (t[0].equalsIgnoreCase("ray_count")) {
 					int rayCount = 0;
 					try {
@@ -461,7 +461,15 @@ class Scripter2D extends Scripter {
 					} catch (NumberFormatException e) {
 						return;
 					}
-					s2d.model.setViscosity(viscosity);
+					s2d.model.setBackgroundViscosity(viscosity);
+				} else if (t[0].equalsIgnoreCase("background_viscosity")) {
+					float viscosity = 0;
+					try {
+						viscosity = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.model.setBackgroundViscosity(viscosity);
 				} else if (t[0].equalsIgnoreCase("velocity")) {
 					s2d.view.setVelocityOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
@@ -618,6 +626,15 @@ class Scripter2D extends Scripter {
 					s2d.model.setBackgroundConductivity(x);
 					arrayUpdateRequested = true;
 				} else if (t[0].equalsIgnoreCase("background_capacity")) {
+					float x = 0;
+					try {
+						x = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						return;
+					}
+					s2d.model.setBackgroundSpecificHeat(x);
+					arrayUpdateRequested = true;
+				} else if (t[0].equalsIgnoreCase("background_specific_heat")) {
 					float x = 0;
 					try {
 						x = Float.parseFloat(t[1]);

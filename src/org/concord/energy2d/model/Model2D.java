@@ -182,11 +182,11 @@ public class Model2D {
 		return fluidSolver.getBuoyancyApproximation();
 	}
 
-	public void setViscosity(float viscosity) {
-		fluidSolver.setViscosity(viscosity);
+	public void setBackgroundViscosity(float viscosity) {
+		fluidSolver.setBackgroundViscosity(viscosity);
 	}
 
-	public float getViscosity() {
+	public float getBackgroundViscosity() {
 		return fluidSolver.getViscosity();
 	}
 
@@ -233,12 +233,12 @@ public class Model2D {
 		return raySolver.getSolarRayCount();
 	}
 
-	public void setRaySpeed(float raySpeed) {
-		raySolver.setRaySpeed(raySpeed);
+	public void setSolarRaySpeed(float raySpeed) {
+		raySolver.setSolarRaySpeed(raySpeed);
 	}
 
-	public float getRaySpeed() {
-		return raySolver.getRaySpeed();
+	public float getSolarRaySpeed() {
+		return raySolver.getSolarRaySpeed();
 	}
 
 	public void setPhotonEmissionInterval(int photonEmissionInterval) {

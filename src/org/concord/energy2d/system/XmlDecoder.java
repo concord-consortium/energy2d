@@ -3,6 +3,7 @@ package org.concord.energy2d.system;
 import java.awt.Color;
 
 import org.concord.energy2d.model.Boundary;
+import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.DirichletHeatBoundary;
 import org.concord.energy2d.model.HeatBoundary;
 import org.concord.energy2d.model.Model2D;
@@ -26,9 +27,23 @@ class XmlDecoder extends DefaultHandler {
 	private float modelWidth = 10;
 	private float modelHeight = 10;
 	private float timeStep = 1;
-	private float minimumTemperature;
-	private float maximumTemperature = 40;
 	private int measurementInterval = 500;
+	private boolean sunny;
+	private float sunAngle = (float) Math.PI * 0.5f;
+	private float solarPowerDensity = 2000;
+	private int solarRayCount = 24;
+	private float solarRaySpeed = 0.1f;
+	private int photonEmissionInterval = 20;
+	private boolean convective = true;
+	private float backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
+	private float backgroundDensity = Constants.AIR_DENSITY;
+	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
+	private float backgroundViscosity = Constants.AIR_VISCOSITY;
+	private float backgroundTemperature;
+	private float thermalBuoyancy;
+	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+
+	// view properties
 	private boolean ruler;
 	private boolean grid;
 	private boolean isotherm;
@@ -38,12 +53,17 @@ class XmlDecoder extends DefaultHandler {
 	private boolean velocity;
 	private boolean clock = true;
 	private boolean smooth = true;
-	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+	private float minimumTemperature;
+	private float maximumTemperature = 40;
 
 	// part properties
 	private float partThermalConductivity = Float.NaN;
 	private float partSpecificHeat = Float.NaN;
 	private float partDensity = Float.NaN;
+	private float partEmissivity = Float.NaN;
+	private float partAbsorption = Float.NaN;
+	private float partReflection = Float.NaN;
+	private float partTransmission = Float.NaN;
 	private float partTemperature = Float.NaN;
 	private boolean partConstantTemperature = true;
 	private float partPower = Float.NaN;
@@ -66,6 +86,19 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
 		box.model.setMeasurementInterval(measurementInterval);
+		box.model.setSunny(sunny);
+		box.model.setSunAngle(sunAngle);
+		box.model.setSolarPowerDensity(solarPowerDensity);
+		box.model.setSolarRayCount(solarRayCount);
+		box.model.setSolarRaySpeed(solarRaySpeed);
+		box.model.setPhotonEmissionInterval(photonEmissionInterval);
+		box.model.setConvective(convective);
+		box.model.setBackgroundConductivity(backgroundConductivity);
+		box.model.setBackgroundDensity(backgroundDensity);
+		box.model.setBackgroundSpecificHeat(backgroundSpecificHeat);
+		box.model.setBackgroundTemperature(backgroundTemperature);
+		box.model.setBackgroundViscosity(backgroundViscosity);
+		box.model.setThermalBuoyancy(thermalBuoyancy);
 		box.model.setBuoyancyApproximation(buoyancyApproximation);
 
 		box.view.setRulerOn(ruler);
@@ -233,6 +266,34 @@ class XmlDecoder extends DefaultHandler {
 			modelHeight = Float.parseFloat(str);
 		} else if (qName == "timestep") {
 			timeStep = Float.parseFloat(str);
+		} else if (qName == "measurement_interval") {
+			measurementInterval = Integer.parseInt(str);
+		} else if (qName == "sunny") {
+			sunny = Boolean.parseBoolean(str);
+		} else if (qName == "sun_angle") {
+			sunAngle = Float.parseFloat(str);
+		} else if (qName == "solar_power_density") {
+			solarPowerDensity = Float.parseFloat(str);
+		} else if (qName == "solar_ray_count") {
+			solarRayCount = Integer.parseInt(str);
+		} else if (qName == "solar_ray_speed") {
+			solarRaySpeed = Float.parseFloat(str);
+		} else if (qName == "photon_emission_interval") {
+			photonEmissionInterval = Integer.parseInt(str);
+		} else if (qName == "convective") {
+			convective = Boolean.parseBoolean(str);
+		} else if (qName == "background_conductivity") {
+			backgroundConductivity = Float.parseFloat(str);
+		} else if (qName == "background_density") {
+			backgroundDensity = Float.parseFloat(str);
+		} else if (qName == "background_specific_heat") {
+			backgroundSpecificHeat = Float.parseFloat(str);
+		} else if (qName == "background_temperature") {
+			backgroundTemperature = Float.parseFloat(str);
+		} else if (qName == "background_viscosity") {
+			backgroundViscosity = Float.parseFloat(str);
+		} else if (qName == "thermal_buoyancy") {
+			thermalBuoyancy = Float.parseFloat(str);
 		} else if (qName == "buoyancy_approximation") {
 			buoyancyApproximation = Byte.parseByte(str);
 		} else if (qName == "minimum_temperature") {
@@ -263,6 +324,14 @@ class XmlDecoder extends DefaultHandler {
 			partSpecificHeat = Float.parseFloat(str);
 		} else if (qName == "density") {
 			partDensity = Float.parseFloat(str);
+		} else if (qName == "emissivity") {
+			partEmissivity = Float.parseFloat(str);
+		} else if (qName == "absorption") {
+			partAbsorption = Float.parseFloat(str);
+		} else if (qName == "reflection") {
+			partReflection = Float.parseFloat(str);
+		} else if (qName == "transmission") {
+			partTransmission = Float.parseFloat(str);
 		} else if (qName == "temperature") {
 			partTemperature = Float.parseFloat(str);
 		} else if (qName == "constant_temperature") {
@@ -289,6 +358,14 @@ class XmlDecoder extends DefaultHandler {
 					part.setTemperature(partTemperature);
 				if (!Float.isNaN(partPower))
 					part.setPower(partPower);
+				if (!Float.isNaN(partEmissivity))
+					part.setEmissivity(partEmissivity);
+				if (!Float.isNaN(partAbsorption))
+					part.setAbsorption(partAbsorption);
+				if (!Float.isNaN(partReflection))
+					part.setReflection(partReflection);
+				if (!Float.isNaN(partTransmission))
+					part.setTransmission(partTransmission);
 				part.setConstantTemperature(partConstantTemperature);
 				part.setDraggable(partDraggable);
 				part.setVisible(partVisible);
@@ -306,6 +383,10 @@ class XmlDecoder extends DefaultHandler {
 		partTemperature = Float.NaN;
 		partConstantTemperature = true;
 		partPower = Float.NaN;
+		partEmissivity = Float.NaN;
+		partAbsorption = Float.NaN;
+		partReflection = Float.NaN;
+		partTransmission = Float.NaN;
 		partVisible = true;
 		partDraggable = true;
 		partColor = Color.gray;

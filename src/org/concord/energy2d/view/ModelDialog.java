@@ -159,12 +159,12 @@ class ModelDialog extends JDialog {
 				model.setBackgroundConductivity(conductivity);
 				model.setBackgroundSpecificHeat(capacity);
 				model.setBackgroundDensity(density);
-				model.setViscosity(viscosity);
+				model.setBackgroundViscosity(viscosity);
 				model.setThermalBuoyancy(buoyancy);
 				model.setLx(width);
 				model.setLy(height);
 				model.setSolarPowerDensity(solarPower);
-				model.setRaySpeed(raySpeed);
+				model.setSolarRaySpeed(raySpeed);
 				model.setSolarRayCount((int) rayNumber);
 				model.setPhotonEmissionInterval((int) emissionInterval);
 				model.setSunAngle((float) Math.toRadians(sunAngleSlider
@@ -346,7 +346,7 @@ class ModelDialog extends JDialog {
 		viscosityLabel = new JLabel("Kinematic viscosity");
 		viscosityLabel.setEnabled(model.isConvective());
 		p.add(viscosityLabel);
-		viscosityField = new JTextField(FORMAT.format(model.getViscosity()), 16);
+		viscosityField = new JTextField(FORMAT.format(model.getBackgroundViscosity()), 16);
 		viscosityField.setEnabled(model.isConvective());
 		viscosityField.addActionListener(okListener);
 		p.add(viscosityField);
@@ -416,7 +416,7 @@ class ModelDialog extends JDialog {
 		raySpeedLabel = new JLabel("Ray speed");
 		raySpeedLabel.setEnabled(model.isSunny());
 		p.add(raySpeedLabel);
-		raySpeedField = new JTextField(FORMAT.format(model.getRaySpeed()), 16);
+		raySpeedField = new JTextField(FORMAT.format(model.getSolarRaySpeed()), 16);
 		raySpeedField.setEnabled(model.isSunny());
 		raySpeedField.addActionListener(okListener);
 		p.add(raySpeedField);

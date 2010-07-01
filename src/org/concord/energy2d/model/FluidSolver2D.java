@@ -22,11 +22,7 @@ abstract class FluidSolver2D {
 	private float gravity = 0;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
 
-	/*
-	 * By default, air's kinematic viscosity = 1.568 x 10^-5 m^2/s at 27 C is
-	 * used. It can be set to zero for inviscid fluid.
-	 */
-	float viscosity = 0.00001568f;
+	float viscosity = Constants.AIR_VISCOSITY;
 
 	int nx, ny, nx1, ny1, nx2, ny2;
 	float[][] u0, v0;
@@ -90,7 +86,7 @@ abstract class FluidSolver2D {
 		this.vWind = vWind;
 	}
 
-	void setViscosity(float viscosity) {
+	void setBackgroundViscosity(float viscosity) {
 		this.viscosity = viscosity;
 	}
 

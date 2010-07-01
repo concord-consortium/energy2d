@@ -76,12 +76,6 @@ class XmlEncoder {
 			sb.append("<model_height>" + box.model.getLy()
 					+ "</model_height>\n");
 		}
-		if (box.model.isSunny()) {
-			sb.append("<sunny>true</sunny>");
-		}
-		if (!box.model.isConvective()) {
-			sb.append("<convective>false</convective>");
-		}
 		if (box.model.getTimeStep() != 1) {
 			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
 		}
@@ -89,9 +83,24 @@ class XmlEncoder {
 			sb.append("<measurement_interval>" + box.model.getTimeStep()
 					+ "</measurement_interval>\n");
 		}
-		sb.append("<buoyancy_approximation>"
-				+ box.model.getBuoyancyApproximation()
-				+ "</buoyancy_approximation>\n");
+
+		if (box.model.isSunny()) {
+			sb.append("<sunny>true</sunny>");
+		}
+		sb.append("<sun_angle>" + box.model.getSunAngle() + "</sun_angle>");
+		sb.append("<solar_power_density>" + box.model.getSolarPowerDensity()
+				+ "</solar_power_density>");
+		sb.append("<solar_ray_count>" + box.model.getSolarRayCount()
+				+ "</solar_ray_count>");
+		sb.append("<solar_ray_speed>" + box.model.getSolarRaySpeed()
+				+ "</solar_ray_speed>");
+		sb.append("<photon_emission_interval>"
+				+ box.model.getPhotonEmissionInterval()
+				+ "</photon_emission_interval>");
+
+		if (!box.model.isConvective()) {
+			sb.append("<convective>false</convective>");
+		}
 		if (box.model.getBackgroundConductivity() != Constants.AIR_THERMAL_CONDUCTIVITY) {
 			sb.append("<background_conductivity>"
 					+ box.model.getBackgroundConductivity()
@@ -111,6 +120,16 @@ class XmlEncoder {
 					+ box.model.getBackgroundTemperature()
 					+ "</background_temperature>");
 		}
+		if (box.model.getBackgroundViscosity() != Constants.AIR_VISCOSITY) {
+			sb.append("<background_viscosity>"
+					+ box.model.getBackgroundViscosity()
+					+ "</background_viscosity>");
+		}
+		sb.append("<thermal_buoyancy>" + box.model.getThermalBuoyancy()
+				+ "</thermal_buoyancy>\n");
+		sb.append("<buoyancy_approximation>"
+				+ box.model.getBuoyancyApproximation()
+				+ "</buoyancy_approximation>\n");
 
 		sb.append("<boundary>\n");
 		sb.append(box.model.getHeatBoundary().toXml());
