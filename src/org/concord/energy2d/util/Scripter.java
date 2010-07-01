@@ -46,7 +46,7 @@ public abstract class Scripter {
 
 	protected abstract void evalCommand(String ci);
 
-	protected static float[] parseArray(final int n, String str) {
+	public static float[] parseArray(final int n, String str) {
 		str = str.trim();
 		if (str.startsWith("("))
 			str = str.substring(1);
@@ -58,7 +58,7 @@ public abstract class Scripter {
 		return parseArray(n, s);
 	}
 
-	protected static float[] parseArray(int n, String[] s) {
+	public static float[] parseArray(int n, String[] s) {
 		if (n > s.length)
 			return null;
 		float[] x = new float[n];

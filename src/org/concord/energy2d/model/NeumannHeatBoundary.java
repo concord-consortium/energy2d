@@ -36,4 +36,13 @@ public class NeumannHeatBoundary implements HeatBoundary {
 		return fluxAtBorder[side];
 	}
 
+	public String toXml() {
+		String s = "<flux_at_border upper=\"" + fluxAtBorder[UPPER] + "\"";
+		s += " lower=\"" + fluxAtBorder[LOWER] + "\"";
+		s += " left=\"" + fluxAtBorder[LEFT] + "\"";
+		s += " right=\"" + fluxAtBorder[RIGHT] + "\"";
+		s += "/>\n";
+		return s;
+	}
+
 }

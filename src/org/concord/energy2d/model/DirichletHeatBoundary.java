@@ -35,4 +35,14 @@ public class DirichletHeatBoundary implements HeatBoundary {
 		return temperatureAtBorder[side];
 	}
 
+	public String toXml() {
+		String s = "<temperature_at_border upper=\""
+				+ temperatureAtBorder[UPPER] + "\"";
+		s += " lower=\"" + temperatureAtBorder[LOWER] + "\"";
+		s += " left=\"" + temperatureAtBorder[LEFT] + "\"";
+		s += " right=\"" + temperatureAtBorder[RIGHT] + "\"";
+		s += "/>\n";
+		return s;
+	}
+
 }

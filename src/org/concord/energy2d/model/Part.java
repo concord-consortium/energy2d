@@ -498,20 +498,23 @@ public class Part extends Manipulable {
 		} else if (getShape() instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
 			xml += "<ellipse ";
-			xml += " x=\"" + e.x + "\"";
-			xml += " y=\"" + e.y + "\"";
-			xml += " width=\"" + e.width + "\"";
-			xml += " height=\"" + e.height + "\"/>";
+			xml += " x=\"" + e.getCenterX() + "\"";
+			xml += " y=\"" + e.getCenterY() + "\"";
+			xml += " a=\"" + e.width + "\"";
+			xml += " b=\"" + e.height + "\"/>";
 		} else if (getShape() instanceof Polygon2D) {
 			Polygon2D p = (Polygon2D) getShape();
-			xml += "<polygon>\n";
+			xml += "<polygon count=\"" + p.getVertexCount() + "\" vertices=\"";
 			int n = p.getVertexCount();
-			for (int i = 0; i < n; i++) {
-				Point2D.Float p2d = p.getVertex(i);
-				xml += "<x>" + p2d.x + "</x>\n";
-				xml += "<y>" + p2d.y + "</y>\n";
+			Point2D.Float p2d;
+			for (int i = 0; i < n - 1; i++) {
+				p2d = p.getVertex(i);
+				xml += p2d.x + ", " + p2d.y + ", ";
 			}
-			xml += "</polygon>\n";
+			p2d = p.getVertex(n - 1);
+			xml += p2d.x + ", " + p2d.y + "\"/>\n";
+		} else if (getShape() instanceof Area) {
+
 		}
 		xml += "<thermal_conductivity>" + thermalConductivity
 				+ "</thermal_conductivity>\n";

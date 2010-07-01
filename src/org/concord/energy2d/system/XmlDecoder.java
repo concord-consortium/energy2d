@@ -2,8 +2,13 @@ package org.concord.energy2d.system;
 
 import java.awt.Color;
 
+import org.concord.energy2d.model.Boundary;
+import org.concord.energy2d.model.DirichletHeatBoundary;
+import org.concord.energy2d.model.HeatBoundary;
 import org.concord.energy2d.model.Model2D;
+import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.util.Scripter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -88,10 +93,9 @@ class XmlDecoder extends DefaultHandler {
 
 		String attribName, attribValue;
 
-		float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
-
 		if (qName == "rectangle") {
 			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -104,13 +108,14 @@ class XmlDecoder extends DefaultHandler {
 					} else if (attribName == "height") {
 						h = Float.parseFloat(attribValue);
 					}
-					if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
-							&& !Float.isNaN(h))
-						part = box.model.addRectangularPart(x, y, w, h);
 				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
+						&& !Float.isNaN(h))
+					part = box.model.addRectangularPart(x, y, w, h);
 			}
 		} else if (qName == "ellipse") {
 			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, a = Float.NaN, b = Float.NaN;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -118,14 +123,102 @@ class XmlDecoder extends DefaultHandler {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
 						y = Float.parseFloat(attribValue);
-					} else if (attribName == "width") {
-						w = Float.parseFloat(attribValue);
-					} else if (attribName == "height") {
-						h = Float.parseFloat(attribValue);
+					} else if (attribName == "a") {
+						a = Float.parseFloat(attribValue);
+					} else if (attribName == "b") {
+						b = Float.parseFloat(attribValue);
 					}
-					if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
-							&& !Float.isNaN(h))
-						part = box.model.addEllipticalPart(x, y, w, h);
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(a)
+						&& !Float.isNaN(b))
+					part = box.model.addEllipticalPart(x, y, a, b);
+			}
+		} else if (qName == "polygon") {
+			if (attrib != null) {
+				int count = -1;
+				String vertices = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "count") {
+						count = Integer.parseInt(attribValue);
+					} else if (attribName == "vertices") {
+						vertices = attribValue;
+					}
+				}
+				if (count > 0 && vertices != null) {
+					float[] v = Scripter.parseArray(count * 2, vertices);
+					float[] x = new float[count];
+					float[] y = new float[count];
+					for (int i = 0; i < count; i++) {
+						x[i] = v[2 * i];
+						y[i] = v[2 * i + 1];
+					}
+					part = box.model.addPolygonPart(x, y);
+				}
+			}
+		} else if (qName == "temperature_at_border") {
+			if (attrib != null) {
+				float left = Float.NaN, right = Float.NaN, upper = Float.NaN, lower = Float.NaN;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "left") {
+						left = Float.parseFloat(attribValue);
+					} else if (attribName == "right") {
+						right = Float.parseFloat(attribValue);
+					} else if (attribName == "upper") {
+						upper = Float.parseFloat(attribValue);
+					} else if (attribName == "lower") {
+						lower = Float.parseFloat(attribValue);
+					}
+				}
+				if (!Float.isNaN(left) && !Float.isNaN(right)
+						&& !Float.isNaN(upper) && !Float.isNaN(lower)) {
+					DirichletHeatBoundary b = null;
+					HeatBoundary boundary = box.model.getHeatBoundary();
+					if (boundary instanceof DirichletHeatBoundary) {
+						b = (DirichletHeatBoundary) boundary;
+					} else {
+						b = new DirichletHeatBoundary();
+						box.model.setHeatBoundary(b);
+					}
+					b.setTemperatureAtBorder(Boundary.UPPER, upper);
+					b.setTemperatureAtBorder(Boundary.RIGHT, right);
+					b.setTemperatureAtBorder(Boundary.LOWER, lower);
+					b.setTemperatureAtBorder(Boundary.LEFT, left);
+				}
+			}
+		} else if (qName == "flux_at_border") {
+			if (attrib != null) {
+				float left = Float.NaN, right = Float.NaN, upper = Float.NaN, lower = Float.NaN;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "left") {
+						left = Float.parseFloat(attribValue);
+					} else if (attribName == "right") {
+						right = Float.parseFloat(attribValue);
+					} else if (attribName == "upper") {
+						upper = Float.parseFloat(attribValue);
+					} else if (attribName == "lower") {
+						lower = Float.parseFloat(attribValue);
+					}
+				}
+				if (!Float.isNaN(left) && !Float.isNaN(right)
+						&& !Float.isNaN(upper) && !Float.isNaN(lower)) {
+					NeumannHeatBoundary b = null;
+					HeatBoundary boundary = box.model.getHeatBoundary();
+					if (boundary instanceof NeumannHeatBoundary) {
+						b = (NeumannHeatBoundary) boundary;
+					} else {
+						b = new NeumannHeatBoundary();
+						box.model.setHeatBoundary(b);
+					}
+					b.setFluxAtBorder(Boundary.UPPER, upper);
+					b.setFluxAtBorder(Boundary.RIGHT, right);
+					b.setFluxAtBorder(Boundary.LOWER, lower);
+					b.setFluxAtBorder(Boundary.LEFT, left);
 				}
 			}
 		}
@@ -182,6 +275,8 @@ class XmlDecoder extends DefaultHandler {
 			partVisible = Boolean.parseBoolean(str);
 		} else if (qName == "draggable") {
 			partDraggable = Boolean.parseBoolean(str);
+		} else if (qName == "boundary") {
+
 		} else if (qName == "part") {
 			if (part != null) {
 				if (!Float.isNaN(partThermalConductivity))

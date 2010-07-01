@@ -86,6 +86,10 @@ class XmlEncoder {
 				+ box.model.getBuoyancyApproximation()
 				+ "</buoyancy_approximation>\n");
 
+		sb.append("<boundary>\n");
+		sb.append(box.model.getHeatBoundary().toXml());
+		sb.append("</boundary>\n");
+
 		List<Part> parts = box.model.getParts();
 		if (!parts.isEmpty()) {
 			sb.append("<structure>\n");
