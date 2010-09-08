@@ -666,7 +666,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 
 		g2.setStroke(stroke);
-		drawFrank(g2, getWidth() - 85, getHeight() - 16);
+		int dy = rulerRenderer != null ? 24 : 12;
+		drawFrank(g2, getWidth() - 64, getHeight() - dy);
 
 	}
 
@@ -1696,8 +1697,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void drawFrank(Graphics g, int x, int y) {
-		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.setColor(Color.white);
+		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.setColor(Color.lightGray);
 		String s = "Energy2D";
 		g.drawString(s, x + 1, y - 1);
 		g.drawString(s, x + 1, y + 1);
