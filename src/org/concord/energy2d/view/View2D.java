@@ -330,6 +330,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		rainbow.setRect(x, y, w, h);
 	}
 
+	public Rectangle getRainbowRectangle() {
+		return rainbow.getRect();
+	}
+
 	public void setGraphOn(boolean b) {
 		showGraph = b;
 	}

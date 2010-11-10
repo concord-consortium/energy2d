@@ -1,5 +1,6 @@
 package org.concord.energy2d.system;
 
+import java.awt.Rectangle;
 import java.util.List;
 
 import org.concord.energy2d.model.Constants;
@@ -35,16 +36,15 @@ class XmlEncoder {
 		if (box.view.isRainbowOn()) {
 			sb.append("<rainbow>true</rainbow>\n");
 		}
-		if (box.view.getMinimumTemperature() != 0) {
-			sb.append("<minimum_temperature>"
-					+ box.view.getMinimumTemperature()
-					+ "</minimum_temperature>\n");
-		}
-		if (box.view.getMaximumTemperature() != 40) {
-			sb.append("<maximum_temperature>"
-					+ box.view.getMaximumTemperature()
-					+ "</maximum_temperature>\n");
-		}
+		Rectangle rainbow = box.view.getRainbowRectangle();
+		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
+		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");
+		sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
+		sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
+		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature()
+				+ "</minimum_temperature>\n");
+		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()
+				+ "</maximum_temperature>\n");
 		if (box.view.isOutlineOn()) {
 			sb.append("<outline>true</outline>\n");
 		}

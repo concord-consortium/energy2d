@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 
@@ -32,6 +33,10 @@ class Rainbow {
 		this.y = y;
 		this.w = w;
 		this.h = h;
+	}
+
+	Rectangle getRect() {
+		return new Rectangle(x, y, w, h);
 	}
 
 	private int getColor(int i) {

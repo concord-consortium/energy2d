@@ -50,6 +50,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean streamline;
 	private boolean outline;
 	private boolean rainbow;
+	private int rainbowX, rainbowY, rainbowW, rainbowH;
 	private boolean velocity;
 	private boolean clock = true;
 	private boolean smooth = true;
@@ -108,6 +109,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setStreamlineOn(streamline);
 		box.view.setVelocityOn(velocity);
 		box.view.setRainbowOn(rainbow);
+		box.view.setRainbowRectangle(rainbowX, rainbowY, rainbowW, rainbowH);
 		box.view.setMinimumTemperature(minimumTemperature);
 		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
@@ -312,6 +314,14 @@ class XmlDecoder extends DefaultHandler {
 			grid = Boolean.parseBoolean(str);
 		} else if (qName == "rainbow") {
 			rainbow = Boolean.parseBoolean(str);
+		} else if (qName == "rainbow_x") {
+			rainbowX = Integer.parseInt(str);
+		} else if (qName == "rainbow_y") {
+			rainbowY = Integer.parseInt(str);
+		} else if (qName == "rainbow_w") {
+			rainbowW = Integer.parseInt(str);
+		} else if (qName == "rainbow_h") {
+			rainbowH = Integer.parseInt(str);
 		} else if (qName == "clock") {
 			clock = Boolean.parseBoolean(str);
 		} else if (qName == "outline") {
