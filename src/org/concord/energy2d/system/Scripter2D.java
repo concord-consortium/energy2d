@@ -13,8 +13,11 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,6 +130,22 @@ class Scripter2D extends Scripter {
 		matcher = INIT.matcher(ci);
 		if (matcher.find()) {
 			s2d.initialize();
+			return;
+		}
+
+		matcher = LOAD.matcher(ci);
+		if (matcher.find()) {
+			URL codeBase = s2d.getCodeBase();
+			if (codeBase != null) {
+				String s = ci.substring(matcher.end()).trim();
+				try {
+					URLConnection c = new URL(codeBase + s).openConnection();
+					InputStream is = c.getInputStream();
+					s2d.loadState(is);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			return;
 		}
 

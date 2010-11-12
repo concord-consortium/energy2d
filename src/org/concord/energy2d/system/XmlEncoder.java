@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.model.Thermometer;
 
 /**
  * @author Charles Xie
@@ -23,44 +24,6 @@ class XmlEncoder {
 		StringBuffer sb = new StringBuffer(1000);
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		sb.append("<state>\n");
-
-		// view properties
-
-		sb.append("<view>\n");
-		if (box.view.isGridOn()) {
-			sb.append("<grid>true</grid>\n");
-		}
-		if (box.view.isIsothermOn()) {
-			sb.append("<isotherm>true</isotherm>\n");
-		}
-		if (box.view.isRainbowOn()) {
-			sb.append("<rainbow>true</rainbow>\n");
-		}
-		Rectangle rainbow = box.view.getRainbowRectangle();
-		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
-		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");
-		sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
-		sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
-		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature()
-				+ "</minimum_temperature>\n");
-		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()
-				+ "</maximum_temperature>\n");
-		if (box.view.isVelocityOn()) {
-			sb.append("<velocity>true</velocity>\n");
-		}
-		if (box.view.isStreamlineOn()) {
-			sb.append("<streamline>true</streamline>\n");
-		}
-		if (box.view.isGraphOn()) {
-			sb.append("<graph>true</graph>\n");
-		}
-		if (!box.view.isClockOn()) {
-			sb.append("<clock>false</clock>\n");
-		}
-		if (!box.view.isSmooth()) {
-			sb.append("<smooth>false</smooth>\n");
-		}
-		sb.append("</view>\n");
 
 		// model properties
 
@@ -148,6 +111,56 @@ class XmlEncoder {
 		}
 
 		sb.append("</model>\n");
+
+		// sensors
+		sb.append("<sensor>\n");
+		List<Thermometer> thermometers = box.model.getThermometers();
+		if (thermometers != null) {
+			for (Thermometer t : thermometers) {
+				sb.append(t.toXml() + "\n");
+			}
+		}
+		sb.append("</sensor>\n");
+
+		// view properties
+
+		sb.append("<view>\n");
+		if (box.view.isGridOn()) {
+			sb.append("<grid>true</grid>\n");
+		}
+		if (box.view.isIsothermOn()) {
+			sb.append("<isotherm>true</isotherm>\n");
+		}
+		if (box.view.isRainbowOn()) {
+			sb.append("<rainbow>true</rainbow>\n");
+		}
+		Rectangle rainbow = box.view.getRainbowRectangle();
+		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
+		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");
+		if (rainbow.width > 0)
+			sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
+		if (rainbow.height > 0)
+			sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
+		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature()
+				+ "</minimum_temperature>\n");
+		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()
+				+ "</maximum_temperature>\n");
+		if (box.view.isVelocityOn()) {
+			sb.append("<velocity>true</velocity>\n");
+		}
+		if (box.view.isStreamlineOn()) {
+			sb.append("<streamline>true</streamline>\n");
+		}
+		if (box.view.isGraphOn()) {
+			sb.append("<graph>true</graph>\n");
+		}
+		if (!box.view.isClockOn()) {
+			sb.append("<clock>false</clock>\n");
+		}
+		if (!box.view.isSmooth()) {
+			sb.append("<smooth>false</smooth>\n");
+		}
+		sb.append("</view>\n");
 
 		sb.append("</state>\n");
 

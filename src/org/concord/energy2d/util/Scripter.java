@@ -25,6 +25,7 @@ public abstract class Scripter {
 	protected final static Pattern RUN = compile("(^(?i)run\\b){1}");
 	protected final static Pattern STOP = compile("(^(?i)stop\\b){1}");
 	protected final static Pattern INIT = compile("(^(?i)init\\b){1}");
+	protected final static Pattern LOAD = compile("(^(?i)load\\b){1}");
 	protected final static Pattern ADD = compile("(^(?i)add\\b){1}");
 	protected final static Pattern REMOVE = compile("(^(?i)remove\\b){1}");
 	protected final static Pattern DELAY = compile("(^(?i)delay\\b){1}");

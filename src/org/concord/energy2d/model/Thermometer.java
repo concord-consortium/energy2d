@@ -89,4 +89,11 @@ public class Thermometer extends Manipulable {
 			data.remove(0);
 	}
 
+	public String toXml() {
+		String xml = "<thermometer ";
+		xml += " x=\"" + getX() + "\"";
+		xml += " y=\"" + getY() + "\"/>";
+		return xml;
+	}
+
 }

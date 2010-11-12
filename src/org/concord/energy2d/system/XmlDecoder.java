@@ -66,6 +66,8 @@ class XmlDecoder extends DefaultHandler {
 	private float partReflection = Float.NaN;
 	private float partTransmission = Float.NaN;
 	private float partTemperature = Float.NaN;
+	private float partWindSpeed;
+	private float partWindAngle;
 	private boolean partConstantTemperature = true;
 	private float partPower = Float.NaN;
 	private boolean partFilled = true;
@@ -257,6 +259,21 @@ class XmlDecoder extends DefaultHandler {
 					b.setFluxAtBorder(Boundary.LEFT, left);
 				}
 			}
+		} else if (qName == "thermometer") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y))
+					box.model.addThermometer(x, y);
+			}
 		}
 
 	}
@@ -349,6 +366,10 @@ class XmlDecoder extends DefaultHandler {
 			partConstantTemperature = Boolean.parseBoolean(str);
 		} else if (qName == "power") {
 			partPower = Float.parseFloat(str);
+		} else if (qName == "wind_speed") {
+			partWindSpeed = Float.parseFloat(str);
+		} else if (qName == "wind_angle") {
+			partWindAngle = Float.parseFloat(str);
 		} else if (qName == "color") {
 			partColor = new Color(Integer.parseInt(str, 16));
 		} else if (qName == "filled") {
@@ -358,7 +379,7 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "draggable") {
 			partDraggable = Boolean.parseBoolean(str);
 		} else if (qName == "boundary") {
-
+			// nothing to do at this point
 		} else if (qName == "part") {
 			if (part != null) {
 				if (!Float.isNaN(partThermalConductivity))
@@ -379,6 +400,8 @@ class XmlDecoder extends DefaultHandler {
 					part.setReflection(partReflection);
 				if (!Float.isNaN(partTransmission))
 					part.setTransmission(partTransmission);
+				part.setWindAngle(partWindAngle);
+				part.setWindSpeed(partWindSpeed);
 				part.setConstantTemperature(partConstantTemperature);
 				part.setDraggable(partDraggable);
 				part.setVisible(partVisible);
@@ -401,6 +424,8 @@ class XmlDecoder extends DefaultHandler {
 		partAbsorption = Float.NaN;
 		partReflection = Float.NaN;
 		partTransmission = Float.NaN;
+		partWindSpeed = 0;
+		partWindAngle = 0;
 		partFilled = true;
 		partVisible = true;
 		partDraggable = true;

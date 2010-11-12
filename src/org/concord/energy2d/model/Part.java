@@ -490,14 +490,14 @@ public class Part extends Manipulable {
 		String xml = "<part>";
 		if (getShape() instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-			xml += "<rectangle ";
+			xml += "<rectangle";
 			xml += " x=\"" + r.x + "\"";
 			xml += " y=\"" + r.y + "\"";
 			xml += " width=\"" + r.width + "\"";
 			xml += " height=\"" + r.height + "\"/>";
 		} else if (getShape() instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-			xml += "<ellipse ";
+			xml += "<ellipse";
 			xml += " x=\"" + e.getCenterX() + "\"";
 			xml += " y=\"" + e.getCenterY() + "\"";
 			xml += " a=\"" + e.width + "\"";
