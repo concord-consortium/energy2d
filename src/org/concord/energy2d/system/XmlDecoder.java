@@ -28,6 +28,7 @@ class XmlDecoder extends DefaultHandler {
 	private float modelHeight = 10;
 	private float timeStep = 1;
 	private int measurementInterval = 500;
+	private int viewUpdateInterval = 100;
 	private boolean sunny;
 	private float sunAngle = (float) Math.PI * 0.5f;
 	private float solarPowerDensity = 2000;
@@ -48,7 +49,6 @@ class XmlDecoder extends DefaultHandler {
 	private boolean grid;
 	private boolean isotherm;
 	private boolean streamline;
-	private boolean outline;
 	private boolean rainbow;
 	private int rainbowX, rainbowY, rainbowW, rainbowH;
 	private boolean velocity;
@@ -68,6 +68,7 @@ class XmlDecoder extends DefaultHandler {
 	private float partTemperature = Float.NaN;
 	private boolean partConstantTemperature = true;
 	private float partPower = Float.NaN;
+	private boolean partFilled = true;
 	private boolean partVisible = true;
 	private boolean partDraggable = true;
 	private Color partColor = Color.gray;
@@ -87,6 +88,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
 		box.model.setMeasurementInterval(measurementInterval);
+		box.model.setViewUpdateInterval(viewUpdateInterval);
 		box.model.setSunny(sunny);
 		box.model.setSunAngle(sunAngle);
 		box.model.setSolarPowerDensity(solarPowerDensity);
@@ -103,7 +105,6 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setBuoyancyApproximation(buoyancyApproximation);
 
 		box.view.setRulerOn(ruler);
-		box.view.setOutlineOn(outline);
 		box.view.setGridOn(grid);
 		box.view.setIsothermOn(isotherm);
 		box.view.setStreamlineOn(streamline);
@@ -270,6 +271,8 @@ class XmlDecoder extends DefaultHandler {
 			timeStep = Float.parseFloat(str);
 		} else if (qName == "measurement_interval") {
 			measurementInterval = Integer.parseInt(str);
+		} else if (qName == "viewupdate_interval") {
+			viewUpdateInterval = Integer.parseInt(str);
 		} else if (qName == "sunny") {
 			sunny = Boolean.parseBoolean(str);
 		} else if (qName == "sun_angle") {
@@ -324,8 +327,6 @@ class XmlDecoder extends DefaultHandler {
 			rainbowH = Integer.parseInt(str);
 		} else if (qName == "clock") {
 			clock = Boolean.parseBoolean(str);
-		} else if (qName == "outline") {
-			outline = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {
 			smooth = Boolean.parseBoolean(str);
 		} else if (qName == "thermal_conductivity") {
@@ -350,6 +351,8 @@ class XmlDecoder extends DefaultHandler {
 			partPower = Float.parseFloat(str);
 		} else if (qName == "color") {
 			partColor = new Color(Integer.parseInt(str, 16));
+		} else if (qName == "filled") {
+			partFilled = Boolean.parseBoolean(str);
 		} else if (qName == "visible") {
 			partVisible = Boolean.parseBoolean(str);
 		} else if (qName == "draggable") {
@@ -379,6 +382,7 @@ class XmlDecoder extends DefaultHandler {
 				part.setConstantTemperature(partConstantTemperature);
 				part.setDraggable(partDraggable);
 				part.setVisible(partVisible);
+				part.setFilled(partFilled);
 				part.setColor(partColor);
 				resetPartVariables();
 			}
@@ -397,6 +401,7 @@ class XmlDecoder extends DefaultHandler {
 		partAbsorption = Float.NaN;
 		partReflection = Float.NaN;
 		partTransmission = Float.NaN;
+		partFilled = true;
 		partVisible = true;
 		partDraggable = true;
 		partColor = Color.gray;

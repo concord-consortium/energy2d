@@ -45,9 +45,6 @@ class XmlEncoder {
 				+ "</minimum_temperature>\n");
 		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()
 				+ "</maximum_temperature>\n");
-		if (box.view.isOutlineOn()) {
-			sb.append("<outline>true</outline>\n");
-		}
 		if (box.view.isVelocityOn()) {
 			sb.append("<velocity>true</velocity>\n");
 		}
@@ -83,6 +80,11 @@ class XmlEncoder {
 			sb.append("<measurement_interval>"
 					+ box.model.getMeasurementInterval()
 					+ "</measurement_interval>\n");
+		}
+		if (box.model.getViewUpdateInterval() != 100) {
+			sb.append("<viewupdate_interval>"
+					+ box.model.getViewUpdateInterval()
+					+ "</viewupdate_interval>\n");
 		}
 
 		if (box.model.isSunny()) {

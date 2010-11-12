@@ -540,6 +540,8 @@ public class Part extends Manipulable {
 			xml += "<color>"
 					+ Integer.toHexString(0x00ffffff & getColor().getRGB())
 					+ "</color>\n";
+		if (!isFilled())
+			xml += "<filled>false</filled>\n";
 		if (!isVisible())
 			xml += "<visible>false</visible>\n";
 		if (!isDraggable())

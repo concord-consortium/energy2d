@@ -229,11 +229,11 @@ class ViewDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Measurement"));
+		p.setBorder(BorderFactory.createTitledBorder("Event Frequency"));
 		box.add(p);
 		count = 0;
 
-		label = new JLabel("Reading period");
+		label = new JLabel("Measurement interval");
 		p.add(label);
 
 		textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
@@ -247,7 +247,25 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(textField);
-		label = new JLabel("<html><i>s");
+		label = new JLabel("<html><i>s</html>");
+		p.add(label);
+		count++;
+
+		label = new JLabel("View update interval");
+		p.add(label);
+
+		textField = new JTextField(view.model.getViewUpdateInterval() + "", 2);
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField src = (JTextField) e.getSource();
+				float interval = parse(src.getText());
+				if (Float.isNaN(interval))
+					return;
+				view.model.setViewUpdateInterval((int) interval);
+			}
+		});
+		p.add(textField);
+		label = new JLabel("<html><i>s</html>");
 		p.add(label);
 		count++;
 
