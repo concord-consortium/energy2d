@@ -274,6 +274,24 @@ class XmlDecoder extends DefaultHandler {
 				if (!Float.isNaN(x) && !Float.isNaN(y))
 					box.model.addThermometer(x, y);
 			}
+		} else if (qName == "text") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN;
+				String str = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "string") {
+						str = attribValue;
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y))
+					box.view.addText(str, x, y);
+			}
 		}
 
 	}

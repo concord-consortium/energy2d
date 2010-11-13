@@ -227,10 +227,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			pictures.clear();
 	}
 
-	public void addText(String text, int x, int y) {
+	public void addText(String text, float x, float y) {
 		if (textBoxes == null)
 			textBoxes = new ArrayList<TextBox>();
 		textBoxes.add(new TextBox(text, x, y));
+		repaint();
 	}
 
 	public int getTextBoxCount() {
@@ -813,7 +814,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		for (TextBox x : textBoxes) {
 			g.setFont(new Font(x.getName(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
-			g.drawString(x.getText(), x.getX(), x.getY());
+			g.drawString(x.getString(), convertPointToPixelX(x.getX()),
+					getHeight() - convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);

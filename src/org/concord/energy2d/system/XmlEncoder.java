@@ -128,6 +128,9 @@ class XmlEncoder {
 		if (box.view.isGridOn()) {
 			sb.append("<grid>true</grid>\n");
 		}
+		if (box.view.isRulerOn()) {
+			sb.append("<ruler>true</ruler>\n");
+		}
 		if (box.view.isIsothermOn()) {
 			sb.append("<isotherm>true</isotherm>\n");
 		}
@@ -159,6 +162,12 @@ class XmlEncoder {
 		}
 		if (!box.view.isSmooth()) {
 			sb.append("<smooth>false</smooth>\n");
+		}
+		int n = box.view.getTextBoxCount();
+		if (n > 0) {
+			for (int i = 0; i < n; i++) {
+				sb.append(box.view.getTextBox(i).toXml());
+			}
 		}
 		sb.append("</view>\n");
 

@@ -14,45 +14,45 @@ import java.awt.Font;
  */
 public class TextBox {
 
-	private String text;
+	private String str;
 	private String name = "Arial";
 	private int style = Font.PLAIN;
 	private int size = 12;
 	private Color color = Color.white;
-	private int x = 50, y = 50;
+	private float x, y;
 
-	public TextBox(String text, int x, int y) {
-		setText(text);
+	public TextBox(String str, float x, float y) {
+		setString(str);
 		setLocation(x, y);
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setLocation(int x, int y) {
+	public void setLocation(float x, float y) {
 		setX(x);
 		setY(y);
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setString(String str) {
+		this.str = str;
 	}
 
-	public String getText() {
-		return text;
+	public String getString() {
+		return str;
 	}
 
 	public void setName(String name) {
@@ -85,6 +85,19 @@ public class TextBox {
 
 	public Color getColor() {
 		return color;
+	}
+
+	public String toXml() {
+		String xml = "<text ";
+		xml += " string=\"" + str + "\"";
+		xml += " name=\"" + name + "\"";
+		xml += " size=\"" + size + "\"";
+		xml += " style=\"" + style + "\"";
+		xml += " color=\""
+				+ Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";
+		xml += " x=\"" + getX() + "\"";
+		xml += " y=\"" + getY() + "\"/>";
+		return xml;
 	}
 
 }
