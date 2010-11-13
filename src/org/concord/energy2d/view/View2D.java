@@ -227,11 +227,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			pictures.clear();
 	}
 
-	public void addText(String text, float x, float y) {
+	public TextBox addText(String text, float x, float y) {
 		if (textBoxes == null)
 			textBoxes = new ArrayList<TextBox>();
-		textBoxes.add(new TextBox(text, x, y));
+		TextBox t = new TextBox(text, x, y);
+		textBoxes.add(t);
 		repaint();
+		return t;
 	}
 
 	public int getTextBoxCount() {

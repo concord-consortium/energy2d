@@ -88,7 +88,7 @@ public class TextBox {
 	}
 
 	public String toXml() {
-		String xml = "<text ";
+		String xml = "<text";
 		xml += " string=\"" + str + "\"";
 		xml += " name=\"" + name + "\"";
 		xml += " size=\"" + size + "\"";

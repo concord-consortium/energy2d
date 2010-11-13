@@ -1,6 +1,7 @@
 package org.concord.energy2d.system;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Constants;
@@ -10,6 +11,7 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.Scripter;
+import org.concord.energy2d.view.TextBox;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -277,7 +279,9 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "text") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
-				String str = null;
+				int size = 12, style = Font.PLAIN;
+				String str = null, name = null;
+				Color color = null;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -287,10 +291,22 @@ class XmlDecoder extends DefaultHandler {
 						y = Float.parseFloat(attribValue);
 					} else if (attribName == "string") {
 						str = attribValue;
+					} else if (attribName == "size") {
+						size = Integer.parseInt(attribValue);
+					} else if (attribName == "name") {
+						name = attribValue;
+					} else if (attribName == "color") {
+						color = new Color(Integer.parseInt(attribValue, 16));
 					}
 				}
-				if (!Float.isNaN(x) && !Float.isNaN(y))
-					box.view.addText(str, x, y);
+				if (!Float.isNaN(x) && !Float.isNaN(y)) {
+					TextBox t = box.view.addText(str, x, y);
+					t.setSize(size);
+					t.setStyle(style);
+					t.setName(name);
+					t.setColor(color);
+					box.view.repaint();
+				}
 			}
 		}
 

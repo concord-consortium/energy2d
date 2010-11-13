@@ -173,8 +173,8 @@ class Scripter2D extends Scripter {
 						final String s2 = s;
 						final Runnable r = new Runnable() {
 							public void run() {
-								s2d.view.addText(s2.substring(j + 1), z[0],
-										z[1]);
+								s2d.view.addText(s2.substring(j + 1).trim(),
+										z[0], z[1]);
 							}
 						};
 						EventQueue.invokeLater(new Runnable() {
