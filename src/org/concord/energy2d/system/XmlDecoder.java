@@ -422,6 +422,8 @@ class XmlDecoder extends DefaultHandler {
 			clock = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {
 			smooth = Boolean.parseBoolean(str);
+		} else if (qName == "graph") {
+			graphOn = Boolean.parseBoolean(str);
 		} else if (qName == "thermal_conductivity") {
 			partThermalConductivity = Float.parseFloat(str);
 		} else if (qName == "specific_heat") {
