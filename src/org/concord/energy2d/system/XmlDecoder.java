@@ -2,6 +2,8 @@ package org.concord.energy2d.system;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Constants;
@@ -10,6 +12,7 @@ import org.concord.energy2d.model.HeatBoundary;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.view.TextBox;
 import org.xml.sax.Attributes;
@@ -54,6 +57,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean rainbow;
 	private int rainbowX, rainbowY, rainbowW, rainbowH;
 	private boolean velocity;
+	private boolean graphOn;
 	private boolean clock = true;
 	private boolean smooth = true;
 	private float minimumTemperature;
@@ -119,6 +123,24 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
 		box.view.setSmooth(smooth);
+		box.view.setGraphOn(graphOn);
+
+		// since we don't know the width and height of the model
+		// until now, we have to fix the locations and the sizes of
+		// the thermometers, since they are relative to the size
+		// of the model.
+		List<Thermometer> thermometers = box.model.getThermometers();
+		if (thermometers != null) {
+			synchronized (thermometers) {
+				for (Thermometer t : thermometers) {
+					Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+					r.width = 0.025f * modelWidth;
+					r.height = 0.05f * modelHeight;
+					r.x = r.x - 0.5f * r.width;
+					r.y = r.y - 0.5f * r.height;
+				}
+			}
+		}
 
 		box.model.refreshPowerArray();
 		box.model.refreshTemperatureBoundaryArray();
@@ -172,6 +194,26 @@ class XmlDecoder extends DefaultHandler {
 				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(a)
 						&& !Float.isNaN(b))
 					part = box.model.addEllipticalPart(x, y, a, b);
+			}
+		} else if (qName == "ring") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, inner = Float.NaN, outer = Float.NaN;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "inner") {
+						inner = Float.parseFloat(attribValue);
+					} else if (attribName == "outer") {
+						outer = Float.parseFloat(attribValue);
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(inner)
+						&& !Float.isNaN(outer))
+					part = box.model.addRingPart(x, y, inner, outer);
 			}
 		} else if (qName == "polygon") {
 			if (attrib != null) {

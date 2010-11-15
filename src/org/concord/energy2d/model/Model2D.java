@@ -5,7 +5,6 @@
 
 package org.concord.energy2d.model;
 
-import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -18,6 +17,7 @@ import java.util.List;
 import org.concord.energy2d.event.VisualizationEvent;
 import org.concord.energy2d.event.VisualizationListener;
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.math.Ring2D;
 
 /**
  * Units:
@@ -331,12 +331,7 @@ public class Model2D {
 	}
 
 	public void addThermometer(float x, float y) {
-		Thermometer t = new Thermometer(x, y);
-		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
-		r.width = 0.025f * lx;
-		r.height = 0.05f * ly;
-		t.setLocation(x, y);
-		thermometers.add(t);
+		thermometers.add(new Thermometer(x, y));
 	}
 
 	public List<Thermometer> getThermometers() {
@@ -356,11 +351,7 @@ public class Model2D {
 	}
 
 	public Part addRingPart(float x, float y, float inner, float outer) {
-		Area area = new Area(new Ellipse2D.Float(x - 0.5f * outer, y - 0.5f
-				* outer, outer, outer));
-		area.subtract(new Area(new Ellipse2D.Float(x - 0.5f * inner, y - 0.5f
-				* inner, inner, inner)));
-		Part p = new Part(area);
+		Part p = new Part(new Ring2D(x, y, inner, outer));
 		addPart(p);
 		return p;
 	}

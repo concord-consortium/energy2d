@@ -585,8 +585,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
 				int wt = convertLengthToPixelX(r.width);
 				int ht = convertLengthToPixelY(r.height);
-				int xt = convertPointToPixelX(r.x);
-				int yt = convertPointToPixelY(r.y);
+				int xt = convertPointToPixelX(t.getX()) - wt / 2;
+				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g2.setColor(Color.yellow);
 				g2.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
 			} else {
@@ -684,10 +684,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		g.setStroke(thinStroke);
 		Symbol s = Symbol.get(Symbol.THERMOMETER);
-		Rectangle2D.Float r = (Rectangle2D.Float) thermometers.get(0)
-				.getShape();
-		s.setIconWidth((int) (r.width * getWidth() / (xmax - xmin)));
-		s.setIconHeight((int) (r.height * getHeight() / (ymax - ymin)));
+		float w = 0.025f * model.getLx();
+		float h = 0.05f * model.getLy();
+		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
+		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float dx = s.getIconWidth() * 0.5f;
 		float dy = s.getIconHeight() * 0.5f;
 		float temp;
@@ -698,6 +698,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int ix, iy;
 		synchronized (thermometers) {
 			for (Thermometer t : thermometers) {
+				Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+				r.width = w;
+				r.height = h;
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
@@ -890,7 +893,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			// always prefer to select a thermometer
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					if (t.contains(rx, ry)) {
+					if (t.getShape().contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
 					}

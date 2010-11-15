@@ -15,6 +15,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.math.Ring2D;
 
 /**
  * Default properties set to be that of polystyrene. See
@@ -513,8 +514,13 @@ public class Part extends Manipulable {
 			}
 			p2d = p.getVertex(n - 1);
 			xml += p2d.x + ", " + p2d.y + "\"/>\n";
-		} else if (getShape() instanceof Area) {
-
+		} else if (getShape() instanceof Ring2D) {
+			Ring2D ring = (Ring2D) getShape();
+			xml += "<ring";
+			xml += " x=\"" + ring.getX() + "\"";
+			xml += " y=\"" + ring.getY() + "\"";
+			xml += " inner=\"" + ring.getInnerDiameter() + "\"";
+			xml += " outer=\"" + ring.getOuterDiameter() + "\"/>";
 		}
 		xml += "<thermal_conductivity>" + thermalConductivity
 				+ "</thermal_conductivity>\n";

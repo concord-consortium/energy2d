@@ -25,6 +25,7 @@ public class Thermometer extends Manipulable {
 
 	public Thermometer(float x, float y) {
 		super(new Rectangle2D.Float());
+		// should have used Point2D but it is not a Shape.
 		data = Collections.synchronizedList(new ArrayList<TimedData>());
 		listeners = new ArrayList<MeasurementListener>();
 		setLocation(x, y);
@@ -36,8 +37,8 @@ public class Thermometer extends Manipulable {
 
 	public void setLocation(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		r.x = x - r.width * 0.5f;
-		r.y = y - r.height * 0.5f;
+		r.x = x - 0.5f * r.width;
+		r.y = y - 0.5f * r.height;
 	}
 
 	public float getX() {
