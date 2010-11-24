@@ -102,6 +102,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGraph;
 	private boolean showRainbow;
 	private boolean clockOn = true;
+	private boolean frankOn = true;
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
@@ -301,6 +302,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	public void setFrankOn(boolean b) {
+		frankOn = b;
 	}
 
 	public void setRulerOn(boolean b) {
@@ -673,8 +678,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 
 		g2.setStroke(stroke);
-		int dy = rulerRenderer != null ? 24 : 12;
-		drawFrank(g2, getWidth() - 84, getHeight() - dy);
+		if (frankOn) {
+			int dy = rulerRenderer != null ? 24 : 12;
+			drawFrank(g2, getWidth() - 84, getHeight() - dy);
+		}
 
 	}
 

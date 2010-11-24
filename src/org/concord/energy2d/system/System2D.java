@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -298,14 +299,27 @@ public class System2D extends JApplet implements MwService,
 	}
 
 	public static void main(String[] args) {
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System2D box = new System2D();
+		box.view.setPreferredSize(new Dimension(600, 600));
+		box.view.setFrankOn(false);
+
 		final JFrame frame = new JFrame();
+		frame.setTitle("Energy2D");
+		frame.setJMenuBar(new MenuBar(box, frame));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		System2D s2d = new System2D();
-		frame.setContentPane(s2d.getContentPane());
-		frame.getContentPane().add(s2d.createButtonPanel(), BorderLayout.SOUTH);
+		frame.setContentPane(box.getContentPane());
+		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);
 		frame.pack();
 		frame.setVisible(true);
+
 	}
 
 }
