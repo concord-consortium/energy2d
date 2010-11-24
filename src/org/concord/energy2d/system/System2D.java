@@ -207,6 +207,8 @@ public class System2D extends JApplet implements MwService,
 
 	public void loadState(InputStream is) throws IOException {
 		stop();
+		reset();
+		clear();
 		if (is == null)
 			return;
 		try {
