@@ -148,6 +148,8 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setInitialTemperature();
 		box.view.repaint();
 
+		resetGlobalVariables();
+
 	}
 
 	public void startElement(String uri, String localName, String qName,
@@ -508,6 +510,44 @@ class XmlDecoder extends DefaultHandler {
 		partVisible = true;
 		partDraggable = true;
 		partColor = Color.gray;
+	}
+
+	private void resetGlobalVariables() {
+
+		// model properties
+		modelWidth = 10;
+		modelHeight = 10;
+		timeStep = 1;
+		measurementInterval = 100;
+		viewUpdateInterval = 20;
+		sunny = false;
+		sunAngle = (float) Math.PI * 0.5f;
+		solarPowerDensity = 2000;
+		solarRayCount = 24;
+		solarRaySpeed = 0.1f;
+		photonEmissionInterval = 20;
+		convective = true;
+		backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
+		backgroundDensity = Constants.AIR_DENSITY;
+		backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
+		backgroundViscosity = Constants.AIR_VISCOSITY;
+		backgroundTemperature = 0;
+		thermalBuoyancy = 0;
+		buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+
+		// view properties
+		ruler = false;
+		grid = false;
+		isotherm = false;
+		streamline = false;
+		rainbow = false;
+		velocity = false;
+		graphOn = false;
+		clock = true;
+		smooth = true;
+		minimumTemperature = 0;
+		maximumTemperature = 40;
+
 	}
 
 	public void characters(char[] ch, int start, int length) {

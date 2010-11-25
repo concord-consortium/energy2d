@@ -8,6 +8,7 @@ package org.concord.energy2d.system;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -63,6 +64,7 @@ public class System2D extends JApplet implements MwService,
 	private File currentFile;
 
 	Runnable clickRun, clickStop, clickReset;
+	private JButton buttonRun, buttonStop, buttonReset;
 
 	public System2D() {
 
@@ -87,53 +89,6 @@ public class System2D extends JApplet implements MwService,
 			e.printStackTrace();
 		}
 
-	}
-
-	private JPanel createButtonPanel() {
-		JPanel p = new JPanel();
-		final JButton buttonRun = new JButton("Run");
-		final JButton buttonStop = new JButton("Stop");
-		final JButton buttonReset = new JButton("Reset");
-		buttonRun.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				run();
-				buttonRun.setEnabled(false);
-				buttonStop.setEnabled(true);
-			}
-		});
-		p.add(buttonRun);
-		buttonStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				stop();
-				buttonRun.setEnabled(true);
-				buttonStop.setEnabled(false);
-			}
-		});
-		p.add(buttonStop);
-		buttonReset.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				reset();
-				buttonRun.setEnabled(true);
-				buttonStop.setEnabled(false);
-			}
-		});
-		p.add(buttonReset);
-		clickRun = new Runnable() {
-			public void run() {
-				buttonRun.doClick();
-			}
-		};
-		clickStop = new Runnable() {
-			public void run() {
-				buttonStop.doClick();
-			}
-		};
-		clickReset = new Runnable() {
-			public void run() {
-				buttonReset.doClick();
-			}
-		};
-		return p;
 	}
 
 	@Override
@@ -223,6 +178,11 @@ public class System2D extends JApplet implements MwService,
 		} finally {
 			is.close();
 		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				buttonStop.doClick();
+			}
+		});
 	}
 
 	public void saveState(OutputStream os) throws IOException {
@@ -311,6 +271,53 @@ public class System2D extends JApplet implements MwService,
 				model.getPhotons().clear();
 		}
 		view.repaint();
+	}
+
+	private JPanel createButtonPanel() {
+		JPanel p = new JPanel();
+		buttonRun = new JButton("Run");
+		buttonRun.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				run();
+				buttonRun.setEnabled(false);
+				buttonStop.setEnabled(true);
+			}
+		});
+		p.add(buttonRun);
+		buttonStop = new JButton("Stop");
+		buttonStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				stop();
+				buttonRun.setEnabled(true);
+				buttonStop.setEnabled(false);
+			}
+		});
+		p.add(buttonStop);
+		buttonReset = new JButton("Reset");
+		buttonReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reset();
+				buttonRun.setEnabled(true);
+				buttonStop.setEnabled(false);
+			}
+		});
+		p.add(buttonReset);
+		clickRun = new Runnable() {
+			public void run() {
+				buttonRun.doClick();
+			}
+		};
+		clickStop = new Runnable() {
+			public void run() {
+				buttonStop.doClick();
+			}
+		};
+		clickReset = new Runnable() {
+			public void run() {
+				buttonReset.doClick();
+			}
+		};
+		return p;
 	}
 
 	public static void main(String[] args) {

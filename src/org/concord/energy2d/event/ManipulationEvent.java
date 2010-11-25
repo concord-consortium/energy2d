@@ -23,6 +23,7 @@ public class ManipulationEvent extends EventObject {
 	public static final byte RUN = 11;
 	public static final byte STOP = 12;
 	public static final byte RESET = 13;
+	public static final byte GRID = 14;
 
 	private static final long serialVersionUID = 1L;
 	private Object target;

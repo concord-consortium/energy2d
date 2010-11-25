@@ -18,6 +18,8 @@ import javax.swing.JToolBar;
 
 import org.concord.energy2d.event.GraphEvent;
 import org.concord.energy2d.event.GraphListener;
+import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.view.View2D;
 
@@ -25,16 +27,21 @@ import org.concord.energy2d.view.View2D;
  * @author Charles Xie
  * 
  */
-class ToolBar extends JToolBar implements GraphListener {
+class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 
 	private JToggleButton graphButton;
+	private JToggleButton gridButton;
+
+	private System2D box;
 
 	private static final long serialVersionUID = 1L;
 
-	ToolBar(final System2D box) {
+	ToolBar(System2D s2d) {
 
 		super(HORIZONTAL);
 		setFloatable(false);
+
+		box = s2d;
 
 		box.view.addGraphListener(this);
 
@@ -128,17 +135,17 @@ class ToolBar extends JToolBar implements GraphListener {
 		});
 		add(graphButton);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class
+		gridButton = new JToggleButton(new ImageIcon(ToolBar.class
 				.getResource("resources/grid.png")));
-		x.setToolTipText("Show or hide grid lines");
-		x.addItemListener(new ItemListener() {
+		gridButton.setToolTipText("Show or hide grid lines");
+		gridButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JToggleButton src = (JToggleButton) e.getSource();
 				box.view.setGridOn(src.isSelected());
 				box.view.repaint();
 			}
 		});
-		add(x);
+		add(gridButton);
 
 	}
 
@@ -148,6 +155,10 @@ class ToolBar extends JToolBar implements GraphListener {
 
 	public void graphOpened(GraphEvent e) {
 		MiscUtil.setSelectedSilently(graphButton, true);
+	}
+
+	public void manipulationOccured(ManipulationEvent e) {
+		MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
 	}
 
 }

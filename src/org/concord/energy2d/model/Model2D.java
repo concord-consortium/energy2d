@@ -103,7 +103,7 @@ public class Model2D {
 	private boolean running;
 	private boolean notifyReset;
 	private int viewUpdateInterval = 20;
-	private int measurementInterval = 500;
+	private int measurementInterval = 100;
 
 	// optimization flags
 	private boolean hasPartPower;

@@ -326,6 +326,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void reset() {
 		runToggle = false;
+		setSelectedManipulable(null);
 		setTime(0);
 	}
 
