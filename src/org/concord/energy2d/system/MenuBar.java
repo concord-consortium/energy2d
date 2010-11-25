@@ -8,6 +8,8 @@ package org.concord.energy2d.system;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +26,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -49,7 +54,7 @@ class MenuBar extends JMenuBar {
 			if (index == -1)
 				return false;
 			String postfix = filename.substring(index + 1);
-			if ("aps".equalsIgnoreCase(postfix))
+			if ("e2d".equalsIgnoreCase(postfix))
 				return true;
 			return false;
 		}
@@ -77,6 +82,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.addChoosableFileFilter(filter);
 				fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
 				fileChooser.setDialogTitle("Open");
 				fileChooser.setApproveButtonMnemonic('O');
@@ -84,6 +90,7 @@ class MenuBar extends JMenuBar {
 				if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					if (file.exists()) {
+						box.setCurrentFile(file);
 						try {
 							box.loadState(new FileInputStream(file));
 						} catch (FileNotFoundException e1) {
@@ -104,6 +111,11 @@ class MenuBar extends JMenuBar {
 				KeyEvent.CTRL_MASK));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (box.getCurrentFile() == null) {
+					saveAs(box, frame);
+				} else {
+					save(box);
+				}
 			}
 		});
 		menu.add(mi);
@@ -114,31 +126,7 @@ class MenuBar extends JMenuBar {
 				KeyEvent.CTRL_MASK));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				fileChooser.addChoosableFileFilter(filter);
-				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-				fileChooser.setDialogTitle("Save");
-				fileChooser.setApproveButtonMnemonic('S');
-				if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
-					boolean b = true;
-					if (file.exists()) {
-						if (JOptionPane.showConfirmDialog(frame, "File "
-								+ file.getName() + " exists, overwrite?",
-								"File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
-							b = false;
-						}
-					}
-					if (b) {
-						try {
-							box.saveState(new FileOutputStream(file));
-						} catch (FileNotFoundException e1) {
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
+				saveAs(box, frame);
 			}
 		});
 		menu.add(mi);
@@ -153,6 +141,42 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(mi);
+
+		// view menu
+
+		final JCheckBoxMenuItem miIsotherm = new JCheckBoxMenuItem("Isotherm");
+		final JCheckBoxMenuItem miVelocity = new JCheckBoxMenuItem("Velocity");
+
+		menu = new JMenu("View");
+		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				miIsotherm.setSelected(box.view.isIsothermOn());
+				miVelocity.setSelected(box.view.isVelocityOn());
+			}
+		});
+		add(menu);
+
+		miIsotherm.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setIsothermOn(src.isSelected());
+			}
+		});
+		menu.add(miIsotherm);
+
+		miVelocity.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setVelocityOn(src.isSelected());
+			}
+		});
+		menu.add(miVelocity);
 
 		// help menu
 
@@ -169,6 +193,45 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
+	}
+
+	private void save(System2D box) {
+		try {
+			box.saveState(new FileOutputStream(box.getCurrentFile()));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void saveAs(System2D box, JFrame frame) {
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.addChoosableFileFilter(filter);
+		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		fileChooser.setDialogTitle("Save");
+		fileChooser.setApproveButtonMnemonic('S');
+		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			boolean b = true;
+			if (file.exists()) {
+				if (JOptionPane.showConfirmDialog(frame, "File "
+						+ file.getName() + " exists, overwrite?",
+						"File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+					b = false;
+				}
+			}
+			if (b) {
+				box.setCurrentFile(file);
+				try {
+					box.saveState(new FileOutputStream(file));
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

@@ -10,6 +10,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -56,6 +60,7 @@ public class System2D extends JApplet implements MwService,
 	private SAXParser saxParser;
 	private DefaultHandler saxHandler;
 	private XmlEncoder encoder;
+	private File currentFile;
 
 	Runnable clickRun, clickStop, clickReset;
 
@@ -231,6 +236,14 @@ public class System2D extends JApplet implements MwService,
 		}
 	}
 
+	void setCurrentFile(File file) {
+		currentFile = file;
+	}
+
+	File getCurrentFile() {
+		return currentFile;
+	}
+
 	public boolean needExecutorService() {
 		return true;
 	}
@@ -308,12 +321,14 @@ public class System2D extends JApplet implements MwService,
 			e.printStackTrace();
 		}
 
-		System2D box = new System2D();
+		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));
 		box.view.setFrankOn(false);
 
 		final JFrame frame = new JFrame();
 		frame.setTitle("Energy2D");
+		frame.setIconImage(new ImageIcon(System2D.class
+				.getResource("resources/frame.png")).getImage());
 		frame.setJMenuBar(new MenuBar(box, frame));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
@@ -322,6 +337,16 @@ public class System2D extends JApplet implements MwService,
 		frame.setLocation(100, 100);
 		frame.pack();
 		frame.setVisible(true);
+
+		frame.addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent e) {
+				File file = box.getCurrentFile();
+				frame.setTitle(file != null ? "Energy2D: " + file : "Energy2D");
+			}
+
+			public void windowLostFocus(WindowEvent e) {
+			}
+		});
 
 	}
 

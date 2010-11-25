@@ -49,6 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
 
+import org.concord.energy2d.event.GraphEvent;
+import org.concord.energy2d.event.GraphListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
@@ -144,6 +146,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DialogFactory dialogFactory;
 
 	private List<ManipulationListener> manipulationListeners;
+	private List<GraphListener> graphListeners;
 
 	public View2D() {
 		super();
@@ -195,6 +198,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
+		graphListeners = new ArrayList<GraphListener>();
 	}
 
 	public void setActionMode(byte mode) {
@@ -286,6 +290,31 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		ManipulationEvent e = new ManipulationEvent(this, m, type);
 		for (ManipulationListener l : manipulationListeners) {
 			l.manipulationOccured(e);
+		}
+	}
+
+	public void addGraphListener(GraphListener l) {
+		if (!graphListeners.contains(l))
+			graphListeners.add(l);
+	}
+
+	public void removeGraphListener(GraphListener l) {
+		graphListeners.remove(l);
+	}
+
+	private void notifyGraphListeners(byte eventType) {
+		if (graphListeners.isEmpty())
+			return;
+		GraphEvent e = new GraphEvent(this);
+		for (GraphListener l : graphListeners) {
+			switch (eventType) {
+			case GraphEvent.GRAPH_CLOSED:
+				l.graphClosed(e);
+				break;
+			case GraphEvent.GRAPH_OPENED:
+				l.graphOpened(e);
+				break;
+			}
 		}
 	}
 
@@ -1073,6 +1102,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case KeyEvent.VK_G:
 			showGraph = !showGraph;
+			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED
+					: GraphEvent.GRAPH_CLOSED);
 			break;
 		}
 		repaint();
@@ -1298,6 +1329,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
+				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
 			} else if (graphRenderer.buttonContains(
 					GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				graphRenderer.expandScopeX();

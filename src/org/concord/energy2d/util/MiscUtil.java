@@ -8,8 +8,11 @@ package org.concord.energy2d.util;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
@@ -18,6 +21,28 @@ import javax.swing.SpringLayout;
  * 
  */
 public final class MiscUtil {
+
+	public static void setSelectedSilently(AbstractButton x, boolean b) {
+		ActionListener[] al = x.getActionListeners();
+		if (al != null && al.length > 0) {
+			for (ActionListener a : al)
+				x.removeActionListener(a);
+		}
+		ItemListener[] il = x.getItemListeners();
+		if (il != null && il.length > 0) {
+			for (ItemListener a : il)
+				x.removeItemListener(a);
+		}
+		x.setSelected(b);
+		if (al != null && al.length > 0) {
+			for (ActionListener a : al)
+				x.addActionListener(a);
+		}
+		if (il != null && il.length > 0) {
+			for (ItemListener a : il)
+				x.addItemListener(a);
+		}
+	}
 
 	/** copy two-dimension arrays */
 	public static void copy(float[][] dst, float[][] src) {
