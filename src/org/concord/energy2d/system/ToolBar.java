@@ -32,7 +32,7 @@ class ToolBar extends JToolBar {
 		ButtonGroup bg = new ButtonGroup();
 
 		JToggleButton x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/select.gif")));
+				.getResource("resources/select.png")));
 		x.setSelected(true);
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -43,17 +43,7 @@ class ToolBar extends JToolBar {
 		bg.add(x);
 
 		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/thermometer.gif")));
-		x.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				box.view.setActionMode(View2D.THERMOMETER_MODE);
-			}
-		});
-		add(x);
-		bg.add(x);
-
-		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/recttool.gif")));
+				.getResource("resources/rectangle.png")));
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.RECTANGLE_MODE);
@@ -63,7 +53,7 @@ class ToolBar extends JToolBar {
 		bg.add(x);
 
 		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/ellipsetool.gif")));
+				.getResource("resources/ellipse.png")));
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.ELLIPSE_MODE);
@@ -73,7 +63,7 @@ class ToolBar extends JToolBar {
 		bg.add(x);
 
 		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/triangletool.gif")));
+				.getResource("resources/polygon.png")));
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.POLYGON_MODE);
@@ -81,6 +71,27 @@ class ToolBar extends JToolBar {
 		});
 		add(x);
 		bg.add(x);
+
+		x = new JToggleButton(new ImageIcon(ToolBar.class
+				.getResource("resources/thermometer.png")));
+		x.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				box.view.setActionMode(View2D.THERMOMETER_MODE);
+			}
+		});
+		add(x);
+		bg.add(x);
+
+		x = new JToggleButton(new ImageIcon(ToolBar.class
+				.getResource("resources/grid.png")));
+		x.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JToggleButton src = (JToggleButton) e.getSource();
+				box.view.setGridOn(src.isSelected());
+				box.view.repaint();
+			}
+		});
+		add(x);
 
 	}
 
