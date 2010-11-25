@@ -35,7 +35,7 @@ public class Model2D {
 
 	private int indexOfStep;
 
-	private float backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
+	private float backgroundConductivity = 100 * Constants.AIR_THERMAL_CONDUCTIVITY;
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
 	private float backgroundDensity = Constants.AIR_DENSITY;
 	private float backgroundTemperature;
@@ -102,7 +102,7 @@ public class Model2D {
 
 	private boolean running;
 	private boolean notifyReset;
-	private int viewUpdateInterval = 100;
+	private int viewUpdateInterval = 20;
 	private int measurementInterval = 500;
 
 	// optimization flags

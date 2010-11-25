@@ -317,6 +317,7 @@ public class System2D extends JApplet implements MwService,
 		frame.setJMenuBar(new MenuBar(box, frame));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
+		frame.getContentPane().add(new ToolBar(box), BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);
 		frame.pack();

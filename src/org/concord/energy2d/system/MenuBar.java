@@ -104,6 +104,16 @@ class MenuBar extends JMenuBar {
 				KeyEvent.CTRL_MASK));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		menu.add(mi);
+
+		mi = new JMenuItem("Save As");
+		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				KeyEvent.CTRL_MASK));
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				fileChooser.addChoosableFileFilter(filter);
 				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -129,16 +139,6 @@ class MenuBar extends JMenuBar {
 						}
 					}
 				}
-			}
-		});
-		menu.add(mi);
-
-		mi = new JMenuItem("Save As");
-		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				KeyEvent.CTRL_MASK));
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		menu.add(mi);

@@ -24,7 +24,7 @@ abstract class HeatSolver2D {
 	float[][] t0; // array that stores the previous temperature results
 	boolean[][] fluidity;
 	float deltaX, deltaY;
-	float timeStep = 1;
+	float timeStep = .1f;
 
 	HeatSolver2D(int nx, int ny) {
 		this.nx = nx;

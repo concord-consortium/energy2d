@@ -26,7 +26,7 @@ abstract class FluidSolver2D {
 
 	int nx, ny, nx1, ny1, nx2, ny2;
 	float[][] u0, v0;
-	float timeStep = 1;
+	float timeStep = .1f;
 	float deltaX, deltaY;
 	boolean[][] fluidity;
 	Boundary boundary;
