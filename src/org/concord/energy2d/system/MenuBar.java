@@ -17,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -66,6 +68,11 @@ class MenuBar extends JMenuBar {
 
 	};
 
+	private Action openAction;
+	private Action saveAction;
+	private Action saveAsAction;
+	private Action exitAction;
+
 	MenuBar(final System2D box, final JFrame frame) {
 
 		fileChooser = new JFileChooser();
@@ -75,11 +82,9 @@ class MenuBar extends JMenuBar {
 		JMenu menu = new JMenu("File");
 		add(menu);
 
-		JMenuItem mi = new JMenuItem("Open");
-		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				KeyEvent.CTRL_MASK));
-		mi.addActionListener(new ActionListener() {
+		openAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				fileChooser.addChoosableFileFilter(filter);
@@ -92,7 +97,7 @@ class MenuBar extends JMenuBar {
 					if (file.exists()) {
 						box.setCurrentFile(file);
 						try {
-							box.loadState(new FileInputStream(file));
+							box.loadStateApp(new FileInputStream(file));
 						} catch (FileNotFoundException e1) {
 							e1.printStackTrace();
 						} catch (IOException e1) {
@@ -102,14 +107,24 @@ class MenuBar extends JMenuBar {
 				}
 				fileChooser.resetChoosableFileFilters();
 			}
+		};
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				KeyEvent.CTRL_MASK);
+		box.view.getInputMap().put(ks, "Open");
+		box.view.getActionMap().put("Open", openAction);
+		JMenuItem mi = new JMenuItem("Open");
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openAction.actionPerformed(e);
+			}
 		});
 		menu.add(mi);
 
-		mi = new JMenuItem("Save");
-		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				KeyEvent.CTRL_MASK));
-		mi.addActionListener(new ActionListener() {
+		saveAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent e) {
 				if (box.getCurrentFile() == null) {
 					saveAs(box, frame);
@@ -117,27 +132,56 @@ class MenuBar extends JMenuBar {
 					save(box);
 				}
 			}
-		});
-		menu.add(mi);
-
-		mi = new JMenuItem("Save As");
-		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				KeyEvent.CTRL_MASK));
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
+		box.view.getInputMap().put(ks, "Save");
+		box.view.getActionMap().put("Save", saveAction);
+		mi = new JMenuItem("Save");
+		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveAs(box, frame);
+				saveAction.actionPerformed(e);
 			}
 		});
 		menu.add(mi);
 
-		mi = new JMenuItem("Exit");
-		mi.setAccelerator(IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-				KeyEvent.CTRL_MASK));
+		saveAsAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				saveAs(box, frame);
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
+		box.view.getInputMap().put(ks, "SaveAs");
+		box.view.getActionMap().put("SaveAs", saveAsAction);
+		mi = new JMenuItem("Save As");
+		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				saveAsAction.actionPerformed(e);
+			}
+		});
+		menu.add(mi);
+
+		exitAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
+		box.view.getInputMap().put(ks, "Quit");
+		box.view.getActionMap().put("Quit", exitAction);
+		mi = new JMenuItem("Exit");
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exitAction.actionPerformed(e);
 			}
 		});
 		menu.add(mi);
@@ -166,6 +210,7 @@ class MenuBar extends JMenuBar {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setIsothermOn(src.isSelected());
+				box.view.repaint();
 			}
 		});
 		menu.add(miIsotherm);
@@ -174,6 +219,7 @@ class MenuBar extends JMenuBar {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setVelocityOn(src.isSelected());
+				box.view.repaint();
 			}
 		});
 		menu.add(miVelocity);

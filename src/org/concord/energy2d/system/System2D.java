@@ -165,10 +165,15 @@ public class System2D extends JApplet implements MwService,
 		return view;
 	}
 
-	public void loadState(InputStream is) throws IOException {
+	void loadStateApp(InputStream is) throws IOException {
 		stop();
 		reset();
 		clear();
+		loadState(is);
+	}
+
+	public void loadState(InputStream is) throws IOException {
+		stop();
 		if (is == null)
 			return;
 		try {
@@ -180,7 +185,8 @@ public class System2D extends JApplet implements MwService,
 		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				buttonStop.doClick();
+				if (buttonStop != null)
+					buttonStop.doClick();
 			}
 		});
 	}
@@ -333,7 +339,6 @@ public class System2D extends JApplet implements MwService,
 		box.view.setFrankOn(false);
 
 		final JFrame frame = new JFrame();
-		frame.setTitle("Energy2D");
 		frame.setIconImage(new ImageIcon(System2D.class
 				.getResource("resources/frame.png")).getImage());
 		frame.setJMenuBar(new MenuBar(box, frame));
@@ -348,7 +353,8 @@ public class System2D extends JApplet implements MwService,
 		frame.addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				File file = box.getCurrentFile();
-				frame.setTitle(file != null ? "Energy2D: " + file : "Energy2D");
+				frame.setTitle(file != null ? "Energy2D V0.1: " + file
+						: "Energy2D: V0.1");
 			}
 
 			public void windowLostFocus(WindowEvent e) {

@@ -1069,7 +1069,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			setSelectedManipulable(selectedManipulable);
 		}
 		repaint();
-		e.consume();
+		// e.consume();//don't call, or this stops key binding
 	}
 
 	private void processKeyReleased(KeyEvent e) {
@@ -1108,7 +1108,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		}
 		repaint();
-		e.consume();
+		// e.consume();//don't call, or this stops key binding
 	}
 
 	private void processMousePressed(MouseEvent e) {
