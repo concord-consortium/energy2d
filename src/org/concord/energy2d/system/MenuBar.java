@@ -229,6 +229,9 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Models");
 		add(menu);
 
+		JMenu subMenu = new JMenu("Fluid Dynamics");
+		menu.add(subMenu);
+
 		mi = new JMenuItem("Benard Cell");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -240,9 +243,9 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		menu.add(mi);
+		subMenu.add(mi);
 
-		mi = new JMenuItem("Lid-drive cavity");
+		mi = new JMenuItem("Lid-Driven Cavity");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -254,9 +257,9 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		menu.add(mi);
+		subMenu.add(mi);
 
-		mi = new JMenuItem("Smoke in wind");
+		mi = new JMenuItem("Smoke in Wind");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -267,9 +270,26 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		menu.add(mi);
+		subMenu.add(mi);
 
-		mi = new JMenuItem("Solar heating");
+		mi = new JMenuItem("Laminar/Turbulent Flow");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/laminar-turbulent.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		subMenu = new JMenu("Building Energy Flow");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Internal Heating");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -280,7 +300,20 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		menu.add(mi);
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Solar Heating");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/house2.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
 
 		// help menu
 
