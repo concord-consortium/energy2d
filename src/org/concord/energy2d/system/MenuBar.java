@@ -224,10 +224,75 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(miVelocity);
 
+		// model menu
+
+		menu = new JMenu("Models");
+		add(menu);
+
+		mi = new JMenuItem("Benard Cell");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/benardcell.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu.add(mi);
+
+		mi = new JMenuItem("Lid-drive cavity");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/lid-driven-cavity.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu.add(mi);
+
+		mi = new JMenuItem("Smoke in wind");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/smoke-in-wind.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu.add(mi);
+
+		mi = new JMenuItem("Solar heating");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/house1.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu.add(mi);
+
 		// help menu
 
 		menu = new JMenu("Help");
 		add(menu);
+
+		mi = new JMenuItem("Script Input");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		menu.add(mi);
 
 		mi = new JMenuItem("About");
 		mi.addActionListener(new ActionListener() {
