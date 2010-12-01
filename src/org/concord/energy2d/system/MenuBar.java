@@ -229,7 +229,62 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Models");
 		add(menu);
 
-		JMenu subMenu = new JMenu("Fluid Dynamics");
+		JMenu subMenu = new JMenu("Heat Conduction");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Thermal Conductivity");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/conduction1.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Conduction Area");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/conduction2.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Temperature Difference");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/conduction3.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Heat Capacity");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/conduction4.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		subMenu = new JMenu("Fluid Dynamics");
 		menu.add(subMenu);
 
 		mi = new JMenuItem("Benard Cell");
