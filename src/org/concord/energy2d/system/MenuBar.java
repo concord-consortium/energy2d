@@ -190,6 +190,9 @@ class MenuBar extends JMenuBar {
 
 		final JCheckBoxMenuItem miIsotherm = new JCheckBoxMenuItem("Isotherm");
 		final JCheckBoxMenuItem miVelocity = new JCheckBoxMenuItem("Velocity");
+		final JCheckBoxMenuItem miRainbow = new JCheckBoxMenuItem("Rainbow");
+		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
+		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
 
 		menu = new JMenu("View");
 		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
@@ -202,6 +205,9 @@ class MenuBar extends JMenuBar {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 				miIsotherm.setSelected(box.view.isIsothermOn());
 				miVelocity.setSelected(box.view.isVelocityOn());
+				miRainbow.setSelected(box.view.isRainbowOn());
+				miRuler.setSelected(box.view.isRulerOn());
+				miGrid.setSelected(box.view.isGridOn());
 			}
 		});
 		add(menu);
@@ -223,6 +229,33 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(miVelocity);
+
+		miRainbow.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setRainbowOn(src.isSelected());
+				box.view.repaint();
+			}
+		});
+		menu.add(miRainbow);
+
+		miRuler.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setRulerOn(src.isSelected());
+				box.view.repaint();
+			}
+		});
+		menu.add(miRuler);
+
+		miGrid.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setGridOn(src.isSelected());
+				box.view.repaint();
+			}
+		});
+		menu.add(miGrid);
 
 		// model menu
 
@@ -380,7 +413,7 @@ class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/house1.e2d"));
+							.getResourceAsStream("models/internal-heater.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -388,12 +421,86 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Solar Heating");
+		mi = new JMenuItem("Solar Heating: Gable Roof");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/house2.e2d"));
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/solar-heating-gable-roof.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Solar Heating: Skillion Roof");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/solar-heating-skillion-roof.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Solar Heating: Two Story");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/solar-heating-two-story.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Solar Heating (Convection)");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/solar-heating-convection.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		subMenu = new JMenu("Boundary Conditions");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Fixed Temperature Boundary");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/fixed-temperature-boundary.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Fixed Flux Boundary");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/fixed-flux-boundary.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
