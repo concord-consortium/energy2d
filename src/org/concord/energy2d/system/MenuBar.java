@@ -284,6 +284,37 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		subMenu = new JMenu("Heat Convection");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Natural Convection");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/natural-convection.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Forced Convection");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/forced-convection.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
 		subMenu = new JMenu("Fluid Dynamics");
 		menu.add(subMenu);
 
@@ -292,7 +323,7 @@ class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/benardcell.e2d"));
+							.getResourceAsStream("models/benard-cell.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -363,6 +394,36 @@ class MenuBar extends JMenuBar {
 				try {
 					box.loadStateApp(MenuBar.class
 							.getResourceAsStream("models/house2.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		subMenu = new JMenu("Miscellaneous");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Ray Optics");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/ray-optics.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Projection Effect");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/projection-effect.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
