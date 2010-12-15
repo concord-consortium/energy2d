@@ -558,11 +558,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mi = new JMenuItem("Properties");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JDialog d = dialogFactory
-						.createDialog(selectedManipulable != null ? selectedManipulable
-								: model);
-				if (d != null)
-					d.setVisible(true);
+				createDialog(selectedManipulable != null ? selectedManipulable
+						: model);
 			}
 		});
 		popupMenu.add(mi);
@@ -577,6 +574,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		});
 		popupMenu.add(mi);
 
+	}
+
+	public void createDialog(Object o) {
+		JDialog d = dialogFactory.createDialog(o);
+		if (d != null)
+			d.setVisible(true);
 	}
 
 	public void setArea(float xmin, float xmax, float ymin, float ymax) {

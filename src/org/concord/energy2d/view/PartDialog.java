@@ -145,6 +145,9 @@ class PartDialog extends JDialog {
 				} else {
 					part.setTemperature(temperature);
 				}
+				part
+						.setConstantTemperature(temperatureRadioButton
+								.isSelected());
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
@@ -244,8 +247,8 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Thermal conductivity");
 		p.add(label);
-		thermalConductivityField = new JTextField(FORMAT
-				.format(part.getThermalConductivity()), 8);
+		thermalConductivityField = new JTextField(FORMAT.format(part
+				.getThermalConductivity()), 8);
 		thermalConductivityField.addActionListener(okListener);
 		p.add(thermalConductivityField);
 		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
@@ -254,7 +257,8 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Specific heat");
 		p.add(label);
-		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
+		specificHeatField = new JTextField(FORMAT
+				.format(part.getSpecificHeat()), 8);
 		specificHeatField.addActionListener(okListener);
 		p.add(specificHeatField);
 		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");

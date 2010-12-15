@@ -72,6 +72,7 @@ class MenuBar extends JMenuBar {
 	private Action saveAction;
 	private Action saveAsAction;
 	private Action exitAction;
+	private Action propertyAction;
 
 	MenuBar(final System2D box, final JFrame frame) {
 
@@ -165,6 +166,29 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(mi);
+
+		menu.addSeparator();
+
+		propertyAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				box.view.createDialog(box.model);
+			}
+		};
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
+		box.view.getInputMap().put(ks, "Property");
+		box.view.getActionMap().put("Property", propertyAction);
+		mi = new JMenuItem("Property");
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				propertyAction.actionPerformed(e);
+			}
+		});
+		menu.add(mi);
+
+		menu.addSeparator();
 
 		exitAction = new AbstractAction() {
 			private static final long serialVersionUID = 1L;
