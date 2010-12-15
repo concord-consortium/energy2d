@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
-<view>
-<rainbow>true</rainbow>
-<rainbow_x>50</rainbow_x><rainbow_y>20</rainbow_y><rainbow_w>296</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
-<maximum_temperature>20.0</maximum_temperature>
-<velocity>true</velocity>
-</view>
 <model>
 <timestep>0.5</timestep>
 <measurement_interval>100</measurement_interval>
@@ -16,7 +10,7 @@
 <flux_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
 </boundary>
 <structure>
-<part><rectangle  x="0.0" y="4.0" width="10.0" height="1.0"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="0.0" y="4.0" width="10.0" height="1.0"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -25,7 +19,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 </part>
-<part><rectangle  x="0.0" y="7.0" width="10.0" height="1.0"/><thermal_conductivity>1.0E-6</thermal_conductivity>
+<part><rectangle x="0.0" y="7.0" width="10.0" height="1.0"/><thermal_conductivity>1.0E-6</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -33,7 +27,7 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 </part>
-<part><rectangle  x="0.0" y="6.8" width="10.0" height="0.2"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="0.0" y="6.8" width="10.0" height="0.2"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -44,4 +38,12 @@
 </part>
 </structure>
 </model>
+<sensor>
+</sensor>
+<view>
+<rainbow>true</rainbow>
+<rainbow_x>50</rainbow_x><rainbow_y>20</rainbow_y><rainbow_w>500</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
+<maximum_temperature>20.0</maximum_temperature>
+<velocity>true</velocity>
+</view>
 </state>

@@ -96,7 +96,7 @@ public class TextBox {
 		xml += " color=\""
 				+ Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";
 		xml += " x=\"" + getX() + "\"";
-		xml += " y=\"" + getY() + "\"/>";
+		xml += " y=\"" + getY() + "\"/>\n";
 		return xml;
 	}
 

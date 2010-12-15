@@ -69,5 +69,6 @@
 <view>
 <rainbow_x>0</rainbow_x><rainbow_y>0</rainbow_y><rainbow_w>296</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<text string="Fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="0.5"/><text string="No fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="5.75"/></view>
+<text string="No fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="0.5"/>
+<text string="Fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="5.75"/></view>
 </state>

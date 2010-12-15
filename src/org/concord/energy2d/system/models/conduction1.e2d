@@ -155,5 +155,9 @@
 <rainbow_x>0</rainbow_x><rainbow_y>0</rainbow_y><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
 <clock>false</clock>
-<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.02"/><text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/><text string="Wood" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.02"/><text string="Metal" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.08"/><text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.02"/><text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/><text string="Wood" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.02"/><text string="Metal" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.08"/></view>
+<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.02"/>
+<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/>
+<text string="Metal" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.02"/>
+<text string="Wood" name="Arial" size="12" style="0" color="ffffff" x="0.045" y="0.08"/>
+</view>
 </state>
