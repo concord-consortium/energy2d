@@ -102,7 +102,7 @@
 </sensor>
 <view>
 <rainbow>true</rainbow>
-<rainbow_x>50</rainbow_x><rainbow_y>20</rainbow_y><rainbow_w>296</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
+<rainbow_x>50</rainbow_x><rainbow_y>20</rainbow_y><rainbow_w>500</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
 </view>
 </state>

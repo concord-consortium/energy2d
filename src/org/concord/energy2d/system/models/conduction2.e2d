@@ -87,5 +87,6 @@
 <maximum_temperature>100.0</maximum_temperature>
 <clock>false</clock>
 <text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.02"/>
-<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/></view>
+<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/>
+</view>
 </state>

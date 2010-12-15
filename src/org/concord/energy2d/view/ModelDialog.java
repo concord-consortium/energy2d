@@ -156,7 +156,8 @@ class ModelDialog extends JDialog {
 
 				model.setTimeStep(steplength);
 				model.setBackgroundTemperature(bgTemperature);
-				model.setBackgroundConductivity(conductivity);
+				model.setBackgroundConductivity(Math.max(conductivity,
+						0.000000001f));
 				model.setBackgroundSpecificHeat(capacity);
 				model.setBackgroundDensity(density);
 				model.setBackgroundViscosity(viscosity);
@@ -346,7 +347,8 @@ class ModelDialog extends JDialog {
 		viscosityLabel = new JLabel("Kinematic viscosity");
 		viscosityLabel.setEnabled(model.isConvective());
 		p.add(viscosityLabel);
-		viscosityField = new JTextField(FORMAT.format(model.getBackgroundViscosity()), 16);
+		viscosityField = new JTextField(FORMAT.format(model
+				.getBackgroundViscosity()), 16);
 		viscosityField.setEnabled(model.isConvective());
 		viscosityField.addActionListener(okListener);
 		p.add(viscosityField);
@@ -416,7 +418,8 @@ class ModelDialog extends JDialog {
 		raySpeedLabel = new JLabel("Ray speed");
 		raySpeedLabel.setEnabled(model.isSunny());
 		p.add(raySpeedLabel);
-		raySpeedField = new JTextField(FORMAT.format(model.getSolarRaySpeed()), 16);
+		raySpeedField = new JTextField(FORMAT.format(model.getSolarRaySpeed()),
+				16);
 		raySpeedField.setEnabled(model.isSunny());
 		raySpeedField.addActionListener(okListener);
 		p.add(raySpeedField);
