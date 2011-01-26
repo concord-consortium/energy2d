@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * @author Charles Xie
+ * @author Charles Xie,
  * 
  */
 public class System2D extends JApplet implements MwService,
