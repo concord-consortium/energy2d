@@ -60,7 +60,7 @@ class PartDialog extends JDialog {
 	private ColoredLabel coloredLabel;
 	private JCheckBox visibleCheckBox, draggableCheckBox, borderOnlyCheckBox;
 	private JRadioButton notHeatSourceRadioButton, powerRadioButton,
-			temperatureRadioButton;
+			constantTemperatureRadioButton;
 	private Window owner;
 	private ActionListener okListener;
 
@@ -118,7 +118,8 @@ class PartDialog extends JDialog {
 				}
 
 				float temperature = Float.NaN, power = Float.NaN;
-				if (temperatureRadioButton.isSelected()) {
+				if (notHeatSourceRadioButton.isSelected()
+						|| constantTemperatureRadioButton.isSelected()) {
 					temperature = parse(temperatureField.getText());
 					if (Float.isNaN(temperature))
 						return;
@@ -145,9 +146,8 @@ class PartDialog extends JDialog {
 				} else {
 					part.setTemperature(temperature);
 				}
-				part
-						.setConstantTemperature(temperatureRadioButton
-								.isSelected());
+				part.setConstantTemperature(constantTemperatureRadioButton
+						.isSelected());
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
@@ -287,8 +287,8 @@ class PartDialog extends JDialog {
 		notHeatSourceRadioButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					temperatureLabel.setEnabled(false);
-					temperatureField.setEnabled(false);
+					temperatureLabel.setEnabled(true);
+					temperatureField.setEnabled(true);
 					powerLabel.setEnabled(false);
 					powerField.setEnabled(false);
 				}
@@ -297,8 +297,9 @@ class PartDialog extends JDialog {
 		p.add(notHeatSourceRadioButton);
 		bg.add(notHeatSourceRadioButton);
 
-		temperatureRadioButton = new JRadioButton("Constant temperature");
-		temperatureRadioButton.addItemListener(new ItemListener() {
+		constantTemperatureRadioButton = new JRadioButton(
+				"Constant temperature");
+		constantTemperatureRadioButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					temperatureLabel.setEnabled(true);
@@ -308,8 +309,8 @@ class PartDialog extends JDialog {
 				}
 			}
 		});
-		p.add(temperatureRadioButton);
-		bg.add(temperatureRadioButton);
+		p.add(constantTemperatureRadioButton);
+		bg.add(constantTemperatureRadioButton);
 
 		powerRadioButton = new JRadioButton("Constant power");
 		powerRadioButton.addItemListener(new ItemListener() {
@@ -367,8 +368,8 @@ class PartDialog extends JDialog {
 
 		if (part.getPower() != 0) {
 			powerRadioButton.setSelected(true);
-		} else if (!Float.isNaN(part.getTemperature())) {
-			temperatureRadioButton.setSelected(true);
+		} else if (part.getConstantTemperature()) {
+			constantTemperatureRadioButton.setSelected(true);
 		} else {
 			notHeatSourceRadioButton.setSelected(true);
 		}
