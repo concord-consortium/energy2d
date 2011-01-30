@@ -15,7 +15,7 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 	private static byte relaxationSteps = 5;
 
-	private boolean crankNicolson;
+	private boolean implicit = true;
 
 	HeatSolver2DImpl(int nx, int ny) {
 		super(nx, ny);
@@ -28,10 +28,32 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 		float hx = 0.5f / (deltaX * deltaX);
 		float hy = 0.5f / (deltaY * deltaY);
-		float rij, sij, axij, bxij, ayij, byij, qij, t0ij;
+		float rij, sij, axij, bxij, ayij, byij;
 		float invTimeStep = 1f / timeStep;
 
-		for (int k = 0; k < relaxationSteps; k++) {
+		if (implicit) {
+			for (int k = 0; k < relaxationSteps; k++) {
+				for (int i = 1; i < nx1; i++) {
+					for (int j = 1; j < ny1; j++) {
+						if (Float.isNaN(tb[i][j])) {
+							sij = capacity[i][j] * density[i][j] * invTimeStep;
+							rij = conductivity[i][j];
+							axij = hx * (rij + conductivity[i - 1][j]);
+							bxij = hx * (rij + conductivity[i + 1][j]);
+							ayij = hy * (rij + conductivity[i][j - 1]);
+							byij = hy * (rij + conductivity[i][j + 1]);
+							t[i][j] = (t0[i][j] * sij + q[i][j] + axij
+									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
+									* t[i][j - 1] + byij * t[i][j + 1])
+									/ (sij + axij + bxij + ayij + byij);
+						} else {
+							t[i][j] = tb[i][j];
+						}
+					}
+				}
+				applyBoundary(t);
+			}
+		} else {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (Float.isNaN(tb[i][j])) {
@@ -41,29 +63,16 @@ class HeatSolver2DImpl extends HeatSolver2D {
 						bxij = hx * (rij + conductivity[i + 1][j]);
 						ayij = hy * (rij + conductivity[i][j - 1]);
 						byij = hy * (rij + conductivity[i][j + 1]);
-						qij = q[i][j];
-						if (crankNicolson) {
-							t0ij = t0[i][j];
-							qij += 0.5f * (axij * (t0[i - 1][j] - t0ij) + bxij
-									* (t0[i + 1][j] - t0ij) + ayij
-									* (t0[i][j - 1] - t0ij) + byij
-									* (t0[i][j + 1] - t0ij));
-							t[i][j] = (t0[i][j] * sij + qij + 0.5f * (axij
-									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
-									* t[i][j - 1] + byij * t[i][j + 1]))
-									/ (sij + 0.5f * (axij + bxij + ayij + byij));
-						} else {
-							t[i][j] = (t0[i][j] * sij + qij + axij
-									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
-									* t[i][j - 1] + byij * t[i][j + 1])
-									/ (sij + axij + bxij + ayij + byij);
-						}
+						t[i][j] = (1 - (axij + bxij + ayij + byij) / sij)
+								* t0[i][j]
+								+ (q[i][j] + axij * t0[i - 1][j] + bxij
+										* t0[i + 1][j] + ayij * t0[i][j - 1] + byij
+										* t0[i][j + 1]) / sij;
 					} else {
 						t[i][j] = tb[i][j];
 					}
 				}
 			}
-			applyBoundary(t);
 		}
 
 		if (convective) {
