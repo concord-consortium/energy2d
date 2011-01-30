@@ -40,6 +40,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -47,6 +49,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import org.concord.energy2d.event.GraphEvent;
@@ -82,6 +85,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	final static byte BOTTOM = 5;
 	final static byte LEFT = 6;
 	final static byte RIGHT = 7;
+
+	private final static boolean IS_MAC = System.getProperty("os.name")
+			.startsWith("Mac");
 
 	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 },
 			{ 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 },
@@ -148,6 +154,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private List<ManipulationListener> manipulationListeners;
 	private List<GraphListener> graphListeners;
 
+	private Action copyAction;
+	private Action cutAction;
+	private Action pasteAction;
+
 	public View2D() {
 		super();
 		for (int i = 0; i < handle.length; i++)
@@ -191,6 +201,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				processComponentResized(e);
 			}
 		});
+		createActions();
 		createPopupMenu();
 		dialogFactory = new DialogFactory(this);
 		temperatureRenderer = new ScalarDistributionRenderer(
@@ -199,6 +210,53 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
 		graphListeners = new ArrayList<GraphListener>();
+	}
+
+	private void createActions() {
+
+		cutAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				cut();
+			}
+		};
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				KeyEvent.CTRL_MASK);
+		cutAction.putValue(Action.NAME, "Cut");
+		cutAction.putValue(Action.ACCELERATOR_KEY, ks);
+		getInputMap().put(ks, "Cut");
+		getActionMap().put("Cut", cutAction);
+
+		copyAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				copy();
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
+		copyAction.putValue(Action.NAME, "Copy");
+		copyAction.putValue(Action.ACCELERATOR_KEY, ks);
+		getInputMap().put(ks, "Copy");
+		getActionMap().put("Copy", copyAction);
+
+		pasteAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				paste();
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
+		pasteAction.putValue(Action.NAME, "Paste");
+		pasteAction.putValue(Action.ACCELERATOR_KEY, ks);
+		getInputMap().put(ks, "Paste");
+		getActionMap().put("Paste", pasteAction);
+
 	}
 
 	public void setActionMode(byte mode) {
@@ -503,6 +561,36 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return popupMenu;
 	}
 
+	private void cut() {
+		if (selectedManipulable != null) {
+			copiedManipulable = selectedManipulable;
+			notifyManipulationListeners(selectedManipulable,
+					ManipulationEvent.DELETE);
+			setSelectedManipulable(null);
+		}
+	}
+
+	private void copy() {
+		copiedManipulable = selectedManipulable;
+	}
+
+	private void paste() {
+		if (copiedManipulable instanceof Part) {
+			Part p = (Part) copiedManipulable;
+			model.addPart(p.duplicate(
+					convertPixelToPointX(mouseReleasedPoint.x),
+					convertPixelToPointY(mouseReleasedPoint.y)));
+			model.refreshPowerArray();
+			model.refreshTemperatureBoundaryArray();
+			model.refreshMaterialPropertyArrays();
+			model.setInitialTemperature();
+		} else if (copiedManipulable instanceof Thermometer) {
+			model.addThermometer(convertPixelToPointX(mouseReleasedPoint.x),
+					convertPixelToPointY(mouseReleasedPoint.y));
+		}
+		repaint();
+	}
+
 	private void createPopupMenu() {
 
 		if (popupMenu != null)
@@ -511,51 +599,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		popupMenu = new JPopupMenu();
 		popupMenu.setInvoker(this);
 
-		JMenuItem mi = new JMenuItem("Copy");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				copiedManipulable = selectedManipulable;
-			}
-		});
-		popupMenu.add(mi);
-
-		mi = new JMenuItem("Cut");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (selectedManipulable != null) {
-					copiedManipulable = selectedManipulable;
-					notifyManipulationListeners(selectedManipulable,
-							ManipulationEvent.DELETE);
-					setSelectedManipulable(null);
-				}
-			}
-		});
-		popupMenu.add(mi);
-
-		mi = new JMenuItem("Paste");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (copiedManipulable instanceof Part) {
-					Part p = (Part) copiedManipulable;
-					model.addPart(p.duplicate(
-							convertPixelToPointX(mouseReleasedPoint.x),
-							convertPixelToPointY(mouseReleasedPoint.y)));
-					model.refreshPowerArray();
-					model.refreshTemperatureBoundaryArray();
-					model.refreshMaterialPropertyArrays();
-					model.setInitialTemperature();
-				} else if (copiedManipulable instanceof Thermometer) {
-					model.addThermometer(
-							convertPixelToPointX(mouseReleasedPoint.x),
-							convertPixelToPointY(mouseReleasedPoint.y));
-				}
-				repaint();
-			}
-		});
-		popupMenu.add(mi);
+		popupMenu.add(copyAction);
+		popupMenu.add(cutAction);
+		popupMenu.add(pasteAction);
 		popupMenu.addSeparator();
 
-		mi = new JMenuItem("Properties");
+		JMenuItem mi = new JMenuItem("Properties");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createDialog(selectedManipulable != null ? selectedManipulable
@@ -1079,6 +1128,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_DELETE:
 		case KeyEvent.VK_BACK_SPACE:
+			// this is different than cut() in that it doesn't
+			// create a copy for pasting
 			if (selectedManipulable != null) {
 				notifyManipulationListeners(selectedManipulable,
 						ManipulationEvent.DELETE);

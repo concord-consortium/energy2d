@@ -181,7 +181,7 @@ class MenuBar extends JMenuBar {
 		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
 		box.view.getInputMap().put(ks, "Property");
 		box.view.getActionMap().put("Property", propertyAction);
-		mi = new JMenuItem("Property");
+		mi = new JMenuItem("Properties");
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -211,6 +211,25 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(mi);
+
+		// edit menu
+
+		menu = new JMenu("Edit");
+		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+			}
+		});
+		add(menu);
+
+		menu.add(box.view.getActionMap().get("Cut"));
+		menu.add(box.view.getActionMap().get("Copy"));
+		menu.add(box.view.getActionMap().get("Paste"));
 
 		// view menu
 
