@@ -15,8 +15,6 @@ class HeatSolver2DImpl extends HeatSolver2D {
 
 	private static byte relaxationSteps = 5;
 
-	private boolean implicit = true;
-
 	HeatSolver2DImpl(int nx, int ny) {
 		super(nx, ny);
 	}
@@ -31,29 +29,7 @@ class HeatSolver2DImpl extends HeatSolver2D {
 		float rij, sij, axij, bxij, ayij, byij;
 		float invTimeStep = 1f / timeStep;
 
-		if (implicit) {
-			for (int k = 0; k < relaxationSteps; k++) {
-				for (int i = 1; i < nx1; i++) {
-					for (int j = 1; j < ny1; j++) {
-						if (Float.isNaN(tb[i][j])) {
-							sij = capacity[i][j] * density[i][j] * invTimeStep;
-							rij = conductivity[i][j];
-							axij = hx * (rij + conductivity[i - 1][j]);
-							bxij = hx * (rij + conductivity[i + 1][j]);
-							ayij = hy * (rij + conductivity[i][j - 1]);
-							byij = hy * (rij + conductivity[i][j + 1]);
-							t[i][j] = (t0[i][j] * sij + q[i][j] + axij
-									* t[i - 1][j] + bxij * t[i + 1][j] + ayij
-									* t[i][j - 1] + byij * t[i][j + 1])
-									/ (sij + axij + bxij + ayij + byij);
-						} else {
-							t[i][j] = tb[i][j];
-						}
-					}
-				}
-				applyBoundary(t);
-			}
-		} else {
+		for (int k = 0; k < relaxationSteps; k++) {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (Float.isNaN(tb[i][j])) {
@@ -63,16 +39,16 @@ class HeatSolver2DImpl extends HeatSolver2D {
 						bxij = hx * (rij + conductivity[i + 1][j]);
 						ayij = hy * (rij + conductivity[i][j - 1]);
 						byij = hy * (rij + conductivity[i][j + 1]);
-						t[i][j] = (1 - (axij + bxij + ayij + byij) / sij)
-								* t0[i][j]
-								+ (q[i][j] + axij * t0[i - 1][j] + bxij
-										* t0[i + 1][j] + ayij * t0[i][j - 1] + byij
-										* t0[i][j + 1]) / sij;
+						t[i][j] = (t0[i][j] * sij + q[i][j] + axij
+								* t[i - 1][j] + bxij * t[i + 1][j] + ayij
+								* t[i][j - 1] + byij * t[i][j + 1])
+								/ (sij + axij + bxij + ayij + byij);
 					} else {
 						t[i][j] = tb[i][j];
 					}
 				}
 			}
+			applyBoundary(t);
 		}
 
 		if (convective) {
