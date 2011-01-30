@@ -22,6 +22,23 @@ import javax.swing.SpringLayout;
  */
 public final class MiscUtil {
 
+	private final static String FILE_SEPARATOR = System
+			.getProperty("file.separator");
+
+	/** return the file name of this path */
+	public static String getFileName(String path) {
+		if (path == null)
+			return null;
+		int i = path.lastIndexOf("/");
+		if (i == -1)
+			i = path.lastIndexOf("\\");
+		if (i == -1)
+			i = path.lastIndexOf(FILE_SEPARATOR);
+		if (i == -1)
+			return path;
+		return path.substring(i + 1, path.length());
+	}
+
 	public static void setSelectedSilently(AbstractButton x, boolean b) {
 		ActionListener[] al = x.getActionListeners();
 		if (al != null && al.length > 0) {

@@ -32,6 +32,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.concord.energy2d.util.MiscUtil;
+
 /**
  * @author Charles Xie
  * 
@@ -604,6 +606,11 @@ class MenuBar extends JMenuBar {
 		fileChooser.setApproveButtonMnemonic('S');
 		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
+			if (!file.toString().toLowerCase().endsWith(".e2d")) {
+				file = new File(file.getParentFile(), MiscUtil.getFileName(file
+						.toString())
+						+ ".e2d");
+			}
 			boolean b = true;
 			if (file.exists()) {
 				if (JOptionPane.showConfirmDialog(frame, "File "
