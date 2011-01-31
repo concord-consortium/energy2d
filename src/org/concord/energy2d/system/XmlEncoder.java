@@ -53,43 +53,43 @@ class XmlEncoder {
 		if (box.model.isSunny()) {
 			sb.append("<sunny>true</sunny>");
 		}
-		sb.append("<sun_angle>" + box.model.getSunAngle() + "</sun_angle>");
+		sb.append("<sun_angle>" + box.model.getSunAngle() + "</sun_angle>\n");
 		sb.append("<solar_power_density>" + box.model.getSolarPowerDensity()
-				+ "</solar_power_density>");
+				+ "</solar_power_density>\n");
 		sb.append("<solar_ray_count>" + box.model.getSolarRayCount()
-				+ "</solar_ray_count>");
+				+ "</solar_ray_count>\n");
 		sb.append("<solar_ray_speed>" + box.model.getSolarRaySpeed()
-				+ "</solar_ray_speed>");
+				+ "</solar_ray_speed>\n");
 		sb.append("<photon_emission_interval>"
 				+ box.model.getPhotonEmissionInterval()
-				+ "</photon_emission_interval>");
+				+ "</photon_emission_interval>\n");
 
 		if (!box.model.isConvective()) {
-			sb.append("<convective>false</convective>");
+			sb.append("<convective>false</convective>\n");
 		}
 		if (box.model.getBackgroundConductivity() != Constants.AIR_THERMAL_CONDUCTIVITY) {
 			sb.append("<background_conductivity>"
 					+ box.model.getBackgroundConductivity()
-					+ "</background_conductivity>");
+					+ "</background_conductivity>\n");
 		}
 		if (box.model.getBackgroundDensity() != Constants.AIR_DENSITY) {
 			sb.append("<background_density>" + box.model.getBackgroundDensity()
-					+ "</background_density>");
+					+ "</background_density>\n");
 		}
 		if (box.model.getBackgroundSpecificHeat() != Constants.AIR_SPECIFIC_HEAT) {
 			sb.append("<background_specific_heat>"
 					+ box.model.getBackgroundSpecificHeat()
-					+ "</background_specific_heat>");
+					+ "</background_specific_heat>\n");
 		}
 		if (box.model.getBackgroundTemperature() != 0) {
 			sb.append("<background_temperature>"
 					+ box.model.getBackgroundTemperature()
-					+ "</background_temperature>");
+					+ "</background_temperature>\n");
 		}
 		if (box.model.getBackgroundViscosity() != Constants.AIR_VISCOSITY) {
 			sb.append("<background_viscosity>"
 					+ box.model.getBackgroundViscosity()
-					+ "</background_viscosity>");
+					+ "</background_viscosity>\n");
 		}
 		sb.append("<thermal_buoyancy>" + box.model.getThermalBuoyancy()
 				+ "</thermal_buoyancy>\n");

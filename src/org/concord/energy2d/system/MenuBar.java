@@ -307,10 +307,57 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Models");
 		add(menu);
 
-		JMenu subMenu = new JMenu("Heat Conduction");
+		JMenu subMenu = new JMenu("Heat and Temperature");
 		menu.add(subMenu);
 
-		mi = new JMenuItem("Thermal Conductivity");
+		mi = new JMenuItem("Thermal Equilibrium Between Identical Objects");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/identical-heat-capacities.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem(
+				"Thermal Equilibrium Between Objects with Different Heat Capacities: Case 1");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/different-heat-capacities1.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem(
+				"Thermal Equilibrium Between Objects with Different Heat Capacities: Case 2");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/different-heat-capacities2.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		subMenu = new JMenu("Heat Conduction");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Comparing Thermal Conductivities");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -323,7 +370,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Conduction Area");
+		mi = new JMenuItem("Comparing Conduction Area");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -336,7 +383,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Temperature Difference");
+		mi = new JMenuItem("Comparing Temperature Difference");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -349,7 +396,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Heat Capacity");
+		mi = new JMenuItem("Comparing Heat Capacity");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
