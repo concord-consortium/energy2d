@@ -91,7 +91,7 @@ public class Thermometer extends Manipulable {
 	}
 
 	public String toXml() {
-		String xml = "<thermometer ";
+		String xml = "<thermometer";
 		xml += " x=\"" + getX() + "\"";
 		xml += " y=\"" + getY() + "\"/>";
 		return xml;

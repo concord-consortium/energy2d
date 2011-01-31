@@ -393,6 +393,21 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		mi = new JMenuItem(
+				"The Effect of Thermal Conductivity on Equilibration Speed");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/different-conductivity.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
 		subMenu = new JMenu("Heat Conduction");
 		menu.add(subMenu);
 
