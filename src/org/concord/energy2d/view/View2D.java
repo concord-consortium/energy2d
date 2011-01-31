@@ -604,7 +604,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		popupMenu.add(pasteAction);
 		popupMenu.addSeparator();
 
-		JMenuItem mi = new JMenuItem("Properties");
+		JMenuItem mi = new JMenuItem("Properties...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createDialog(selectedManipulable != null ? selectedManipulable
@@ -613,12 +613,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		});
 		popupMenu.add(mi);
 
-		mi = new JMenuItem("View Options");
+		mi = new JMenuItem("View Options...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JDialog d = dialogFactory.createDialog(View2D.this);
-				if (d != null)
-					d.setVisible(true);
+				createDialog(View2D.this);
 			}
 		});
 		popupMenu.add(mi);

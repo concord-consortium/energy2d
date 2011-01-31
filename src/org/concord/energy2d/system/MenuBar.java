@@ -116,7 +116,7 @@ class MenuBar extends JMenuBar {
 				KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Open");
 		box.view.getActionMap().put("Open", openAction);
-		JMenuItem mi = new JMenuItem("Open");
+		JMenuItem mi = new JMenuItem("Open...");
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -160,7 +160,7 @@ class MenuBar extends JMenuBar {
 				: KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "SaveAs");
 		box.view.getActionMap().put("SaveAs", saveAsAction);
-		mi = new JMenuItem("Save As");
+		mi = new JMenuItem("Save As...");
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -181,7 +181,7 @@ class MenuBar extends JMenuBar {
 		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
 		box.view.getInputMap().put(ks, "Property");
 		box.view.getActionMap().put("Property", propertyAction);
-		mi = new JMenuItem("Properties");
+		mi = new JMenuItem("Properties...");
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -301,6 +301,15 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(miGrid);
+		menu.addSeparator();
+
+		mi = new JMenuItem("More...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.view.createDialog(box.view);
+			}
+		});
+		menu.add(mi);
 
 		// model menu
 
@@ -665,18 +674,18 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Help");
 		add(menu);
 
-		mi = new JMenuItem("Script Input");
+		mi = new JMenuItem("Script Input...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		menu.add(mi);
 
-		mi = new JMenuItem("About");
+		mi = new JMenuItem("About...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JLabel label = new JLabel(
-						"<html><h2>Energy2D</h2><hr><h3>Credit:</h3>This program is brought to you by:<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul><p>This program is licensed under the GNU Lesser General Public License V3.0.<br>Funding of this project is provided by the National Science Foundation<br>under grant #0918449 to the Concord Consortium. </html>");
+						"<html><h2>Energy2D: Seeing Energy Flow</h2><hr><h4>Credit:</h4>This program is brought to you by:<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul><p>This program is licensed under the GNU Lesser General Public License V3.0.<br>Funding of this project is provided by the National Science Foundation<br>under grant #0918449 to the Concord Consortium. </html>");
 				JOptionPane.showMessageDialog(frame, label);
 			}
 		});
