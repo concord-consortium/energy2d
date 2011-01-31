@@ -316,7 +316,7 @@ class MenuBar extends JMenuBar {
 				try {
 					box
 							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/identical-heat-capacities.e2d"));
+									.getResourceAsStream("models/identical-heat-capacity.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -325,13 +325,13 @@ class MenuBar extends JMenuBar {
 		subMenu.add(mi);
 
 		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Heat Capacities: Case 1");
+				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 1");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box
 							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-heat-capacities1.e2d"));
+									.getResourceAsStream("models/different-specific-heat1.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -340,13 +340,43 @@ class MenuBar extends JMenuBar {
 		subMenu.add(mi);
 
 		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Heat Capacities: Case 2");
+				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 2");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box
 							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-heat-capacities2.e2d"));
+									.getResourceAsStream("models/different-specific-heat2.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem(
+				"Thermal Equilibrium Between Objects with Different Densities: Case 1");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/different-density1.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem(
+				"Thermal Equilibrium Between Objects with Different Densities: Case 2");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box
+							.loadStateApp(MenuBar.class
+									.getResourceAsStream("models/different-density2.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
