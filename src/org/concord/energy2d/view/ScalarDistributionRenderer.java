@@ -5,6 +5,9 @@
 
 package org.concord.energy2d.view;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -16,6 +19,7 @@ import javax.swing.JComponent;
  */
 class ScalarDistributionRenderer {
 
+	private final static int ERROR_PIXEL = -16777216;
 	private BufferedImage image;
 	private int[] pixels;
 	private int w, h;
@@ -69,14 +73,14 @@ class ScalarDistributionRenderer {
 		return (255 << 24) | (rc << 16) | (gc << 8) | bc;
 	}
 
-	void render(float[][] distribution, JComponent c, Graphics2D g) {
+	void render(float[][] distribution, View2D view, Graphics2D g) {
 
-		if (!c.isVisible())
+		if (!view.isVisible())
 			return;
 
-		w = c.getWidth();
-		h = c.getHeight();
-		createImage(w, h, c);
+		w = view.getWidth();
+		h = view.getHeight();
+		createImage(w, h, view);
 
 		int m = distribution.length;
 		int n = distribution[0].length;
@@ -154,7 +158,16 @@ class ScalarDistributionRenderer {
 			}
 		}
 		image.setRGB(0, 0, w, h, pixels, 0, w);
-		g.drawImage(image, 0, 0, c);
+		g.drawImage(image, 0, 0, view);
+
+		if (pixels[pixels.length / 2] == ERROR_PIXEL) {
+			String s = "Fatal Error";
+			FontMetrics fm = g.getFontMetrics();
+			g.setColor(Color.red);
+			g.setFont(new Font("Arial", Font.BOLD, 20));
+			g.drawString(s, (w - fm.stringWidth(s)) / 2, h / 2);
+			view.model.stop();
+		}
 
 	}
 
