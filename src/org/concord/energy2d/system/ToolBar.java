@@ -59,8 +59,7 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/rectangle.png")));
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/rectangle.png")));
 		x.setToolTipText("Draw a rectangle");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -75,8 +74,7 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/ellipse.png")));
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/ellipse.png")));
 		x.setToolTipText("Draw an ellipse");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -91,8 +89,7 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/polygon.png")));
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/polygon.png")));
 		x.setToolTipText("Draw an arbitray shape");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -107,8 +104,7 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/thermometer.png")));
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/thermometer.png")));
 		x.setToolTipText("Add a thermometer");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
