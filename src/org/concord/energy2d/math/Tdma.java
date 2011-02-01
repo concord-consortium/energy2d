@@ -36,8 +36,7 @@ public class Tdma {
 	 * @param x
 	 *            the result vector
 	 */
-	public static void solve(float[] a, float[] b, float[] c, float[] d,
-			float[] x) {
+	public static void solve(float[] a, float[] b, float[] c, float[] d, float[] x) {
 		int n = a.length;
 		float temp;
 		c[0] /= b[0];

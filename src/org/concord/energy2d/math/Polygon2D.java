@@ -30,8 +30,7 @@ public class Polygon2D implements Shape {
 			throw new IllegalArgumentException(
 					"the number of x coodinates must be equal to that of the y coordinates.");
 		if (x.length < 3)
-			throw new IllegalArgumentException(
-					"the number of vertices must be no less than 3.");
+			throw new IllegalArgumentException("the number of vertices must be no less than 3.");
 		vertex = new Point2D.Float[x.length];
 		for (int i = 0; i < x.length; i++)
 			setVertex(i, x[i], y[i]);
@@ -59,8 +58,7 @@ public class Polygon2D implements Shape {
 
 	public void setVertex(int i, float x, float y) {
 		if (i < 0 || i >= vertex.length)
-			throw new IllegalArgumentException(
-					"index of vertex is out of bound.");
+			throw new IllegalArgumentException("index of vertex is out of bound.");
 		if (vertex[i] == null)
 			vertex[i] = new Point2D.Float(x, y);
 		else
@@ -69,8 +67,7 @@ public class Polygon2D implements Shape {
 
 	public Point2D.Float getVertex(int i) {
 		if (i < 0 || i >= vertex.length)
-			throw new IllegalArgumentException(
-					"index of vertex is out of bound.");
+			throw new IllegalArgumentException("index of vertex is out of bound.");
 		return vertex[i];
 	}
 
