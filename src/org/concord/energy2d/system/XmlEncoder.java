@@ -1,6 +1,6 @@
 package org.concord.energy2d.system;
 
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import org.concord.energy2d.model.Constants;
@@ -125,13 +125,11 @@ class XmlEncoder {
 		if (box.view.isRainbowOn()) {
 			sb.append("<rainbow>true</rainbow>\n");
 		}
-		Rectangle rainbow = box.view.getRainbowRectangle();
+		Rectangle2D.Float rainbow = box.view.getRainbowRectangle();
 		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
 		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");
-		if (rainbow.width > 0)
-			sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
-		if (rainbow.height > 0)
-			sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
+		sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
+		sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
 		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature()
 				+ "</minimum_temperature>\n");
 		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature()

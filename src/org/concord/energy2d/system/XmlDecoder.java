@@ -55,7 +55,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean isotherm;
 	private boolean streamline;
 	private boolean rainbow;
-	private int rainbowX, rainbowY, rainbowW, rainbowH;
+	private float rainbowX, rainbowY, rainbowW, rainbowH;
 	private boolean velocity;
 	private boolean graphOn;
 	private boolean clock = true;
@@ -118,7 +118,11 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setStreamlineOn(streamline);
 		box.view.setVelocityOn(velocity);
 		box.view.setRainbowOn(rainbow);
-		box.view.setRainbowRectangle(rainbowX, rainbowY, rainbowW, rainbowH);
+		float xRainbow = rainbowX > 1 ? rainbowX / box.view.getWidth() : rainbowX;
+		float yRainbow = rainbowY > 1 ? rainbowY / box.view.getHeight() : rainbowY;
+		float wRainbow = rainbowW > 1 ? rainbowW / box.view.getWidth() : rainbowW;
+		float hRainbow = rainbowH > 1 ? rainbowH / box.view.getHeight() : rainbowH;
+		box.view.setRainbowRectangle(xRainbow, yRainbow, wRainbow, hRainbow);
 		box.view.setMinimumTemperature(minimumTemperature);
 		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
@@ -410,13 +414,13 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "rainbow") {
 			rainbow = Boolean.parseBoolean(str);
 		} else if (qName == "rainbow_x") {
-			rainbowX = Integer.parseInt(str);
+			rainbowX = Float.parseFloat(str);
 		} else if (qName == "rainbow_y") {
-			rainbowY = Integer.parseInt(str);
+			rainbowY = Float.parseFloat(str);
 		} else if (qName == "rainbow_w") {
-			rainbowW = Integer.parseInt(str);
+			rainbowW = Float.parseFloat(str);
 		} else if (qName == "rainbow_h") {
-			rainbowH = Integer.parseInt(str);
+			rainbowH = Float.parseFloat(str);
 		} else if (qName == "clock") {
 			clock = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {

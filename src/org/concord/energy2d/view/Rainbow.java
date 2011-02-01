@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
@@ -21,22 +21,24 @@ class Rainbow {
 
 	private short[][] rgbScale;
 	private Font font = new Font(null, Font.PLAIN | Font.BOLD, 8);
-	private int x, y, w, h;
+	// relative to the width and height of the view
+	private float rx, ry, rw, rh;
 	private int labelCount = 5;
+	private int w, h, x, y;
 
 	Rainbow(short[][] rgbScale) {
 		this.rgbScale = rgbScale;
 	}
 
-	void setRect(int x, int y, int w, int h) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+	void setRect(float rx, float ry, float rw, float rh) {
+		this.rx = rx;
+		this.ry = ry;
+		this.rw = rw;
+		this.rh = rh;
 	}
 
-	Rectangle getRect() {
-		return new Rectangle(x, y, w, h);
+	Rectangle2D.Float getRect() {
+		return new Rectangle2D.Float(rx, ry, rw, rh);
 	}
 
 	private int getColor(int i) {
@@ -54,6 +56,10 @@ class Rainbow {
 	}
 
 	void render(JComponent c, Graphics2D g, float max, float min) {
+		x = (int) (rx * c.getWidth());
+		y = (int) (ry * c.getHeight());
+		w = (int) (rw * c.getWidth());
+		h = (int) (rh * c.getHeight());
 		if (h == 0) {
 			h = 20;
 		}

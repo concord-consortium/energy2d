@@ -419,11 +419,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return showRainbow;
 	}
 
-	public void setRainbowRectangle(int x, int y, int w, int h) {
-		rainbow.setRect(x, y, w, h);
+	/** relative to the width and height of the view */
+	public void setRainbowRectangle(float rx, float ry, float rw, float rh) {
+		rainbow.setRect(rx, ry, rw, rh);
 	}
 
-	public Rectangle getRainbowRectangle() {
+	/** relative to the width and height of the view */
+	public Rectangle2D.Float getRainbowRectangle() {
 		return rainbow.getRect();
 	}
 

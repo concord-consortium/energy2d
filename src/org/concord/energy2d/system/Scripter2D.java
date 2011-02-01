@@ -519,10 +519,11 @@ class Scripter2D extends Scripter {
 						final float h1 = h;
 						final Runnable r = new Runnable() {
 							public void run() {
-								int x2 = s2d.view.convertPointToPixelX(x1);
-								int y2 = s2d.view.convertPointToPixelY(y1);
-								int w2 = s2d.view.convertLengthToPixelX(w1);
-								int h2 = s2d.view.convertLengthToPixelY(h1);
+								float x2 = s2d.view.convertPointToPixelX(x1) / s2d.view.getWidth();
+								float y2 = s2d.view.convertPointToPixelY(y1) / s2d.view.getHeight();
+								float w2 = s2d.view.convertLengthToPixelX(w1) / s2d.view.getWidth();
+								float h2 = s2d.view.convertLengthToPixelY(h1)
+										/ s2d.view.getHeight();
 								s2d.view.setRainbowRectangle(x2, y2, w2, h2);
 								s2d.view.repaint();
 							}
