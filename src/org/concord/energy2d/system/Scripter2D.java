@@ -133,7 +133,7 @@ class Scripter2D extends Scripter {
 				try {
 					URLConnection c = new URL(codeBase + s).openConnection();
 					InputStream is = c.getInputStream();
-					s2d.loadState(is);
+					s2d.loadStateApp(is);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
