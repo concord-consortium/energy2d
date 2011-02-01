@@ -39,9 +39,8 @@ class HeatSolver2DImpl extends HeatSolver2D {
 						bxij = hx * (rij + conductivity[i + 1][j]);
 						ayij = hy * (rij + conductivity[i][j - 1]);
 						byij = hy * (rij + conductivity[i][j + 1]);
-						t[i][j] = (t0[i][j] * sij + q[i][j] + axij
-								* t[i - 1][j] + bxij * t[i + 1][j] + ayij
-								* t[i][j - 1] + byij * t[i][j + 1])
+						t[i][j] = (t0[i][j] * sij + q[i][j] + axij * t[i - 1][j] + bxij
+								* t[i + 1][j] + ayij * t[i][j - 1] + byij * t[i][j + 1])
 								/ (sij + axij + bxij + ayij + byij);
 					} else {
 						t[i][j] = tb[i][j];
@@ -69,13 +68,9 @@ class HeatSolver2DImpl extends HeatSolver2D {
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					t0[i][j] = t[i][j]
-							- tx
-							* (u[i + 1][j] * t[i + 1][j] - u[i - 1][j]
-									* t[i - 1][j])
-							- ty
-							* (v[i][j + 1] * t[i][j + 1] - v[i][j - 1]
-									* t[i][j - 1]);
+					t0[i][j] = t[i][j] - tx
+							* (u[i + 1][j] * t[i + 1][j] - u[i - 1][j] * t[i - 1][j]) - ty
+							* (v[i][j + 1] * t[i][j + 1] - v[i][j - 1] * t[i][j - 1]);
 				}
 			}
 		}
@@ -86,8 +81,8 @@ class HeatSolver2DImpl extends HeatSolver2D {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
 					t[i][j] = 0.5f * (t[i][j] + t0[i][j]) - 0.5f * tx * u[i][j]
-							* (t0[i + 1][j] - t0[i - 1][j]) - 0.5f * ty
-							* v[i][j] * (t0[i][j + 1] - t0[i][j - 1]);
+							* (t0[i + 1][j] - t0[i - 1][j]) - 0.5f * ty * v[i][j]
+							* (t0[i][j + 1] - t0[i][j - 1]);
 				}
 			}
 		}

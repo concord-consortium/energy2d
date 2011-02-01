@@ -149,8 +149,7 @@ public class Model2D {
 		setGridCellSize();
 
 		parts = Collections.synchronizedList(new ArrayList<Part>());
-		thermometers = Collections
-				.synchronizedList(new ArrayList<Thermometer>());
+		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 
 		visualizationListeners = new ArrayList<VisualizationListener>();
@@ -416,10 +415,8 @@ public class Model2D {
 								t[i][j] = p.getTemperature();
 							fluidity[i][j] = false;
 							if ((windSpeed = p.getWindSpeed()) != 0) {
-								uWind[i][j] = (float) (windSpeed * Math.cos(p
-										.getWindAngle()));
-								vWind[i][j] = (float) (windSpeed * Math.sin(p
-										.getWindAngle()));
+								uWind[i][j] = (float) (windSpeed * Math.cos(p.getWindAngle()));
+								vWind[i][j] = (float) (windSpeed * Math.sin(p.getWindAngle()));
 							}
 							break;
 						}
@@ -444,8 +441,7 @@ public class Model2D {
 				if (hasPartPower) {
 					synchronized (parts) {
 						for (Part p : parts) {
-							if (p.getPower() != 0
-									&& p.getShape().contains(x, y)) {
+							if (p.getPower() != 0 && p.getShape().contains(x, y)) {
 								// no overlap of parts will be allowed
 								q[i][j] = p.getPower();
 								break;
@@ -468,8 +464,7 @@ public class Model2D {
 					for (Part p : parts) {
 						if (Float.isNaN(p.getTemperature()))
 							continue;
-						if (p.getConstantTemperature()
-								&& p.getShape().contains(x, y)) {
+						if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
 							tb[i][j] = p.getTemperature();
 							break;
 						}
@@ -766,12 +761,10 @@ public class Model2D {
 			propertyChangeListeners.remove(listener);
 	}
 
-	private void notifyPropertyChangeListeners(String propertyName,
-			Object oldValue, Object newValue) {
+	private void notifyPropertyChangeListeners(String propertyName, Object oldValue, Object newValue) {
 		if (propertyChangeListeners.isEmpty())
 			return;
-		PropertyChangeEvent e = new PropertyChangeEvent(this, propertyName,
-				oldValue, newValue);
+		PropertyChangeEvent e = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
 		for (PropertyChangeListener x : propertyChangeListeners)
 			x.propertyChange(e);
 	}
