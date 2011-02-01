@@ -660,9 +660,19 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Help");
 		add(menu);
 
-		mi = new JMenuItem("Script Input...");
+		mi = new JMenuItem("Keyboard Shortcuts...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String s = "<html><h2>Keyboard Shortcuts</h2><hr>";
+				s += "<ul>";
+				s += "<li>R &mdash; Run or stop the graph.";
+				s += "<li>G &mdash; Show or hide the graph.";
+				s += "<li>S &mdash; Turn sunlight on or off.";
+				s += "<li>Q &mdash; When sunlight is present, increase the sun angle (towards west).";
+				s += "<li>W &mdash; When sunlight is present, decrease the sun angle (towards east).";
+				s += "</ul>";
+				s += "</html>";
+				JOptionPane.showMessageDialog(frame, new JLabel(s));
 			}
 		});
 		menu.add(mi);
@@ -670,9 +680,16 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("About...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JLabel label = new JLabel(
-						"<html><h2>Energy2D</h2><h4><i>Interactive simulation of heat and mass flow</i></h4><hr><h4>Credit:</h4>This program is brought to you by:<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul><p>This program is licensed under the GNU Lesser General Public License V3.0.<br>Funding of this project is provided by the National Science Foundation<br>under grant #0918449 to the Concord Consortium. </html>");
-				JOptionPane.showMessageDialog(frame, label);
+				String s = "<html><h2>Energy2D</h2>";
+				s += "<h4><i>Interactive simulation of heat and mass flow<br>for studying energy science and technology</i></h4>";
+				s += "http://energy.concord.org/energy2d.html<hr>";
+				s += "<h4>Credit:</h4>This program is brought to you by:";
+				s += "<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul>";
+				s += "<p>This program is licensed under the GNU Lesser General Public License V3.0.<br>";
+				s += "Funding of this project is provided by the National Science Foundation<br>";
+				s += "under grant #0918449 to the Concord Consortium.";
+				s += "</html>";
+				JOptionPane.showMessageDialog(frame, new JLabel(s));
 			}
 		});
 		menu.add(mi);
