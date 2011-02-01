@@ -93,11 +93,11 @@ class GraphRenderer {
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		closeButton.setBounds(x + w - 10, y, 10, 10);
-		xExpandButton.setBounds(x + w - 22, y, 10, 10);
-		xShrinkButton.setBounds(x + w - 34, y, 10, 10);
-		yExpandButton.setBounds(x + w - 46, y, 10, 10);
-		yShrinkButton.setBounds(x + w - 58, y, 10, 10);
+		closeButton.setBounds(x + w - 20, y, 20, 20);
+		xExpandButton.setBounds(x + w - 42, y, 20, 20);
+		xShrinkButton.setBounds(x + w - 64, y, 20, 20);
+		yExpandButton.setBounds(x + w - 86, y, 20, 20);
+		yShrinkButton.setBounds(x + w - 108, y, 20, 20);
 	}
 
 	boolean buttonContains(byte button, int x0, int y0) {
@@ -136,41 +136,56 @@ class GraphRenderer {
 			g.setColor(frameColor);
 			g.drawRoundRect(x - 10, y - 10, w + 20, h + 20, 20, 20);
 
-			// draw close button
-			g.setColor(fgColor);
 			g.setStroke(thinStroke);
+
+			// draw close button
+			g.setColor(Color.lightGray);
+			g.fill(closeButton);
+			g.setColor(fgColor);
 			g.draw(closeButton);
-			g.drawLine(closeButton.x, closeButton.y, closeButton.x + closeButton.width,
-					closeButton.y + closeButton.height);
-			g.drawLine(closeButton.x, closeButton.y + closeButton.height, closeButton.x
-					+ closeButton.width, closeButton.y);
+			g.drawLine(closeButton.x + 4, closeButton.y + 4, closeButton.x + closeButton.width - 4,
+					closeButton.y + closeButton.height - 4);
+			g.drawLine(closeButton.x + 4, closeButton.y + closeButton.height - 4, closeButton.x
+					+ closeButton.width - 4, closeButton.y + 4);
 
 			// draw x scope control buttons
+			g.setColor(Color.lightGray);
+			g.fill(xExpandButton);
+			g.setColor(fgColor);
 			g.draw(xExpandButton);
 			int y2 = xExpandButton.y + xExpandButton.height / 2;
-			int x2 = xExpandButton.x + xExpandButton.width - 2;
-			g.drawLine(xExpandButton.x + 1, y2, x2, y2);
+			int x2 = xExpandButton.x + xExpandButton.width - 4;
+			g.drawLine(xExpandButton.x + 3, y2, x2, y2);
 			g.drawLine(x2, y2, x2 - 4, y2 - 4);
 			g.drawLine(x2, y2, x2 - 4, y2 + 4);
+			g.setColor(Color.lightGray);
+			g.fill(xShrinkButton);
+			g.setColor(fgColor);
 			g.draw(xShrinkButton);
-			x2 = xShrinkButton.x + xShrinkButton.width - 1;
-			g.drawLine(xShrinkButton.x + 1, y2, x2, y2);
-			x2 = xShrinkButton.x + 1;
+			x2 = xShrinkButton.x + xShrinkButton.width - 4;
+			g.drawLine(xShrinkButton.x + 3, y2, x2, y2);
+			x2 = xShrinkButton.x + 3;
 			g.drawLine(x2, y2, x2 + 4, y2 - 4);
 			g.drawLine(x2, y2, x2 + 4, y2 + 4);
 
 			// draw y scope control buttons
+			g.setColor(Color.lightGray);
+			g.fill(yExpandButton);
+			g.setColor(fgColor);
 			g.draw(yExpandButton);
 			x2 = yExpandButton.x + yExpandButton.width / 2;
-			y2 = yExpandButton.y + yExpandButton.height - 1;
-			g.drawLine(x2, yExpandButton.y + 1, x2, y2);
-			g.draw(yShrinkButton);
+			y2 = yExpandButton.y + yExpandButton.height - 4;
+			g.drawLine(x2, yExpandButton.y + 3, x2, y2);
 			g.drawLine(x2, y2 + 1, x2 + 4, y2 - 3);
 			g.drawLine(x2, y2 + 1, x2 - 4, y2 - 3);
+			g.setColor(Color.lightGray);
+			g.fill(yShrinkButton);
+			g.setColor(fgColor);
+			g.draw(yShrinkButton);
 			x2 = yShrinkButton.x + yShrinkButton.width / 2;
-			g.drawLine(x2, yShrinkButton.y + 1, x2, y2 + 1);
-			g.drawLine(x2, yShrinkButton.y + 1, x2 + 4, yShrinkButton.y + 4);
-			g.drawLine(x2, yShrinkButton.y + 1, x2 - 4, yShrinkButton.y + 4);
+			g.drawLine(x2, yShrinkButton.y + 3, x2, y2);
+			g.drawLine(x2, yShrinkButton.y + 3, x2 + 4, yShrinkButton.y + 6);
+			g.drawLine(x2, yShrinkButton.y + 3, x2 - 4, yShrinkButton.y + 6);
 
 			// draw axes
 			g.drawLine(x, y, x, y + h);

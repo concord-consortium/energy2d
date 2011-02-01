@@ -37,8 +37,8 @@
 </structure>
 </model>
 <sensor>
-<thermometer  x="0.6224999" y="0.505"/>
-<thermometer  x="0.3125" y="0.505"/>
+<thermometer  x="0.65" y="0.5"/>
+<thermometer  x="0.35" y="0.5"/>
 </sensor>
 <view>
 <grid>true</grid>
