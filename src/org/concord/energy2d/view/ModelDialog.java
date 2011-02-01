@@ -43,8 +43,7 @@ class ModelDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private final static DecimalFormat FORMAT = new DecimalFormat(
-			"####.########");
+	private final static DecimalFormat FORMAT = new DecimalFormat("####.########");
 
 	private JTextField steplengthField;
 	private JTextField bgTemperatureField;
@@ -149,15 +148,14 @@ class ModelDialog extends JDialog {
 
 				if (steplength <= 0) {
 					JOptionPane.showMessageDialog(ModelDialog.this,
-							"Time step must be greater than zero!",
-							"Time step error", JOptionPane.ERROR_MESSAGE);
+							"Time step must be greater than zero!", "Time step error",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
 				model.setTimeStep(steplength);
 				model.setBackgroundTemperature(bgTemperature);
-				model.setBackgroundConductivity(Math.max(conductivity,
-						0.000000001f));
+				model.setBackgroundConductivity(Math.max(conductivity, 0.000000001f));
 				model.setBackgroundSpecificHeat(capacity);
 				model.setBackgroundDensity(density);
 				model.setBackgroundViscosity(viscosity);
@@ -168,8 +166,7 @@ class ModelDialog extends JDialog {
 				model.setSolarRaySpeed(raySpeed);
 				model.setSolarRayCount((int) rayNumber);
 				model.setPhotonEmissionInterval((int) emissionInterval);
-				model.setSunAngle((float) Math.toRadians(sunAngleSlider
-						.getValue()));
+				model.setSunAngle((float) Math.toRadians(sunAngleSlider.getValue()));
 
 				switch (boundaryComboBox.getSelectedIndex()) {
 				case 0:
@@ -192,9 +189,8 @@ class ModelDialog extends JDialog {
 
 				model.setSunny(sunnyCheckBox.isSelected());
 				model.setConvective(convectiveCheckBox.isSelected());
-				model
-						.setBuoyancyApproximation((byte) buoyancyApproximationComboBox
-								.getSelectedIndex());
+				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox
+						.getSelectedIndex());
 
 				model.refreshMaterialPropertyArrays();
 
@@ -305,8 +301,7 @@ class ModelDialog extends JDialog {
 
 		label = new JLabel("Background temperature");
 		p.add(label);
-		bgTemperatureField = new JTextField(FORMAT.format(model
-				.getBackgroundTemperature()), 16);
+		bgTemperatureField = new JTextField(FORMAT.format(model.getBackgroundTemperature()), 16);
 		bgTemperatureField.addActionListener(okListener);
 		p.add(bgTemperatureField);
 		label = new JLabel("<html><i>\u2103");
@@ -315,8 +310,7 @@ class ModelDialog extends JDialog {
 
 		label = new JLabel("Conductivity");
 		p.add(label);
-		conductivityField = new JTextField(FORMAT.format(model
-				.getBackgroundConductivity()), 16);
+		conductivityField = new JTextField(FORMAT.format(model.getBackgroundConductivity()), 16);
 		conductivityField.addActionListener(okListener);
 		p.add(conductivityField);
 		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
@@ -325,8 +319,7 @@ class ModelDialog extends JDialog {
 
 		label = new JLabel("Specific heat");
 		p.add(label);
-		capacityField = new JTextField(FORMAT.format(model
-				.getBackgroundSpecificHeat()), 16);
+		capacityField = new JTextField(FORMAT.format(model.getBackgroundSpecificHeat()), 16);
 		capacityField.addActionListener(okListener);
 		p.add(capacityField);
 		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
@@ -335,49 +328,42 @@ class ModelDialog extends JDialog {
 
 		label = new JLabel("Density");
 		p.add(label);
-		densityField = new JTextField(FORMAT.format(model
-				.getBackgroundDensity()), 16);
+		densityField = new JTextField(FORMAT.format(model.getBackgroundDensity()), 16);
 		densityField.addActionListener(okListener);
 		p.add(densityField);
-		label = new JLabel(
-				"<html><i>kg/m<sup><font size=2>3</font></sup></html>");
+		label = new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>");
 		p.add(label);
 		count++;
 
 		viscosityLabel = new JLabel("Kinematic viscosity");
 		viscosityLabel.setEnabled(model.isConvective());
 		p.add(viscosityLabel);
-		viscosityField = new JTextField(FORMAT.format(model
-				.getBackgroundViscosity()), 16);
+		viscosityField = new JTextField(FORMAT.format(model.getBackgroundViscosity()), 16);
 		viscosityField.setEnabled(model.isConvective());
 		viscosityField.addActionListener(okListener);
 		p.add(viscosityField);
-		label = new JLabel(
-				"<html><i>m<sup><font size=2>2</font></sup>/s</html>");
+		label = new JLabel("<html><i>m<sup><font size=2>2</font></sup>/s</html>");
 		p.add(label);
 		count++;
 
 		buoyancyLabel = new JLabel("Thermal buoyancy");
 		buoyancyLabel.setEnabled(model.isConvective());
 		p.add(buoyancyLabel);
-		buoyancyField = new JTextField(FORMAT
-				.format(model.getThermalBuoyancy()), 16);
+		buoyancyField = new JTextField(FORMAT.format(model.getThermalBuoyancy()), 16);
 		buoyancyField.setEnabled(model.isConvective());
 		buoyancyField.addActionListener(okListener);
 		p.add(buoyancyField);
-		label = new JLabel(
-				"<html><i>m/(s<sup><font size=2>2</font></sup>\u00b7\u2103)</html>)");
+		label = new JLabel("<html><i>m/(s<sup><font size=2>2</font></sup>\u00b7\u2103)</html>)");
 		p.add(label);
 		count++;
 
 		buoyancyApproximationLabel = new JLabel("Buoyancy approximation");
 		buoyancyApproximationLabel.setEnabled(model.isConvective());
 		p.add(buoyancyApproximationLabel);
-		buoyancyApproximationComboBox = new JComboBox(new String[] {
-				"All-cell average", "Column average" });
+		buoyancyApproximationComboBox = new JComboBox(new String[] { "All-cell average",
+				"Column average" });
 		buoyancyApproximationComboBox.setEnabled(model.isConvective());
-		buoyancyApproximationComboBox.setSelectedIndex(model
-				.getBuoyancyApproximation());
+		buoyancyApproximationComboBox.setSelectedIndex(model.getBuoyancyApproximation());
 		p.add(buoyancyApproximationComboBox);
 		label = new JLabel();
 		p.add(label);
@@ -393,21 +379,18 @@ class ModelDialog extends JDialog {
 		solarPowerLabel = new JLabel("Solar power density");
 		solarPowerLabel.setEnabled(model.isSunny());
 		p.add(solarPowerLabel);
-		solarPowerField = new JTextField(FORMAT.format(model
-				.getSolarPowerDensity()), 16);
+		solarPowerField = new JTextField(FORMAT.format(model.getSolarPowerDensity()), 16);
 		solarPowerField.setEnabled(model.isSunny());
 		solarPowerField.addActionListener(okListener);
 		p.add(solarPowerField);
-		label = new JLabel(
-				"<html><i>W/m<sup><font size=2>3</font></sup></html>)");
+		label = new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>)");
 		p.add(label);
 		count++;
 
 		rayNumberLabel = new JLabel("Ray number");
 		rayNumberLabel.setEnabled(model.isSunny());
 		p.add(rayNumberLabel);
-		rayNumberField = new JTextField(
-				FORMAT.format(model.getSolarRayCount()), 16);
+		rayNumberField = new JTextField(FORMAT.format(model.getSolarRayCount()), 16);
 		rayNumberField.setEnabled(model.isSunny());
 		rayNumberField.addActionListener(okListener);
 		p.add(rayNumberField);
@@ -418,8 +401,7 @@ class ModelDialog extends JDialog {
 		raySpeedLabel = new JLabel("Ray speed");
 		raySpeedLabel.setEnabled(model.isSunny());
 		p.add(raySpeedLabel);
-		raySpeedField = new JTextField(FORMAT.format(model.getSolarRaySpeed()),
-				16);
+		raySpeedField = new JTextField(FORMAT.format(model.getSolarRaySpeed()), 16);
 		raySpeedField.setEnabled(model.isSunny());
 		raySpeedField.addActionListener(okListener);
 		p.add(raySpeedField);
@@ -430,8 +412,7 @@ class ModelDialog extends JDialog {
 		emissionIntervalLabel = new JLabel("Emission interval");
 		emissionIntervalLabel.setEnabled(model.isSunny());
 		p.add(emissionIntervalLabel);
-		emissionIntervalField = new JTextField(FORMAT.format(model
-				.getPhotonEmissionInterval()), 16);
+		emissionIntervalField = new JTextField(FORMAT.format(model.getPhotonEmissionInterval()), 16);
 		emissionIntervalField.setEnabled(model.isSunny());
 		emissionIntervalField.addActionListener(okListener);
 		p.add(emissionIntervalField);
@@ -442,8 +423,7 @@ class ModelDialog extends JDialog {
 		sunAngleLabel = new JLabel("Sun angle");
 		sunAngleLabel.setEnabled(model.isSunny());
 		p.add(sunAngleLabel);
-		sunAngleSlider = new JSlider(0, 180, (int) Math.toDegrees(model
-				.getSunAngle()));
+		sunAngleSlider = new JSlider(0, 180, (int) Math.toDegrees(model.getSunAngle()));
 		sunAngleSlider.setEnabled(model.isSunny());
 		sunAngleSlider.setPaintTicks(true);
 		sunAngleSlider.setMajorTickSpacing(45);
@@ -470,8 +450,7 @@ class ModelDialog extends JDialog {
 
 		label = new JLabel("Heat boundary condition");
 		p.add(label);
-		boundaryComboBox = new JComboBox(new String[] {
-				"Dirichlet (constant temperature)",
+		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)",
 				"Neumann (constant heat flux)" });
 		if (model.getHeatBoundary() instanceof DirichletHeatBoundary) {
 			boundaryComboBox.setSelectedIndex(0);
@@ -545,14 +524,10 @@ class ModelDialog extends JDialog {
 	private void setHeatBoundaryFields(HeatBoundary heatBoundary) {
 		if (heatBoundary instanceof DirichletHeatBoundary) {
 			DirichletHeatBoundary b = (DirichletHeatBoundary) heatBoundary;
-			leftBoundaryField.setText(FORMAT.format(b
-					.getTemperatureAtBorder(Boundary.LEFT)));
-			rightBoundaryField.setText(FORMAT.format(b
-					.getTemperatureAtBorder(Boundary.RIGHT)));
-			upperBoundaryField.setText(FORMAT.format(b
-					.getTemperatureAtBorder(Boundary.UPPER)));
-			lowerBoundaryField.setText(FORMAT.format(b
-					.getTemperatureAtBorder(Boundary.LOWER)));
+			leftBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LEFT)));
+			rightBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.RIGHT)));
+			upperBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.UPPER)));
+			lowerBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LOWER)));
 			leftBoundaryLabel.setText("Left boundary temperature");
 			rightBoundaryLabel.setText("Right boundary temperature");
 			upperBoundaryLabel.setText("Upper boundary temperature");
@@ -563,14 +538,10 @@ class ModelDialog extends JDialog {
 			lowerBoundaryLabel2.setText("<html><i>\u2103");
 		} else if (heatBoundary instanceof NeumannHeatBoundary) {
 			NeumannHeatBoundary b = (NeumannHeatBoundary) heatBoundary;
-			leftBoundaryField.setText(FORMAT.format(b
-					.getFluxAtBorder(Boundary.LEFT)));
-			rightBoundaryField.setText(FORMAT.format(b
-					.getFluxAtBorder(Boundary.RIGHT)));
-			upperBoundaryField.setText(FORMAT.format(b
-					.getFluxAtBorder(Boundary.UPPER)));
-			lowerBoundaryField.setText(FORMAT.format(b
-					.getFluxAtBorder(Boundary.LOWER)));
+			leftBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LEFT)));
+			rightBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.RIGHT)));
+			upperBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.UPPER)));
+			lowerBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LOWER)));
 			leftBoundaryLabel.setText("Left boundary heat flux");
 			rightBoundaryLabel.setText("Right boundary heat flux");
 			upperBoundaryLabel.setText("Upper boundary heat flux");

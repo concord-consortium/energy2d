@@ -5,9 +5,6 @@
 
 package org.concord.energy2d.view;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -110,12 +107,8 @@ class ScalarDistributionRenderer {
 						j1 = n - 1;
 					t1 = y - j0;
 					t0 = 1 - t1;
-					v = (s0
-							* (t0 * distribution[i0][j0] + t1
-									* distribution[i0][j1])
-							+ s1
-							* (t0 * distribution[i1][j0] + t1
-									* distribution[i1][j1]) - min)
+					v = (s0 * (t0 * distribution[i0][j0] + t1 * distribution[i0][j1]) + s1
+							* (t0 * distribution[i1][j0] + t1 * distribution[i1][j1]) - min)
 							* scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
@@ -123,14 +116,10 @@ class ScalarDistributionRenderer {
 						v = 0;
 					iv = (int) v;
 					v -= iv;
-					rc = (int) (rgbScale[iv][0] * (1 - v) + rgbScale[iv + 1][0]
-							* v);
-					gc = (int) (rgbScale[iv][1] * (1 - v) + rgbScale[iv + 1][1]
-							* v);
-					bc = (int) (rgbScale[iv][2] * (1 - v) + rgbScale[iv + 1][2]
-							* v);
-					pixels[i + j * w] = (255 << 24) | (rc << 16) | (gc << 8)
-							| bc;
+					rc = (int) (rgbScale[iv][0] * (1 - v) + rgbScale[iv + 1][0] * v);
+					gc = (int) (rgbScale[iv][1] * (1 - v) + rgbScale[iv + 1][1] * v);
+					bc = (int) (rgbScale[iv][2] * (1 - v) + rgbScale[iv + 1][2] * v);
+					pixels[i + j * w] = (255 << 24) | (rc << 16) | (gc << 8) | bc;
 				}
 			}
 		} else {
@@ -146,14 +135,10 @@ class ScalarDistributionRenderer {
 						v = 0;
 					iv = (int) v;
 					v -= iv;
-					rc = (int) (rgbScale[iv][0] * (1 - v) + rgbScale[iv + 1][0]
-							* v);
-					gc = (int) (rgbScale[iv][1] * (1 - v) + rgbScale[iv + 1][1]
-							* v);
-					bc = (int) (rgbScale[iv][2] * (1 - v) + rgbScale[iv + 1][2]
-							* v);
-					pixels[i + j * w] = (255 << 24) | (rc << 16) | (gc << 8)
-							| bc;
+					rc = (int) (rgbScale[iv][0] * (1 - v) + rgbScale[iv + 1][0] * v);
+					gc = (int) (rgbScale[iv][1] * (1 - v) + rgbScale[iv + 1][1] * v);
+					bc = (int) (rgbScale[iv][2] * (1 - v) + rgbScale[iv + 1][2] * v);
+					pixels[i + j * w] = (255 << 24) | (rc << 16) | (gc << 8) | bc;
 				}
 			}
 		}
@@ -161,12 +146,9 @@ class ScalarDistributionRenderer {
 		g.drawImage(image, 0, 0, view);
 
 		if (pixels[pixels.length / 2] == ERROR_PIXEL) {
-			String s = "Fatal Error";
-			FontMetrics fm = g.getFontMetrics();
-			g.setColor(Color.red);
-			g.setFont(new Font("Arial", Font.BOLD, 20));
-			g.drawString(s, (w - fm.stringWidth(s)) / 2, h / 2);
-			view.model.stop();
+			view.setErrorMessage("Fatal error!");
+		} else {
+			view.setErrorMessage(null);
 		}
 
 	}

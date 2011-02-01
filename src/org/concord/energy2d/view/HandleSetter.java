@@ -36,52 +36,22 @@ class HandleSetter {
 
 		if (s instanceof RectangularShape) {
 			Rectangle2D bound = s.getBounds2D();
-			handle[UPPER_LEFT].x = view.convertPointToPixelX((float) bound
-					.getMinX())
-					- h;
-			handle[UPPER_LEFT].y = view.convertPointToPixelY((float) bound
-					.getMinY())
-					- h;
-			handle[LOWER_LEFT].x = view.convertPointToPixelX((float) bound
-					.getMinX())
-					- h;
-			handle[LOWER_LEFT].y = view.convertPointToPixelY((float) bound
-					.getMaxY())
-					- h;
-			handle[UPPER_RIGHT].x = view.convertPointToPixelX((float) bound
-					.getMaxX())
-					- h;
-			handle[UPPER_RIGHT].y = view.convertPointToPixelY((float) bound
-					.getMinY())
-					- h;
-			handle[LOWER_RIGHT].x = view.convertPointToPixelX((float) bound
-					.getMaxX())
-					- h;
-			handle[LOWER_RIGHT].y = view.convertPointToPixelY((float) bound
-					.getMaxY())
-					- h;
-			handle[TOP].x = view.convertPointToPixelX((float) bound
-					.getCenterX())
-					- h;
-			handle[TOP].y = view.convertPointToPixelY((float) bound.getMinY())
-					- h;
-			handle[BOTTOM].x = view.convertPointToPixelX((float) bound
-					.getCenterX())
-					- h;
-			handle[BOTTOM].y = view.convertPointToPixelY((float) bound
-					.getMaxY())
-					- h;
-			handle[LEFT].x = view.convertPointToPixelX((float) bound.getMinX())
-					- h;
-			handle[LEFT].y = view.convertPointToPixelY((float) bound
-					.getCenterY())
-					- h;
-			handle[RIGHT].x = view
-					.convertPointToPixelX((float) bound.getMaxX())
-					- h;
-			handle[RIGHT].y = view.convertPointToPixelY((float) bound
-					.getCenterY())
-					- h;
+			handle[UPPER_LEFT].x = view.convertPointToPixelX((float) bound.getMinX()) - h;
+			handle[UPPER_LEFT].y = view.convertPointToPixelY((float) bound.getMinY()) - h;
+			handle[LOWER_LEFT].x = view.convertPointToPixelX((float) bound.getMinX()) - h;
+			handle[LOWER_LEFT].y = view.convertPointToPixelY((float) bound.getMaxY()) - h;
+			handle[UPPER_RIGHT].x = view.convertPointToPixelX((float) bound.getMaxX()) - h;
+			handle[UPPER_RIGHT].y = view.convertPointToPixelY((float) bound.getMinY()) - h;
+			handle[LOWER_RIGHT].x = view.convertPointToPixelX((float) bound.getMaxX()) - h;
+			handle[LOWER_RIGHT].y = view.convertPointToPixelY((float) bound.getMaxY()) - h;
+			handle[TOP].x = view.convertPointToPixelX((float) bound.getCenterX()) - h;
+			handle[TOP].y = view.convertPointToPixelY((float) bound.getMinY()) - h;
+			handle[BOTTOM].x = view.convertPointToPixelX((float) bound.getCenterX()) - h;
+			handle[BOTTOM].y = view.convertPointToPixelY((float) bound.getMaxY()) - h;
+			handle[LEFT].x = view.convertPointToPixelX((float) bound.getMinX()) - h;
+			handle[LEFT].y = view.convertPointToPixelY((float) bound.getCenterY()) - h;
+			handle[RIGHT].x = view.convertPointToPixelX((float) bound.getMaxX()) - h;
+			handle[RIGHT].y = view.convertPointToPixelY((float) bound.getCenterY()) - h;
 		}
 
 		else if (s instanceof Polygon2D) {

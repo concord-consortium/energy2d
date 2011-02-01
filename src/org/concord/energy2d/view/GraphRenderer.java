@@ -45,8 +45,7 @@ class GraphRenderer {
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
 	private Rectangle yExpandButton, yShrinkButton;
-	private String xLabel = "Time (hr)", yLabel = "Temperature (" + '\u2103'
-			+ ")";
+	private String xLabel = "Time (hr)", yLabel = "Temperature (" + '\u2103' + ")";
 
 	GraphRenderer(int x, int y, int w, int h) {
 		closeButton = new Rectangle();
@@ -123,8 +122,7 @@ class GraphRenderer {
 		g.drawString(s, x - stringWidth / 2, y);
 	}
 
-	void render(JComponent c, Graphics2D g, List<TimedData> data,
-			boolean highlight) {
+	void render(JComponent c, Graphics2D g, List<TimedData> data, boolean highlight) {
 
 		if (!c.isVisible())
 			return;
@@ -142,10 +140,10 @@ class GraphRenderer {
 			g.setColor(fgColor);
 			g.setStroke(thinStroke);
 			g.draw(closeButton);
-			g.drawLine(closeButton.x, closeButton.y, closeButton.x
-					+ closeButton.width, closeButton.y + closeButton.height);
-			g.drawLine(closeButton.x, closeButton.y + closeButton.height,
-					closeButton.x + closeButton.width, closeButton.y);
+			g.drawLine(closeButton.x, closeButton.y, closeButton.x + closeButton.width,
+					closeButton.y + closeButton.height);
+			g.drawLine(closeButton.x, closeButton.y + closeButton.height, closeButton.x
+					+ closeButton.width, closeButton.y);
 
 			// draw x scope control buttons
 			g.draw(xExpandButton);
@@ -187,8 +185,7 @@ class GraphRenderer {
 				k = x + Math.round(i * w * 0.1f);
 				if (i % 2 == 0) {
 					g.drawLine(k, y + h, k, y + h - 4);
-					centerString(FORMAT.format(scopeX * i * 0.1f / 3600f), g,
-							k + 3, y + h - 8);
+					centerString(FORMAT.format(scopeX * i * 0.1f / 3600f), g, k + 3, y + h - 8);
 				} else {
 					g.drawLine(k, y + h, k, y + h - 2);
 				}
@@ -199,8 +196,7 @@ class GraphRenderer {
 				k = y + Math.round(i * h * 0.1f);
 				if (i % 2 == 0) {
 					g.drawLine(x, k, x + 4, k);
-					centerString(FORMAT.format(scopeY * (1 - i * 0.1f)), g,
-							x + 12, k + 3);
+					centerString(FORMAT.format(scopeY * (1 - i * 0.1f)), g, x + 12, k + 3);
 				} else {
 					g.drawLine(x, k, x + 2, k);
 				}

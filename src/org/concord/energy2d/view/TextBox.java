@@ -93,8 +93,7 @@ public class TextBox {
 		xml += " name=\"" + name + "\"";
 		xml += " size=\"" + size + "\"";
 		xml += " style=\"" + style + "\"";
-		xml += " color=\""
-				+ Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";
+		xml += " color=\"" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";
 		xml += " x=\"" + getX() + "\"";
 		xml += " y=\"" + getY() + "\"/>\n";
 		return xml;

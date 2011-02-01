@@ -132,8 +132,8 @@ class PartDialog extends JDialog {
 				Shape shape = part.getShape();
 				if (shape instanceof RectangularShape) {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
-						view.resizeManipulableTo(part, xcenter - 0.5f * width,
-								ycenter - 0.5f * height, width, height);
+						view.resizeManipulableTo(part, xcenter - 0.5f * width, ycenter - 0.5f
+								* height, width, height);
 					}
 				}
 				if (Float.isNaN(power)) {
@@ -146,8 +146,7 @@ class PartDialog extends JDialog {
 				} else {
 					part.setTemperature(temperature);
 				}
-				part.setConstantTemperature(constantTemperatureRadioButton
-						.isSelected());
+				part.setConstantTemperature(constantTemperatureRadioButton.isSelected());
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
@@ -162,8 +161,7 @@ class PartDialog extends JDialog {
 				part.setFilled(!borderOnlyCheckBox.isSelected());
 				part.setColor(coloredLabel.getBackground());
 
-				view.notifyManipulationListeners(part,
-						ManipulationEvent.PROPERTY_CHANGE);
+				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 
 				PartDialog.this.dispose();
@@ -219,8 +217,7 @@ class PartDialog extends JDialog {
 
 			label = new JLabel("Width");
 			p.add(label);
-			wField = new JTextField(FORMAT.format(part.getShape().getBounds2D()
-					.getWidth()));
+			wField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getWidth()));
 			wField.addActionListener(okListener);
 			p.add(wField);
 			label = new JLabel("<html><i>m");
@@ -228,8 +225,7 @@ class PartDialog extends JDialog {
 
 			label = new JLabel("Height");
 			p.add(label);
-			hField = new JTextField(FORMAT.format(part.getShape().getBounds2D()
-					.getHeight()));
+			hField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getHeight()));
 			hField.addActionListener(okListener);
 			p.add(hField);
 			label = new JLabel("<html><i>m");
@@ -247,8 +243,7 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Thermal conductivity");
 		p.add(label);
-		thermalConductivityField = new JTextField(FORMAT.format(part
-				.getThermalConductivity()), 8);
+		thermalConductivityField = new JTextField(FORMAT.format(part.getThermalConductivity()), 8);
 		thermalConductivityField.addActionListener(okListener);
 		p.add(thermalConductivityField);
 		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
@@ -257,8 +252,7 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Specific heat");
 		p.add(label);
-		specificHeatField = new JTextField(FORMAT
-				.format(part.getSpecificHeat()), 8);
+		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
 		specificHeatField.addActionListener(okListener);
 		p.add(specificHeatField);
 		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
@@ -270,8 +264,7 @@ class PartDialog extends JDialog {
 		densityField = new JTextField(FORMAT.format(part.getDensity()), 8);
 		densityField.addActionListener(okListener);
 		p.add(densityField);
-		label = new JLabel(
-				"<html><i>kg/m<sup><font size=2>3</font></sup></html>");
+		label = new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>");
 		p.add(label);
 		count++;
 
@@ -297,8 +290,7 @@ class PartDialog extends JDialog {
 		p.add(notHeatSourceRadioButton);
 		bg.add(notHeatSourceRadioButton);
 
-		constantTemperatureRadioButton = new JRadioButton(
-				"Constant temperature");
+		constantTemperatureRadioButton = new JRadioButton("Constant temperature");
 		constantTemperatureRadioButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -332,15 +324,13 @@ class PartDialog extends JDialog {
 		powerField = new JTextField(FORMAT.format(part.getPower()), 16);
 		powerField.addActionListener(okListener);
 		p.add(powerField);
-		label = new JLabel(
-				"<html><i>W/m<sup><font size=2>3</font></sup></html>");
+		label = new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>");
 		p.add(label);
 		count++;
 
 		temperatureLabel = new JLabel("Temperature");
 		p.add(temperatureLabel);
-		temperatureField = new JTextField(FORMAT.format(part.getTemperature()),
-				16);
+		temperatureField = new JTextField(FORMAT.format(part.getTemperature()), 16);
 		temperatureField.addActionListener(okListener);
 		p.add(temperatureField);
 		label = new JLabel("<html><i>\u2103");
@@ -358,8 +348,7 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Wind angle");
 		p.add(label);
-		windAngleField = new JTextField(FORMAT.format(Math.toDegrees(part
-				.getWindAngle())), 8);
+		windAngleField = new JTextField(FORMAT.format(Math.toDegrees(part.getWindAngle())), 8);
 		windAngleField.addActionListener(okListener);
 		p.add(windAngleField);
 		label = new JLabel("Degrees");
@@ -396,8 +385,7 @@ class PartDialog extends JDialog {
 
 		label = new JLabel("Transmission");
 		p.add(label);
-		transmissionField = new JTextField(FORMAT
-				.format(part.getTransmission()), 16);
+		transmissionField = new JTextField(FORMAT.format(part.getTransmission()), 16);
 		transmissionField.addActionListener(okListener);
 		p.add(transmissionField);
 		p.add(new JLabel());
@@ -411,8 +399,7 @@ class PartDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
-		draggableCheckBox = new JCheckBox("Draggable by user", part
-				.isDraggable());
+		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
 		p.add(draggableCheckBox);
 		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
 		p.add(visibleCheckBox);

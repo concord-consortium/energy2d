@@ -9,6 +9,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -86,17 +87,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	final static byte LEFT = 6;
 	final static byte RIGHT = 7;
 
-	private final static boolean IS_MAC = System.getProperty("os.name")
-			.startsWith("Mac");
+	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 },
-			{ 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 },
-			{ 255, 255, 255 } };
+	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 }, { 0, 128, 225 },
+			{ 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
 
 	private static final long serialVersionUID = 1L;
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
-	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat(
-			"###.#");
+	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
 
 	private RulerRenderer rulerRenderer;
@@ -114,8 +112,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
-	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, 1, new float[] { 2 }, 0);
+	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+			1, new float[] { 2 }, 0);
 	private static Color lightColor = new Color(255, 255, 255, 128);
 	private final static Color TRANSLUCENT_GRAY = new Color(128, 128, 128, 128);
 	private float xmin, xmax, ymin, ymax;
@@ -141,6 +139,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point mousePressedPoint = new Point(-1, -1);
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
+	private String errorMessage;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -204,8 +203,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		createActions();
 		createPopupMenu();
 		dialogFactory = new DialogFactory(this);
-		temperatureRenderer = new ScalarDistributionRenderer(
-				TEMPERATURE_COLOR_SCALE);
+		temperatureRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -221,9 +219,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				cut();
 			}
 		};
-		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				KeyEvent.CTRL_MASK);
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK);
 		cutAction.putValue(Action.NAME, "Cut");
 		cutAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Cut");
@@ -236,8 +233,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				copy();
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke
+				.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
 		copyAction.putValue(Action.NAME, "Copy");
 		copyAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Copy");
@@ -250,8 +247,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				paste();
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke
+				.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
 		pasteAction.putValue(Action.NAME, "Paste");
 		pasteAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Paste");
@@ -564,8 +561,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void cut() {
 		if (selectedManipulable != null) {
 			copiedManipulable = selectedManipulable;
-			notifyManipulationListeners(selectedManipulable,
-					ManipulationEvent.DELETE);
+			notifyManipulationListeners(selectedManipulable, ManipulationEvent.DELETE);
 			setSelectedManipulable(null);
 		}
 	}
@@ -577,8 +573,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void paste() {
 		if (copiedManipulable instanceof Part) {
 			Part p = (Part) copiedManipulable;
-			model.addPart(p.duplicate(
-					convertPixelToPointX(mouseReleasedPoint.x),
+			model.addPart(p.duplicate(convertPixelToPointX(mouseReleasedPoint.x),
 					convertPixelToPointY(mouseReleasedPoint.y)));
 			model.refreshPowerArray();
 			model.refreshTemperatureBoundaryArray();
@@ -607,8 +602,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		JMenuItem mi = new JMenuItem("Properties...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createDialog(selectedManipulable != null ? selectedManipulable
-						: model);
+				createDialog(selectedManipulable != null ? selectedManipulable : model);
 			}
 		});
 		popupMenu.add(mi);
@@ -647,10 +641,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int w = getWidth();
 		int h = getHeight();
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		Stroke stroke = g2.getStroke();
 		g.setColor(getBackground());
 		g.fillRect(0, 0, w, h);
@@ -699,11 +691,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			rulerRenderer.render(this, g2);
 		}
 		if (showRainbow)
-			rainbow.render(this, g2, temperatureRenderer.getMaximum(),
-					temperatureRenderer.getMinimum());
+			rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer
+					.getMinimum());
 		if (velocityRenderer != null)
-			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(),
-					this, g2);
+			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(), this, g2);
 		drawThermometers(g2);
 		drawPhotons(g2);
 		drawTextBoxes(g2);
@@ -713,8 +704,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				graphRenderer.setDrawFrame(true);
 				synchronized (model.getThermometers()) {
 					for (Thermometer t : model.getThermometers()) {
-						graphRenderer.render(this, g2, t.getData(),
-								selectedManipulable == t);
+						graphRenderer.render(this, g2, t.getData(), selectedManipulable == t);
 					}
 				}
 			}
@@ -743,15 +733,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.fill(polygon);
 			g2.setColor(Color.white);
 			g2.draw(polygon);
-			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0
-					&& mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0
+					&& mouseReleasedPoint.y >= 0) {
 				g2.setColor(Color.green);
-				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
-						mouseReleasedPoint.x, mouseReleasedPoint.y);
+				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x,
+						mouseReleasedPoint.y);
 				int np = polygon.npoints;
 				if (np > 0) {
-					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y,
-							polygon.xpoints[0], polygon.ypoints[0]);
+					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0],
+							polygon.ypoints[0]);
 				}
 			}
 			break;
@@ -763,6 +753,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			drawFrank(g2, getWidth() - 84, getHeight() - dy);
 		}
 
+		if (errorMessage != null) {
+			g.setColor(Color.red);
+			g.setFont(new Font("Arial", Font.BOLD, 30));
+			FontMetrics fm = g.getFontMetrics();
+			g.drawString(errorMessage, w / 2 - fm.stringWidth(errorMessage) / 2, h / 2);
+			notifyManipulationListeners(null, ManipulationEvent.STOP);
+		}
+
+	}
+
+	void setErrorMessage(String message) {
+		this.errorMessage = message;
 	}
 
 	private void drawThermometers(Graphics2D g) {
@@ -858,8 +860,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				} else if (s instanceof Area) {
 					if (scale == null)
 						scale = new AffineTransform();
-					scale.setToScale(getWidth() / (xmax - xmin), getHeight()
-							/ (ymax - ymin));
+					scale.setToScale(getWidth() / (xmax - xmin), getHeight() / (ymax - ymin));
 					Area area = (Area) s;
 					area.transform(scale);
 					if (p.isFilled()) {
@@ -868,8 +869,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					g.setColor(Color.black);
 					g.draw(area);
-					scale.setToScale((xmax - xmin) / getWidth(), (ymax - ymin)
-							/ getHeight());
+					scale.setToScale((xmax - xmin) / getWidth(), (ymax - ymin) / getHeight());
 					area.transform(scale);
 				} else if (s instanceof Polygon2D) {
 					Polygon2D q = (Polygon2D) s;
@@ -906,8 +906,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		for (TextBox x : textBoxes) {
 			g.setFont(new Font(x.getName(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
-			g.drawString(x.getString(), convertPointToPixelX(x.getX()),
-					getHeight() - convertPointToPixelY(x.getY()));
+			g.drawString(x.getString(), convertPointToPixelX(x.getX()), getHeight()
+					- convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
@@ -932,8 +932,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				x = convertPointToPixelX(p.getX());
 				y = convertPointToPixelY(p.getY());
 				r = 1.0 / Math.hypot(p.getVx(), p.getVy());
-				g.drawLine((int) (x - photonLength * p.getVx() * r),
-						(int) (y - photonLength * p.getVy() * r), x, y);
+				g.drawLine((int) (x - photonLength * p.getVx() * r), (int) (y - photonLength
+						* p.getVy() * r), x, y);
 			}
 		}
 	}
@@ -942,8 +942,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		temperatureRenderer.render(model.getTemperature(), this, g);
 	}
 
-	private void setAnchorPointForRectangularShape(byte i, float x, float y,
-			float w, float h) {
+	private void setAnchorPointForRectangularShape(byte i, float x, float y, float w, float h) {
 		switch (i) {
 		case UPPER_LEFT:
 			anchorPoint.setLocation(x + w, y + h);
@@ -1007,8 +1006,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			boolean b = false;
 			if (shape instanceof Ellipse2D.Float) {
 				Ellipse2D.Float e = (Ellipse2D.Float) shape;
-				b = e.width < (xmax - xmin) / nx + 0.01f
-						|| e.height < (ymax - ymin) / ny + 0.01f;
+				b = e.width < (xmax - xmin) / nx + 0.01f || e.height < (ymax - ymin) / ny + 0.01f;
 			}
 			if (!b)
 				HandleSetter.setRects(this, selectedManipulable, handle);
@@ -1061,8 +1059,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			Rectangle2D rect = ((Area) s).getBounds2D();
 			if (translate == null)
 				translate = new AffineTransform();
-			translate.setToTranslation(x - (float) rect.getX(), y
-					- (float) rect.getY());
+			translate.setToTranslation(x - (float) rect.getX(), y - (float) rect.getY());
 			((Area) s).transform(translate);
 		} else if (s instanceof Polygon2D) {
 			Shape[] shape = movingShape.getShapes();
@@ -1100,20 +1097,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (selectedManipulable != null) {
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				translateManipulableBy(selectedManipulable, -.01f
-						* (xmax - xmin), 0);
+				translateManipulableBy(selectedManipulable, -.01f * (xmax - xmin), 0);
 				break;
 			case KeyEvent.VK_RIGHT:
-				translateManipulableBy(selectedManipulable,
-						.01f * (xmax - xmin), 0);
+				translateManipulableBy(selectedManipulable, .01f * (xmax - xmin), 0);
 				break;
 			case KeyEvent.VK_DOWN:
-				translateManipulableBy(selectedManipulable, 0,
-						.01f * (ymax - ymin));
+				translateManipulableBy(selectedManipulable, 0, .01f * (ymax - ymin));
 				break;
 			case KeyEvent.VK_UP:
-				translateManipulableBy(selectedManipulable, 0, -.01f
-						* (ymax - ymin));
+				translateManipulableBy(selectedManipulable, 0, -.01f * (ymax - ymin));
 				break;
 			}
 			setSelectedManipulable(selectedManipulable);
@@ -1129,14 +1122,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			// this is different than cut() in that it doesn't
 			// create a copy for pasting
 			if (selectedManipulable != null) {
-				notifyManipulationListeners(selectedManipulable,
-						ManipulationEvent.DELETE);
+				notifyManipulationListeners(selectedManipulable, ManipulationEvent.DELETE);
 				setSelectedManipulable(null);
 			}
 			break;
 		case KeyEvent.VK_R:
-			notifyManipulationListeners(null,
-					runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
+			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP
+					: ManipulationEvent.RUN);
 			runToggle = !runToggle;
 			break;
 		case KeyEvent.VK_T:
@@ -1146,17 +1138,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.SUN_SHINE);
 			break;
 		case KeyEvent.VK_Q:
-			notifyManipulationListeners(null,
-					ManipulationEvent.SUN_ANGLE_INCREASE);
+			notifyManipulationListeners(null, ManipulationEvent.SUN_ANGLE_INCREASE);
 			break;
 		case KeyEvent.VK_W:
-			notifyManipulationListeners(null,
-					ManipulationEvent.SUN_ANGLE_DECREASE);
+			notifyManipulationListeners(null, ManipulationEvent.SUN_ANGLE_DECREASE);
 			break;
 		case KeyEvent.VK_G:
 			showGraph = !showGraph;
-			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED
-					: GraphEvent.GRAPH_CLOSED);
+			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
 			break;
 		}
 		repaint();
@@ -1172,17 +1161,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			boolean inGraph = false;
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				inGraph = true;
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				inGraph = true;
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
 				inGraph = true;
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
 				inGraph = true;
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				inGraph = true;
 			}
 			if (inGraph) {
@@ -1265,14 +1250,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							y = getHeight() - 8;
 					}
 					RectangularShape s = (RectangularShape) shape[0];
-					double a = s.getX(), b = s.getY(), c = s.getWidth(), d = s
-							.getHeight();
+					double a = s.getX(), b = s.getY(), c = s.getWidth(), d = s.getHeight();
 					if (selectedSpot == -1) {
 						// x+width/2+pressedPointRelative.x=mouse_x
 						a = x - pressedPointRelative.x - c * 0.5;
 						b = y - pressedPointRelative.y - d * 0.5;
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.MOVE_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
 							switch (selectedSpot) {
@@ -1296,8 +1279,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								c = Math.abs(x - anchorPoint.x);
 								break;
 							}
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
 					s.setFrame(a, b, c, d);
@@ -1314,17 +1296,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						xc = x - pressedPointRelative.x - xc;
 						yc = y - pressedPointRelative.y - yc;
 						s.translate((int) xc, (int) yc);
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.MOVE_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
 							int k = s.npoints < handle.length ? selectedSpot
-									: (int) ((float) selectedSpot
-											* (float) s.npoints / (float) handle.length);
+									: (int) ((float) selectedSpot * (float) s.npoints / (float) handle.length);
 							s.xpoints[k] = x;
 							s.ypoints[k] = y;
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
 				} else {
@@ -1383,17 +1362,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				graphRenderer.expandScopeX();
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
 				graphRenderer.shrinkScopeX();
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
 				graphRenderer.expandScopeY();
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.shrinkScopeY();
 			}
 			repaint();
@@ -1436,8 +1411,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				popupMenu.show(this, x, y);
 				return;
 			}
-			if (movingShape != null && mouseBeingDragged
-					&& selectedManipulable != null) {
+			if (movingShape != null && mouseBeingDragged && selectedManipulable != null) {
 				if (selectedManipulable.isDraggable()) {
 					Shape[] shape = movingShape.getShapes();
 					if (shape[0] instanceof RectangularShape) {
@@ -1451,12 +1425,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								RectangularShape r = (RectangularShape) shape[0];
 								float x2 = convertPixelToPointX((int) r.getX());
 								float y2 = convertPixelToPointY((int) r.getY());
-								float w2 = convertPixelToLengthX((int) r
-										.getWidth());
-								float h2 = convertPixelToLengthY((int) r
-										.getHeight());
-								resizeManipulableTo(selectedManipulable, x2,
-										y2, w2, h2);
+								float w2 = convertPixelToLengthX((int) r.getWidth());
+								float h2 = convertPixelToLengthY((int) r.getHeight());
+								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2);
 								setSelectedManipulable(selectedManipulable);
 							}
 						}
@@ -1473,15 +1444,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								Polygon p0 = (Polygon) shape[0];
 								int n = p0.npoints;
 								for (int i = 0; i < n; i++) {
-									p
-											.setVertex(
-													i,
-													convertPixelToPointX(p0.xpoints[i]),
-													convertPixelToPointY(p0.ypoints[i]));
+									p.setVertex(i, convertPixelToPointX(p0.xpoints[i]),
+											convertPixelToPointY(p0.ypoints[i]));
 								}
 								setSelectedManipulable(selectedManipulable);
-								notifyManipulationListeners(
-										selectedManipulable,
+								notifyManipulationListeners(selectedManipulable,
 										ManipulationEvent.RESIZE);
 							}
 						}
@@ -1498,8 +1465,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case RECTANGLE_MODE:
 			if (rectangle.width * rectangle.height > 9) {
 				model.addRectangularPart(convertPixelToPointX(rectangle.x),
-						convertPixelToPointY(rectangle.y),
-						convertPixelToLengthX(rectangle.width),
+						convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width),
 						convertPixelToLengthY(rectangle.height));
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
@@ -1526,8 +1492,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			mouseReleasedPoint.setLocation(x, y);
 			break;
 		case THERMOMETER_MODE:
-			model.addThermometer(convertPixelToPointX(x),
-					convertPixelToPointY(y));
+			model.addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
 			break;
 		}
 		repaint();
@@ -1542,17 +1507,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.X_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			} else if (graphRenderer.buttonContains(
-					GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			} else {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -1575,41 +1536,32 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					if (selectedManipulable.getShape() instanceof RectangularShape) {
 						switch (iSpot) {
 						case UPPER_LEFT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
 							break;
 						case LOWER_LEFT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
 							break;
 						case UPPER_RIGHT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
 							break;
 						case LOWER_RIGHT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
 							break;
 						case TOP:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 							break;
 						case BOTTOM:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
 							break;
 						case LEFT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 							break;
 						case RIGHT:
-							setCursor(Cursor
-									.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+							setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 							break;
 						}
 					} else {
-						setCursor(Cursor
-								.getPredefinedCursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 					}
 				}
 			}
@@ -1635,9 +1587,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				}
-				setCursor(Cursor
-						.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
-								: Cursor.DEFAULT_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
+						: Cursor.DEFAULT_CURSOR));
 			}
 			break;
 		case POLYGON_MODE:
@@ -1690,8 +1641,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int d = convertLengthToPixelY(r.height);
 				if (anchor)
 					setAnchorPointForRectangularShape(selectedSpot, a, b, c, d);
-				movingShape = new MovingRoundRectangle(
-						new RoundRectangle2D.Float(a, b, c, d, 0, 0));
+				movingShape = new MovingRoundRectangle(new RoundRectangle2D.Float(a, b, c, d, 0, 0));
 			} else if (shape instanceof Ellipse2D.Float) {
 				Ellipse2D.Float e = (Ellipse2D.Float) shape;
 				int a = convertPointToPixelX(e.x);
@@ -1725,8 +1675,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			int d = convertLengthToPixelY(r.height);
 			if (anchor)
 				setAnchorPointForRectangularShape(selectedSpot, a, b, c, d);
-			movingShape = new MovingRoundRectangle(new RoundRectangle2D.Float(
-					a, b, c, d, 0, 0));
+			movingShape = new MovingRoundRectangle(new RoundRectangle2D.Float(a, b, c, d, 0, 0));
 		}
 	}
 

@@ -78,8 +78,7 @@ class Rainbow {
 			String s = null;
 			for (int i = 0; i < labelCount + 1; i++) {
 				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
-				g.drawString(s, x + w + 15, y + h * (float) i
-						/ (float) labelCount + 2.5f);
+				g.drawString(s, x + w + 15, y + h * (float) i / (float) labelCount + 2.5f);
 			}
 		} else {
 			for (int i = 0; i < w; i++) {
@@ -92,8 +91,8 @@ class Rainbow {
 			FontMetrics fm = g.getFontMetrics();
 			for (int i = 0; i < labelCount + 1; i++) {
 				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
-				g.drawString(s, x + w * (float) i / (float) labelCount
-						- fm.stringWidth(s) * 0.5f, y + h + 15);
+				g.drawString(s, x + w * (float) i / (float) labelCount - fm.stringWidth(s) * 0.5f,
+						y + h + 15);
 			}
 		}
 		g.setFont(oldFont);

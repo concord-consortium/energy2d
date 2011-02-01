@@ -190,8 +190,7 @@ class ViewDialog extends JDialog {
 		JLabel label = new JLabel("Lowest temperature for coloring");
 		p.add(label);
 
-		JTextField textField = new JTextField(
-				view.getMinimumTemperature() + "", 8);
+		JTextField textField = new JTextField(view.getMinimumTemperature() + "", 8);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextField src = (JTextField) e.getSource();

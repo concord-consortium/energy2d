@@ -18,8 +18,8 @@ import javax.swing.JComponent;
  */
 class GridRenderer {
 
-	private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER, 1, new float[] { 1.5f }, 0);
+	private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1,
+			new float[] { 1.5f }, 0);
 	private Color color = new Color(128, 128, 225, 128);
 	private int nx;
 	private int ny;
