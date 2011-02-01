@@ -22,8 +22,7 @@ import javax.swing.SpringLayout;
  */
 public final class MiscUtil {
 
-	private final static String FILE_SEPARATOR = System
-			.getProperty("file.separator");
+	private final static String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	/** return the file name of this path */
 	public static String getFileName(String path) {
@@ -75,8 +74,7 @@ public final class MiscUtil {
 		int hours = time % 24;
 		time /= 24;
 		int days = time;
-		return String
-				.format("%d:%02d:%02d:%02d", days, hours, minutes, seconds);
+		return String.format("%d:%02d:%02d:%02d", days, hours, minutes, seconds);
 	}
 
 	/**
@@ -88,15 +86,13 @@ public final class MiscUtil {
 	public static boolean isRightClick(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0)
 			return true;
-		if (System.getProperty("os.name").startsWith("Mac")
-				&& e.isControlDown())
+		if (System.getProperty("os.name").startsWith("Mac") && e.isControlDown())
 			return true;
 		return false;
 	}
 
 	public static Color getContrastColor(Color c) {
-		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c
-				.getBlue());
+		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
 	}
 
 	public static Color parseRGBColor(String str) {
@@ -137,14 +133,13 @@ public final class MiscUtil {
 	 * @param yPad
 	 *            y padding between cells
 	 */
-	public static void makeCompactGrid(Container parent, int rows, int cols,
-			int initialX, int initialY, int xPad, int yPad) {
+	public static void makeCompactGrid(Container parent, int rows, int cols, int initialX,
+			int initialY, int xPad, int yPad) {
 		SpringLayout layout;
 		try {
 			layout = (SpringLayout) parent.getLayout();
 		} catch (ClassCastException exc) {
-			System.err
-					.println("The first argument to makeCompactGrid must use SpringLayout.");
+			System.err.println("The first argument to makeCompactGrid must use SpringLayout.");
 			return;
 		}
 
@@ -153,12 +148,10 @@ public final class MiscUtil {
 		for (int c = 0; c < cols; c++) {
 			Spring width = Spring.constant(0);
 			for (int r = 0; r < rows; r++) {
-				width = Spring.max(width, getConstraintsForCell(r, c, parent,
-						cols).getWidth());
+				width = Spring.max(width, getConstraintsForCell(r, c, parent, cols).getWidth());
 			}
 			for (int r = 0; r < rows; r++) {
-				SpringLayout.Constraints constraints = getConstraintsForCell(r,
-						c, parent, cols);
+				SpringLayout.Constraints constraints = getConstraintsForCell(r, c, parent, cols);
 				constraints.setX(x);
 				constraints.setWidth(width);
 			}
@@ -170,12 +163,10 @@ public final class MiscUtil {
 		for (int r = 0; r < rows; r++) {
 			Spring height = Spring.constant(0);
 			for (int c = 0; c < cols; c++) {
-				height = Spring.max(height, getConstraintsForCell(r, c, parent,
-						cols).getHeight());
+				height = Spring.max(height, getConstraintsForCell(r, c, parent, cols).getHeight());
 			}
 			for (int c = 0; c < cols; c++) {
-				SpringLayout.Constraints constraints = getConstraintsForCell(r,
-						c, parent, cols);
+				SpringLayout.Constraints constraints = getConstraintsForCell(r, c, parent, cols);
 				constraints.setY(y);
 				constraints.setHeight(height);
 			}
@@ -190,8 +181,8 @@ public final class MiscUtil {
 	}
 
 	/* Used by makeCompactGrid. */
-	private static SpringLayout.Constraints getConstraintsForCell(int r, int c,
-			Container parent, int cols) {
+	private static SpringLayout.Constraints getConstraintsForCell(int r, int c, Container parent,
+			int cols) {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
 		Component component = parent.getComponent(r * cols + c);
 		return layout.getConstraints(component);

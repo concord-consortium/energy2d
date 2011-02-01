@@ -59,15 +59,14 @@ public class ContourMap {
 				connect(g, x, y, x + step, y, x + step, y, x + step, y + step);
 				connect(g, x, y, x, y + step, x + step, y, x + step, y + step);
 				connect(g, x, y, x, y + step, x, y + step, x + step, y + step);
-				connect(g, x + step, y, x + step, y + step, x, y + step, x
-						+ step, y + step);
+				connect(g, x + step, y, x + step, y + step, x, y + step, x + step, y + step);
 			}
 	}
 
 	// draw a contour line between (x1, y1) - (x2, y2) and (x3, y3) - (x4, y4)
 	// if applicable
-	private void connect(Graphics2D g, int x1, int y1, int x2, int y2, int x3,
-			int y3, int x4, int y4) {
+	private void connect(Graphics2D g, int x1, int y1, int x2, int y2, int x3, int y3, int x4,
+			int y4) {
 		float f1 = func[x1][y1];
 		float f2 = func[x2][y2];
 		float f3 = func[x3][y3];
@@ -90,8 +89,8 @@ public class ContourMap {
 		}
 	}
 
-	private void interpolate(float f1, float f2, int x1, int y1, int x2,
-			int y2, float v, Point2D.Float p) {
+	private void interpolate(float f1, float f2, int x1, int y1, int x2, int y2, float v,
+			Point2D.Float p) {
 		float r2 = (v - f1) / (f2 - f1);
 		float r1 = 1 - r2;
 		float h = 0.5f * step;

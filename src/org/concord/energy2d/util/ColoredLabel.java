@@ -34,9 +34,8 @@ public class ColoredLabel extends JLabel {
 		setText("Double-click to change color");
 		setHorizontalAlignment(CENTER);
 		setBackground(color);
-		setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createEtchedBorder(), BorderFactory.createEmptyBorder(8, 8, 8,
-				8)));
+		setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(),
+				BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
 		addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
@@ -46,15 +45,12 @@ public class ColoredLabel extends JLabel {
 					} else {
 						colorChooser.setColor(getBackground());
 					}
-					JDialog d = JColorChooser.createDialog(ColoredLabel.this,
-							"Color", true, colorChooser, new ActionListener() {
+					JDialog d = JColorChooser.createDialog(ColoredLabel.this, "Color", true,
+							colorChooser, new ActionListener() {
 								public void actionPerformed(ActionEvent e) { // ok
-									ColoredLabel.this
-											.setBackground(colorChooser
-													.getColor());
+									ColoredLabel.this.setBackground(colorChooser.getColor());
 									ColoredLabel.this.setForeground(MiscUtil
-											.getContrastColor(colorChooser
-													.getColor()));
+											.getContrastColor(colorChooser.getColor()));
 									ColoredLabel.this.repaint();
 								}
 							}, new ActionListener() {// cancel
