@@ -41,8 +41,7 @@ import org.concord.energy2d.util.MiscUtil;
 class MenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = 1L;
-	private final static boolean IS_MAC = System.getProperty("os.name")
-			.startsWith("Mac");
+	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
 	private JFileChooser fileChooser;
 
@@ -111,9 +110,8 @@ class MenuBar extends JMenuBar {
 				fileChooser.resetChoosableFileFilters();
 			}
 		};
-		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O,
-				KeyEvent.CTRL_MASK);
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK)
+				: KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Open");
 		box.view.getActionMap().put("Open", openAction);
 		JMenuItem mi = new JMenuItem("Open...");
@@ -136,8 +134,8 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK) : KeyStroke
+				.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Save");
 		box.view.getActionMap().put("Save", saveAction);
 		mi = new JMenuItem("Save");
@@ -156,8 +154,8 @@ class MenuBar extends JMenuBar {
 				saveAs(box, frame);
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke
+				.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "SaveAs");
 		box.view.getActionMap().put("SaveAs", saveAsAction);
 		mi = new JMenuItem("Save As...");
@@ -199,8 +197,8 @@ class MenuBar extends JMenuBar {
 				frame.dispose();
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke
+				.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Quit");
 		box.view.getActionMap().put("Quit", exitAction);
 		mi = new JMenuItem("Exit");
@@ -323,9 +321,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/identical-heat-capacity.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/identical-heat-capacity.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -338,9 +335,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-specific-heat1.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/different-specific-heat1.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -353,9 +349,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-specific-heat2.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/different-specific-heat2.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -363,14 +358,12 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Densities: Case 1");
+		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Densities: Case 1");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-density1.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/different-density1.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -378,14 +371,12 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Densities: Case 2");
+		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Densities: Case 2");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-density2.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/different-density2.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -393,14 +384,12 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem(
-				"The Effect of Thermal Conductivity on Equilibration Speed");
+		mi = new JMenuItem("The Effect of Thermal Conductivity on Equilibration Speed");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/different-conductivity.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/different-conductivity.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -415,8 +404,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/conduction1.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction1.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -428,8 +416,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/conduction2.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction2.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -441,8 +428,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/conduction3.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction3.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -454,8 +440,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/conduction4.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction4.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -470,9 +455,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/natural-convection.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/natural-convection.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -484,9 +468,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/forced-convection.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/forced-convection.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -501,8 +484,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/benard-cell.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/benard-cell.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -514,9 +496,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/lid-driven-cavity.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/lid-driven-cavity.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -528,8 +509,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/smoke-in-wind.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/smoke-in-wind.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -541,9 +521,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/laminar-turbulent.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/laminar-turbulent.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -571,9 +550,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/solar-heating-gable-roof.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/solar-heating-gable-roof.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -585,9 +563,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/solar-heating-skillion-roof.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/solar-heating-skillion-roof.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -599,9 +576,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/solar-heating-two-story.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/solar-heating-two-story.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -613,9 +589,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/solar-heating-convection.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/solar-heating-convection.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -630,9 +605,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/fixed-temperature-boundary.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/fixed-temperature-boundary.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -644,9 +618,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/fixed-flux-boundary.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/fixed-flux-boundary.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -661,8 +634,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/ray-optics.e2d"));
+					box.loadStateApp(MenuBar.class.getResourceAsStream("models/ray-optics.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -674,9 +646,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					box
-							.loadStateApp(MenuBar.class
-									.getResourceAsStream("models/projection-effect.e2d"));
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/projection-effect.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -727,15 +698,13 @@ class MenuBar extends JMenuBar {
 		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			if (!file.toString().toLowerCase().endsWith(".e2d")) {
-				file = new File(file.getParentFile(), MiscUtil.getFileName(file
-						.toString())
+				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString())
 						+ ".e2d");
 			}
 			boolean b = true;
 			if (file.exists()) {
-				if (JOptionPane.showConfirmDialog(frame, "File "
-						+ file.getName() + " exists, overwrite?",
-						"File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName()
+						+ " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 					b = false;
 				}
 			}
