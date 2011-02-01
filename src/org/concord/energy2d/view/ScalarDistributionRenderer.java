@@ -146,7 +146,7 @@ class ScalarDistributionRenderer {
 		g.drawImage(image, 0, 0, view);
 
 		if (pixels[pixels.length / 2] == ERROR_PIXEL) {
-			view.setErrorMessage("Fatal error!");
+			view.setErrorMessage("FATAL ERROR!");
 		} else {
 			view.setErrorMessage(null);
 		}

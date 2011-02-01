@@ -671,7 +671,7 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JLabel label = new JLabel(
-						"<html><h2>Energy2D: Seeing Energy Flow</h2><hr><h4>Credit:</h4>This program is brought to you by:<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul><p>This program is licensed under the GNU Lesser General Public License V3.0.<br>Funding of this project is provided by the National Science Foundation<br>under grant #0918449 to the Concord Consortium. </html>");
+						"<html><h2>Energy2D</h2><h4><i>Interactive simulation of heat and mass flow</i></h4><hr><h4>Credit:</h4>This program is brought to you by:<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul><p>This program is licensed under the GNU Lesser General Public License V3.0.<br>Funding of this project is provided by the National Science Foundation<br>under grant #0918449 to the Concord Consortium. </html>");
 				JOptionPane.showMessageDialog(frame, label);
 			}
 		});
