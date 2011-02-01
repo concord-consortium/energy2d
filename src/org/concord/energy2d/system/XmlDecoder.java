@@ -152,8 +152,7 @@ class XmlDecoder extends DefaultHandler {
 
 	}
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attrib) {
+	public void startElement(String uri, String localName, String qName, Attributes attrib) {
 
 		String attribName, attribValue;
 
@@ -173,8 +172,7 @@ class XmlDecoder extends DefaultHandler {
 						h = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w)
-						&& !Float.isNaN(h))
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h))
 					part = box.model.addRectangularPart(x, y, w, h);
 			}
 		} else if (qName == "ellipse") {
@@ -193,8 +191,7 @@ class XmlDecoder extends DefaultHandler {
 						b = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(a)
-						&& !Float.isNaN(b))
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(a) && !Float.isNaN(b))
 					part = box.model.addEllipticalPart(x, y, a, b);
 			}
 		} else if (qName == "ring") {
@@ -257,8 +254,8 @@ class XmlDecoder extends DefaultHandler {
 						lower = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(left) && !Float.isNaN(right)
-						&& !Float.isNaN(upper) && !Float.isNaN(lower)) {
+				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper)
+						&& !Float.isNaN(lower)) {
 					DirichletHeatBoundary b = null;
 					HeatBoundary boundary = box.model.getHeatBoundary();
 					if (boundary instanceof DirichletHeatBoundary) {
@@ -289,8 +286,8 @@ class XmlDecoder extends DefaultHandler {
 						lower = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(left) && !Float.isNaN(right)
-						&& !Float.isNaN(upper) && !Float.isNaN(lower)) {
+				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper)
+						&& !Float.isNaN(lower)) {
 					NeumannHeatBoundary b = null;
 					HeatBoundary boundary = box.model.getHeatBoundary();
 					if (boundary instanceof NeumannHeatBoundary) {

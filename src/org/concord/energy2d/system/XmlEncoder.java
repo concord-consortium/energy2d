@@ -33,20 +33,17 @@ class XmlEncoder {
 			sb.append("<model_width>" + box.model.getLx() + "</model_width>\n");
 		}
 		if (box.model.getLy() != 10) {
-			sb.append("<model_height>" + box.model.getLy()
-					+ "</model_height>\n");
+			sb.append("<model_height>" + box.model.getLy() + "</model_height>\n");
 		}
 		if (box.model.getTimeStep() != 1) {
 			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
 		}
 		if (box.model.getMeasurementInterval() != 500) {
-			sb.append("<measurement_interval>"
-					+ box.model.getMeasurementInterval()
+			sb.append("<measurement_interval>" + box.model.getMeasurementInterval()
 					+ "</measurement_interval>\n");
 		}
 		if (box.model.getViewUpdateInterval() != 100) {
-			sb.append("<viewupdate_interval>"
-					+ box.model.getViewUpdateInterval()
+			sb.append("<viewupdate_interval>" + box.model.getViewUpdateInterval()
 					+ "</viewupdate_interval>\n");
 		}
 
@@ -56,20 +53,16 @@ class XmlEncoder {
 		sb.append("<sun_angle>" + box.model.getSunAngle() + "</sun_angle>\n");
 		sb.append("<solar_power_density>" + box.model.getSolarPowerDensity()
 				+ "</solar_power_density>\n");
-		sb.append("<solar_ray_count>" + box.model.getSolarRayCount()
-				+ "</solar_ray_count>\n");
-		sb.append("<solar_ray_speed>" + box.model.getSolarRaySpeed()
-				+ "</solar_ray_speed>\n");
-		sb.append("<photon_emission_interval>"
-				+ box.model.getPhotonEmissionInterval()
+		sb.append("<solar_ray_count>" + box.model.getSolarRayCount() + "</solar_ray_count>\n");
+		sb.append("<solar_ray_speed>" + box.model.getSolarRaySpeed() + "</solar_ray_speed>\n");
+		sb.append("<photon_emission_interval>" + box.model.getPhotonEmissionInterval()
 				+ "</photon_emission_interval>\n");
 
 		if (!box.model.isConvective()) {
 			sb.append("<convective>false</convective>\n");
 		}
 		if (box.model.getBackgroundConductivity() != Constants.AIR_THERMAL_CONDUCTIVITY) {
-			sb.append("<background_conductivity>"
-					+ box.model.getBackgroundConductivity()
+			sb.append("<background_conductivity>" + box.model.getBackgroundConductivity()
 					+ "</background_conductivity>\n");
 		}
 		if (box.model.getBackgroundDensity() != Constants.AIR_DENSITY) {
@@ -77,24 +70,19 @@ class XmlEncoder {
 					+ "</background_density>\n");
 		}
 		if (box.model.getBackgroundSpecificHeat() != Constants.AIR_SPECIFIC_HEAT) {
-			sb.append("<background_specific_heat>"
-					+ box.model.getBackgroundSpecificHeat()
+			sb.append("<background_specific_heat>" + box.model.getBackgroundSpecificHeat()
 					+ "</background_specific_heat>\n");
 		}
 		if (box.model.getBackgroundTemperature() != 0) {
-			sb.append("<background_temperature>"
-					+ box.model.getBackgroundTemperature()
+			sb.append("<background_temperature>" + box.model.getBackgroundTemperature()
 					+ "</background_temperature>\n");
 		}
 		if (box.model.getBackgroundViscosity() != Constants.AIR_VISCOSITY) {
-			sb.append("<background_viscosity>"
-					+ box.model.getBackgroundViscosity()
+			sb.append("<background_viscosity>" + box.model.getBackgroundViscosity()
 					+ "</background_viscosity>\n");
 		}
-		sb.append("<thermal_buoyancy>" + box.model.getThermalBuoyancy()
-				+ "</thermal_buoyancy>\n");
-		sb.append("<buoyancy_approximation>"
-				+ box.model.getBuoyancyApproximation()
+		sb.append("<thermal_buoyancy>" + box.model.getThermalBuoyancy() + "</thermal_buoyancy>\n");
+		sb.append("<buoyancy_approximation>" + box.model.getBuoyancyApproximation()
 				+ "</buoyancy_approximation>\n");
 
 		sb.append("<boundary>\n");
