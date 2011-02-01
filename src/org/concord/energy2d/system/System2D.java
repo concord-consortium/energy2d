@@ -49,8 +49,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Charles Xie
  * 
  */
-public class System2D extends JApplet implements MwService,
-		VisualizationListener, ManipulationListener {
+public class System2D extends JApplet implements MwService, VisualizationListener,
+		ManipulationListener {
 
 	private static final long serialVersionUID = 1L;
 	Model2D model;
@@ -245,13 +245,25 @@ public class System2D extends JApplet implements MwService,
 				model.getThermometers().remove((Thermometer) target);
 			break;
 		case ManipulationEvent.RUN:
-			run();
+			if (clickRun != null) {
+				EventQueue.invokeLater(clickRun);
+			} else {
+				run();
+			}
 			break;
 		case ManipulationEvent.STOP:
-			stop();
+			if (clickStop != null) {
+				EventQueue.invokeLater(clickStop);
+			} else {
+				stop();
+			}
 			break;
 		case ManipulationEvent.RESET:
-			reset();
+			if (clickReset != null) {
+				EventQueue.invokeLater(clickReset);
+			} else {
+				reset();
+			}
 			break;
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());
@@ -339,8 +351,8 @@ public class System2D extends JApplet implements MwService,
 		box.view.setFrankOn(false);
 
 		final JFrame frame = new JFrame();
-		frame.setIconImage(new ImageIcon(System2D.class
-				.getResource("resources/frame.png")).getImage());
+		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png"))
+				.getImage());
 		frame.setJMenuBar(new MenuBar(box, frame));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
@@ -353,8 +365,7 @@ public class System2D extends JApplet implements MwService,
 		frame.addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				File file = box.getCurrentFile();
-				frame.setTitle(file != null ? "Energy2D V0.1: " + file
-						: "Energy2D: V0.1");
+				frame.setTitle(file != null ? "Energy2D V0.1: " + file : "Energy2D: V0.1");
 			}
 
 			public void windowLostFocus(WindowEvent e) {
