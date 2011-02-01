@@ -44,21 +44,13 @@ class Scripter2D extends Scripter {
 	private final static Pattern PART = compile("(^(?i)part\\b){1}");
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
-	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}"
-			+ REGEX_WHITESPACE
-			+ "*"
-			+ REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE
+			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}"
-			+ REGEX_WHITESPACE
-			+ "*"
-			+ REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_WHITESPACE + "*(\\]){1}\\.");
-	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}"
-			+ REGEX_WHITESPACE
-			+ "*"
-			+ REGEX_NONNEGATIVE_DECIMAL
-			+ REGEX_WHITESPACE + "*(\\]){1}\\.");
+			+ REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE
+			+ "*(\\]){1}\\.");
+	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE
+			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 
 	private System2D s2d;
 	private boolean arrayUpdateRequested, temperatureInitializationRequested;
@@ -173,8 +165,7 @@ class Scripter2D extends Scripter {
 						final String s2 = s;
 						final Runnable r = new Runnable() {
 							public void run() {
-								s2d.view.addText(s2.substring(j + 1).trim(),
-										z[0], z[1]);
+								s2d.view.addText(s2.substring(j + 1).trim(), z[0], z[1]);
 							}
 						};
 						EventQueue.invokeLater(new Runnable() {
@@ -202,13 +193,8 @@ class Scripter2D extends Scripter {
 							final ImageIcon image = new ImageIcon(url);
 							final Runnable r = new Runnable() {
 								public void run() {
-									s2d.view
-											.addPicture(
-													image,
-													s2d.view
-															.convertPointToPixelX(z[0]),
-													s2d.view
-															.convertPointToPixelY(z[1]));
+									s2d.view.addPicture(image, s2d.view.convertPointToPixelX(z[0]),
+											s2d.view.convertPointToPixelY(z[1]));
 								}
 							};
 							EventQueue.invokeLater(new Runnable() {
@@ -261,8 +247,7 @@ class Scripter2D extends Scripter {
 				if (t.length == 4) {
 					try {
 						float x = Float.parseFloat(t[0]);
-						float y = convertVerticalCoordinate(Float
-								.parseFloat(t[1]));
+						float y = convertVerticalCoordinate(Float.parseFloat(t[1]));
 						float w = Float.parseFloat(t[2]);
 						float h = Float.parseFloat(t[3]);
 						s2d.model.addRectangularPart(x, y, w, h);
@@ -278,8 +263,7 @@ class Scripter2D extends Scripter {
 				if (t.length == 4) {
 					try {
 						float x = Float.parseFloat(t[0]);
-						float y = convertVerticalCoordinate(Float
-								.parseFloat(t[1]));
+						float y = convertVerticalCoordinate(Float.parseFloat(t[1]));
 						float a = Float.parseFloat(t[2]);
 						float b = Float.parseFloat(t[3]);
 						s2d.model.addEllipticalPart(x, y, a, b);
@@ -295,8 +279,7 @@ class Scripter2D extends Scripter {
 				if (t.length == 4) {
 					try {
 						float xcenter = Float.parseFloat(t[0]);
-						float ycenter = convertVerticalCoordinate(Float
-								.parseFloat(t[1]));
+						float ycenter = convertVerticalCoordinate(Float.parseFloat(t[1]));
 						float inner = Float.parseFloat(t[2]);
 						float outer = Float.parseFloat(t[3]);
 						s2d.model.addRingPart(xcenter, ycenter, inner, outer);
@@ -316,8 +299,7 @@ class Scripter2D extends Scripter {
 					for (int i = 0; i < x.length; i++) {
 						try {
 							x[i] = Float.parseFloat(t[2 * i]);
-							y[i] = convertVerticalCoordinate(Float
-									.parseFloat(t[2 * i + 1]));
+							y[i] = convertVerticalCoordinate(Float.parseFloat(t[2 * i + 1]));
 						} catch (NumberFormatException e) {
 							e.printStackTrace();
 							return;
@@ -470,8 +452,7 @@ class Scripter2D extends Scripter {
 					} catch (NumberFormatException e) {
 						return;
 					}
-					s2d.model
-							.setBuoyancyApproximation((byte) buoyancyApproximation);
+					s2d.model.setBuoyancyApproximation((byte) buoyancyApproximation);
 				} else if (t[0].equalsIgnoreCase("viscosity")) {
 					float viscosity = 0;
 					try {
