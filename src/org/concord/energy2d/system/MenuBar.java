@@ -677,6 +677,17 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
+		mi = new JMenuItem("Script Console...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ScriptDialog dialog = new ScriptDialog(box);
+				dialog.pack();
+				dialog.setLocationRelativeTo(box);
+				dialog.setVisible(true);
+			}
+		});
+		menu.add(mi);
+
 		mi = new JMenuItem("About...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
