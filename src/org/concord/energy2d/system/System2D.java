@@ -68,6 +68,12 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public System2D() {
 
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		model = new Model2D();
 		model.addVisualizationListener(this);
 		view = new View2D();
@@ -339,12 +345,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	public static void main(String[] args) {
-
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));

@@ -989,10 +989,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		synchronized (model.getParts()) {
-			for (Part p : model.getParts()) {
-				if (p.contains(rx, ry)) {
-					setSelectedManipulable(p);
-					return;
+			int n = model.getParts().size();
+			if (n > 0) { // later-added has higher priority
+				for (int i = n - 1; i >= 0; i--) {
+					Part p = model.getPart(i);
+					if (p.contains(rx, ry)) {
+						setSelectedManipulable(p);
+						return;
+					}
 				}
 			}
 		}
