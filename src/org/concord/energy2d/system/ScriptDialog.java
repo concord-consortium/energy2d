@@ -21,13 +21,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.concord.energy2d.event.ScriptEvent;
+import org.concord.energy2d.event.ScriptListener;
 
 /**
  * @author Charles Xie
  * 
  */
 
-class ScriptDialog extends JDialog implements EnterListener {
+class ScriptDialog extends JDialog implements EnterListener, ScriptListener {
 
 	private static final long serialVersionUID = 1L;
 	private ConsoleTextPane console;
@@ -35,21 +36,21 @@ class ScriptDialog extends JDialog implements EnterListener {
 
 	public ScriptDialog(System2D s2d) {
 
-		super(JOptionPane.getFrameForComponent(s2d), "Script Console", false);
-		setPreferredSize(new Dimension(600, 400));
+		super(JOptionPane.getFrameForComponent(s2d), "Script Console", true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		box = s2d;
 
 		console = new ConsoleTextPane(this);
+		console.setPreferredSize(new Dimension(500, 400));
 		console.setBorder(BorderFactory.createLoweredBevelBorder());
 		console.setPrompt();
 		console.appendNewline();
 		console.setPrompt();
-		getContentPane().add(new JScrollPane(console), BorderLayout.CENTER);
+		add(new JScrollPane(console), BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		getContentPane().add(p, BorderLayout.SOUTH);
+		add(p, BorderLayout.SOUTH);
 
 		JButton button = new JButton("Clear");
 		button.setToolTipText("Clear the console");
@@ -64,10 +65,13 @@ class ScriptDialog extends JDialog implements EnterListener {
 		button.setToolTipText("Close the console");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				box.getScripter().removeScriptListener(ScriptDialog.this);
 				dispose();
 			}
 		});
 		p.add(button);
+
+		box.getScripter().addScriptListener(this);
 
 	}
 

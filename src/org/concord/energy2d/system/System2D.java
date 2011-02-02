@@ -229,6 +229,12 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		return null;
 	}
 
+	public Scripter2D getScripter() {
+		if (scripter == null)
+			scripter = new Scripter2D(this);
+		return scripter;
+	}
+
 	public void setEditable(boolean b) {
 	}
 

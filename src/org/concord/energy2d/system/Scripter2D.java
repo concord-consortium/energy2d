@@ -18,11 +18,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 
+import org.concord.energy2d.event.ScriptEvent;
+import org.concord.energy2d.event.ScriptListener;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletHeatBoundary;
 import org.concord.energy2d.model.HeatBoundary;
@@ -53,10 +57,48 @@ class Scripter2D extends Scripter {
 			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 
 	private System2D s2d;
+	private List<ScriptListener> listenerList;
 	private boolean arrayUpdateRequested, temperatureInitializationRequested;
 
 	Scripter2D(System2D s2d) {
 		this.s2d = s2d;
+	}
+
+	void addScriptListener(ScriptListener listener) {
+		if (listenerList == null)
+			listenerList = new CopyOnWriteArrayList<ScriptListener>();
+		if (!listenerList.contains(listener))
+			listenerList.add(listener);
+	}
+
+	void removeScriptListener(ScriptListener listener) {
+		if (listenerList == null)
+			return;
+		listenerList.remove(listener);
+	}
+
+	void removeAllScriptListeners() {
+		if (listenerList == null)
+			return;
+		listenerList.clear();
+	}
+
+	private void notifyScriptListener(ScriptEvent e) {
+		if (listenerList == null)
+			return;
+		synchronized (listenerList) {
+			for (ScriptListener l : listenerList) {
+				l.outputScriptResult(e);
+			}
+		}
+	}
+
+	private void out(byte status, String description) {
+		if (status == ScriptEvent.FAILED) {
+			notifyScriptListener(new ScriptEvent(s2d, status, "Aborted: " + description));
+		} else {
+			notifyScriptListener(new ScriptEvent(s2d, status, description));
+		}
 	}
 
 	public void executeScript(String script) {
@@ -136,6 +178,7 @@ class Scripter2D extends Scripter {
 					s2d.loadStateApp(is);
 				} catch (IOException e) {
 					e.printStackTrace();
+					out(ScriptEvent.FAILED, e.getMessage());
 				}
 			}
 			return;
@@ -159,6 +202,7 @@ class Scripter2D extends Scripter {
 				s = s.substring(4).trim();
 				int i = s.indexOf("(");
 				final int j = s.indexOf(")");
+				boolean success = false;
 				if (i != -1 && j != -1) {
 					final float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
@@ -173,8 +217,11 @@ class Scripter2D extends Scripter {
 								EventQueue.invokeLater(r);
 							}
 						});
+						success = true;
 					}
 				}
+				if (!success)
+					out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
 			} else if (s.toLowerCase().startsWith("image")) {
 				s = s.substring(5).trim();
 				int i = s.indexOf("(");
@@ -722,6 +769,8 @@ class Scripter2D extends Scripter {
 			}
 			return;
 		}
+
+		out(ScriptEvent.HARMLESS, "Command not recognized");
 
 	}
 
