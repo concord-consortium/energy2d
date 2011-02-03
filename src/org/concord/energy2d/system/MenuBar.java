@@ -43,8 +43,8 @@ class MenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
+	private ScriptDialog scriptDialog;
 	private JFileChooser fileChooser;
-
 	private FileFilter filter = new FileFilter() {
 
 		public boolean accept(File file) {
@@ -680,10 +680,14 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Script Console...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ScriptDialog dialog = new ScriptDialog(box);
-				dialog.pack();
-				dialog.setLocationRelativeTo(box);
-				dialog.setVisible(true);
+				if (scriptDialog != null && scriptDialog.isShowing()) {
+					scriptDialog.toFront();
+				} else {
+					scriptDialog = new ScriptDialog(box);
+					scriptDialog.pack();
+					scriptDialog.setLocationRelativeTo(box);
+					scriptDialog.setVisible(true);
+				}
 			}
 		});
 		menu.add(mi);
@@ -692,7 +696,8 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = "<html><h2>Energy2D</h2>";
-				s += "<h4><i>Interactive simulation of heat and mass flow<br>for studying energy science and technology</i></h4>";
+				s += "<h4><i>Interactive simulation of heat and mass flow<br>";
+				s += "for studying energy science and technology</i></h4>";
 				s += "http://energy.concord.org/energy2d.html<hr>";
 				s += "<h4>Credit:</h4>This program is brought to you by:";
 				s += "<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul>";
