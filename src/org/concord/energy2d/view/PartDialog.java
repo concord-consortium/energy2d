@@ -57,6 +57,8 @@ class PartDialog extends JDialog {
 	private JTextField reflectionField;
 	private JTextField transmissionField;
 	private JTextField xField, yField, wField, hField;
+	private JTextField uidField;
+	private JTextField labelField;
 	private ColoredLabel coloredLabel;
 	private JCheckBox visibleCheckBox, draggableCheckBox, borderOnlyCheckBox;
 	private JRadioButton notHeatSourceRadioButton, powerRadioButton,
@@ -394,11 +396,21 @@ class PartDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
 
-		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Appearance"));
-		box.add(p);
-		count = 0;
+		Box miscBox = Box.createVerticalBox();
+		miscBox.setBorder(BorderFactory.createTitledBorder("Miscellaneous"));
+		box.add(miscBox);
 
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		miscBox.add(p);
+		p.add(new JLabel("Unique ID:"));
+		uidField = new JTextField(20);
+		p.add(uidField);
+		p.add(new JLabel("Label:"));
+		labelField = new JTextField(20);
+		p.add(labelField);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		miscBox.add(p);
 		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
 		p.add(draggableCheckBox);
 		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
@@ -407,9 +419,6 @@ class PartDialog extends JDialog {
 		p.add(borderOnlyCheckBox);
 		coloredLabel = new ColoredLabel(part.getColor());
 		p.add(coloredLabel);
-		count++;
-
-		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
 
 		pack();
 		setLocationRelativeTo(view);
