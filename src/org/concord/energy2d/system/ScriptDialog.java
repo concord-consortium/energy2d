@@ -34,9 +34,9 @@ class ScriptDialog extends JDialog implements EnterListener, ScriptListener {
 	private ConsoleTextPane console;
 	private System2D box;
 
-	public ScriptDialog(System2D s2d) {
+	ScriptDialog(System2D s2d) {
 
-		super(JOptionPane.getFrameForComponent(s2d), "Script Console", true);
+		super(JOptionPane.getFrameForComponent(s2d.view), "Script Console", false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		box = s2d;
