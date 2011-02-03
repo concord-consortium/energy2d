@@ -153,6 +153,8 @@ class PartDialog extends JDialog {
 				part.setVisible(visibleCheckBox.isSelected());
 				part.setFilled(!borderOnlyCheckBox.isSelected());
 				part.setColor(coloredLabel.getBackground());
+				part.setLabel(labelField.getText());
+				part.setUid(uidField.getText());
 
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
@@ -394,10 +396,10 @@ class PartDialog extends JDialog {
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		miscBox.add(p);
 		p.add(new JLabel("Unique ID:"));
-		uidField = new JTextField(20);
+		uidField = new JTextField(part.getUid(), 20);
 		p.add(uidField);
 		p.add(new JLabel("Label:"));
-		labelField = new JTextField(20);
+		labelField = new JTextField(part.getLabel(), 20);
 		p.add(labelField);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));

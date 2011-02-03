@@ -96,6 +96,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
+	private Font labelFont = new Font(null, Font.PLAIN | Font.BOLD, 16);
 
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
@@ -847,6 +848,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					g.setColor(Color.black);
 					g.drawOval(x - 1, y - 1, w + 2, h + 2);
+					String label = p.getLabel();
+					if (label != null) {
+						if (label.equalsIgnoreCase("%temperature"))
+							label = (int) (p.getTemperature()) + "\u00b0C";
+						g.setColor(Color.white);
+						g.setFont(labelFont);
+						FontMetrics fm = g.getFontMetrics();
+						int labelWidth = fm.stringWidth(label);
+						g.drawString(label, x + w / 2 - labelWidth / 2, y + h / 2);
+					}
 				} else if (s instanceof Rectangle2D.Float) {
 					Rectangle2D.Float r = (Rectangle2D.Float) s;
 					int x = convertPointToPixelX(r.x);
@@ -859,6 +870,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					g.setColor(Color.black);
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);
+					String label = p.getLabel();
+					if (label != null) {
+						if (label.equalsIgnoreCase("%temperature"))
+							label = (int) (p.getTemperature()) + "\u00b0C";
+						g.setColor(Color.white);
+						g.setFont(labelFont);
+						FontMetrics fm = g.getFontMetrics();
+						int labelWidth = fm.stringWidth(label);
+						g.drawString(label, x + w / 2 - labelWidth / 2, y + h / 2);
+					}
 				} else if (s instanceof Area) {
 					if (scale == null)
 						scale = new AffineTransform();

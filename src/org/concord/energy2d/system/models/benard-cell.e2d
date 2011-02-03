@@ -25,6 +25,7 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
+<constant_temperature>true</constant_temperature>
 </part>
 <part><rectangle x="0.0" y="7.0" width="10.0" height="1.0"/><thermal_conductivity>1.0E-6</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -44,6 +45,7 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
+<constant_temperature>true</constant_temperature>
 </part>
 </structure>
 </model>

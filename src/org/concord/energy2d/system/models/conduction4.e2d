@@ -26,6 +26,8 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
+<constant_temperature>true</constant_temperature>
+<label>%temperature</label>
 <filled>false</filled>
 <draggable>false</draggable>
 </part>
@@ -50,6 +52,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Low specific heat</label>
 <filled>false</filled>
 <draggable>false</draggable>
 </part>
@@ -61,6 +64,8 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
+<constant_temperature>true</constant_temperature>
+<label>%temperature</label>
 <filled>false</filled>
 <draggable>false</draggable>
 </part>
@@ -85,6 +90,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>High specific heat</label>
 <filled>false</filled>
 <draggable>false</draggable>
 </part>
@@ -99,9 +105,5 @@
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.49333334</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
 <clock>false</clock>
-<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.02"/>
-<text string="50C" name="Arial" size="12" style="0" color="ffffff" x="0.0050" y="0.08"/>
-<text string="High heat capacity" name="Arial" size="12" style="0" color="ffffff" x="0.035" y="0.02"/>
-<text string="Low heat capacity" name="Arial" size="12" style="0" color="ffffff" x="0.035" y="0.08"/>
 </view>
 </state>

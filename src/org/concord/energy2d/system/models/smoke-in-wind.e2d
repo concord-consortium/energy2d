@@ -36,6 +36,7 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
+<constant_temperature>true</constant_temperature>
 </part>
 </structure>
 </model>

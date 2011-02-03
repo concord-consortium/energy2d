@@ -25,6 +25,7 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
+<constant_temperature>true</constant_temperature>
 <wind_speed>0.1</wind_speed>
 </part>
 </structure>

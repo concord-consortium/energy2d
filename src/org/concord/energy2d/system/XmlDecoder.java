@@ -74,12 +74,14 @@ class XmlDecoder extends DefaultHandler {
 	private float partTemperature = Float.NaN;
 	private float partWindSpeed;
 	private float partWindAngle;
-	private boolean partConstantTemperature = true;
+	private boolean partConstantTemperature = false;
 	private float partPower = Float.NaN;
 	private boolean partFilled = true;
 	private boolean partVisible = true;
 	private boolean partDraggable = true;
 	private Color partColor = Color.gray;
+	private String partUid;
+	private String partLabel;
 	private Part part;
 
 	XmlDecoder(System2D box) {
@@ -427,6 +429,10 @@ class XmlDecoder extends DefaultHandler {
 			smooth = Boolean.parseBoolean(str);
 		} else if (qName == "graph") {
 			graphOn = Boolean.parseBoolean(str);
+		} else if (qName == "uid") {
+			partUid = str;
+		} else if (qName == "label") {
+			partLabel = str;
 		} else if (qName == "thermal_conductivity") {
 			partThermalConductivity = Float.parseFloat(str);
 		} else if (qName == "specific_heat") {
@@ -488,6 +494,8 @@ class XmlDecoder extends DefaultHandler {
 				part.setVisible(partVisible);
 				part.setFilled(partFilled);
 				part.setColor(partColor);
+				part.setUid(partUid);
+				part.setLabel(partLabel);
 				resetPartVariables();
 			}
 		}
@@ -499,7 +507,7 @@ class XmlDecoder extends DefaultHandler {
 		partSpecificHeat = Float.NaN;
 		partDensity = Float.NaN;
 		partTemperature = Float.NaN;
-		partConstantTemperature = true;
+		partConstantTemperature = false;
 		partPower = Float.NaN;
 		partEmissivity = Float.NaN;
 		partAbsorption = Float.NaN;
@@ -511,6 +519,8 @@ class XmlDecoder extends DefaultHandler {
 		partVisible = true;
 		partDraggable = true;
 		partColor = Color.gray;
+		partUid = null;
+		partLabel = null;
 	}
 
 	private void resetGlobalVariables() {

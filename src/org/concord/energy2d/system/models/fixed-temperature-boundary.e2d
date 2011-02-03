@@ -17,7 +17,7 @@
 <temperature_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
 </boundary>
 <structure>
-<part><ellipse x="5.0" y="5.0" a="1.0" b="1.0"/><thermal_conductivity>0.08</thermal_conductivity>
+<part><ellipse x="5.0" y="5.0" a="1.0" b="1.0"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>

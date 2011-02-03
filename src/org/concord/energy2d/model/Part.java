@@ -518,8 +518,7 @@ public class Part extends Manipulable {
 		xml += "<absorption>" + absorption + "</absorption>\n";
 		xml += "<emissivity>" + emissivity + "</emissivity>\n";
 		xml += "<temperature>" + temperature + "</temperature>\n";
-		if (!constantTemperature)
-			xml += "<constant_temperature>false</constant_temperature>\n";
+		xml += "<constant_temperature>" + constantTemperature + "</constant_temperature>\n";
 		if (power != 0)
 			xml += "<power>" + power + "</power>\n";
 		if (windSpeed > 0) {
@@ -528,8 +527,12 @@ public class Part extends Manipulable {
 		if (windAngle != 0) {
 			xml += "<wind_angle>" + windAngle + "</wind_angle>\n";
 		}
+		if (getUid() != null && !getUid().trim().equals(""))
+			xml += "<uid>" + getUid() + "</uid>\n";
 		if (!getColor().equals(Color.gray))
 			xml += "<color>" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "</color>\n";
+		if (getLabel() != null && !getLabel().trim().equals(""))
+			xml += "<label>" + getLabel() + "</label>\n";
 		if (!isFilled())
 			xml += "<filled>false</filled>\n";
 		if (!isVisible())

@@ -23,12 +23,30 @@ public abstract class Manipulable {
 	private Color color = Color.gray;
 	private boolean draggable = true;
 	private boolean visible = true;
+	private String label;
+	private String uid;
 
 	public Manipulable(Shape shape) {
 		setShape(shape);
 	}
 
 	public abstract Manipulable duplicate(float x, float y);
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getLabel() {
+		return label;
+	}
 
 	public boolean contains(float x, float y) {
 		return shape.contains(x, y);
@@ -53,8 +71,8 @@ public abstract class Manipulable {
 	public Point2D.Float getCenter() {
 		if (shape instanceof Polygon2D)
 			return ((Polygon2D) shape).getCenter();
-		return new Point2D.Float((float) shape.getBounds2D().getCenterX(),
-				(float) shape.getBounds2D().getCenterY());
+		return new Point2D.Float((float) shape.getBounds2D().getCenterX(), (float) shape
+				.getBounds2D().getCenterY());
 	}
 
 	public void setSelected(boolean selected) {
