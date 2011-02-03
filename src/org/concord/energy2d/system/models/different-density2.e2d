@@ -45,13 +45,13 @@
 </structure>
 </model>
 <sensor>
-<thermometer  x="0.35" y="0.5"/>
-<thermometer  x="0.65" y="0.5"/>
+<thermometer x="0.35" y="0.5"/>
+<thermometer x="0.65" y="0.5"/>
 </sensor>
 <view>
 <grid>true</grid>
 <rainbow>true</rainbow>
-<rainbow_x>50</rainbow_x><rainbow_y>20</rainbow_y><rainbow_w>500</rainbow_w><rainbow_h>20</rainbow_h><minimum_temperature>0.0</minimum_temperature>
+<rainbow_x>0.083333336</rainbow_x><rainbow_y>0.033333335</rainbow_y><rainbow_w>0.8333333</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>
 <text string="Density (kg/m^3): Left: 200; Right: 100." name="Arial" size="12" style="0" color="ffffff" x="0.25" y="0.1"/>
 </view>

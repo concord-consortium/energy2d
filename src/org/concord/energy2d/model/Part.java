@@ -35,28 +35,24 @@ public class Part extends Manipulable {
 	 */
 	private float power;
 
-	/*
-	 * a fixed or initial temperature for this part. When a temperature value is
-	 * imposed, this part becomes an internal boundary. Set it to Float.NaN to
-	 * disable this and allow heat to flow through this part.
-	 */
-	private float temperature = java.lang.Float.NaN;
+	// a fixed or initial temperature for this part
+	private float temperature;
 
 	/*
 	 * when this flag is true, temperature is maintained at the set value.
 	 * Otherwise, it will be just the initial value that defines the heat energy
 	 * this part initially possesses.
 	 */
-	private boolean constantTemperature = true;
+	private boolean constantTemperature;
 
 	/*
 	 * the thermal conductivity: Fourier's Law, the flow of heat energy
 	 * 
 	 * q = - k dT/dx
 	 * 
-	 * Unit: W/(mK). The default value is water's.
+	 * Unit: W/(mK). Water's is 0.08.
 	 */
-	private float thermalConductivity = 0.08f;
+	private float thermalConductivity = 1f;
 
 	/*
 	 * the specific heat capacity: J/(kgK).
@@ -95,12 +91,10 @@ public class Part extends Manipulable {
 		Shape s = getShape();
 		if (s instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) s;
-			s = new Rectangle2D.Float(x - 0.5f * r.width, y - 0.5f * r.height,
-					r.width, r.height);
+			s = new Rectangle2D.Float(x - 0.5f * r.width, y - 0.5f * r.height, r.width, r.height);
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) s;
-			s = new Ellipse2D.Float(x - 0.5f * e.width, y - 0.5f * e.height,
-					e.width, e.height);
+			s = new Ellipse2D.Float(x - 0.5f * e.width, y - 0.5f * e.height, e.width, e.height);
 		} else if (s instanceof Area) {
 			s = new Area(s);
 			Rectangle2D r = s.getBounds2D();
@@ -190,8 +184,6 @@ public class Part extends Manipulable {
 
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
-		if (this.temperature <= -273)
-			this.temperature = java.lang.Float.NaN;
 	}
 
 	public float getTemperature() {
@@ -332,8 +324,7 @@ public class Part extends Manipulable {
 				p.setVx(vx);
 				p.setVy(vy);
 				model.addPhoton(p);
-				model.setTemperatureAt(x, y, d - p.getEnergy()
-						/ getSpecificHeat());
+				model.setTemperatureAt(x, y, d - p.getEnergy() / getSpecificHeat());
 			}
 		} else {
 			float[] vxi = new float[4], vyi = new float[4];
@@ -364,8 +355,7 @@ public class Part extends Manipulable {
 						p.setVy(vyi[k]);
 						model.addPhoton(p);
 					}
-					model.changeAverageTemperatureAt(x, y, -ir * nray
-							/ getSpecificHeat());
+					model.changeAverageTemperatureAt(x, y, -ir * nray / getSpecificHeat());
 				}
 			}
 		}
@@ -382,8 +372,7 @@ public class Part extends Manipulable {
 			float y0 = r.y;
 			float x1 = r.x + r.width;
 			float y1 = r.y + r.height;
-			if (p.getX() < x1 && p.getX() > x0 && p.getY() < y1
-					&& p.getY() > y0) {
+			if (p.getX() < x1 && p.getX() > x0 && p.getY() < y1 && p.getY() > y0) {
 				float dx = p.getVx() * timeStep;
 				if (p.getX() - dx < x0) {
 					p.setVx(-Math.abs(p.getVx()));
@@ -462,8 +451,7 @@ public class Part extends Manipulable {
 		reflectFromLine(p, line, timeStep);
 	}
 
-	private static boolean reflectFromLine(Photon p, Line2D.Float line,
-			float timeStep) {
+	private static boolean reflectFromLine(Photon p, Line2D.Float line, float timeStep) {
 		float x1 = p.getX();
 		float y1 = p.getY();
 		float x2 = p.getX() - p.getVx() * timeStep;
@@ -522,16 +510,14 @@ public class Part extends Manipulable {
 			xml += " inner=\"" + ring.getInnerDiameter() + "\"";
 			xml += " outer=\"" + ring.getOuterDiameter() + "\"/>";
 		}
-		xml += "<thermal_conductivity>" + thermalConductivity
-				+ "</thermal_conductivity>\n";
+		xml += "<thermal_conductivity>" + thermalConductivity + "</thermal_conductivity>\n";
 		xml += "<specific_heat>" + specificHeat + "</specific_heat>\n";
 		xml += "<density>" + density + "</density>\n";
 		xml += "<transmission>" + transmission + "</transmission>\n";
 		xml += "<reflection>" + reflection + "</reflection>\n";
 		xml += "<absorption>" + absorption + "</absorption>\n";
 		xml += "<emissivity>" + emissivity + "</emissivity>\n";
-		if (!java.lang.Float.isNaN(temperature))
-			xml += "<temperature>" + temperature + "</temperature>\n";
+		xml += "<temperature>" + temperature + "</temperature>\n";
 		if (!constantTemperature)
 			xml += "<constant_temperature>false</constant_temperature>\n";
 		if (power != 0)
@@ -543,9 +529,7 @@ public class Part extends Manipulable {
 			xml += "<wind_angle>" + windAngle + "</wind_angle>\n";
 		}
 		if (!getColor().equals(Color.gray))
-			xml += "<color>"
-					+ Integer.toHexString(0x00ffffff & getColor().getRGB())
-					+ "</color>\n";
+			xml += "<color>" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "</color>\n";
 		if (!isFilled())
 			xml += "<filled>false</filled>\n";
 		if (!isVisible())

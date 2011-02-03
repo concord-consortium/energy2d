@@ -821,7 +821,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return new Color(0xFFFF00);
 		if (p.getPower() < 0)
 			return new Color(0xB0C4DE);
-		if (!Float.isNaN(p.getTemperature()))
+		if (p.getConstantTemperature())
 			return new Color(temperatureRenderer.getColor(p.getTemperature()));
 		return p.getColor();
 	}

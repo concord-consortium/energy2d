@@ -2,7 +2,16 @@
 <state>
 <model>
 <timestep>50.0</timestep>
-<sunny>true</sunny><sun_angle>1.5707964</sun_angle><solar_power_density>20000.0</solar_power_density><solar_ray_count>24</solar_ray_count><solar_ray_speed>0.0010</solar_ray_speed><photon_emission_interval>5</photon_emission_interval><convective>false</convective><background_conductivity>0.1</background_conductivity><thermal_buoyancy>2.5E-4</thermal_buoyancy>
+<measurement_interval>100</measurement_interval>
+<viewupdate_interval>20</viewupdate_interval>
+<sunny>true</sunny><sun_angle>1.5707964</sun_angle>
+<solar_power_density>20000.0</solar_power_density>
+<solar_ray_count>24</solar_ray_count>
+<solar_ray_speed>0.0010</solar_ray_speed>
+<photon_emission_interval>5</photon_emission_interval>
+<convective>false</convective>
+<background_conductivity>0.1</background_conductivity>
+<thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
 <temperature_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
@@ -16,6 +25,8 @@
 <reflection>1.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>22ccff</color>
 </part>
 <part><polygon count="6" vertices="1.5, 3.5, 5.5, 1.0, 9.5, 3.5, 8.5, 3.5, 5.5, 1.6499996, 2.5, 3.5"/>
@@ -26,14 +37,18 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
-<part><rectangle x="-0.1" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>333333</color>
 </part>
 <part><rectangle x="2.0" y="7.25" width="0.5" height="0.75"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -43,6 +58,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="2.0" y="4.75" width="0.5" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -51,6 +68,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="2.0" y="3.5" width="0.5" height="0.25"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -59,6 +78,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="2.15" y="5.75" width="0.2" height="1.5"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -67,6 +88,8 @@
 <reflection>0.0</reflection>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>ffffff</color>
 </part>
 <part><rectangle x="2.15" y="3.75" width="0.2" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -76,6 +99,8 @@
 <reflection>0.0</reflection>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>ffffff</color>
 </part>
 <part><rectangle x="8.5" y="7.25" width="0.5" height="0.75"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -85,6 +110,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="8.5" y="4.75" width="0.5" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -93,6 +120,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="8.5" y="3.5" width="0.5" height="0.25"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -101,6 +130,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="8.65" y="5.75" width="0.2" height="1.5"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -109,6 +140,8 @@
 <reflection>0.0</reflection>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>ffffff</color>
 </part>
 <part><rectangle x="8.65" y="3.75" width="0.2" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -118,6 +151,8 @@
 <reflection>0.0</reflection>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 <color>ffffff</color>
 </part>
 <part><rectangle x="2.5" y="5.0" width="5.0" height="0.25"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -127,6 +162,8 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 <part><rectangle x="5.3" y="1.0" width="0.4" height="7.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -135,18 +172,21 @@
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
 </part>
 </structure>
 </model>
 <sensor>
-<thermometer  x="1.625" y="6.25"/>
-<thermometer  x="3.125" y="6.25"/>
-<thermometer  x="8.125" y="6.25"/>
+<thermometer x="1.625" y="6.25"/>
+<thermometer x="3.125" y="6.25"/>
+<thermometer x="8.125" y="6.25"/>
 </sensor>
 <view>
 <ruler>true</ruler>
 <isotherm>true</isotherm>
-<rainbow_x>0</rainbow_x><rainbow_y>0</rainbow_y><minimum_temperature>0.0</minimum_temperature>
+<rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<text string="Two-story" name="Arial" size="12" style="0" color="ffffff" x="1.0" y="1.0"/></view>
+<text string="Two-story" name="Arial" size="12" style="0" color="ffffff" x="1.0" y="1.0"/>
+</view>
 </state>

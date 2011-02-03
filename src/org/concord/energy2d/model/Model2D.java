@@ -35,7 +35,7 @@ public class Model2D {
 
 	private int indexOfStep;
 
-	private float backgroundConductivity = 100 * Constants.AIR_THERMAL_CONDUCTIVITY;
+	private float backgroundConductivity = 10 * Constants.AIR_THERMAL_CONDUCTIVITY;
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
 	private float backgroundDensity = Constants.AIR_DENSITY;
 	private float backgroundTemperature;
@@ -410,8 +410,7 @@ public class Model2D {
 							conductivity[i][j] = p.getThermalConductivity();
 							capacity[i][j] = p.getSpecificHeat();
 							density[i][j] = p.getDensity();
-							if (!initial && p.getConstantTemperature()
-									&& !Float.isNaN(p.getTemperature()))
+							if (!initial && p.getConstantTemperature())
 								t[i][j] = p.getTemperature();
 							fluidity[i][j] = false;
 							if ((windSpeed = p.getWindSpeed()) != 0) {
@@ -462,8 +461,6 @@ public class Model2D {
 				tb[i][j] = Float.NaN;
 				synchronized (parts) {
 					for (Part p : parts) {
-						if (Float.isNaN(p.getTemperature()))
-							continue;
 						if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
 							tb[i][j] = p.getTemperature();
 							break;
@@ -521,10 +518,8 @@ public class Model2D {
 						for (Part p : parts) {
 							if (p.getShape().contains(x, y)) {
 								// no overlap of parts will be allowed
-								if (!Float.isNaN(p.getTemperature())) {
-									t[i][j] = p.getTemperature();
-									found = true;
-								}
+								t[i][j] = p.getTemperature();
+								found = true;
 								break;
 							}
 						}

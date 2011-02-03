@@ -119,17 +119,19 @@ class PartDialog extends JDialog {
 						return;
 				}
 
-				float temperature = Float.NaN, power = Float.NaN;
 				if (notHeatSourceRadioButton.isSelected()
 						|| constantTemperatureRadioButton.isSelected()) {
-					temperature = parse(temperatureField.getText());
+					float temperature = parse(temperatureField.getText());
 					if (Float.isNaN(temperature))
 						return;
+					part.setTemperature(temperature);
 				} else if (powerRadioButton.isSelected()) {
-					power = parse(powerField.getText());
+					float power = parse(powerField.getText());
 					if (Float.isNaN(power))
 						return;
+					part.setPower(power);
 				}
+				part.setConstantTemperature(constantTemperatureRadioButton.isSelected());
 
 				Shape shape = part.getShape();
 				if (shape instanceof RectangularShape) {
@@ -138,17 +140,6 @@ class PartDialog extends JDialog {
 								* height, width, height);
 					}
 				}
-				if (Float.isNaN(power)) {
-					part.setPower(0);
-				} else {
-					part.setPower(power);
-				}
-				if (Float.isNaN(temperature)) {
-					part.setTemperature(-300);
-				} else {
-					part.setTemperature(temperature);
-				}
-				part.setConstantTemperature(constantTemperatureRadioButton.isSelected());
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
