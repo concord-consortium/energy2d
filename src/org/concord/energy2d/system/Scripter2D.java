@@ -93,6 +93,11 @@ class Scripter2D extends Scripter {
 		}
 	}
 
+	private void showException(String command, Exception e) {
+		e.printStackTrace();
+		out(ScriptEvent.FAILED, "Error in \'" + command + "\':" + e.getMessage());
+	}
+
 	private void out(byte status, String description) {
 		if (status == ScriptEvent.FAILED) {
 			notifyScriptListener(new ScriptEvent(s2d, status, "Aborted: " + description));
@@ -177,8 +182,7 @@ class Scripter2D extends Scripter {
 					InputStream is = c.getInputStream();
 					s2d.loadStateApp(is);
 				} catch (IOException e) {
-					e.printStackTrace();
-					out(ScriptEvent.FAILED, e.getMessage());
+					showException(ci, e);
 				}
 			}
 			return;
@@ -226,6 +230,7 @@ class Scripter2D extends Scripter {
 				s = s.substring(5).trim();
 				int i = s.indexOf("(");
 				int j = s.indexOf(")");
+				boolean success = false;
 				if (i != -1 && j != -1) {
 					final float[] z = parseArray(2, s.substring(i + 1, j));
 					if (z != null) {
@@ -249,9 +254,12 @@ class Scripter2D extends Scripter {
 									EventQueue.invokeLater(r);
 								}
 							});
+							success = true;
 						}
 					}
 				}
+				if (!success)
+					out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
 			}
 			return;
 		}
@@ -278,10 +286,11 @@ class Scripter2D extends Scripter {
 					float y = convertVerticalCoordinate(Float.parseFloat(t[1]));
 					s2d.model.addThermometer(x, y);
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					showException(ci, e);
 					return;
 				}
 			}
+			out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
 		}
 
 		matcher = PART.matcher(ci);
@@ -299,7 +308,7 @@ class Scripter2D extends Scripter {
 						float h = Float.parseFloat(t[3]);
 						s2d.model.addRectangularPart(x, y, w, h);
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						showException(ci, e);
 						return;
 					}
 				}
@@ -315,7 +324,7 @@ class Scripter2D extends Scripter {
 						float b = Float.parseFloat(t[3]);
 						s2d.model.addEllipticalPart(x, y, a, b);
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						showException(ci, e);
 						return;
 					}
 				}
@@ -331,7 +340,7 @@ class Scripter2D extends Scripter {
 						float outer = Float.parseFloat(t[3]);
 						s2d.model.addRingPart(xcenter, ycenter, inner, outer);
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						showException(ci, e);
 						return;
 					}
 				}
@@ -348,7 +357,7 @@ class Scripter2D extends Scripter {
 							x[i] = Float.parseFloat(t[2 * i]);
 							y[i] = convertVerticalCoordinate(Float.parseFloat(t[2 * i + 1]));
 						} catch (NumberFormatException e) {
-							e.printStackTrace();
+							showException(ci, e);
 							return;
 						}
 					}
@@ -384,7 +393,7 @@ class Scripter2D extends Scripter {
 						b.setTemperatureAtBorder(Boundary.LOWER, tS);
 						b.setTemperatureAtBorder(Boundary.LEFT, tW);
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						showException(ci, e);
 						return;
 					}
 				}
@@ -411,7 +420,7 @@ class Scripter2D extends Scripter {
 						b.setFluxAtBorder(Boundary.LOWER, fS);
 						b.setFluxAtBorder(Boundary.LEFT, fW);
 					} catch (NumberFormatException e) {
-						e.printStackTrace();
+						showException(ci, e);
 						return;
 					}
 				}
@@ -445,6 +454,7 @@ class Scripter2D extends Scripter {
 					try {
 						angle = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setSunAngle((float) (angle / 180.0 * Math.PI));
@@ -454,6 +464,7 @@ class Scripter2D extends Scripter {
 					try {
 						solarPower = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setSolarPowerDensity(solarPower);
@@ -462,6 +473,7 @@ class Scripter2D extends Scripter {
 					try {
 						emissionInterval = Integer.parseInt(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setPhotonEmissionInterval(emissionInterval);
@@ -470,6 +482,7 @@ class Scripter2D extends Scripter {
 					try {
 						raySpeed = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setSolarRaySpeed(raySpeed);
@@ -478,6 +491,7 @@ class Scripter2D extends Scripter {
 					try {
 						rayCount = Integer.parseInt(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setSolarRayCount(rayCount);
@@ -489,6 +503,7 @@ class Scripter2D extends Scripter {
 					try {
 						thermalBuoyancy = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setThermalBuoyancy(thermalBuoyancy);
@@ -497,6 +512,7 @@ class Scripter2D extends Scripter {
 					try {
 						buoyancyApproximation = Integer.parseInt(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBuoyancyApproximation((byte) buoyancyApproximation);
@@ -505,6 +521,7 @@ class Scripter2D extends Scripter {
 					try {
 						viscosity = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundViscosity(viscosity);
@@ -513,6 +530,7 @@ class Scripter2D extends Scripter {
 					try {
 						viscosity = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundViscosity(viscosity);
@@ -558,6 +576,7 @@ class Scripter2D extends Scripter {
 							w = Float.parseFloat(t[3]);
 							h = Float.parseFloat(t[4]);
 						} catch (NumberFormatException e) {
+							showException(ci, e);
 							return;
 						}
 						final float x1 = x;
@@ -586,6 +605,7 @@ class Scripter2D extends Scripter {
 					try {
 						min = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.view.setMinimumTemperature(min);
@@ -595,6 +615,7 @@ class Scripter2D extends Scripter {
 					try {
 						max = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.view.setMaximumTemperature(max);
@@ -604,6 +625,7 @@ class Scripter2D extends Scripter {
 					try {
 						resolution = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.view.setIsothermResolution(resolution);
@@ -613,6 +635,7 @@ class Scripter2D extends Scripter {
 					try {
 						resolution = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.view.setStreamlineResolution(resolution);
@@ -622,6 +645,7 @@ class Scripter2D extends Scripter {
 					try {
 						timestep = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setTimeStep(timestep);
@@ -630,6 +654,7 @@ class Scripter2D extends Scripter {
 					try {
 						viewUpdateInterval = Integer.parseInt(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setViewUpdateInterval(viewUpdateInterval);
@@ -638,6 +663,7 @@ class Scripter2D extends Scripter {
 					try {
 						measurementInterval = Integer.parseInt(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setMeasurementInterval(measurementInterval);
@@ -646,6 +672,7 @@ class Scripter2D extends Scripter {
 					try {
 						width = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setLx(width);
@@ -657,6 +684,7 @@ class Scripter2D extends Scripter {
 					try {
 						height = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setLy(height);
@@ -668,6 +696,7 @@ class Scripter2D extends Scripter {
 					try {
 						x = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundConductivity(x);
@@ -677,6 +706,7 @@ class Scripter2D extends Scripter {
 					try {
 						x = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundSpecificHeat(x);
@@ -686,6 +716,7 @@ class Scripter2D extends Scripter {
 					try {
 						x = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundSpecificHeat(x);
@@ -695,6 +726,7 @@ class Scripter2D extends Scripter {
 					try {
 						x = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundDensity(x);
@@ -704,6 +736,7 @@ class Scripter2D extends Scripter {
 					try {
 						x = Float.parseFloat(t[1]);
 					} catch (NumberFormatException e) {
+						showException(ci, e);
 						return;
 					}
 					s2d.model.setBackgroundTemperature(x);
@@ -724,9 +757,8 @@ class Scripter2D extends Scripter {
 						int end = matcher.end();
 						String s1 = s.substring(end).trim();
 						int i = s1.indexOf(" ");
-						if (i < 0) {
+						if (i < 0)
 							return;
-						}
 						String s2 = s1.substring(0, i).trim();
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
@@ -739,9 +771,8 @@ class Scripter2D extends Scripter {
 						int end = matcher.end();
 						String s1 = s.substring(end).trim();
 						int i = s1.indexOf(" ");
-						if (i < 0) {
+						if (i < 0)
 							return;
-						}
 						String s2 = s1.substring(0, i).trim();
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
@@ -755,9 +786,8 @@ class Scripter2D extends Scripter {
 						int end = matcher.end();
 						String s1 = s.substring(end).trim();
 						int i = s1.indexOf(" ");
-						if (i < 0) {
+						if (i < 0)
 							return;
-						}
 						String s2 = s1.substring(0, i).trim();
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
@@ -781,7 +811,7 @@ class Scripter2D extends Scripter {
 		try {
 			z = Float.parseFloat(str1.substring(lb + 1, rb));
 		} catch (Exception e) {
-			e.printStackTrace();
+			showException(str1, e);
 			return;
 		}
 		int i = (int) Math.round(z);
@@ -796,14 +826,14 @@ class Scripter2D extends Scripter {
 			try {
 				z = Integer.parseInt(str3.substring(1), 16);
 			} catch (Exception e) {
-				e.printStackTrace();
+				showException(str3, e);
 				return;
 			}
 		} else if (str3.startsWith("0X") || str3.startsWith("0x")) {
 			try {
 				z = Integer.parseInt(str3.substring(2), 16);
 			} catch (Exception e) {
-				e.printStackTrace();
+				showException(str3, e);
 				return;
 			}
 		} else if (str3.equalsIgnoreCase("true")) {
@@ -822,7 +852,7 @@ class Scripter2D extends Scripter {
 			try {
 				z = Float.parseFloat(str3);
 			} catch (Exception e) {
-				e.printStackTrace();
+				showException(str3, e);
 				return;
 			}
 		}
@@ -917,7 +947,7 @@ class Scripter2D extends Scripter {
 		try {
 			z = Float.parseFloat(str1.substring(lb + 1, rb));
 		} catch (Exception e) {
-			e.printStackTrace();
+			showException(str1, e);
 			return;
 		}
 		int i = (int) Math.round(z);
@@ -935,21 +965,21 @@ class Scripter2D extends Scripter {
 				try {
 					z = Integer.parseInt(str3.substring(1), 16);
 				} catch (Exception e) {
-					e.printStackTrace();
+					showException(str3, e);
 					return;
 				}
 			} else if (str3.startsWith("0X") || str3.startsWith("0x")) {
 				try {
 					z = Integer.parseInt(str3.substring(2), 16);
 				} catch (Exception e) {
-					e.printStackTrace();
+					showException(str3, e);
 					return;
 				}
 			} else {
 				try {
 					z = Float.parseFloat(str3);
 				} catch (Exception e) {
-					e.printStackTrace();
+					showException(str3, e);
 					return;
 				}
 			}
@@ -990,7 +1020,7 @@ class Scripter2D extends Scripter {
 		try {
 			z = Float.parseFloat(str1.substring(lb + 1, rb));
 		} catch (Exception e) {
-			e.printStackTrace();
+			showException(str1, e);
 			return;
 		}
 		int i = (int) Math.round(z);
@@ -1000,7 +1030,7 @@ class Scripter2D extends Scripter {
 		try {
 			z = Float.parseFloat(str3);
 		} catch (Exception e) {
-			e.printStackTrace();
+			showException(str3, e);
 			return;
 		}
 		String s = str2.toLowerCase().intern();

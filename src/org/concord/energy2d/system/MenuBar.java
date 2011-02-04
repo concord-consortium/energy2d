@@ -88,6 +88,7 @@ class MenuBar extends JMenuBar {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
+				box.stop();
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				fileChooser.addChoosableFileFilter(filter);
 				fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -441,6 +442,32 @@ class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction4.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("The Series Circuit Analogy");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/series-circuit-analogy.e2d"));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("The Parallel Circuit Analogy");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					box.loadStateApp(MenuBar.class
+							.getResourceAsStream("models/parallel-circuit-analogy.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
