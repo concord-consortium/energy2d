@@ -856,7 +856,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
-						g.drawString(label, x + w / 2 - labelWidth / 2, y + h / 2);
+						g.drawString(label, x + (w - labelWidth) / 2, y + h / 2 + fm.getHeight()
+								/ 4);
 					}
 				} else if (s instanceof Rectangle2D.Float) {
 					Rectangle2D.Float r = (Rectangle2D.Float) s;
@@ -878,7 +879,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
-						g.drawString(label, x + w / 2 - labelWidth / 2, y + h / 2);
+						g.drawString(label, x + (w - labelWidth) / 2, y + h / 2 + fm.getHeight()
+								/ 4);
 					}
 				} else if (s instanceof Area) {
 					if (scale == null)

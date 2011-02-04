@@ -123,6 +123,8 @@ public class Part extends Manipulable {
 		p.emissivity = emissivity;
 		p.windAngle = windAngle;
 		p.windSpeed = windSpeed;
+		p.setUid(getUid());
+		p.setLabel(getLabel());
 		return p;
 	}
 

@@ -436,7 +436,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Comparing Heat Capacity");
+		mi = new JMenuItem("Comparing Specific Heat Capacity");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {

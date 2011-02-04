@@ -788,6 +788,10 @@ class Scripter2D extends Scripter {
 		if (i < 0 || i >= s2d.model.getPartCount()) {
 			return;
 		}
+		Part part = s2d.model.getPart(i);
+		if (part == null)
+			return;
+		String s = str2.toLowerCase().intern();
 		if (str3.startsWith("#")) {
 			try {
 				z = Integer.parseInt(str3.substring(1), 16);
@@ -807,6 +811,14 @@ class Scripter2D extends Scripter {
 		} else if (str3.equalsIgnoreCase("false")) {
 			z = 0;
 		} else {
+			if (s == "label") {
+				part.setLabel(str3);
+				return;
+			}
+			if (s == "uid") {
+				part.setUid(str3);
+				return;
+			}
 			try {
 				z = Float.parseFloat(str3);
 			} catch (Exception e) {
@@ -814,10 +826,6 @@ class Scripter2D extends Scripter {
 				return;
 			}
 		}
-		String s = str2.toLowerCase().intern();
-		Part part = s2d.model.getPart(i);
-		if (part == null)
-			return;
 		if (s == "conductivity") {
 			part.setThermalConductivity(z);
 			arrayUpdateRequested = true;
