@@ -1635,7 +1635,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals("Time step")) {
 			float timeStep = (Float) e.getNewValue();
-			graphRenderer.setScopeX(3600 * timeStep);
+			graphRenderer.setScopeX(7200 * timeStep);
 			photonLength = Math.max(5, timeStep * 0.1f);
 		}
 	}

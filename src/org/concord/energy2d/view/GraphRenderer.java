@@ -156,17 +156,17 @@ class GraphRenderer {
 			int y2 = xExpandButton.y + xExpandButton.height / 2;
 			int x2 = xExpandButton.x + xExpandButton.width - 4;
 			g.drawLine(xExpandButton.x + 3, y2, x2, y2);
-			g.drawLine(x2, y2, x2 - 4, y2 - 4);
-			g.drawLine(x2, y2, x2 - 4, y2 + 4);
+			x2 = xExpandButton.x + 3;
+			g.drawLine(x2, y2, x2 + 4, y2 - 4);
+			g.drawLine(x2, y2, x2 + 4, y2 + 4);
 			g.setColor(Color.lightGray);
 			g.fill(xShrinkButton);
 			g.setColor(fgColor);
 			g.draw(xShrinkButton);
 			x2 = xShrinkButton.x + xShrinkButton.width - 4;
 			g.drawLine(xShrinkButton.x + 3, y2, x2, y2);
-			x2 = xShrinkButton.x + 3;
-			g.drawLine(x2, y2, x2 + 4, y2 - 4);
-			g.drawLine(x2, y2, x2 + 4, y2 + 4);
+			g.drawLine(x2, y2, x2 - 4, y2 - 4);
+			g.drawLine(x2, y2, x2 - 4, y2 + 4);
 
 			// draw y scope control buttons
 			g.setColor(Color.lightGray);
