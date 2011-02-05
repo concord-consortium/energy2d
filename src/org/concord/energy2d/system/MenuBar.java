@@ -16,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,6 +34,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.concord.energy2d.event.IOEvent;
+import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -75,6 +79,8 @@ class MenuBar extends JMenuBar {
 	private Action exitAction;
 	private Action propertyAction;
 
+	private List<IOListener> ioListeners;
+
 	MenuBar(final System2D box, final JFrame frame) {
 
 		fileChooser = new JFileChooser();
@@ -106,6 +112,11 @@ class MenuBar extends JMenuBar {
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
+						notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, box));
+					} else {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box),
+								"File " + file + " was not found.", "File not found",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				fileChooser.resetChoosableFileFilters();
@@ -779,6 +790,26 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		}
+	}
+
+	void addIOListener(IOListener l) {
+		if (ioListeners == null)
+			ioListeners = new ArrayList<IOListener>();
+		if (!ioListeners.contains(l))
+			ioListeners.add(l);
+	}
+
+	void removeIOListener(IOListener l) {
+		if (ioListeners == null)
+			return;
+		ioListeners.remove(l);
+	}
+
+	private void notifyIOListeners(IOEvent e) {
+		if (ioListeners == null)
+			return;
+		for (IOListener x : ioListeners)
+			x.ioOccured(e);
 	}
 
 }

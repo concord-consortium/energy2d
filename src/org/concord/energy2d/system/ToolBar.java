@@ -6,6 +6,7 @@
 
 package org.concord.energy2d.system;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -18,6 +19,8 @@ import javax.swing.JToolBar;
 
 import org.concord.energy2d.event.GraphEvent;
 import org.concord.energy2d.event.GraphListener;
+import org.concord.energy2d.event.IOEvent;
+import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.util.MiscUtil;
@@ -27,10 +30,11 @@ import org.concord.energy2d.view.View2D;
  * @author Charles Xie
  * 
  */
-class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
+class ToolBar extends JToolBar implements GraphListener, IOListener, ManipulationListener {
 
 	private JToggleButton graphButton;
 	private JToggleButton gridButton;
+	private JToggleButton selectButton;
 
 	private System2D box;
 
@@ -47,19 +51,20 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 
 		ButtonGroup bg = new ButtonGroup();
 
-		JToggleButton x = new JToggleButton(new ImageIcon(ToolBar.class
+		selectButton = new JToggleButton(new ImageIcon(ToolBar.class
 				.getResource("resources/select.png")));
-		x.setToolTipText("Select and move an object");
-		x.setSelected(true);
-		x.addItemListener(new ItemListener() {
+		selectButton.setToolTipText("Select and move an object");
+		selectButton.setSelected(true);
+		selectButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.SELECT_MODE);
 			}
 		});
-		add(x);
-		bg.add(x);
+		add(selectButton);
+		bg.add(selectButton);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/rectangle.png")));
+		JToggleButton x = new JToggleButton(new ImageIcon(ToolBar.class
+				.getResource("resources/rectangle.png")));
 		x.setToolTipText("Draw a rectangle");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -155,6 +160,23 @@ class ToolBar extends JToolBar implements GraphListener, ManipulationListener {
 
 	public void manipulationOccured(ManipulationEvent e) {
 		MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
+	}
+
+	public void ioOccured(IOEvent e) {
+		switch (e.getType()) {
+		case IOEvent.FILE_INPUT:
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					selectButton.doClick();
+					selectButton.requestFocusInWindow();
+					graphButton.setSelected(box.view.isGraphOn());
+					gridButton.setSelected(box.view.isGridOn());
+				}
+			});
+			break;
+		case IOEvent.FILE_OUTPUT:
+			break;
+		}
 	}
 
 }

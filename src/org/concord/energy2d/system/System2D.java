@@ -359,10 +359,13 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png"))
 				.getImage());
-		frame.setJMenuBar(new MenuBar(box, frame));
+		MenuBar menuBar = new MenuBar(box, frame);
+		frame.setJMenuBar(menuBar);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
-		frame.getContentPane().add(new ToolBar(box), BorderLayout.NORTH);
+		ToolBar toolBar = new ToolBar(box);
+		menuBar.addIOListener(toolBar);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);
 		frame.pack();
