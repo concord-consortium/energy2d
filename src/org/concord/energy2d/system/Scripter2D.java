@@ -15,7 +15,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -204,49 +203,16 @@ class Scripter2D extends Scripter {
 			String s = ci.substring(matcher.end()).trim();
 			if (s.toLowerCase().startsWith("text")) {
 				s = s.substring(4).trim();
-				int i = s.indexOf("(");
-				final int j = s.indexOf(")");
 				boolean success = false;
-				if (i != -1 && j != -1) {
-					final float[] z = parseArray(2, s.substring(i + 1, j));
-					if (z != null) {
-						final String s2 = s;
-						final Runnable r = new Runnable() {
-							public void run() {
-								s2d.view.addText(s2.substring(j + 1).trim(), z[0], z[1]);
-							}
-						};
-						EventQueue.invokeLater(new Runnable() {
-							public void run() {
-								EventQueue.invokeLater(r);
-							}
-						});
-						success = true;
-					}
-				}
-				if (!success)
-					out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
-			} else if (s.toLowerCase().startsWith("image")) {
-				s = s.substring(5).trim();
-				int i = s.indexOf("(");
-				int j = s.indexOf(")");
-				boolean success = false;
-				if (i != -1 && j != -1) {
-					final float[] z = parseArray(2, s.substring(i + 1, j));
-					if (z != null) {
-						String filename = s.substring(j + 1);
-						URL url = null;
-						try {
-							url = new URL(s2d.getCodeBase(), filename);
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
-						}
-						if (url != null) {
-							final ImageIcon image = new ImageIcon(url);
+				if (s.startsWith("(")) {
+					final int j = s.indexOf(")");
+					if (j != -1) {
+						final float[] z = parseArray(2, s.substring(1, j));
+						if (z != null) {
+							final String s2 = s;
 							final Runnable r = new Runnable() {
 								public void run() {
-									s2d.view.addPicture(image, s2d.view.convertPointToPixelX(z[0]),
-											s2d.view.convertPointToPixelY(z[1]));
+									s2d.view.addText(s2.substring(j + 1).trim(), z[0], z[1]);
 								}
 							};
 							EventQueue.invokeLater(new Runnable() {
@@ -260,6 +226,45 @@ class Scripter2D extends Scripter {
 				}
 				if (!success)
 					out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
+			} else if (s.toLowerCase().startsWith("image")) {
+				s = s.substring(5).trim();
+				boolean success = false;
+				if (s.startsWith("(")) {
+					int j = s.indexOf(")");
+					if (j != -1) {
+						final float[] z = parseArray(2, s.substring(1, j));
+						if (z != null) {
+							String filename = s.substring(j + 1);
+							URL url = null;
+							try {
+								url = new URL(s2d.getCodeBase(), filename);
+							} catch (Exception e) {
+								showException(ci, e);
+								return;
+							}
+							if (url != null) {
+								final ImageIcon image = new ImageIcon(url);
+								final Runnable r = new Runnable() {
+									public void run() {
+										s2d.view.addPicture(image, s2d.view
+												.convertPointToPixelX(z[0]), s2d.view
+												.convertPointToPixelY(z[1]));
+									}
+								};
+								EventQueue.invokeLater(new Runnable() {
+									public void run() {
+										EventQueue.invokeLater(r);
+									}
+								});
+								success = true;
+							}
+						}
+					}
+				}
+				if (!success)
+					out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
+			} else {
+				out(ScriptEvent.FAILED, "Unrecognized command \'" + ci + "\'");
 			}
 			return;
 		}
