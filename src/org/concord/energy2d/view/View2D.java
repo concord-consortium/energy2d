@@ -96,7 +96,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
-	private Font labelFont = new Font(null, Font.PLAIN | Font.BOLD, 16);
+	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
 
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;

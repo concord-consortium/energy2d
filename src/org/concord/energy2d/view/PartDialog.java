@@ -143,7 +143,7 @@ class PartDialog extends JDialog {
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
 				part.setWindSpeed(windSpeed);
-				part.setThermalConductivity(conductivity);
+				part.setThermalConductivity(Math.max(conductivity, 0.000000001f));
 				part.setSpecificHeat(capacity);
 				part.setDensity(density);
 				part.setAbsorption(absorption);

@@ -494,7 +494,7 @@ class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/natural-convection.e2d"));
+							.getResourceAsStream("models/compare-convection-conduction.e2d"));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

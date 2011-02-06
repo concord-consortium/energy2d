@@ -16,8 +16,8 @@ public class TextBox {
 
 	private String str;
 	private String name = "Arial";
-	private int style = Font.PLAIN;
-	private int size = 12;
+	private int style = Font.PLAIN | Font.BOLD;
+	private int size = 14;
 	private Color color = Color.white;
 	private float x, y;
 
