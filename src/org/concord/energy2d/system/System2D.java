@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,6 +64,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private DefaultHandler saxHandler;
 	private XmlEncoder encoder;
 	private File currentFile;
+	private URL currentURL;
 	private String currentModel;
 
 	Runnable clickRun, clickStop, clickReset, clickReload;
@@ -213,6 +215,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	void loadFile(File file) {
 		currentFile = file;
 		currentModel = null;
+		currentURL = null;
+		if (currentFile == null)
+			return;
 		try {
 			loadStateApp(new FileInputStream(file));
 		} catch (IOException e) {
@@ -223,6 +228,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	void loadModel(String name) {
 		currentModel = name;
 		currentFile = null;
+		currentURL = null;
+		if (currentModel == null)
+			return;
 		try {
 			loadStateApp(System2D.class.getResourceAsStream(name));
 		} catch (IOException e) {
@@ -230,12 +238,30 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 	}
 
+	void loadURL(URL url) throws IOException {
+		currentURL = url;
+		currentFile = null;
+		currentModel = null;
+		if (currentURL == null)
+			return;
+		loadStateApp(url.openConnection().getInputStream());
+	}
+
 	void reload() {
-		if (currentFile == null) {
-			if (currentModel != null)
-				loadModel(currentModel);
-		} else {
+		if (currentFile != null) {
 			loadFile(currentFile);
+			return;
+		}
+		if (currentModel != null) {
+			loadModel(currentModel);
+			return;
+		}
+		if (currentURL != null) {
+			try {
+				loadURL(currentURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

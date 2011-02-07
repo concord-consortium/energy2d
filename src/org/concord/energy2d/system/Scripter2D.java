@@ -14,9 +14,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -187,9 +185,7 @@ class Scripter2D extends Scripter {
 			if (codeBase != null) {
 				String s = ci.substring(matcher.end()).trim();
 				try {
-					URLConnection c = new URL(codeBase, s).openConnection();
-					InputStream is = c.getInputStream();
-					s2d.loadStateApp(is);
+					s2d.loadURL(new URL(codeBase, s));
 				} catch (IOException e) {
 					showException(ci, e);
 				}
