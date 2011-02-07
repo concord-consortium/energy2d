@@ -177,7 +177,7 @@ class Scripter2D extends Scripter {
 			if (codeBase != null) {
 				String s = ci.substring(matcher.end()).trim();
 				try {
-					URLConnection c = new URL(codeBase + s).openConnection();
+					URLConnection c = new URL(codeBase, s).openConnection();
 					InputStream is = c.getInputStream();
 					s2d.loadStateApp(is);
 				} catch (IOException e) {
