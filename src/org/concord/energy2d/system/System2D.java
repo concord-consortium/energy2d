@@ -15,7 +15,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -64,9 +63,10 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private DefaultHandler saxHandler;
 	private XmlEncoder encoder;
 	private File currentFile;
+	private String currentModel;
 
-	Runnable clickRun, clickStop, clickReset;
-	private JButton buttonRun, buttonStop, buttonReset;
+	Runnable clickRun, clickStop, clickReset, clickReload;
+	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
 
 	public System2D() {
 
@@ -210,16 +210,41 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 	}
 
-	void reloadConfiguration() {
-		if (currentFile == null)
-			return;
+	void loadFile(File file) {
+		currentFile = file;
+		currentModel = null;
 		try {
-			loadStateApp(new FileInputStream(currentFile));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			loadStateApp(new FileInputStream(file));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
+
+	void loadModel(String name) {
+		currentModel = name;
+		currentFile = null;
+		try {
+			loadStateApp(System2D.class.getResourceAsStream(name));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	void reload() {
+		if (currentFile == null) {
+			if (currentModel != null)
+				loadModel(currentModel);
+		} else {
+			loadFile(currentFile);
+		}
+	}
+
+	void setCurrentModel(String name) {
+		currentModel = name;
+	}
+
+	public String getCurrentModel() {
+		return currentModel;
 	}
 
 	void setCurrentFile(File file) {
@@ -291,6 +316,13 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 				reset();
 			}
 			break;
+		case ManipulationEvent.RELOAD:
+			if (clickReload != null) {
+				EventQueue.invokeLater(clickReload);
+			} else {
+				reload();
+			}
+			break;
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());
 			model.refreshPowerArray();
@@ -320,6 +352,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private JPanel createButtonPanel() {
 		JPanel p = new JPanel();
 		buttonRun = new JButton("Run");
+		buttonRun.setToolTipText("Run the simulation");
 		buttonRun.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				run();
@@ -329,6 +362,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 		p.add(buttonRun);
 		buttonStop = new JButton("Stop");
+		buttonStop.setEnabled(false);
+		buttonStop.setToolTipText("Stop the simulation");
 		buttonStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				stop();
@@ -338,6 +373,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 		p.add(buttonStop);
 		buttonReset = new JButton("Reset");
+		buttonReset.setToolTipText("Reset the simulation");
 		buttonReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				reset();
@@ -346,6 +382,16 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			}
 		});
 		p.add(buttonReset);
+		buttonReload = new JButton("Reload");
+		buttonReload.setToolTipText("Reload the initial configurations");
+		buttonReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reload();
+				buttonRun.setEnabled(true);
+				buttonStop.setEnabled(false);
+			}
+		});
+		p.add(buttonReload);
 		clickRun = new Runnable() {
 			public void run() {
 				buttonRun.doClick();
@@ -359,6 +405,11 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		clickReset = new Runnable() {
 			public void run() {
 				buttonReset.doClick();
+			}
+		};
+		clickReload = new Runnable() {
+			public void run() {
+				buttonReload.doClick();
 			}
 		};
 		return p;

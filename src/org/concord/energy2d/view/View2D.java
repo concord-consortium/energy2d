@@ -1198,6 +1198,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case KeyEvent.VK_T:
 			notifyManipulationListeners(null, ManipulationEvent.RESET);
 			break;
+		case KeyEvent.VK_L:
+			notifyManipulationListeners(null, ManipulationEvent.RELOAD);
+			break;
 		case KeyEvent.VK_S:
 			notifyManipulationListeners(null, ManipulationEvent.SUN_SHINE);
 			break;

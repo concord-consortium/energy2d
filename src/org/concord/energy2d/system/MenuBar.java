@@ -12,7 +12,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -105,14 +104,7 @@ class MenuBar extends JMenuBar {
 				if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					if (file.exists()) {
-						box.setCurrentFile(file);
-						try {
-							box.loadStateApp(new FileInputStream(file));
-						} catch (FileNotFoundException e1) {
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
+						box.loadFile(file);
 						notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, box));
 					} else {
 						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box),
@@ -639,13 +631,9 @@ class MenuBar extends JMenuBar {
 		}
 	}
 
-	private void loadModel(String address) {
-		try {
-			box.loadStateApp(MenuBar.class.getResourceAsStream(address));
-			notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, box));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void loadModel(String name) {
+		box.loadModel(name);
+		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, box));
 	}
 
 	void addIOListener(IOListener l) {

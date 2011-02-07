@@ -35,13 +35,13 @@ public class Helper {
 
 	public final static void showKeyboardShortcuts(Frame frame) {
 		String s = "<html><h2>Keyboard Shortcuts</h2><hr>";
-		s += "<ul>";
-		s += "<li>R &mdash; Run or pause the simulation.";
-		s += "<li>G &mdash; Show or hide the graph.";
-		s += "<li>S &mdash; Turn sunlight on or off.";
-		s += "<li>Q &mdash; When sunlight is present, increase the sun angle (towards west).";
-		s += "<li>W &mdash; When sunlight is present, decrease the sun angle (towards east).";
-		s += "</ul>";
+		s += "<br><font face=Courier>'R'</font> &mdash; Run or pause the simulation.";
+		s += "<br><font face=Courier>'T'</font> &mdash; Reset the simulation.";
+		s += "<br><font face=Courier>'L'</font> &mdash; Reload the initial configurations.";
+		s += "<br><font face=Courier>'G'</font> &mdash; Show or hide the graph.";
+		s += "<br><font face=Courier>'S'</font> &mdash; Turn sunlight on or off.";
+		s += "<br><font face=Courier>'Q'</font> &mdash; When sunlight is present, increase the sun angle (towards west).";
+		s += "<br><font face=Courier>'W'</font> &mdash; When sunlight is present, decrease the sun angle (towards east).";
 		s += "</html>";
 		JOptionPane.showMessageDialog(frame, new JLabel(s));
 	}

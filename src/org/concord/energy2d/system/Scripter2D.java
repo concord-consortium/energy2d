@@ -132,6 +132,16 @@ class Scripter2D extends Scripter {
 			return;
 		}
 
+		matcher = RELOAD.matcher(ci);
+		if (matcher.find()) {
+			if (s2d.clickReload != null) {
+				EventQueue.invokeLater(s2d.clickReload);
+			} else {
+				s2d.run();
+			}
+			return;
+		}
+
 		matcher = RUN.matcher(ci);
 		if (matcher.find()) {
 			if (s2d.clickRun != null) {
