@@ -326,7 +326,7 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "text") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
-				int size = 12, style = Font.PLAIN;
+				int size = 14, style = Font.PLAIN;
 				String str = null, name = null;
 				Color color = null;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {

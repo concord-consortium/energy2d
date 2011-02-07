@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,7 +78,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		model = new Model2D();
 		model.addVisualizationListener(this);
-		view = new View2D();
+		view = new View2D(this);
 		view.addManipulationListener(this);
 		view.setModel(model);
 		view.setPreferredSize(new Dimension(400, 400));
@@ -205,6 +207,18 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			os.write(encoder.encode().getBytes());
 		} finally {
 			os.close();
+		}
+	}
+
+	void reloadConfiguration() {
+		if (currentFile == null)
+			return;
+		try {
+			loadStateApp(new FileInputStream(currentFile));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -374,7 +388,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				File file = box.getCurrentFile();
-				frame.setTitle(file != null ? "Energy2D V0.1: " + file : "Energy2D: V0.1");
+				frame.setTitle(file != null ? "Energy2D V0.2: " + file : "Energy2D: V0.2");
 			}
 
 			public void windowLostFocus(WindowEvent e) {

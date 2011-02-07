@@ -47,7 +47,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
@@ -63,6 +65,8 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.system.Helper;
+import org.concord.energy2d.system.System2D;
 import org.concord.energy2d.util.ContourMap;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -158,8 +162,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Action cutAction;
 	private Action pasteAction;
 
-	public View2D() {
+	private System2D box;
+
+	public View2D(System2D box) {
 		super();
+		this.box = box;
 		for (int i = 0; i < handle.length; i++)
 			handle[i] = new Rectangle(0, 0, 6, 6);
 		addKeyListener(new KeyAdapter() {
@@ -617,6 +624,34 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		});
 		popupMenu.add(mi);
+		popupMenu.addSeparator();
+
+		JMenu subMenu = new JMenu("Help");
+		popupMenu.add(subMenu);
+
+		mi = new JMenuItem("Script Console...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Helper.showScriptDialog(box);
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Keyboard Shortcuts...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Helper.showKeyboardShortcuts(JOptionPane.getFrameForComponent(View2D.this));
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("About...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Helper.showAbout(JOptionPane.getFrameForComponent(View2D.this));
+			}
+		});
+		subMenu.add(mi);
 
 	}
 
