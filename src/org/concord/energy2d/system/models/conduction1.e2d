@@ -11,7 +11,9 @@
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>20</photon_emission_interval>
 <convective>false</convective>
-<background_conductivity>1.0E-7</background_conductivity>
+<background_conductivity>1.0E-9</background_conductivity>
+<background_density>1.0</background_density>
+<background_specific_heat>100.0</background_specific_heat>
 <thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
