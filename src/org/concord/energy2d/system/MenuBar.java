@@ -79,9 +79,12 @@ class MenuBar extends JMenuBar {
 	private Action exitAction;
 	private Action propertyAction;
 
+	private System2D box;
 	private List<IOListener> ioListeners;
 
 	MenuBar(final System2D box, final JFrame frame) {
+
+		this.box = box;
 
 		fileChooser = new JFileChooser();
 
@@ -332,12 +335,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Thermal Equilibrium Between Identical Objects");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/identical-heat-capacity.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/identical-heat-capacity.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -346,12 +344,7 @@ class MenuBar extends JMenuBar {
 				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 1");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/different-specific-heat1.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/different-specific-heat1.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -360,12 +353,7 @@ class MenuBar extends JMenuBar {
 				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 2");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/different-specific-heat2.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/different-specific-heat2.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -373,12 +361,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Densities: Case 1");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/different-density1.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/different-density1.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -386,12 +369,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Densities: Case 2");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/different-density2.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/different-density2.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -399,12 +377,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("The Effect of Thermal Conductivity on Equilibration Speed");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/different-conductivity.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/different-conductivity.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -415,11 +388,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Comparing Thermal Conductivities");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction1.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/conduction1.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -427,11 +396,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Comparing Conduction Area");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction2.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/conduction2.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -439,11 +404,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Comparing Temperature Difference");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction3.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/conduction3.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -451,11 +412,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Comparing Specific Heat Capacity");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/conduction4.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/conduction4.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -463,12 +420,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("The Series Circuit Analogy");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/series-circuit-analogy.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/series-circuit-analogy.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -476,12 +428,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("The Parallel Circuit Analogy");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/parallel-circuit-analogy.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/parallel-circuit-analogy.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -492,12 +439,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Natural Convection");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/compare-convection-conduction.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/compare-convection-conduction.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -505,12 +447,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Forced Convection");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/forced-convection.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/forced-convection.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -521,11 +458,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Benard Cell");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/benard-cell.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/benard-cell.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -533,12 +466,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Lid-Driven Cavity");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/lid-driven-cavity.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/lid-driven-cavity.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -546,11 +474,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Smoke in Wind");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/smoke-in-wind.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/smoke-in-wind.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -558,12 +482,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Laminar/Turbulent Flow");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/laminar-turbulent.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/laminar-turbulent.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -574,12 +493,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Internal Heating");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/internal-heater.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/internal-heater.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -587,12 +501,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Solar Heating: Gable Roof");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/solar-heating-gable-roof.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/solar-heating-gable-roof.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -600,12 +509,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Solar Heating: Skillion Roof");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/solar-heating-skillion-roof.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/solar-heating-skillion-roof.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -613,12 +517,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Solar Heating: Two Story");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/solar-heating-two-story.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/solar-heating-two-story.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -626,12 +525,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Solar Heating (Convection)");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/solar-heating-convection.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/solar-heating-convection.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -642,12 +536,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Fixed Temperature Boundary");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/fixed-temperature-boundary.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/fixed-temperature-boundary.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -655,12 +544,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Fixed Flux Boundary");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/fixed-flux-boundary.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/fixed-flux-boundary.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -671,11 +555,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Ray Optics");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class.getResourceAsStream("models/ray-optics.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/ray-optics.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -683,12 +563,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Projection Effect");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					box.loadStateApp(MenuBar.class
-							.getResourceAsStream("models/projection-effect.e2d"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				loadModel("models/projection-effect.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -741,7 +616,7 @@ class MenuBar extends JMenuBar {
 				s += "<ul><li>Dr. Charles Xie, Email: qxie@concord.org</ul>";
 				s += "<p>This program is licensed under the GNU Lesser General Public License V3.0.<br>";
 				s += "Funding of this project is provided by the National Science Foundation<br>";
-				s += "under grant #0918449 to the Concord Consortium.";
+				s += "under grant #0918449.";
 				s += "</html>";
 				JOptionPane.showMessageDialog(frame, new JLabel(s));
 			}
@@ -789,6 +664,15 @@ class MenuBar extends JMenuBar {
 					e1.printStackTrace();
 				}
 			}
+		}
+	}
+
+	private void loadModel(String address) {
+		try {
+			box.loadStateApp(MenuBar.class.getResourceAsStream(address));
+			notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, box));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
