@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.model.Thermometer;
 
 /**
  * @author Charles Xie
@@ -34,6 +35,8 @@ final class DialogFactory {
 			return new ViewDialog(view, modal);
 		if (o instanceof Part)
 			return new PartDialog(view, (Part) o, modal);
+		if (o instanceof Thermometer)
+			return new ThermometerDialog(view, (Thermometer) o, modal);
 		return null;
 	}
 

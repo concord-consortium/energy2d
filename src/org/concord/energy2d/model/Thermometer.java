@@ -22,6 +22,8 @@ public class Thermometer extends Manipulable {
 	private final static int MAX = 500;
 	private List<TimedData> data;
 	private List<MeasurementListener> listeners;
+	private boolean thermostat;
+	private float thermostatTemperature = 20;
 
 	public Thermometer(float x, float y) {
 		super(new Rectangle2D.Float());
@@ -33,6 +35,22 @@ public class Thermometer extends Manipulable {
 
 	public Thermometer duplicate(float x, float y) {
 		return new Thermometer(x, y);
+	}
+
+	public void setThermostat(boolean b) {
+		thermostat = b;
+	}
+
+	public boolean isThermostat() {
+		return thermostat;
+	}
+
+	public void setThermostatTemperature(float t) {
+		thermostatTemperature = t;
+	}
+
+	public float getThermostatTemperature() {
+		return thermostatTemperature;
 	}
 
 	public void setLocation(float x, float y) {
@@ -92,6 +110,10 @@ public class Thermometer extends Manipulable {
 
 	public String toXml() {
 		String xml = "<thermometer";
+		if (thermostat) {
+			xml += " thermostat=\"true\"";
+			xml += " thermostat_temperature=\"" + thermostatTemperature + "\"";
+		}
 		xml += " x=\"" + getX() + "\"";
 		xml += " y=\"" + getY() + "\"/>";
 		return xml;

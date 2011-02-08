@@ -247,7 +247,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		loadStateApp(url.openConnection().getInputStream());
 	}
 
-	void reload() {
+	public void reload() {
 		if (currentFile != null) {
 			loadFile(currentFile);
 			return;
@@ -464,8 +464,16 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		frame.addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
-				File file = box.getCurrentFile();
-				frame.setTitle(file != null ? "Energy2D V0.2: " + file : "Energy2D: V0.2");
+				String title = "Energy2D V0.2";
+				if (box.currentFile != null) {
+					frame.setTitle(title + ": " + box.currentFile);
+				} else if (box.currentModel != null) {
+					frame.setTitle(title + ": " + box.currentModel);
+				} else if (box.currentURL != null) {
+					frame.setTitle(title + ": " + box.currentURL);
+				} else {
+					frame.setTitle(title);
+				}
 			}
 
 			public void windowLostFocus(WindowEvent e) {

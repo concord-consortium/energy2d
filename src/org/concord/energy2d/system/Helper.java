@@ -49,7 +49,7 @@ public class Helper {
 	public final static void showAbout(Frame frame) {
 		String s = "<html><h2>Energy2D</h2>";
 		s += "<h4><i>Interactive simulation of heat and mass flow</i></h4>";
-		s += "http://energy.concord.org/energy2d.html<hr>";
+		s += "http://energy.concord.org/energy2d/index.html<hr>";
 		s += "<h4>Credit:</h4>This program is brought to you by Dr. Charles Xie (qxie@concord.org).<br>";
 		s += "Funding of this project is provided by the National Science Foundation<br>";
 		s += "under grant #0918449 to the Concord Consortium.";
