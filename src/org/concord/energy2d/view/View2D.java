@@ -100,7 +100,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
-	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
+	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 12);
 
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
@@ -914,8 +914,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
-						g.drawString(label, x + (w - labelWidth) / 2, y + h / 2 + fm.getHeight()
-								/ 4);
+						float x0 = x + 0.5f * w;
+						float y0 = y + 0.5f * h;
+						if (w < h * 0.25f) {
+							g.rotate(Math.PI * 0.5, x0, y0);
+							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+							g.rotate(-Math.PI * 0.5, x0, y0);
+						} else {
+							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+						}
 					}
 				} else if (s instanceof Area) {
 					if (scale == null)
