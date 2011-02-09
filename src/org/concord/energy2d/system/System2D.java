@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +36,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.concord.energy2d.event.IOEvent;
+import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.event.VisualizationEvent;
@@ -69,6 +73,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	Runnable clickRun, clickStop, clickReset, clickReload;
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
+	private List<IOListener> ioListeners;
 
 	public System2D() {
 
@@ -223,6 +228,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 	}
 
 	void loadModel(String name) {
@@ -236,6 +242,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 	}
 
 	void loadURL(URL url) throws IOException {
@@ -245,6 +252,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (currentURL == null)
 			return;
 		loadStateApp(url.openConnection().getInputStream());
+		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 	}
 
 	public void reload() {
@@ -441,6 +449,26 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		return p;
 	}
 
+	void addIOListener(IOListener l) {
+		if (ioListeners == null)
+			ioListeners = new ArrayList<IOListener>();
+		if (!ioListeners.contains(l))
+			ioListeners.add(l);
+	}
+
+	void removeIOListener(IOListener l) {
+		if (ioListeners == null)
+			return;
+		ioListeners.remove(l);
+	}
+
+	private void notifyIOListeners(IOEvent e) {
+		if (ioListeners == null)
+			return;
+		for (IOListener x : ioListeners)
+			x.ioOccured(e);
+	}
+
 	public static void main(String[] args) {
 
 		final System2D box = new System2D();
@@ -455,7 +483,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
 		ToolBar toolBar = new ToolBar(box);
-		menuBar.addIOListener(toolBar);
+		box.addIOListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);
