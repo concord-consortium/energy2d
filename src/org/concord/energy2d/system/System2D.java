@@ -416,6 +416,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			}
 		});
 		p.add(buttonReset);
+		JPanel spacer = new JPanel();
+		spacer.setPreferredSize(new Dimension(20, 10));
+		p.add(spacer);
 		buttonReload = new JButton("Reload");
 		buttonReload.setToolTipText("Reload the initial configurations");
 		buttonReload.addActionListener(new ActionListener() {
