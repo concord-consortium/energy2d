@@ -14,30 +14,30 @@ import javax.swing.ImageIcon;
 public class Picture {
 
 	private ImageIcon image;
-	private int x = 50, y = 50;
+	private float x, y;
 
-	public Picture(ImageIcon image, int x, int y) {
+	public Picture(ImageIcon image, float x, float y) {
 		setImage(image);
 		setLocation(x, y);
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public void setLocation(int x, int y) {
+	public void setLocation(float x, float y) {
 		setX(x);
 		setY(y);
 	}

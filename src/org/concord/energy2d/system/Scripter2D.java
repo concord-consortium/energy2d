@@ -973,6 +973,7 @@ class Scripter2D extends Scripter {
 			text.setName(str3);
 		} else if (s == "text") {
 			text.setString(str3);
+			s2d.view.repaint();
 		} else {
 			if (str3.startsWith("#")) {
 				try {
@@ -998,11 +999,13 @@ class Scripter2D extends Scripter {
 			}
 			if (s == "color") {
 				text.setColor(new Color((int) z));
+				s2d.view.repaint();
 			} else if (s == "x") {
 				final float z2 = z;
 				final Runnable r = new Runnable() {
 					public void run() {
-						text.setX(s2d.view.convertPointToPixelX(z2));
+						text.setX(z2);
+						s2d.view.repaint();
 					}
 				};
 				EventQueue.invokeLater(new Runnable() {
@@ -1014,7 +1017,8 @@ class Scripter2D extends Scripter {
 				final float z2 = z;
 				final Runnable r = new Runnable() {
 					public void run() {
-						text.setY(s2d.view.convertPointToPixelY(z2));
+						text.setY(z2);
+						s2d.view.repaint();
 					}
 				};
 				EventQueue.invokeLater(new Runnable() {
@@ -1054,7 +1058,7 @@ class Scripter2D extends Scripter {
 			final float z2 = z;
 			final Runnable r = new Runnable() {
 				public void run() {
-					picture.setX(s2d.view.convertPointToPixelX(z2));
+					picture.setX(z2);
 				}
 			};
 			EventQueue.invokeLater(new Runnable() {
@@ -1066,7 +1070,7 @@ class Scripter2D extends Scripter {
 			final float z2 = z;
 			final Runnable r = new Runnable() {
 				public void run() {
-					picture.setY(s2d.view.convertPointToPixelY(z2));
+					picture.setY(z2);
 				}
 			};
 			EventQueue.invokeLater(new Runnable() {

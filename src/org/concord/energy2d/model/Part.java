@@ -545,6 +545,21 @@ public class Part extends Manipulable {
 		return xml;
 	}
 
+	public String getLabel(String label) {
+		String s = null;
+		if (label.equalsIgnoreCase("%temperature"))
+			s = (int) temperature + " \u00b0C";
+		else if (label.equalsIgnoreCase("%density"))
+			s = (int) density + " kg/m\u00b3";
+		else if (label.equalsIgnoreCase("%specific_heat"))
+			s = (int) specificHeat + " J/(kg\u00d7\u00b0C)";
+		else if (label.equalsIgnoreCase("%thermal_conductivity"))
+			s = (float) thermalConductivity + " W/(m\u00d7\u00b0C)";
+		else if (label.equalsIgnoreCase("%power_density"))
+			s = (int) power + " W/m\u00b3";
+		return s;
+	}
+
 	@Override
 	public String toString() {
 		return toXml();

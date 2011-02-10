@@ -887,8 +887,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					g.drawOval(x - 1, y - 1, w + 2, h + 2);
 					String label = p.getLabel();
 					if (label != null) {
-						if (label.equalsIgnoreCase("%temperature"))
-							label = (int) (p.getTemperature()) + "\u00b0C";
+						String partLabel = p.getLabel(label);
+						if (partLabel != null)
+							label = partLabel;
 						g.setColor(Color.white);
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
@@ -917,8 +918,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);
 					String label = p.getLabel();
 					if (label != null) {
-						if (label.equalsIgnoreCase("%temperature"))
-							label = (int) (p.getTemperature()) + "\u00b0C";
+						String partLabel = p.getLabel(label);
+						if (partLabel != null)
+							label = partLabel;
 						g.setColor(Color.white);
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
@@ -993,7 +995,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (pictures == null || pictures.isEmpty())
 			return;
 		for (Picture x : pictures) {
-			x.getImage().paintIcon(this, g, x.getX(), x.getY());
+			x.getImage().paintIcon(this, g, convertPointToPixelX(x.getX()),
+					getHeight() - convertPointToPixelY(x.getY()));
 		}
 	}
 
