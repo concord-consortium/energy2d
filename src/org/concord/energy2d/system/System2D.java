@@ -207,7 +207,11 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	public void saveState(OutputStream os) throws IOException {
-		stop();
+		if (clickStop != null) {
+			EventQueue.invokeLater(clickStop);
+		} else {
+			stop();
+		}
 		if (os == null)
 			return;
 		try {
