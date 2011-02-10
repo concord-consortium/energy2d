@@ -340,11 +340,15 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	public void manipulationOccured(ManipulationEvent e) {
 		Object target = e.getTarget();
 		switch (e.getType()) {
+		case ManipulationEvent.EDITED:
+			saved = false;
+			break;
 		case ManipulationEvent.DELETE:
 			if (target instanceof Part)
 				model.removePart((Part) target);
 			else if (target instanceof Thermometer)
 				model.getThermometers().remove((Thermometer) target);
+			saved = false;
 			break;
 		case ManipulationEvent.RUN:
 			if (clickRun != null) {
@@ -377,16 +381,19 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());
 			model.refreshPowerArray();
+			saved = false;
 			break;
 		case ManipulationEvent.SUN_ANGLE_INCREASE:
 			float a = model.getSunAngle() + (float) Math.PI / 18;
 			model.setSunAngle(Math.min(a, (float) Math.PI));
 			model.refreshPowerArray();
+			saved = false;
 			break;
 		case ManipulationEvent.SUN_ANGLE_DECREASE:
 			a = model.getSunAngle() - (float) Math.PI / 18;
 			model.setSunAngle(Math.max(a, 0));
 			model.refreshPowerArray();
+			saved = false;
 			break;
 		}
 		if (target instanceof Part) {
@@ -396,6 +403,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			model.refreshTemperatureBoundaryArray();
 			if (p.getEmissivity() > 0)
 				model.getPhotons().clear();
+			saved = false;
 		}
 		view.repaint();
 	}
