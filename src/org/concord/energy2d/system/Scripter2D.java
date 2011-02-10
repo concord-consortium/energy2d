@@ -971,6 +971,8 @@ class Scripter2D extends Scripter {
 		String s = str2.toLowerCase().intern();
 		if (s == "name") {
 			text.setName(str3);
+		} else if (s == "text") {
+			text.setString(str3);
 		} else {
 			if (str3.startsWith("#")) {
 				try {

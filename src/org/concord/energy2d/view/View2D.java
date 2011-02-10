@@ -1217,8 +1217,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case KeyEvent.VK_L:
 			notifyManipulationListeners(null, ManipulationEvent.RELOAD);
 			break;
-		case KeyEvent.VK_S:
-			notifyManipulationListeners(null, ManipulationEvent.SUN_SHINE);
+		case KeyEvent.VK_S: // avoid conflict with the save keystroke
+			if (!e.isControlDown() && !e.isMetaDown() && !e.isAltDown())
+				notifyManipulationListeners(null, ManipulationEvent.SUN_SHINE);
 			break;
 		case KeyEvent.VK_Q:
 			notifyManipulationListeners(null, ManipulationEvent.SUN_ANGLE_INCREASE);
