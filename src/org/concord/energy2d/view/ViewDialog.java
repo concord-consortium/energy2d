@@ -32,7 +32,6 @@ import org.concord.energy2d.util.MiscUtil;
  */
 class ViewDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
 	private Window owner;
 
 	ViewDialog(final View2D view, boolean modal) {

@@ -38,7 +38,6 @@ import org.concord.energy2d.util.MiscUtil;
  */
 class MenuBar extends JMenuBar {
 
-	private static final long serialVersionUID = 1L;
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
 	private JFileChooser fileChooser;
@@ -82,8 +81,6 @@ class MenuBar extends JMenuBar {
 		add(menu);
 
 		openAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				box.stop();
 				fileChooser.setAcceptAllFileFilterUsed(false);
@@ -119,8 +116,6 @@ class MenuBar extends JMenuBar {
 		menu.add(mi);
 
 		saveAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				if (box.getCurrentFile() == null) {
 					saveAs(box, frame);
@@ -143,8 +138,6 @@ class MenuBar extends JMenuBar {
 		menu.add(mi);
 
 		saveAsAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				saveAs(box, frame);
 			}
@@ -165,8 +158,6 @@ class MenuBar extends JMenuBar {
 		menu.addSeparator();
 
 		propertyAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				box.view.createDialog(box.model);
 			}
@@ -186,8 +177,6 @@ class MenuBar extends JMenuBar {
 		menu.addSeparator();
 
 		exitAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 			}

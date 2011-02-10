@@ -27,7 +27,6 @@ import javax.swing.text.JTextComponent;
 
 public class TextComponentPopupMenu extends JPopupMenu {
 
-	private static final long serialVersionUID = 1L;
 	protected Map<Object, Action> actions;
 	protected JTextComponent text;
 	protected JMenuItem miCut, miPaste, miCopy, miSelectAll;

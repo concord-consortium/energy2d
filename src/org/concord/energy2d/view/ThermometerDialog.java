@@ -32,7 +32,6 @@ import org.concord.energy2d.model.Thermometer;
  */
 class ThermometerDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
 	private Window owner;
 	private JPanel p1, p2;
 

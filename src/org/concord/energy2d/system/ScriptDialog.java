@@ -30,7 +30,6 @@ import org.concord.energy2d.event.ScriptListener;
 
 class ScriptDialog extends JDialog implements EnterListener, ScriptListener {
 
-	private static final long serialVersionUID = 1L;
 	private ConsoleTextPane console;
 	private System2D box;
 

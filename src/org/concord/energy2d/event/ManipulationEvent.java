@@ -26,7 +26,6 @@ public class ManipulationEvent extends EventObject {
 	public static final byte RELOAD = 14;
 	public static final byte GRID = 15;
 
-	private static final long serialVersionUID = 1L;
 	private Object target;
 	private byte type = -1;
 

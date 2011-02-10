@@ -17,8 +17,6 @@ public class GraphEvent extends EventObject {
 	public final static byte GRAPH_OPENED = 0;
 	public final static byte GRAPH_CLOSED = 1;
 
-	private static final long serialVersionUID = 1L;
-
 	public GraphEvent(Object source) {
 		super(source);
 	}

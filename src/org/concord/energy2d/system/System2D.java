@@ -11,8 +11,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
@@ -58,7 +60,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class System2D extends JApplet implements MwService, VisualizationListener,
 		ManipulationListener {
 
-	private static final long serialVersionUID = 1L;
 	Model2D model;
 	View2D view;
 	private Scripter2D scripter;
@@ -70,10 +71,12 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private File currentFile;
 	private URL currentURL;
 	private String currentModel;
+	private boolean saved = true;
 
 	Runnable clickRun, clickStop, clickReset, clickReload;
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
 	private List<IOListener> ioListeners;
+	private JFrame owner;
 
 	public System2D() {
 
@@ -180,7 +183,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		return view;
 	}
 
-	void loadStateApp(InputStream is) throws IOException {
+	private void loadStateApp(InputStream is) throws IOException {
 		stop();
 		reset();
 		clear();
@@ -219,6 +222,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		} finally {
 			os.close();
 		}
+		saved = true;
 	}
 
 	void loadFile(File file) {
@@ -233,6 +237,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			e.printStackTrace();
 		}
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
+		saved = true;
 	}
 
 	void loadModel(String name) {
@@ -277,6 +282,13 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 	}
 
+	int askSaveOption() {
+		if (saved || owner == null)
+			return JOptionPane.NO_OPTION;
+		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Energy2D",
+				JOptionPane.YES_NO_CANCEL_OPTION);
+	}
+
 	void setCurrentModel(String name) {
 		currentModel = name;
 	}
@@ -303,6 +315,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (scripter == null)
 			scripter = new Scripter2D(this);
 		scripter.executeScript(script);
+		saved = false;
 		return null;
 	}
 
@@ -470,10 +483,26 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	private void notifyIOListeners(IOEvent e) {
+		setFrameTitle();
 		if (ioListeners == null)
 			return;
 		for (IOListener x : ioListeners)
 			x.ioOccured(e);
+	}
+
+	private void setFrameTitle() {
+		if (owner == null)
+			return;
+		String title = "Energy2D V0.2";
+		if (currentFile != null) {
+			owner.setTitle(title + ": " + currentFile);
+		} else if (currentModel != null) {
+			owner.setTitle(title + ": " + currentModel);
+		} else if (currentURL != null) {
+			owner.setTitle(title + ": " + currentURL);
+		} else {
+			owner.setTitle(title);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -487,7 +516,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 				.getImage());
 		MenuBar menuBar = new MenuBar(box, frame);
 		frame.setJMenuBar(menuBar);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
 		ToolBar toolBar = new ToolBar(box);
 		box.addIOListener(toolBar);
@@ -496,25 +525,34 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.setLocation(100, 100);
 		frame.pack();
 		frame.setVisible(true);
-
-		frame.addWindowFocusListener(new WindowFocusListener() {
-			public void windowGainedFocus(WindowEvent e) {
-				String title = "Energy2D V0.2";
-				if (box.currentFile != null) {
-					frame.setTitle(title + ": " + box.currentFile);
-				} else if (box.currentModel != null) {
-					frame.setTitle(title + ": " + box.currentModel);
-				} else if (box.currentURL != null) {
-					frame.setTitle(title + ": " + box.currentURL);
-				} else {
-					frame.setTitle(title);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				switch (box.askSaveOption()) {
+				case JOptionPane.YES_OPTION:
+					Action a = null;
+					if (box.currentFile != null) {
+						a = box.view.getActionMap().get("Save");
+					} else {
+						a = box.view.getActionMap().get("SaveAs");
+					}
+					if (a != null)
+						a.actionPerformed(null);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							System.exit(0);
+						}
+					});
+					break;
+				case JOptionPane.NO_OPTION:
+					System.exit(0);
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					// do nothing
+					break;
 				}
 			}
-
-			public void windowLostFocus(WindowEvent e) {
-			}
 		});
+		box.owner = frame;
 
 	}
-
 }

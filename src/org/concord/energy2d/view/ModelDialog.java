@@ -41,8 +41,6 @@ import org.concord.energy2d.util.MiscUtil;
  */
 class ModelDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-
 	private final static DecimalFormat FORMAT = new DecimalFormat("####.########");
 
 	private JTextField steplengthField;

@@ -22,7 +22,6 @@ import org.concord.energy2d.util.PastableTextPane;
 
 class ConsoleTextPane extends PastableTextPane {
 
-	private static final long serialVersionUID = 1L;
 	private CommandHistory commandHistory = new CommandHistory(20);
 	private ConsoleDocument consoleDoc;
 	private EnterListener enterListener;

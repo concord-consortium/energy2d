@@ -20,8 +20,6 @@ import javax.swing.text.StyledDocument;
 
 public class PastableTextPane extends JTextPane {
 
-	private static final long serialVersionUID = 1L;
-
 	protected TextComponentPopupMenu popupMenu;
 
 	protected MouseAdapter mouseAdapter = new MouseAdapter() {

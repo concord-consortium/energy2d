@@ -23,8 +23,6 @@ import javax.swing.text.StyleConstants;
 
 class ConsoleDocument extends DefaultStyledDocument {
 
-	private static final long serialVersionUID = 1L;
-
 	private ConsoleTextPane consoleTextPane;
 
 	private static SimpleAttributeSet attError;

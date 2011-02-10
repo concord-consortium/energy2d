@@ -96,7 +96,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 }, { 0, 128, 225 },
 			{ 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
 
-	private static final long serialVersionUID = 1L;
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
@@ -221,8 +220,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void createActions() {
 
 		cutAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				cut();
 			}
@@ -235,8 +232,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		getActionMap().put("Cut", cutAction);
 
 		copyAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				copy();
 			}
@@ -249,8 +244,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		getActionMap().put("Copy", copyAction);
 
 		pasteAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
 			public void actionPerformed(ActionEvent e) {
 				paste();
 			}

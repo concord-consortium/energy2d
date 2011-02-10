@@ -38,8 +38,6 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 
 	private System2D box;
 
-	private static final long serialVersionUID = 1L;
-
 	ToolBar(System2D s2d) {
 
 		super(HORIZONTAL);

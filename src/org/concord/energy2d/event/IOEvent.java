@@ -17,8 +17,6 @@ public class IOEvent extends EventObject {
 	public final static byte FILE_INPUT = 0;
 	public final static byte FILE_OUTPUT = 1;
 
-	private static final long serialVersionUID = 1L;
-
 	private byte type = FILE_INPUT;
 
 	public IOEvent(byte type, Object source) {

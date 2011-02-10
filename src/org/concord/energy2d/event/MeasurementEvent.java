@@ -13,8 +13,6 @@ import java.util.EventObject;
  */
 public class MeasurementEvent extends EventObject {
 
-	private static final long serialVersionUID = 1L;
-
 	public MeasurementEvent(Object source) {
 		super(source);
 	}
