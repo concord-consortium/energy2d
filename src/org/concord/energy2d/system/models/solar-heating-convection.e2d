@@ -58,6 +58,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Roof</label>
 </part>
 <part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -69,6 +70,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>333333</color>
+<label>Ground</label>
 </part>
 <part><rectangle x="8.5" y="3.5" width="0.5" height="4.5"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -79,6 +81,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Wall</label>
 </part>
 <part><rectangle x="2.15" y="5.0" width="0.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -89,7 +92,8 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
-<color>ffffff</color>
+<color>ccccff</color>
+<label>Window</label>
 </part>
 <part><rectangle x="2.5" y="3.5" width="6.0" height="0.5"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -100,6 +104,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Ceiling</label>
 </part>
 <part><rectangle x="2.55" y="7.7" width="5.9" height="0.25"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -111,6 +116,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>444444</color>
+<label>Floor</label>
 </part>
 </structure>
 </model>
@@ -123,6 +129,6 @@
 <ruler>true</ruler>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<text string="Press 'Q' or 'W' to change the sun angle" name="Arial" size="14" style="1" color="ffffff" x="0.5" y="9.5"/>
+<text string="Press 'Q' or 'W' to change the sun angle" name="Arial" size="14" style="0" color="ffffff" x="0.5" y="9.5"/>
 </view>
 </state>

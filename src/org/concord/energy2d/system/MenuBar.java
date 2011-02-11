@@ -498,6 +498,22 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		mi = new JMenuItem("Infiltration");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/infiltration.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Wind Effect");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/wind-effect.e2d");
+			}
+		});
+		subMenu.add(mi);
+
 		mi = new JMenuItem("Solar Heating: Gable Roof");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -522,7 +538,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Solar Heating (Convection)");
+		mi = new JMenuItem("Solar Heating: Convection");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/solar-heating-convection.e2d");

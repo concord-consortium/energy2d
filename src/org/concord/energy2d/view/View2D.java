@@ -8,6 +8,7 @@ package org.concord.energy2d.view;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -431,6 +432,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setGraphOn(boolean b) {
+		if (b && model.getThermometers().isEmpty()) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JOptionPane.showMessageDialog(View2D.this,
+							"No graph can be shown because there is no thermometer.");
+				}
+			});
+			return;
+		}
 		showGraph = b;
 	}
 
@@ -731,13 +741,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPhotons(g2);
 		drawTextBoxes(g2);
 		drawPictures(g2);
-		if (showGraph) {
-			if (!model.getThermometers().isEmpty()) {
-				graphRenderer.setDrawFrame(true);
-				synchronized (model.getThermometers()) {
-					for (Thermometer t : model.getThermometers()) {
-						graphRenderer.render(this, g2, t.getData(), selectedManipulable == t);
-					}
+		if (showGraph && !model.getThermometers().isEmpty()) {
+			graphRenderer.setDrawFrame(true);
+			synchronized (model.getThermometers()) {
+				for (Thermometer t : model.getThermometers()) {
+					graphRenderer.render(this, g2, t.getData(), selectedManipulable == t);
 				}
 			}
 		}

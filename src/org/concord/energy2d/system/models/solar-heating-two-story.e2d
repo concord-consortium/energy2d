@@ -50,6 +50,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>333333</color>
+<label>Ground</label>
 </part>
 <part><rectangle x="2.0" y="7.25" width="0.5" height="0.75"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -164,6 +165,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Floor</label>
 </part>
 <part><rectangle x="5.3" y="1.0" width="0.4" height="7.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -174,6 +176,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Wall</label>
 </part>
 </structure>
 </model>
@@ -188,6 +191,6 @@
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
 <text string="Two-story" name="Arial" size="12" style="0" color="ffffff" x="1.0" y="1.0"/>
-<text string="Press 'Q' or 'W' to change the sun angle" name="Arial" size="14" style="1" color="ffffff" x="0.5" y="9.5"/>
+<text string="Press 'Q' or 'W' to change the sun angle" name="Arial" size="14" style="0" color="ffffff" x="0.5" y="9.5"/>
 </view>
 </state>

@@ -29,6 +29,7 @@
 <emissivity>0.0</emissivity>
 <temperature>40.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>%specific_heat</label>
 <filled>false</filled>
 </part>
 <part><rectangle x="0.49999997" y="0.3" width="0.3" height="0.4"/><thermal_conductivity>1.0</thermal_conductivity>
@@ -40,19 +41,19 @@
 <emissivity>0.0</emissivity>
 <temperature>10.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>%specific_heat</label>
 <filled>false</filled>
 </part>
 </structure>
 </model>
 <sensor>
-<thermometer x="0.35" y="0.5"/>
-<thermometer x="0.65" y="0.5"/>
+<thermometer x="0.35" y="0.45000005"/>
+<thermometer x="0.65" y="0.45000005"/>
 </sensor>
 <view>
 <grid>true</grid>
 <rainbow>true</rainbow>
 <rainbow_x>0.083333336</rainbow_x><rainbow_y>0.033333335</rainbow_y><rainbow_w>0.8333333</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>
-<text string="Specific heats (J/kg*C): Left: 1000; Right: 2000." name="Arial" size="12" style="0" color="ffffff" x="0.25" y="0.1"/>
 </view>
 </state>

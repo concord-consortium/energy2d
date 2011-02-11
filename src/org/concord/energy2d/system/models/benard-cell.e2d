@@ -36,6 +36,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Insulator</label>
 </part>
 <part><rectangle x="0.0" y="6.8" width="10.0" height="0.2"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
