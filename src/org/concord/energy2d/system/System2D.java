@@ -554,6 +554,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.setContentPane(box.getContentPane());
 		ToolBar toolBar = new ToolBar(box);
 		box.addIOListener(toolBar);
+		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);

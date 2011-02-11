@@ -439,6 +439,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							"No graph can be shown because there is no thermometer.");
 				}
 			});
+			notifyManipulationListeners(null, ManipulationEvent.GRAPH);
 			return;
 		}
 		showGraph = b;

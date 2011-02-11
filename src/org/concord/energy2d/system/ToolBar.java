@@ -112,6 +112,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.THERMOMETER_MODE);
+				graphButton.setEnabled(true);
 			}
 		});
 		x.addActionListener(new ActionListener() {
@@ -159,7 +160,13 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 	}
 
 	public void manipulationOccured(ManipulationEvent e) {
-		MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
+		switch (e.getType()) {
+		case ManipulationEvent.GRAPH:
+			MiscUtil.setSelectedSilently(graphButton, !box.model.getThermometers().isEmpty());
+			break;
+		default:
+			MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
+		}
 	}
 
 	public void ioOccured(IOEvent e) {
@@ -171,6 +178,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 					selectButton.requestFocusInWindow();
 					MiscUtil.setSelectedSilently(graphButton, box.view.isGraphOn());
 					MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
+					graphButton.setEnabled(!box.model.getThermometers().isEmpty());
 				}
 			});
 			break;
