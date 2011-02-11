@@ -6,6 +6,7 @@
 
 package org.concord.energy2d.system;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -30,6 +31,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
+import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -178,7 +180,29 @@ class MenuBar extends JMenuBar {
 
 		exitAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				switch (box.askSaveOption()) {
+				case JOptionPane.YES_OPTION:
+					Action a = null;
+					if (box.getCurrentFile() != null) {
+						a = box.view.getActionMap().get("Save");
+					} else {
+						a = box.view.getActionMap().get("SaveAs");
+					}
+					if (a != null)
+						a.actionPerformed(null);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							System.exit(0);
+						}
+					});
+					break;
+				case JOptionPane.NO_OPTION:
+					System.exit(0);
+					break;
+				case JOptionPane.CANCEL_OPTION:
+					// do nothing
+					break;
+				}
 			}
 		};
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke
@@ -244,6 +268,7 @@ class MenuBar extends JMenuBar {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setIsothermOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		menu.add(miIsotherm);
@@ -253,6 +278,7 @@ class MenuBar extends JMenuBar {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setVelocityOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		menu.add(miVelocity);
@@ -262,6 +288,7 @@ class MenuBar extends JMenuBar {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setRainbowOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		menu.add(miRainbow);
@@ -271,6 +298,7 @@ class MenuBar extends JMenuBar {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setRulerOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		menu.add(miRuler);
@@ -280,6 +308,7 @@ class MenuBar extends JMenuBar {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setGridOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		menu.add(miGrid);

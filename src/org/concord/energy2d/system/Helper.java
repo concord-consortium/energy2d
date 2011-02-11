@@ -28,7 +28,7 @@ public class Helper {
 		} else {
 			scriptDialog = new ScriptDialog(box);
 			scriptDialog.pack();
-			scriptDialog.setLocationRelativeTo(box);
+			scriptDialog.setLocationRelativeTo(box.view);
 			scriptDialog.setVisible(true);
 		}
 	}

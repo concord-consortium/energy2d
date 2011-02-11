@@ -340,7 +340,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		manipulationListeners.remove(l);
 	}
 
-	void notifyManipulationListeners(Manipulable m, byte type) {
+	public void notifyManipulationListeners(Manipulable m, byte type) {
 		if (manipulationListeners.isEmpty())
 			return;
 		ManipulationEvent e = new ManipulationEvent(this, m, type);
@@ -586,6 +586,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			model.addThermometer(convertPixelToPointX(mouseReleasedPoint.x),
 					convertPixelToPointY(mouseReleasedPoint.y));
 		}
+		notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
 	}
 
@@ -1474,6 +1475,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshTemperatureBoundaryArray();
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
+					notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 					polygon.reset();
 				}
 				break;
@@ -1551,6 +1553,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
+				notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 			rectangle.setRect(-1000, -1000, 0, 0);
 			break;
@@ -1565,6 +1568,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
+				notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
@@ -1573,6 +1577,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case THERMOMETER_MODE:
 			model.addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
+			notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			break;
 		}
 		repaint();

@@ -60,6 +60,8 @@ import org.xml.sax.helpers.DefaultHandler;
 public class System2D extends JApplet implements MwService, VisualizationListener,
 		ManipulationListener {
 
+	private final static String BRAND_NAME = "Energy2D V0.2";
+
 	Model2D model;
 	View2D view;
 	private Scripter2D scripter;
@@ -183,7 +185,19 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		return view;
 	}
 
-	private void loadStateApp(InputStream is) throws IOException {
+	private void loadStateApp(final InputStream is) {
+		askSaveBeforeLoading(new Runnable() {
+			public void run() {
+				try {
+					loadStateApp2(is);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private void loadStateApp2(InputStream is) throws IOException {
 		stop();
 		reset();
 		clear();
@@ -191,6 +205,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	public void loadState(InputStream is) throws IOException {
+		saved = true;
 		stop();
 		if (is == null)
 			return;
@@ -226,10 +241,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	void loadFile(File file) {
-		currentFile = file;
-		currentModel = null;
-		currentURL = null;
-		if (currentFile == null)
+		if (file == null)
 			return;
 		try {
 			loadStateApp(new FileInputStream(file));
@@ -237,31 +249,29 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			e.printStackTrace();
 		}
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
-		saved = true;
+		currentFile = file;
+		currentModel = null;
+		currentURL = null;
 	}
 
 	void loadModel(String name) {
+		if (name == null)
+			return;
+		loadStateApp(System2D.class.getResourceAsStream(name));
+		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 		currentModel = name;
 		currentFile = null;
 		currentURL = null;
-		if (currentModel == null)
-			return;
-		try {
-			loadStateApp(System2D.class.getResourceAsStream(name));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 	}
 
 	void loadURL(URL url) throws IOException {
-		currentURL = url;
-		currentFile = null;
-		currentModel = null;
-		if (currentURL == null)
+		if (url == null)
 			return;
 		loadStateApp(url.openConnection().getInputStream());
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
+		currentURL = url;
+		currentFile = null;
+		currentModel = null;
 	}
 
 	public void reload() {
@@ -283,10 +293,36 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	int askSaveOption() {
-		if (saved || owner == null)
+		if (saved || owner == null || currentModel != null || currentURL != null)
 			return JOptionPane.NO_OPTION;
 		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Energy2D",
 				JOptionPane.YES_NO_CANCEL_OPTION);
+	}
+
+	private void askSaveBeforeLoading(Runnable r) {
+		if (owner == null) { // not an application
+			r.run();
+			return;
+		}
+		switch (askSaveOption()) {
+		case JOptionPane.YES_OPTION:
+			Action a = null;
+			if (currentFile != null) {
+				a = view.getActionMap().get("Save");
+			} else {
+				a = view.getActionMap().get("SaveAs");
+			}
+			if (a != null)
+				a.actionPerformed(null);
+			EventQueue.invokeLater(r);
+			break;
+		case JOptionPane.NO_OPTION:
+			r.run();
+			break;
+		case JOptionPane.CANCEL_OPTION:
+			// do nothing
+			break;
+		}
 	}
 
 	void setCurrentModel(String name) {
@@ -340,7 +376,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	public void manipulationOccured(ManipulationEvent e) {
 		Object target = e.getTarget();
 		switch (e.getType()) {
-		case ManipulationEvent.EDITED:
+		case ManipulationEvent.PROPERTY_CHANGE:
 			saved = false;
 			break;
 		case ManipulationEvent.DELETE:
@@ -501,15 +537,14 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private void setFrameTitle() {
 		if (owner == null)
 			return;
-		String title = "Energy2D V0.2";
 		if (currentFile != null) {
-			owner.setTitle(title + ": " + currentFile);
+			owner.setTitle(BRAND_NAME + ": " + currentFile);
 		} else if (currentModel != null) {
-			owner.setTitle(title + ": " + currentModel);
+			owner.setTitle(BRAND_NAME + ": " + currentModel);
 		} else if (currentURL != null) {
-			owner.setTitle(title + ": " + currentURL);
+			owner.setTitle(BRAND_NAME + ": " + currentURL);
 		} else {
-			owner.setTitle(title);
+			owner.setTitle(BRAND_NAME);
 		}
 	}
 
@@ -531,33 +566,14 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
 		frame.setLocation(100, 100);
+		frame.setTitle(BRAND_NAME);
 		frame.pack();
 		frame.setVisible(true);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				switch (box.askSaveOption()) {
-				case JOptionPane.YES_OPTION:
-					Action a = null;
-					if (box.currentFile != null) {
-						a = box.view.getActionMap().get("Save");
-					} else {
-						a = box.view.getActionMap().get("SaveAs");
-					}
-					if (a != null)
-						a.actionPerformed(null);
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							System.exit(0);
-						}
-					});
-					break;
-				case JOptionPane.NO_OPTION:
-					System.exit(0);
-					break;
-				case JOptionPane.CANCEL_OPTION:
-					// do nothing
-					break;
-				}
+				Action a = box.view.getActionMap().get("Quit");
+				if (a != null)
+					a.actionPerformed(null);
 			}
 		});
 		box.owner = frame;

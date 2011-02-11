@@ -25,7 +25,6 @@ public class ManipulationEvent extends EventObject {
 	public static final byte RESET = 13;
 	public static final byte RELOAD = 14;
 	public static final byte GRID = 15;
-	public static final byte EDITED = 16;
 
 	private Object target;
 	private byte type = -1;

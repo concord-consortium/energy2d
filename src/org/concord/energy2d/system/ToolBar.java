@@ -14,6 +14,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -127,9 +128,15 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		graphButton.setToolTipText("Show or hide graphs");
 		graphButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
+				if (box.model.getThermometers().isEmpty()) {
+					JOptionPane.showMessageDialog(box.view,
+							"No graph can be shown because there is no thermometer.");
+					return;
+				}
 				JToggleButton src = (JToggleButton) e.getSource();
 				box.view.setGraphOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		add(graphButton);
@@ -142,6 +149,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 				JToggleButton src = (JToggleButton) e.getSource();
 				box.view.setGridOn(src.isSelected());
 				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
 		add(gridButton);
@@ -167,8 +175,8 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 				public void run() {
 					selectButton.doClick();
 					selectButton.requestFocusInWindow();
-					graphButton.setSelected(box.view.isGraphOn());
-					gridButton.setSelected(box.view.isGridOn());
+					MiscUtil.setSelectedSilently(graphButton, box.view.isGraphOn());
+					MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
 				}
 			});
 			break;

@@ -28,6 +28,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletHeatBoundary;
 import org.concord.energy2d.model.HeatBoundary;
@@ -196,6 +197,8 @@ class ModelDialog extends JDialog {
 
 				if (!(e.getSource() instanceof JComboBox))
 					ModelDialog.this.dispose();
+
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 
 			}
 		};

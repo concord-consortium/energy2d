@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Thermometer;
 
 /**
@@ -51,6 +52,7 @@ class ThermometerDialog extends JDialog {
 		JButton button = new JButton("Close");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
 			}

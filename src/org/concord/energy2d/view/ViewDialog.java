@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -49,6 +50,7 @@ class ViewDialog extends JDialog {
 		JButton button = new JButton("Close");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
 			}
