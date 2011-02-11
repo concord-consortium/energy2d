@@ -85,6 +85,8 @@ class MenuBar extends JMenuBar {
 		openAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				box.stop();
+				if (!box.askSaveBeforeLoading())
+					return;
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				fileChooser.addChoosableFileFilter(filter);
 				fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);

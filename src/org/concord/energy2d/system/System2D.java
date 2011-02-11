@@ -185,19 +185,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		return view;
 	}
 
-	private void loadStateApp(final InputStream is) {
-		askSaveBeforeLoading(new Runnable() {
-			public void run() {
-				try {
-					loadStateApp2(is);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	private void loadStateApp2(InputStream is) throws IOException {
+	private void loadStateApp(InputStream is) throws IOException {
 		stop();
 		reset();
 		clear();
@@ -257,7 +245,13 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	void loadModel(String name) {
 		if (name == null)
 			return;
-		loadStateApp(System2D.class.getResourceAsStream(name));
+		if (!askSaveBeforeLoading())
+			return;
+		try {
+			loadStateApp(System2D.class.getResourceAsStream(name));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 		currentModel = name;
 		currentFile = null;
@@ -266,6 +260,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	void loadURL(URL url) throws IOException {
 		if (url == null)
+			return;
+		if (!askSaveBeforeLoading())
 			return;
 		loadStateApp(url.openConnection().getInputStream());
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
@@ -299,11 +295,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 				JOptionPane.YES_NO_CANCEL_OPTION);
 	}
 
-	private void askSaveBeforeLoading(Runnable r) {
-		if (owner == null) { // not an application
-			r.run();
-			return;
-		}
+	boolean askSaveBeforeLoading() {
+		if (owner == null) // not an application
+			return true;
 		switch (askSaveOption()) {
 		case JOptionPane.YES_OPTION:
 			Action a = null;
@@ -314,14 +308,11 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			}
 			if (a != null)
 				a.actionPerformed(null);
-			EventQueue.invokeLater(r);
-			break;
+			return true;
 		case JOptionPane.NO_OPTION:
-			r.run();
-			break;
-		case JOptionPane.CANCEL_OPTION:
-			// do nothing
-			break;
+			return true;
+		default:
+			return false;
 		}
 	}
 
