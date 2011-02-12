@@ -71,8 +71,6 @@ class MenuBar extends JMenuBar {
 	private Action saveAction;
 	private Action saveAsAction;
 	private Action exitAction;
-	private Action propertyAction;
-	private Action scriptAction;
 
 	MenuBar(final System2D box, final JFrame frame) {
 
@@ -162,16 +160,9 @@ class MenuBar extends JMenuBar {
 
 		menu.addSeparator();
 
-		propertyAction = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				box.view.createDialog(box.model);
-			}
-		};
-		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
-		box.view.getInputMap().put(ks, "Property");
-		box.view.getActionMap().put("Property", propertyAction);
+		final Action propertyAction = box.view.getActionMap().get("Property");
 		mi = new JMenuItem("Properties...");
-		mi.setAccelerator(ks);
+		mi.setAccelerator((KeyStroke) propertyAction.getValue(Action.ACCELERATOR_KEY));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				propertyAction.actionPerformed(e);
@@ -590,17 +581,9 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Help");
 		add(menu);
 
-		scriptAction = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				Helper.showScriptDialog(box);
-			}
-		};
-		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, true);
-		scriptAction.putValue(Action.ACCELERATOR_KEY, ks);
-		box.view.getInputMap().put(ks, "Script");
-		box.view.getActionMap().put("Script", scriptAction);
+		final Action scriptAction = box.view.getActionMap().get("Script");
 		mi = new JMenuItem("Script Console...");
-		mi.setAccelerator(ks);
+		mi.setAccelerator((KeyStroke) scriptAction.getValue(Action.ACCELERATOR_KEY));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scriptAction.actionPerformed(e);

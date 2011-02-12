@@ -816,8 +816,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		float h = 0.05f * model.getLy();
 		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
-		float dx = s.getIconWidth() * 0.5f;
-		float dy = s.getIconHeight() * 0.5f;
+		float lx = s.getIconWidth();
+		float ly = s.getIconHeight();
 		float temp;
 		String str;
 		g.setFont(smallFont);
@@ -832,8 +832,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
-					x = (int) (rx * getWidth() - dx);
-					y = (int) (ry * getHeight() - dy);
+					x = (int) (rx * getWidth() - lx);
+					y = (int) (ry * getHeight() - ly);
 					s.paintIcon(this, g, x, y);
 					ix = (int) (nx * rx);
 					iy = (int) (ny * ry);

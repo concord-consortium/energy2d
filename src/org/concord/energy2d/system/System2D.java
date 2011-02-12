@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -33,6 +35,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -112,6 +115,34 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
+
+		createActions();
+
+	}
+
+	private void createActions() {
+
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				Helper.showScriptDialog(System2D.this);
+			}
+		};
+		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, true);
+		a.putValue(Action.NAME, "Script");
+		a.putValue(Action.ACCELERATOR_KEY, ks);
+		view.getInputMap().put(ks, "Script");
+		view.getActionMap().put("Script", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				view.createDialog(model);
+			}
+		};
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
+		a.putValue(Action.NAME, "Property");
+		a.putValue(Action.ACCELERATOR_KEY, ks);
+		view.getInputMap().put(ks, "Property");
+		view.getActionMap().put("Property", a);
 
 	}
 
