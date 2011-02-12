@@ -365,6 +365,16 @@ public class Model2D {
 		return parts;
 	}
 
+	public Part getPart(String uid) {
+		if (uid == null)
+			return null;
+		for (Part p : parts) {
+			if (uid.equals(p.getUid()))
+				return p;
+		}
+		return null;
+	}
+
 	public Part getPart(int i) {
 		if (i < 0 || i >= parts.size())
 			return null;

@@ -72,6 +72,7 @@ class MenuBar extends JMenuBar {
 	private Action saveAsAction;
 	private Action exitAction;
 	private Action propertyAction;
+	private Action scriptAction;
 
 	MenuBar(final System2D box, final JFrame frame) {
 
@@ -589,10 +590,20 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Help");
 		add(menu);
 
-		mi = new JMenuItem("Script Console...");
-		mi.addActionListener(new ActionListener() {
+		scriptAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				Helper.showScriptDialog(box);
+			}
+		};
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, true);
+		scriptAction.putValue(Action.ACCELERATOR_KEY, ks);
+		box.view.getInputMap().put(ks, "Script");
+		box.view.getActionMap().put("Script", scriptAction);
+		mi = new JMenuItem("Script Console...");
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scriptAction.actionPerformed(e);
 			}
 		});
 		menu.add(mi);
@@ -605,13 +616,15 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
-		mi = new JMenuItem("About...");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Helper.showAbout(frame);
-			}
-		});
-		menu.add(mi);
+		if (!System.getProperty("os.name").startsWith("Mac")) {
+			mi = new JMenuItem("About...");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Helper.showAbout(frame);
+				}
+			});
+			menu.add(mi);
+		}
 
 	}
 

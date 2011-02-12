@@ -53,6 +53,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.apple.eawt.Application;
+import com.apple.eawt.ApplicationAdapter;
+import com.apple.eawt.ApplicationEvent;
+
 /**
  * @author Charles Xie
  * 
@@ -90,7 +94,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		model = new Model2D();
 		model.addVisualizationListener(this);
-		view = new View2D(this);
+		view = new View2D();
 		view.addManipulationListener(this);
 		view.setModel(model);
 		view.setPreferredSize(new Dimension(400, 400));
@@ -541,6 +545,11 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public static void main(String[] args) {
 
+		if (System.getProperty("os.name").startsWith("Mac")) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND_NAME);
+		}
+
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));
 		box.view.setFrankOn(false);
@@ -570,5 +579,32 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 		box.owner = frame;
 
+		if (System.getProperty("os.name").startsWith("Mac")) {
+			Application app = new Application();
+			app.setEnabledPreferencesMenu(true);
+			app.addApplicationListener(new ApplicationAdapter() {
+				public void handleQuit(ApplicationEvent e) {
+					Action a = box.view.getActionMap().get("Quit");
+					if (a != null)
+						a.actionPerformed(null);
+					// e.setHandled(true); //DO NOT CALL THIS!!!
+				}
+
+				public void handlePreferences(ApplicationEvent e) {
+					e.setHandled(true);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+						}
+					});
+				}
+
+				public void handleAbout(ApplicationEvent e) {
+					Helper.showAbout(frame);
+					e.setHandled(true);
+				}
+			});
+		}
+
 	}
+
 }

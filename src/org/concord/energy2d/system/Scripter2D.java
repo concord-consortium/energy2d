@@ -46,12 +46,13 @@ class Scripter2D extends Scripter {
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE
-			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+			+ "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}"
 			+ REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE
 			+ "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE
 			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern NONNEGATIVE_DECIMAL = compile(REGEX_NONNEGATIVE_DECIMAL);
 
 	private System2D s2d;
 	private List<ScriptListener> listenerList;
@@ -93,6 +94,10 @@ class Scripter2D extends Scripter {
 	private void showException(String command, Exception e) {
 		e.printStackTrace();
 		out(ScriptEvent.FAILED, "Error in \'" + command + "\':" + e.getMessage());
+	}
+
+	private void showError(String command, String message) {
+		out(ScriptEvent.FAILED, "Error in \'" + command + "\':" + message);
 	}
 
 	private void out(byte status, String description) {
@@ -816,23 +821,33 @@ class Scripter2D extends Scripter {
 	}
 
 	private void setPartField(String str1, String str2, String str3) {
+		float z = 0;
+		Part part = null;
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
-		float z = 0;
-		try {
-			z = Float.parseFloat(str1.substring(lb + 1, rb));
-		} catch (Exception e) {
-			showException(str1, e);
+		String s = str1.substring(lb + 1, rb).trim();
+		Matcher matcher = NONNEGATIVE_DECIMAL.matcher(s);
+		if (matcher.find()) {
+			try {
+				z = Float.parseFloat(s);
+			} catch (Exception e) {
+				showException(str1, e);
+				return;
+			}
+			int i = (int) Math.round(z);
+			if (i < 0 || i >= s2d.model.getPartCount()) {
+				showError(str1, "Array index out of bound");
+				return;
+			}
+			part = s2d.model.getPart(i);
+		} else {
+			part = s2d.model.getPart(s);
+		}
+		if (part == null) {
+			showError(str1, "Part cannot be found");
 			return;
 		}
-		int i = (int) Math.round(z);
-		if (i < 0 || i >= s2d.model.getPartCount()) {
-			return;
-		}
-		Part part = s2d.model.getPart(i);
-		if (part == null)
-			return;
-		String s = str2.toLowerCase().intern();
+		s = str2.toLowerCase().intern();
 		if (str3.startsWith("#")) {
 			try {
 				z = Integer.parseInt(str3.substring(1), 16);

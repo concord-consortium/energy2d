@@ -395,9 +395,11 @@ class PartDialog extends JDialog {
 		miscBox.add(p);
 		p.add(new JLabel("Unique ID:"));
 		uidField = new JTextField(part.getUid(), 20);
+		uidField.addActionListener(okListener);
 		p.add(uidField);
 		p.add(new JLabel("Label:"));
 		labelField = new JTextField(part.getLabel(), 20);
+		labelField.addActionListener(okListener);
 		p.add(labelField);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));

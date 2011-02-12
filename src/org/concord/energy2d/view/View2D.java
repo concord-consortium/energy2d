@@ -67,7 +67,6 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.system.Helper;
-import org.concord.energy2d.system.System2D;
 import org.concord.energy2d.util.ContourMap;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -162,11 +161,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Action cutAction;
 	private Action pasteAction;
 
-	private System2D box;
-
-	public View2D(System2D box) {
+	public View2D() {
 		super();
-		this.box = box;
 		for (int i = 0; i < handle.length; i++)
 			handle[i] = new Rectangle(0, 0, 6, 6);
 		addKeyListener(new KeyAdapter() {
@@ -637,7 +633,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mi = new JMenuItem("Script Console...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Helper.showScriptDialog(box);
+				Action a = getActionMap().get("Script");
+				if (a != null)
+					a.actionPerformed(e);
 			}
 		});
 		subMenu.add(mi);
