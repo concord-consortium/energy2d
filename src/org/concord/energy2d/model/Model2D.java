@@ -368,11 +368,25 @@ public class Model2D {
 	public Part getPart(String uid) {
 		if (uid == null)
 			return null;
-		for (Part p : parts) {
-			if (uid.equals(p.getUid()))
-				return p;
+		synchronized (parts) {
+			for (Part p : parts) {
+				if (uid.equals(p.getUid()))
+					return p;
+			}
 		}
 		return null;
+	}
+
+	public boolean isUidUsed(String uid) {
+		if (uid == null)
+			throw new IllegalArgumentException("UID cannot be null.");
+		synchronized (parts) {
+			for (Part p : parts) {
+				if (uid.equals(p.getUid()))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	public Part getPart(int i) {

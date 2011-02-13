@@ -116,6 +116,14 @@ class PartDialog extends JDialog {
 					if (Float.isNaN(height))
 						return;
 				}
+				String uid = uidField.getText();
+				if (uid != null && !uid.equals(part.getUid())) {
+					if (view.model.isUidUsed(uid)) {
+						JOptionPane.showMessageDialog(owner, "UID: " + uid + " has been taken.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
 
 				if (notHeatSourceRadioButton.isSelected()
 						|| constantTemperatureRadioButton.isSelected()) {
@@ -152,7 +160,7 @@ class PartDialog extends JDialog {
 				part.setFilled(!borderOnlyCheckBox.isSelected());
 				part.setColor(coloredLabel.getBackground());
 				part.setLabel(labelField.getText());
-				part.setUid(uidField.getText());
+				part.setUid(uid);
 
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
