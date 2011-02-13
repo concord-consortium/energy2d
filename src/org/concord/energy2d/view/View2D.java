@@ -1080,7 +1080,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private void setSelectedManipulable(Manipulable m) {
+	public void setSelectedManipulable(Manipulable m) {
 		if (selectedManipulable != null)
 			selectedManipulable.setSelected(false);
 		selectedManipulable = m;
@@ -1095,6 +1095,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (!b)
 				HandleSetter.setRects(this, selectedManipulable, handle);
 		}
+	}
+
+	public Manipulable getSelectedManipulable() {
+		return selectedManipulable;
 	}
 
 	private void translateManipulableBy(Manipulable m, float dx, float dy) {

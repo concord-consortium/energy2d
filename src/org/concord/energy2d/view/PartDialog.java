@@ -117,11 +117,15 @@ class PartDialog extends JDialog {
 						return;
 				}
 				String uid = uidField.getText();
-				if (uid != null && !uid.equals(part.getUid())) {
-					if (view.model.isUidUsed(uid)) {
-						JOptionPane.showMessageDialog(owner, "UID: " + uid + " has been taken.",
-								"Error", JOptionPane.ERROR_MESSAGE);
-						return;
+				if (uid != null) {
+					uid = uid.trim();
+					if (!uid.equals("") && !uid.equals(part.getUid())) {
+						if (view.model.isUidUsed(uid)) {
+							JOptionPane.showMessageDialog(owner,
+									"UID: " + uid + " has been taken.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 					}
 				}
 
@@ -163,6 +167,7 @@ class PartDialog extends JDialog {
 				part.setUid(uid);
 
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
+				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
 
 				PartDialog.this.dispose();
