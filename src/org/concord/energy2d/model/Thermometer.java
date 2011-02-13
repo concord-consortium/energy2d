@@ -30,7 +30,7 @@ public class Thermometer extends Manipulable {
 		// should have used Point2D but it is not a Shape.
 		data = Collections.synchronizedList(new ArrayList<TimedData>());
 		listeners = new ArrayList<MeasurementListener>();
-		setLocation(x, y);
+		setCenter(x, y);
 	}
 
 	public Thermometer duplicate(float x, float y) {
@@ -53,17 +53,19 @@ public class Thermometer extends Manipulable {
 		return thermostatTemperature;
 	}
 
-	public void setLocation(float x, float y) {
+	private void setCenter(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.x = x - 0.5f * r.width;
 		r.y = y - 0.5f * r.height;
 	}
 
+	/** returns the x coordinate of the center */
 	public float getX() {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		return r.x + 0.5f * r.width;
 	}
 
+	/** returns the y coordinate of the center */
 	public float getY() {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		return r.y + 0.5f * r.height;

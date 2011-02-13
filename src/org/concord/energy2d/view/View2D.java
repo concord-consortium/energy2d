@@ -832,8 +832,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
-					x = (int) (rx * getWidth() - lx);
-					y = (int) (ry * getHeight() - ly);
+					x = (int) (rx * getWidth() - lx * 0.5);
+					y = (int) (ry * getHeight() - ly * 0.5);
 					s.paintIcon(this, g, x, y);
 					ix = (int) (nx * rx);
 					iy = (int) (ny * ry);
@@ -1059,7 +1059,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			// always prefer to select a thermometer
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					if (t.getShape().contains(rx, ry)) {
+					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
 					}
@@ -1483,7 +1483,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
 					notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-							ManipulationEvent.PART_ADDED);
+							ManipulationEvent.OBJECT_ADDED);
 					polygon.reset();
 				}
 				break;
@@ -1562,7 +1562,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-						ManipulationEvent.PART_ADDED);
+						ManipulationEvent.OBJECT_ADDED);
 			}
 			rectangle.setRect(-1000, -1000, 0, 0);
 			break;
@@ -1578,7 +1578,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-						ManipulationEvent.PART_ADDED);
+						ManipulationEvent.OBJECT_ADDED);
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
@@ -1587,7 +1587,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case THERMOMETER_MODE:
 			model.addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
-			notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			notifyManipulationListeners(model.getThermometers().get(
+					model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
 			break;
 		}
 		repaint();
@@ -1757,8 +1758,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					x[i] = convertPointToPixelX(point.x);
 					y[i] = convertPointToPixelY(point.y);
 				}
-				// if (anchor)
-				// setAnchorPointForRectangularShape(selectedSpot, a, b, c, d);
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
 			}
 		} else if (selectedManipulable instanceof Thermometer) {

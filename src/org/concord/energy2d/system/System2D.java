@@ -419,7 +419,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		case ManipulationEvent.PROPERTY_CHANGE:
 			saved = false;
 			break;
-		case ManipulationEvent.PART_ADDED:
+		case ManipulationEvent.OBJECT_ADDED:
 			saved = false;
 			break;
 		case ManipulationEvent.DELETE:
