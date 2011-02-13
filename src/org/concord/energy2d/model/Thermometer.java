@@ -56,7 +56,7 @@ public class Thermometer extends Manipulable {
 		return thermostatTemperature;
 	}
 
-	void setCenter(float x, float y) {
+	public void setCenter(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.x = x - 0.5f * r.width;
 		r.y = y - 0.5f * r.height;

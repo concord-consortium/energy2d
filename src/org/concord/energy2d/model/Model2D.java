@@ -329,15 +329,12 @@ public class Model2D {
 		return backgroundDensity;
 	}
 
-	public void addThermometer(float x, float y) {
-		Thermometer t = new Thermometer(x, y);
-		float w = Thermometer.RELATIVE_WIDTH * getLx();
-		float h = Thermometer.RELATIVE_HEIGHT * getLy();
-		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
-		r.width = w;
-		r.height = h;
-		t.setCenter(x, y);
+	public void addThermometer(Thermometer t) {
 		thermometers.add(t);
+	}
+
+	public void addThermometer(float x, float y) {
+		thermometers.add(new Thermometer(x, y));
 	}
 
 	public List<Thermometer> getThermometers() {

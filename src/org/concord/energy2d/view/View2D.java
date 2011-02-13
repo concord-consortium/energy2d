@@ -590,7 +590,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			model.refreshMaterialPropertyArrays();
 			model.setInitialTemperature();
 		} else if (copiedManipulable instanceof Thermometer) {
-			model.addThermometer(convertPixelToPointX(mouseReleasedPoint.x),
+			addThermometer(convertPixelToPointX(mouseReleasedPoint.x),
 					convertPixelToPointY(mouseReleasedPoint.y));
 		}
 		notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
@@ -1586,7 +1586,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			mouseReleasedPoint.setLocation(x, y);
 			break;
 		case THERMOMETER_MODE:
-			model.addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
+			addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
 			notifyManipulationListeners(model.getThermometers().get(
 					model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
 			break;
@@ -1595,6 +1595,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		e.consume();
 		movingShape = null;
 		mouseBeingDragged = false;
+	}
+
+	private void addThermometer(float x, float y) {
+		Thermometer t = new Thermometer(x, y);
+		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+		r.width = Thermometer.RELATIVE_WIDTH * model.getLx();
+		r.height = Thermometer.RELATIVE_HEIGHT * model.getLy();
+		t.setCenter(x, y);
+		model.addThermometer(t);
 	}
 
 	private void processMouseMoved(MouseEvent e) {
