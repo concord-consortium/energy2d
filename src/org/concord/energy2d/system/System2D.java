@@ -264,6 +264,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	void loadFile(File file) {
+		setReloadButtonEnabled(true);
 		if (file == null)
 			return;
 		try {
@@ -278,6 +279,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	void loadModel(String name) {
+		setReloadButtonEnabled(true);
 		if (name == null)
 			return;
 		if (!askSaveBeforeLoading())
@@ -294,6 +296,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	void loadURL(URL url) throws IOException {
+		setReloadButtonEnabled(true);
 		if (url == null)
 			return;
 		if (!askSaveBeforeLoading())
@@ -320,7 +323,18 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			return;
 		}
+	}
+
+	private void setReloadButtonEnabled(final boolean b) {
+		if (buttonReload == null)
+			return;
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				buttonReload.setEnabled(b);
+			}
+		});
 	}
 
 	int askSaveOption() {
@@ -403,6 +417,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		Object target = e.getTarget();
 		switch (e.getType()) {
 		case ManipulationEvent.PROPERTY_CHANGE:
+			saved = false;
+			break;
+		case ManipulationEvent.PART_ADDED:
 			saved = false;
 			break;
 		case ManipulationEvent.DELETE:
@@ -507,6 +524,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		spacer.setPreferredSize(new Dimension(20, 10));
 		p.add(spacer);
 		buttonReload = new JButton("Reload");
+		buttonReload.setEnabled(false);
 		buttonReload.setToolTipText("Reload the initial configurations");
 		buttonReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

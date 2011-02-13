@@ -164,6 +164,9 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		case ManipulationEvent.GRAPH:
 			MiscUtil.setSelectedSilently(graphButton, !box.model.getThermometers().isEmpty());
 			break;
+		case ManipulationEvent.PART_ADDED:
+			selectButton.doClick();
+			break;
 		default:
 			MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
 		}
