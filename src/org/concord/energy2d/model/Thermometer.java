@@ -25,6 +25,9 @@ public class Thermometer extends Manipulable {
 	private boolean thermostat;
 	private float thermostatTemperature = 20;
 
+	public final static float RELATIVE_WIDTH = 0.025f;
+	public final static float RELATIVE_HEIGHT = 0.05f;
+
 	public Thermometer(float x, float y) {
 		super(new Rectangle2D.Float());
 		// should have used Point2D but it is not a Shape.
@@ -53,7 +56,7 @@ public class Thermometer extends Manipulable {
 		return thermostatTemperature;
 	}
 
-	private void setCenter(float x, float y) {
+	void setCenter(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.x = x - 0.5f * r.width;
 		r.y = y - 0.5f * r.height;

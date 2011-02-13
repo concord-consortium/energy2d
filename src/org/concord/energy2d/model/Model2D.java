@@ -330,7 +330,14 @@ public class Model2D {
 	}
 
 	public void addThermometer(float x, float y) {
-		thermometers.add(new Thermometer(x, y));
+		Thermometer t = new Thermometer(x, y);
+		float w = Thermometer.RELATIVE_WIDTH * getLx();
+		float h = Thermometer.RELATIVE_HEIGHT * getLy();
+		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+		r.width = w;
+		r.height = h;
+		t.setCenter(x, y);
+		thermometers.add(t);
 	}
 
 	public List<Thermometer> getThermometers() {

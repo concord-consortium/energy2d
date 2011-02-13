@@ -812,8 +812,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		g.setStroke(thinStroke);
 		Symbol s = Symbol.get(Symbol.THERMOMETER);
-		float w = 0.025f * model.getLx();
-		float h = 0.05f * model.getLy();
+		float w = Thermometer.RELATIVE_WIDTH * model.getLx();
+		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
 		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float lx = s.getIconWidth();
