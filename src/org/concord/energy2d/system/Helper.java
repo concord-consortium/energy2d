@@ -53,6 +53,7 @@ public class Helper {
 		s += "<h4>Credit:</h4>This program is brought to you by Dr. Charles Xie (qxie@concord.org).<br>";
 		s += "Funding of this project is provided by the National Science Foundation<br>";
 		s += "under grant #0918449 to the Concord Consortium.";
+		s += "<h4>Principal Investigator:</h4>Charles Xie, Ph.D.";
 		s += "<h4>License:</h4>GNU Lesser General Public License V3.0";
 		s += "</html>";
 		JOptionPane.showMessageDialog(frame, new JLabel(s));

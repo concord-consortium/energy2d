@@ -431,12 +431,20 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("Natural Convection");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/natural-convection.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Comparing Natural Convection and Conduction");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/compare-convection-conduction.e2d");
 			}
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Forced Convection");
+		mi = new JMenuItem("Comparing Forced Convection and Conduction");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/forced-convection.e2d");
@@ -475,6 +483,14 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/laminar-turbulent.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Von Kármán Vortex Street");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/vortex-street.e2d");
 			}
 		});
 		subMenu.add(mi);

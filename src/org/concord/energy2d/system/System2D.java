@@ -276,6 +276,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		currentFile = file;
 		currentModel = null;
 		currentURL = null;
+		setFrameTitle();
 	}
 
 	void loadModel(String name) {
@@ -293,6 +294,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		currentModel = name;
 		currentFile = null;
 		currentURL = null;
+		setFrameTitle();
 	}
 
 	void loadURL(URL url) throws IOException {
@@ -306,6 +308,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		currentURL = url;
 		currentFile = null;
 		currentModel = null;
+		setFrameTitle();
 	}
 
 	public void reload() {
