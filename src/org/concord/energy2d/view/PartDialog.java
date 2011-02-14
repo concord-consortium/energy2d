@@ -54,6 +54,7 @@ class PartDialog extends JDialog {
 	private JTextField absorptionField;
 	private JTextField reflectionField;
 	private JTextField transmissionField;
+	private JTextField emissionField;
 	private JTextField xField, yField, wField, hField;
 	private JTextField uidField;
 	private JTextField labelField;
@@ -82,6 +83,9 @@ class PartDialog extends JDialog {
 					return;
 				float transmission = parse(transmissionField.getText());
 				if (Float.isNaN(transmission))
+					return;
+				float emission = parse(emissionField.getText());
+				if (Float.isNaN(emission))
 					return;
 				float conductivity = parse(thermalConductivityField.getText());
 				if (Float.isNaN(conductivity))
@@ -159,6 +163,7 @@ class PartDialog extends JDialog {
 				part.setAbsorption(absorption);
 				part.setReflection(reflection);
 				part.setTransmission(transmission);
+				part.setEmissivity(emission);
 				part.setDraggable(draggableCheckBox.isSelected());
 				part.setVisible(visibleCheckBox.isSelected());
 				part.setFilled(!borderOnlyCheckBox.isSelected());
@@ -394,8 +399,12 @@ class PartDialog extends JDialog {
 		transmissionField = new JTextField(FORMAT.format(part.getTransmission()), 16);
 		transmissionField.addActionListener(okListener);
 		p.add(transmissionField);
-		p.add(new JLabel());
-		p.add(new JLabel());
+
+		label = new JLabel("Emission");
+		p.add(label);
+		emissionField = new JTextField(FORMAT.format(part.getEmissivity()), 16);
+		emissionField.addActionListener(okListener);
+		p.add(emissionField);
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);

@@ -76,7 +76,7 @@ public class Part extends Manipulable {
 	private float unitSurfaceArea = 100;
 
 	private static int polygonize = 50;
-	private static float radiatorSpacing = .25f;
+	private static float radiatorSpacing = .5f;
 	private static float MINIMUM_RADIATING_TEMPERATUE = 20;
 	private final static float SIN30 = (float) Math.sin(Math.PI / 6);
 	private final static float COS30 = (float) Math.cos(Math.PI / 6);
@@ -326,7 +326,8 @@ public class Part extends Manipulable {
 				p.setVx(vx);
 				p.setVy(vy);
 				model.addPhoton(p);
-				model.setTemperatureAt(x, y, d - p.getEnergy() / getSpecificHeat());
+				if (!constantTemperature)
+					model.setTemperatureAt(x, y, d - p.getEnergy() / getSpecificHeat());
 			}
 		} else {
 			float[] vxi = new float[4], vyi = new float[4];
@@ -357,7 +358,8 @@ public class Part extends Manipulable {
 						p.setVy(vyi[k]);
 						model.addPhoton(p);
 					}
-					model.changeAverageTemperatureAt(x, y, -ir * nray / getSpecificHeat());
+					if (!constantTemperature)
+						model.changeAverageTemperatureAt(x, y, -ir * nray / getSpecificHeat());
 				}
 			}
 		}
