@@ -427,7 +427,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		subMenu = new JMenu("Heat Conduction");
+		subMenu = new JMenu("Conduction");
 		menu.add(subMenu);
 
 		mi = new JMenuItem("Comparing Thermal Conductivities");
@@ -478,7 +478,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		subMenu = new JMenu("Heat Convection");
+		subMenu = new JMenu("Convection");
 		menu.add(subMenu);
 
 		mi = new JMenuItem("Natural Convection");
@@ -505,7 +505,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		subMenu = new JMenu("Heat Radiation");
+		subMenu = new JMenu("Radiation");
 		menu.add(subMenu);
 
 		mi = new JMenuItem("Radiation Heat and Temperature");
@@ -559,7 +559,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		subMenu = new JMenu("Building Energy Flow");
+		subMenu = new JMenu("Building Energy Analysis");
 		menu.add(subMenu);
 
 		mi = new JMenuItem("Internal Heating");
