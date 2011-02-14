@@ -505,6 +505,17 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		subMenu = new JMenu("Heat Radiation");
+		menu.add(subMenu);
+
+		mi = new JMenuItem("Radiation Heat and Temperature");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/temperature-radiation.e2d");
+			}
+		});
+		subMenu.add(mi);
+
 		subMenu = new JMenu("Fluid Dynamics");
 		menu.add(subMenu);
 
