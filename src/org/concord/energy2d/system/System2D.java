@@ -380,6 +380,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	void setCurrentFile(File file) {
 		currentFile = file;
+		setFrameTitle();
 	}
 
 	File getCurrentFile() {

@@ -743,10 +743,10 @@ class MenuBar extends JMenuBar {
 				box.setCurrentFile(file);
 				try {
 					box.saveState(new FileOutputStream(file));
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 			fileChooser.rememberFile(file.getPath());
