@@ -16,16 +16,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -72,15 +76,54 @@ class MenuBar extends JMenuBar {
 	private Action saveAction;
 	private Action saveAsAction;
 	private Action exitAction;
+	private int fileMenuItemCount;
+	private List<JComponent> recentFileMenuItems;
 
 	MenuBar(final System2D box, final JFrame frame) {
 
 		fileChooser = new FileChooser();
+		recentFileMenuItems = new ArrayList<JComponent>();
 
 		// file menu
 
-		JMenu menu = new JMenu("File");
-		add(menu);
+		final JMenu fileMenu = new JMenu("File");
+		fileMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				if (!recentFileMenuItems.isEmpty()) {
+					for (JComponent x : recentFileMenuItems)
+						fileMenu.remove(x);
+				}
+				String[] recentFiles = getRecentFiles();
+				if (recentFiles != null) {
+					int n = recentFiles.length;
+					if (n > 0) {
+						for (int i = 0; i < n; i++) {
+							JMenuItem x = new JMenuItem((i + 1) + " "
+									+ MiscUtil.getFileName(recentFiles[i]));
+							final File rf = new File(recentFiles[i]);
+							x.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									box.loadFile(rf);
+									fileChooser.rememberFile(rf.getPath());
+								}
+							});
+							fileMenu.insert(x, fileMenuItemCount + i);
+							recentFileMenuItems.add(x);
+						}
+						JSeparator s = new JSeparator();
+						fileMenu.add(s, fileMenuItemCount + n);
+						recentFileMenuItems.add(s);
+					}
+				}
+			}
+		});
+		add(fileMenu);
 
 		openAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -102,9 +145,9 @@ class MenuBar extends JMenuBar {
 								"File " + file + " was not found.", "File not found",
 								JOptionPane.ERROR_MESSAGE);
 					}
+					fileChooser.rememberFile(file.getPath());
 				}
 				fileChooser.resetChoosableFileFilters();
-				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 			}
 		};
 		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK)
@@ -118,7 +161,8 @@ class MenuBar extends JMenuBar {
 				openAction.actionPerformed(e);
 			}
 		});
-		menu.add(mi);
+		fileMenu.add(mi);
+		fileMenuItemCount++;
 
 		saveAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -140,7 +184,8 @@ class MenuBar extends JMenuBar {
 				saveAction.actionPerformed(e);
 			}
 		});
-		menu.add(mi);
+		fileMenu.add(mi);
+		fileMenuItemCount++;
 
 		saveAsAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -158,9 +203,11 @@ class MenuBar extends JMenuBar {
 				saveAsAction.actionPerformed(e);
 			}
 		});
-		menu.add(mi);
+		fileMenu.add(mi);
+		fileMenuItemCount++;
 
-		menu.addSeparator();
+		fileMenu.addSeparator();
+		fileMenuItemCount++;
 
 		final Action propertyAction = box.view.getActionMap().get("Property");
 		mi = new JMenuItem("Properties...");
@@ -170,9 +217,11 @@ class MenuBar extends JMenuBar {
 				propertyAction.actionPerformed(e);
 			}
 		});
-		menu.add(mi);
+		fileMenu.add(mi);
+		fileMenuItemCount++;
 
-		menu.addSeparator();
+		fileMenu.addSeparator();
+		fileMenuItemCount++;
 
 		exitAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -214,11 +263,11 @@ class MenuBar extends JMenuBar {
 				exitAction.actionPerformed(e);
 			}
 		});
-		menu.add(mi);
+		fileMenu.add(mi);
 
 		// edit menu
 
-		menu = new JMenu("Edit");
+		JMenu menu = new JMenu("Edit");
 		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent e) {
 			}
@@ -632,12 +681,22 @@ class MenuBar extends JMenuBar {
 	}
 
 	void setLatestPath(String latestPath) {
-		if (latestPath != null)
+		if (latestPath != null) {
 			fileChooser.setCurrentDirectory(new File(latestPath));
+		}
 	}
 
 	String getLatestPath() {
-		return fileChooser.getLastVisitedPath();
+		return fileChooser.getLatestPath();
+	}
+
+	void addRecentFile(String path) {
+		if (path != null)
+			fileChooser.addRecentFile(path);
+	}
+
+	String[] getRecentFiles() {
+		return fileChooser.getRecentFiles();
 	}
 
 	private void save(System2D box) {
@@ -679,7 +738,7 @@ class MenuBar extends JMenuBar {
 					e1.printStackTrace();
 				}
 			}
-			fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
+			fileChooser.rememberFile(file.getPath());
 		}
 	}
 

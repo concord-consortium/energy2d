@@ -600,7 +600,15 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	static void savePreferences(System2D box) {
 		if (preferences == null || box.owner == null)
 			return;
-		preferences.put("Latest Path", ((MenuBar) box.owner.getJMenuBar()).getLatestPath());
+		MenuBar menuBar = (MenuBar) box.owner.getJMenuBar();
+		preferences.put("Latest Path", menuBar.getLatestPath());
+		String[] recentFiles = menuBar.getRecentFiles();
+		if (recentFiles != null) {
+			int n = recentFiles.length;
+			if (n > 0)
+				for (int i = 0; i < n; i++)
+					preferences.put("Recent File " + i, recentFiles[n - i - 1]);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -642,9 +650,11 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 		box.owner = frame;
 
-		String latestPath = preferences.get("Latest Path", null);
-		if (latestPath != null)
-			menuBar.setLatestPath(latestPath);
+		menuBar.setLatestPath(preferences.get("Latest Path", null));
+		menuBar.addRecentFile(preferences.get("Recent File 0", null));
+		menuBar.addRecentFile(preferences.get("Recent File 1", null));
+		menuBar.addRecentFile(preferences.get("Recent File 2", null));
+		menuBar.addRecentFile(preferences.get("Recent File 3", null));
 
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			Application app = new Application();
