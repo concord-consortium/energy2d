@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -86,6 +87,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
 	private List<IOListener> ioListeners;
 	private JFrame owner;
+	private static Preferences preferences;
 
 	public System2D() {
 
@@ -595,12 +597,21 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 	}
 
+	static void savePreferences(System2D box) {
+		if (preferences == null || box.owner == null)
+			return;
+		preferences.put("Latest Path", ((MenuBar) box.owner.getJMenuBar()).getLatestPath());
+	}
+
 	public static void main(String[] args) {
 
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND_NAME);
 		}
+
+		if (preferences == null)
+			preferences = Preferences.userNodeForPackage(System2D.class);
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));
@@ -630,6 +641,10 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			}
 		});
 		box.owner = frame;
+
+		String latestPath = preferences.get("Latest Path", null);
+		if (latestPath != null)
+			menuBar.setLatestPath(latestPath);
 
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			Application app = new Application();

@@ -32,6 +32,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.util.FileChooser;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -42,7 +43,7 @@ class MenuBar extends JMenuBar {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	private JFileChooser fileChooser;
+	private FileChooser fileChooser;
 	private FileFilter filter = new FileFilter() {
 
 		public boolean accept(File file) {
@@ -74,7 +75,7 @@ class MenuBar extends JMenuBar {
 
 	MenuBar(final System2D box, final JFrame frame) {
 
-		fileChooser = new JFileChooser();
+		fileChooser = new FileChooser();
 
 		// file menu
 
@@ -103,6 +104,7 @@ class MenuBar extends JMenuBar {
 					}
 				}
 				fileChooser.resetChoosableFileFilters();
+				fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 			}
 		};
 		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK)
@@ -186,11 +188,13 @@ class MenuBar extends JMenuBar {
 						a.actionPerformed(null);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
+							System2D.savePreferences(box);
 							System.exit(0);
 						}
 					});
 					break;
 				case JOptionPane.NO_OPTION:
+					System2D.savePreferences(box);
 					System.exit(0);
 					break;
 				case JOptionPane.CANCEL_OPTION:
@@ -627,6 +631,15 @@ class MenuBar extends JMenuBar {
 
 	}
 
+	void setLatestPath(String latestPath) {
+		if (latestPath != null)
+			fileChooser.setCurrentDirectory(new File(latestPath));
+	}
+
+	String getLatestPath() {
+		return fileChooser.getLastVisitedPath();
+	}
+
 	private void save(System2D box) {
 		try {
 			box.saveState(new FileOutputStream(box.getCurrentFile()));
@@ -666,6 +679,7 @@ class MenuBar extends JMenuBar {
 					e1.printStackTrace();
 				}
 			}
+			fileChooser.rememberPath(fileChooser.getCurrentDirectory().toString());
 		}
 	}
 
