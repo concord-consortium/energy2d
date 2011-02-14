@@ -117,8 +117,8 @@ class RaySolver2D {
 									break;
 							} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) {
 								if (part.absorb(p)) {
-									i = Math.min(nx, (int) (p.getX() * idx));
-									j = Math.min(ny, (int) (p.getY() * idy));
+									i = Math.min(nx, Math.round(p.getX() * idx));
+									j = Math.min(ny, Math.round(p.getY() * idy));
 									q[i][j] = p.getEnergy() * factor;
 									remove = true;
 									break;
@@ -163,8 +163,7 @@ class RaySolver2D {
 		return false;
 	}
 
-	private void shootAtAngle(float dx, float dy, List<Photon> photons,
-			List<Part> parts) {
+	private void shootAtAngle(float dx, float dy, List<Photon> photons, List<Part> parts) {
 		int m = (int) (lx / dx);
 		int n = (int) (ly / dy);
 		float x, y;
