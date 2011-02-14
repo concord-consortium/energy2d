@@ -835,8 +835,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					x = (int) (rx * getWidth() - lx * 0.5);
 					y = (int) (ry * getHeight() - ly * 0.5);
 					s.paintIcon(this, g, x, y);
-					ix = (int) (nx * rx);
-					iy = (int) (ny * ry);
+					ix = Math.round(nx * rx);
+					iy = Math.round(ny * ry);
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
 						g.setColor(Color.white);

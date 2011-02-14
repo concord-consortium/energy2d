@@ -76,7 +76,7 @@ public class Part extends Manipulable {
 	private float unitSurfaceArea = 100;
 
 	private static int polygonize = 50;
-	private static float radiatorSpacing = .5f;
+	private static float radiatorSpacing = .25f;
 	private static float MINIMUM_RADIATING_TEMPERATUE = 20;
 	private final static float SIN30 = (float) Math.sin(Math.PI / 6);
 	private final static float COS30 = (float) Math.cos(Math.PI / 6);

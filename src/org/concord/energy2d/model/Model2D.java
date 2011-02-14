@@ -707,18 +707,38 @@ public class Model2D {
 		int j0 = Math.round(y / deltaY);
 		int i = Math.min(t.length - 1, i0);
 		int j = Math.min(t[0].length - 1, j0);
+		if (i < 0)
+			i = 0;
+		if (j < 0)
+			j = 0;
 		temp += t[i][j];
 		i = Math.min(t.length - 1, i0 + 1);
 		j = Math.min(t[0].length - 1, j0);
+		if (i < 0)
+			i = 0;
+		if (j < 0)
+			j = 0;
 		temp += t[i][j];
 		i = Math.min(t.length - 1, i0 - 1);
 		j = Math.min(t[0].length - 1, j0);
+		if (i < 0)
+			i = 0;
+		if (j < 0)
+			j = 0;
 		temp += t[i][j];
 		i = Math.min(t.length - 1, i0);
 		j = Math.min(t[0].length - 1, j0 + 1);
+		if (i < 0)
+			i = 0;
+		if (j < 0)
+			j = 0;
 		temp += t[i][j];
 		i = Math.min(t.length - 1, i0);
 		j = Math.min(t[0].length - 1, j0 - 1);
+		if (i < 0)
+			i = 0;
+		if (j < 0)
+			j = 0;
 		temp += t[i][j];
 		return temp * 0.2f;
 	}
@@ -729,19 +749,24 @@ public class Model2D {
 		int j0 = Math.round(y / deltaY);
 		int i = Math.min(t.length - 1, i0);
 		int j = Math.min(t[0].length - 1, j0);
-		t[i][j] += increment;
+		if (i >= 0 && j >= 0)
+			t[i][j] += increment;
 		i = Math.min(t.length - 1, i0 + 1);
 		j = Math.min(t[0].length - 1, j0);
-		t[i][j] += increment;
+		if (i >= 0 && j >= 0)
+			t[i][j] += increment;
 		i = Math.min(t.length - 1, i0 - 1);
 		j = Math.min(t[0].length - 1, j0);
-		t[i][j] += increment;
+		if (i >= 0 && j >= 0)
+			t[i][j] += increment;
 		i = Math.min(t.length - 1, i0);
 		j = Math.min(t[0].length - 1, j0 + 1);
-		t[i][j] += increment;
+		if (i >= 0 && j >= 0)
+			t[i][j] += increment;
 		i = Math.min(t.length - 1, i0);
 		j = Math.min(t[0].length - 1, j0 - 1);
-		t[i][j] += increment;
+		if (i >= 0 && j >= 0)
+			t[i][j] += increment;
 	}
 
 	public float[][] getTemperature() {
