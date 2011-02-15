@@ -98,7 +98,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
-	private Font smallFont = new Font(null, Font.PLAIN, 9);
+	private Font smallFont = new Font(null, Font.PLAIN, 10);
 	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 12);
 
 	private RulerRenderer rulerRenderer;
@@ -749,8 +749,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		if (clockOn) {
+			g2.setFont(smallFont);
 			g2.setColor(Color.white);
-			g2.drawString(MiscUtil.formatTime((int) time), w - 60, 16);
+			g2.drawString(MiscUtil.formatTime((int) time), w - 68, 16);
 		}
 
 		g2.setStroke(dashed);
@@ -788,7 +789,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		g2.setStroke(stroke);
 		if (frankOn) {
-			int dy = rulerRenderer != null ? 24 : 12;
+			int dy = rulerRenderer != null ? 30 : 15;
 			drawFrank(g2, getWidth() - 84, getHeight() - dy);
 		}
 
@@ -1855,15 +1856,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private void drawFrank(Graphics g, int x, int y) {
-		g.setFont(new Font("Arial", Font.BOLD, 16));
-		g.setColor(Color.white);
+	private void drawFrank(Graphics2D g, int x, int y) {
 		String s = "Energy2D";
+		g.setFont(new Font("Arial", Font.BOLD, 14));
+		int w = g.getFontMetrics().stringWidth(s);
+		g.setColor(Color.gray);
+		g.fillRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
+		g.setStroke(moderateStroke);
+		g.setColor(Color.lightGray);
+		g.drawRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
+		g.setColor(Color.black);
 		g.drawString(s, x + 1, y - 1);
 		g.drawString(s, x + 1, y + 1);
 		g.drawString(s, x - 1, y - 1);
 		g.drawString(s, x - 1, y + 1);
-		g.setColor(Color.black);
+		g.setColor(Color.lightGray);
 		g.drawString(s, x, y);
 	}
 

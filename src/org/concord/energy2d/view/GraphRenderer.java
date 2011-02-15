@@ -94,10 +94,10 @@ class GraphRenderer {
 		this.w = w;
 		this.h = h;
 		closeButton.setBounds(x + w - 20, y, 20, 20);
-		xExpandButton.setBounds(x + w - 42, y, 20, 20);
-		xShrinkButton.setBounds(x + w - 64, y, 20, 20);
-		yExpandButton.setBounds(x + w - 86, y, 20, 20);
-		yShrinkButton.setBounds(x + w - 108, y, 20, 20);
+		xExpandButton.setBounds(x + w - 44, y, 20, 20);
+		xShrinkButton.setBounds(x + w - 68, y, 20, 20);
+		yExpandButton.setBounds(x + w - 92, y, 20, 20);
+		yShrinkButton.setBounds(x + w - 116, y, 20, 20);
 	}
 
 	boolean buttonContains(byte button, int x0, int y0) {
@@ -139,6 +139,8 @@ class GraphRenderer {
 			g.setStroke(thinStroke);
 
 			// draw close button
+			g.setColor(fgColor);
+			g.fillRect(closeButton.x + 2, closeButton.y + 2, closeButton.width, closeButton.height);
 			g.setColor(Color.lightGray);
 			g.fill(closeButton);
 			g.setColor(fgColor);
@@ -149,6 +151,9 @@ class GraphRenderer {
 					+ closeButton.width - 4, closeButton.y + 4);
 
 			// draw x scope control buttons
+			g.setColor(fgColor);
+			g.fillRect(xExpandButton.x + 2, xExpandButton.y + 2, xExpandButton.width,
+					xExpandButton.height);
 			g.setColor(Color.lightGray);
 			g.fill(xExpandButton);
 			g.setColor(fgColor);
@@ -159,6 +164,10 @@ class GraphRenderer {
 			x2 = xExpandButton.x + 3;
 			g.drawLine(x2, y2, x2 + 4, y2 - 4);
 			g.drawLine(x2, y2, x2 + 4, y2 + 4);
+
+			g.setColor(fgColor);
+			g.fillRect(xShrinkButton.x + 2, xShrinkButton.y + 2, xShrinkButton.width,
+					xShrinkButton.height);
 			g.setColor(Color.lightGray);
 			g.fill(xShrinkButton);
 			g.setColor(fgColor);
@@ -169,6 +178,9 @@ class GraphRenderer {
 			g.drawLine(x2, y2, x2 - 4, y2 + 4);
 
 			// draw y scope control buttons
+			g.setColor(fgColor);
+			g.fillRect(yExpandButton.x + 2, yExpandButton.y + 2, yExpandButton.width,
+					yExpandButton.height);
 			g.setColor(Color.lightGray);
 			g.fill(yExpandButton);
 			g.setColor(fgColor);
@@ -178,6 +190,10 @@ class GraphRenderer {
 			g.drawLine(x2, yExpandButton.y + 3, x2, y2);
 			g.drawLine(x2, y2 + 1, x2 + 4, y2 - 3);
 			g.drawLine(x2, y2 + 1, x2 - 4, y2 - 3);
+
+			g.setColor(fgColor);
+			g.fillRect(yShrinkButton.x + 2, yShrinkButton.y + 2, yShrinkButton.width,
+					yShrinkButton.height);
 			g.setColor(Color.lightGray);
 			g.fill(yShrinkButton);
 			g.setColor(fgColor);

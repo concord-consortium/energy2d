@@ -104,7 +104,7 @@ class MenuBar extends JMenuBar {
 					int n = recentFiles.length;
 					if (n > 0) {
 						for (int i = 0; i < n; i++) {
-							JMenuItem x = new JMenuItem((i + 1) + " "
+							JMenuItem x = new JMenuItem((i + 1) + "  "
 									+ MiscUtil.getFileName(recentFiles[i]));
 							final File rf = new File(recentFiles[i]);
 							x.addActionListener(new ActionListener() {
