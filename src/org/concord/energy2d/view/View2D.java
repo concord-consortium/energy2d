@@ -391,6 +391,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		frankOn = b;
 	}
 
+	public boolean isFrankOn() {
+		return frankOn;
+	}
+
 	public void setRulerOn(boolean b) {
 		rulerRenderer = b ? new RulerRenderer() : null;
 		if (b)

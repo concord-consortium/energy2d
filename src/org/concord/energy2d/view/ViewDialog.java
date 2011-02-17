@@ -177,7 +177,18 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		p.add(new JPanel());
+
+		checkBox = new JCheckBox("Brand");
+		checkBox.setSelected(view.isFrankOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setFrankOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+
 		p.add(new JPanel());
 		count++;
 

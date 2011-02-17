@@ -125,6 +125,9 @@ class XmlEncoder {
 		if (box.view.isRainbowOn()) {
 			sb.append("<rainbow>true</rainbow>\n");
 		}
+		if (!box.view.isFrankOn()) {
+			sb.append("<brand>false</brand>\n");
+		}
 		Rectangle2D.Float rainbow = box.view.getRainbowRectangle();
 		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
 		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");

@@ -624,7 +624,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));
-		box.view.setFrankOn(false);
 
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png"))

@@ -55,6 +55,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean isotherm;
 	private boolean streamline;
 	private boolean rainbow;
+	private boolean brand = true;
 	private float rainbowX, rainbowY, rainbowW, rainbowH;
 	private boolean velocity;
 	private boolean graphOn;
@@ -120,6 +121,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setStreamlineOn(streamline);
 		box.view.setVelocityOn(velocity);
 		box.view.setRainbowOn(rainbow);
+		box.view.setFrankOn(brand);
 		float xRainbow = rainbowX > 1 ? rainbowX / box.view.getWidth() : rainbowX;
 		float yRainbow = rainbowY > 1 ? rainbowY / box.view.getHeight() : rainbowY;
 		float wRainbow = rainbowW > 1 ? rainbowW / box.view.getWidth() : rainbowW;
@@ -415,6 +417,8 @@ class XmlDecoder extends DefaultHandler {
 			grid = Boolean.parseBoolean(str);
 		} else if (qName == "rainbow") {
 			rainbow = Boolean.parseBoolean(str);
+		} else if (qName == "brand") {
+			brand = Boolean.parseBoolean(str);
 		} else if (qName == "rainbow_x") {
 			rainbowX = Float.parseFloat(str);
 		} else if (qName == "rainbow_y") {
