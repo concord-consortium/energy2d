@@ -446,7 +446,7 @@ class Scripter2D extends Scripter {
 		matcher = SET.matcher(ci);
 		if (matcher.find()) {
 			String s = ci.substring(matcher.end()).trim();
-			String[] t = s.split(REGEX_WHITESPACE);
+			String[] t = s.split(REGEX_WHITESPACE + "+");
 			if (t.length >= 2) {
 				if (t[0].equalsIgnoreCase("sunny")) {
 					s2d.model.setSunny("true".equalsIgnoreCase(t[1]));

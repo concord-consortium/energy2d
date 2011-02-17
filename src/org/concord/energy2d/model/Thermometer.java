@@ -19,7 +19,7 @@ import org.concord.energy2d.event.MeasurementListener;
  */
 public class Thermometer extends Manipulable {
 
-	private final static int MAX = 500;
+	private final static int MAX = 1000;
 	private List<TimedData> data;
 	private List<MeasurementListener> listeners;
 	private boolean thermostat;
