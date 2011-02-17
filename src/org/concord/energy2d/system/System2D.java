@@ -68,7 +68,7 @@ import com.apple.eawt.ApplicationEvent;
 public class System2D extends JApplet implements MwService, VisualizationListener,
 		ManipulationListener {
 
-	private final static String BRAND_NAME = "Energy2D V0.2";
+	final static String BRAND_NAME = "Energy2D V0.2";
 
 	Model2D model;
 	View2D view;
@@ -220,6 +220,10 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public Component getSnapshotComponent() {
 		return view;
+	}
+
+	void saveApplet(File file) {
+		new AppletConverter(this).write(file);
 	}
 
 	private void loadStateApp(InputStream is) throws IOException {
@@ -602,7 +606,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (preferences == null || box.owner == null)
 			return;
 		MenuBar menuBar = (MenuBar) box.owner.getJMenuBar();
-		preferences.put("Latest Path", menuBar.getLatestPath());
+		preferences.put("Latest E2D Path", menuBar.getLatestPath("e2d"));
+		preferences.put("Latest HTM Path", menuBar.getLatestPath("htm"));
 		String[] recentFiles = menuBar.getRecentFiles();
 		if (recentFiles != null) {
 			int n = recentFiles.length;
@@ -650,7 +655,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 		box.owner = frame;
 
-		menuBar.setLatestPath(preferences.get("Latest Path", null));
+		menuBar.setLatestPath(preferences.get("Latest E2D Path", null), "e2d");
+		menuBar.setLatestPath(preferences.get("Latest HTM Path", null), "htm");
 		menuBar.addRecentFile(preferences.get("Recent File 0", null));
 		menuBar.addRecentFile(preferences.get("Recent File 1", null));
 		menuBar.addRecentFile(preferences.get("Recent File 2", null));

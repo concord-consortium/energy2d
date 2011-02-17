@@ -47,8 +47,9 @@ class MenuBar extends JMenuBar {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	private FileChooser fileChooser;
-	private FileFilter filter = new FileFilter() {
+	private FileChooser e2dFileChooser, htmFileChooser;
+
+	private FileFilter e2dFilter = new FileFilter() {
 
 		public boolean accept(File file) {
 			if (file == null)
@@ -72,16 +73,42 @@ class MenuBar extends JMenuBar {
 
 	};
 
+	private FileFilter htmFilter = new FileFilter() {
+
+		public boolean accept(File file) {
+			if (file == null)
+				return false;
+			if (file.isDirectory())
+				return true;
+			String filename = file.getName();
+			int index = filename.lastIndexOf('.');
+			if (index == -1)
+				return false;
+			String postfix = filename.substring(index + 1);
+			if ("htm".equalsIgnoreCase(postfix))
+				return true;
+			return false;
+		}
+
+		@Override
+		public String getDescription() {
+			return "HTML";
+		}
+
+	};
+
 	private Action openAction;
 	private Action saveAction;
 	private Action saveAsAction;
+	private Action saveAsAppletAction;
 	private Action exitAction;
 	private int fileMenuItemCount;
 	private List<JComponent> recentFileMenuItems;
 
 	MenuBar(final System2D box, final JFrame frame) {
 
-		fileChooser = new FileChooser();
+		e2dFileChooser = new FileChooser();
+		htmFileChooser = new FileChooser();
 		recentFileMenuItems = new ArrayList<JComponent>();
 
 		// file menu
@@ -110,7 +137,7 @@ class MenuBar extends JMenuBar {
 							x.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									box.loadFile(rf);
-									fileChooser.rememberFile(rf.getPath());
+									e2dFileChooser.rememberFile(rf.getPath());
 								}
 							});
 							fileMenu.insert(x, fileMenuItemCount + i);
@@ -130,14 +157,14 @@ class MenuBar extends JMenuBar {
 				box.stop();
 				if (!box.askSaveBeforeLoading())
 					return;
-				fileChooser.setAcceptAllFileFilterUsed(false);
-				fileChooser.addChoosableFileFilter(filter);
-				fileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
-				fileChooser.setDialogTitle("Open");
-				fileChooser.setApproveButtonMnemonic('O');
-				fileChooser.setAccessory(null);
-				if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
+				e2dFileChooser.setAcceptAllFileFilterUsed(false);
+				e2dFileChooser.addChoosableFileFilter(e2dFilter);
+				e2dFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+				e2dFileChooser.setDialogTitle("Open");
+				e2dFileChooser.setApproveButtonMnemonic('O');
+				e2dFileChooser.setAccessory(null);
+				if (e2dFileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+					File file = e2dFileChooser.getSelectedFile();
 					if (file.exists()) {
 						box.loadFile(file);
 					} else {
@@ -145,9 +172,9 @@ class MenuBar extends JMenuBar {
 								"File " + file + " was not found.", "File not found",
 								JOptionPane.ERROR_MESSAGE);
 					}
-					fileChooser.rememberFile(file.getPath());
+					e2dFileChooser.rememberFile(file.getPath());
 				}
-				fileChooser.resetChoosableFileFilters();
+				e2dFileChooser.resetChoosableFileFilters();
 			}
 		};
 		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK)
@@ -201,6 +228,28 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveAsAction.actionPerformed(e);
+			}
+		});
+		fileMenu.add(mi);
+		fileMenuItemCount++;
+
+		saveAsAppletAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (box.getCurrentFile() == null) {
+					JOptionPane
+							.showMessageDialog(
+									JOptionPane.getFrameForComponent(box.view),
+									"Sorry, you have to save the current model as a local file in order to create an applet for it.",
+									"Applet not allowed", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				saveAsApplet(box, frame);
+			}
+		};
+		mi = new JMenuItem("Save As Applet...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveAsAppletAction.actionPerformed(e);
 			}
 		});
 		fileMenu.add(mi);
@@ -691,23 +740,29 @@ class MenuBar extends JMenuBar {
 
 	}
 
-	void setLatestPath(String latestPath) {
+	void setLatestPath(String latestPath, String type) {
 		if (latestPath != null) {
-			fileChooser.setCurrentDirectory(new File(latestPath));
+			if ("htm".equalsIgnoreCase(type)) {
+				htmFileChooser.setCurrentDirectory(new File(latestPath));
+			} else if ("e2d".equalsIgnoreCase(type)) {
+				e2dFileChooser.setCurrentDirectory(new File(latestPath));
+			}
 		}
 	}
 
-	String getLatestPath() {
-		return fileChooser.getLatestPath();
+	String getLatestPath(String type) {
+		if ("htm".equalsIgnoreCase(type))
+			return htmFileChooser.getLatestPath();
+		return e2dFileChooser.getLatestPath();
 	}
 
 	void addRecentFile(String path) {
 		if (path != null)
-			fileChooser.addRecentFile(path);
+			e2dFileChooser.addRecentFile(path);
 	}
 
 	String[] getRecentFiles() {
-		return fileChooser.getRecentFiles();
+		return e2dFileChooser.getRecentFiles();
 	}
 
 	private void save(System2D box) {
@@ -721,13 +776,13 @@ class MenuBar extends JMenuBar {
 	}
 
 	private void saveAs(System2D box, JFrame frame) {
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.addChoosableFileFilter(filter);
-		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-		fileChooser.setDialogTitle("Save");
-		fileChooser.setApproveButtonMnemonic('S');
-		if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
+		e2dFileChooser.setAcceptAllFileFilterUsed(false);
+		e2dFileChooser.addChoosableFileFilter(e2dFilter);
+		e2dFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		e2dFileChooser.setDialogTitle("Save");
+		e2dFileChooser.setApproveButtonMnemonic('S');
+		if (e2dFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			File file = e2dFileChooser.getSelectedFile();
 			if (!file.toString().toLowerCase().endsWith(".e2d")) {
 				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString())
 						+ ".e2d");
@@ -749,7 +804,33 @@ class MenuBar extends JMenuBar {
 					e.printStackTrace();
 				}
 			}
-			fileChooser.rememberFile(file.getPath());
+			e2dFileChooser.rememberFile(file.getPath());
+		}
+	}
+
+	private void saveAsApplet(System2D box, JFrame frame) {
+		htmFileChooser.setAcceptAllFileFilterUsed(false);
+		htmFileChooser.addChoosableFileFilter(htmFilter);
+		htmFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		htmFileChooser.setDialogTitle("Save As Applet");
+		htmFileChooser.setApproveButtonMnemonic('S');
+		if (htmFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+			File file = htmFileChooser.getSelectedFile();
+			if (!file.toString().toLowerCase().endsWith(".htm")) {
+				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString())
+						+ ".htm");
+			}
+			boolean b = true;
+			if (file.exists()) {
+				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName()
+						+ " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+					b = false;
+				}
+			}
+			if (b) {
+				box.saveApplet(file);
+			}
+			htmFileChooser.rememberFile(file.getPath());
 		}
 	}
 
