@@ -567,6 +567,22 @@ public class Part extends Manipulable {
 				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
 				s = (float) (e.width * e.height * 0.25 * Math.PI) + " m\u00b2";
 			}
+		} else if (label.equalsIgnoreCase("%width")) {
+			if (getShape() instanceof Rectangle2D.Float) {
+				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+				s = (float) r.width + " m";
+			} else if (getShape() instanceof Ellipse2D.Float) {
+				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+				s = (float) e.width + " m";
+			}
+		} else if (label.equalsIgnoreCase("%height")) {
+			if (getShape() instanceof Rectangle2D.Float) {
+				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+				s = (float) r.height + " m";
+			} else if (getShape() instanceof Ellipse2D.Float) {
+				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+				s = (float) e.height + " m";
+			}
 		}
 		return s;
 	}

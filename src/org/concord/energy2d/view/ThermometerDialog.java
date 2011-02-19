@@ -15,6 +15,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -22,10 +23,13 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.util.MiscUtil;
 
 /**
  * @author Charles Xie
@@ -34,7 +38,7 @@ import org.concord.energy2d.model.Thermometer;
 class ThermometerDialog extends JDialog {
 
 	private Window owner;
-	private JPanel p1, p2;
+	private JPanel thermostatPanel;
 
 	ThermometerDialog(final View2D view, final Thermometer t, boolean modal) {
 
@@ -49,7 +53,7 @@ class ThermometerDialog extends JDialog {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panel.add(buttonPanel, BorderLayout.SOUTH);
 
-		JButton button = new JButton("Close");
+		JButton button = new JButton("OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
@@ -59,14 +63,47 @@ class ThermometerDialog extends JDialog {
 		});
 		buttonPanel.add(button);
 
+		button = new JButton("Cancel");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		buttonPanel.add(button);
+
 		Box box = Box.createVerticalBox();
 		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panel.add(box, BorderLayout.CENTER);
 
+		// thermometer calibration
+
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Average over stencil"));
 		box.add(p);
 
-		JCheckBox checkBox = new JCheckBox("Thermostat");
+		ButtonGroup bg = new ButtonGroup();
+
+		JRadioButton rb = new JRadioButton("One point");
+		rb.setSelected(true);
+		p.add(rb);
+		bg.add(rb);
+
+		rb = new JRadioButton("Five points");
+		p.add(rb);
+		bg.add(rb);
+
+		rb = new JRadioButton("Nine points");
+		p.add(rb);
+		bg.add(rb);
+
+		// thermostat properties
+
+		thermostatPanel = new JPanel(new SpringLayout());
+		thermostatPanel.setBorder(BorderFactory.createTitledBorder("Thermostat"));
+		box.add(thermostatPanel);
+		int count = 0;
+
+		JCheckBox checkBox = new JCheckBox("Activate");
 		checkBox.setSelected(t.isThermostat());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -77,13 +114,10 @@ class ThermometerDialog extends JDialog {
 				view.repaint();
 			}
 		});
-		p.add(checkBox);
-
-		p1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
-		box.add(p1);
+		thermostatPanel.add(checkBox);
 
 		JLabel label = new JLabel("Target temperature: ");
-		p1.add(label);
+		thermostatPanel.add(label);
 		JTextField textField = new JTextField(t.getThermostatTemperature() + "", 10);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -94,18 +128,22 @@ class ThermometerDialog extends JDialog {
 				t.setThermostatTemperature(x);
 			}
 		});
-		p1.add(textField);
+		thermostatPanel.add(textField);
 		label = new JLabel("\u2103");
-		p1.add(label);
-
-		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-		box.add(p2);
+		thermostatPanel.add(label);
+		count++;
 
 		label = new JLabel("Controlled power source:");
-		p2.add(label);
+		thermostatPanel.add(label);
 
 		JComboBox comboBox = new JComboBox();
-		p2.add(comboBox);
+		thermostatPanel.add(comboBox);
+
+		thermostatPanel.add(new JPanel());
+		thermostatPanel.add(new JPanel());
+		count++;
+
+		MiscUtil.makeCompactGrid(thermostatPanel, count, 4, 2, 5, 10, 2);
 
 		enableThermostatSettings(t.isThermostat());
 
@@ -115,12 +153,9 @@ class ThermometerDialog extends JDialog {
 	}
 
 	private void enableThermostatSettings(boolean b) {
-		int n = p1.getComponentCount();
-		for (int i = 0; i < n; i++)
-			p1.getComponent(i).setEnabled(b);
-		n = p2.getComponentCount();
-		for (int i = 0; i < n; i++)
-			p2.getComponent(i).setEnabled(b);
+		int n = thermostatPanel.getComponentCount();
+		for (int i = 1; i < n; i++)
+			thermostatPanel.getComponent(i).setEnabled(b);
 	}
 
 	private float parse(String s) {
