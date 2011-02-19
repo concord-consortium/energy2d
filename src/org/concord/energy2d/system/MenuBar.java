@@ -538,6 +538,14 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		mi = new JMenuItem("Natural Convection with Different Temperatures");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/natural-convection-temperature.e2d");
+			}
+		});
+		subMenu.add(mi);
+
 		mi = new JMenuItem("Comparing Natural Convection and Conduction");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
