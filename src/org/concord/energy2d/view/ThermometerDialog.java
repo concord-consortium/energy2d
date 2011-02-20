@@ -78,7 +78,7 @@ class ThermometerDialog extends JDialog {
 		// thermometer calibration
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setBorder(BorderFactory.createTitledBorder("Average over stencil"));
+		p.setBorder(BorderFactory.createTitledBorder("Measured area (stencil)"));
 		box.add(p);
 
 		ButtonGroup bg = new ButtonGroup();

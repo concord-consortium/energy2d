@@ -144,6 +144,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
 	private String errorMessage;
+	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -987,10 +988,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		Font oldFont = g.getFont();
 		Color oldColor = g.getColor();
+		String s = null;
 		for (TextBox x : textBoxes) {
 			g.setFont(new Font(x.getName(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
-			g.drawString(x.getString(), convertPointToPixelX(x.getX()), getHeight()
+			s = x.getString();
+			s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
+			g.drawString(s, convertPointToPixelX(x.getX()), getHeight()
 					- convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);
