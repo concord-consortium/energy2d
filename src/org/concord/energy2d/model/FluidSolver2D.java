@@ -17,7 +17,11 @@ import org.concord.energy2d.util.MiscUtil;
  */
 abstract class FluidSolver2D {
 
+	// five relaxation steps are probably enough for most transient problems
+	// because there are numerous previous steps that can be considered
+	// as pre-relaxation steps, especially when changes are slow or small.
 	static byte relaxationSteps = 5;
+
 	private float thermalBuoyancy = 0.00025f;
 	private float gravity = 0;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;

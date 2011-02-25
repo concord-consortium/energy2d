@@ -13,6 +13,9 @@ import org.concord.energy2d.util.MiscUtil;
  */
 class HeatSolver2DImpl extends HeatSolver2D {
 
+	// five relaxation steps are probably enough for most transient problems
+	// because there are numerous previous steps that can be considered
+	// as pre-relaxation steps, especially when changes are slow or small.
 	private static byte relaxationSteps = 5;
 
 	HeatSolver2DImpl(int nx, int ny) {
