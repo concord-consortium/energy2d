@@ -105,7 +105,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private GridRenderer gridRenderer;
 	private Rainbow rainbow;
 	private GraphRenderer graphRenderer;
-	private ScalarDistributionRenderer temperatureRenderer;
+	private ScalarDistributionRenderer temperatureRenderer, energyRenderer;
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
 	private boolean streamlineOn;
@@ -209,6 +209,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		createPopupMenu();
 		dialogFactory = new DialogFactory(this);
 		temperatureRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
+		energyRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -1029,6 +1030,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private void drawTemperatureField(Graphics2D g) {
 		temperatureRenderer.render(model.getTemperature(), this, g);
+	}
+
+	private void drawEnergyField(Graphics2D g) {
+		energyRenderer.render(model.getTemperature(), this, g);
 	}
 
 	private void setAnchorPointForRectangularShape(byte i, float x, float y, float w, float h) {
