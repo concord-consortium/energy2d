@@ -140,7 +140,7 @@ class Scripter2D extends Scripter {
 			if (s2d.clickReload != null) {
 				EventQueue.invokeLater(s2d.clickReload);
 			} else {
-				s2d.run();
+				s2d.reload();
 			}
 			return;
 		}
