@@ -116,6 +116,7 @@ class XmlEncoder {
 		if (box.view.isGridOn()) {
 			sb.append("<grid>true</grid>\n");
 		}
+		sb.append("<grid_size>" + box.view.getGridSize() + "</grid_size>\n");
 		if (box.view.isRulerOn()) {
 			sb.append("<ruler>true</ruler>\n");
 		}

@@ -57,6 +57,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean rainbow;
 	private boolean brand = true;
 	private float rainbowX, rainbowY, rainbowW, rainbowH;
+	private int gridSize = 10;
 	private boolean velocity;
 	private boolean graphOn;
 	private boolean clock = true;
@@ -117,6 +118,7 @@ class XmlDecoder extends DefaultHandler {
 
 		box.view.setRulerOn(ruler);
 		box.view.setGridOn(grid);
+		box.view.setGridSize(gridSize);
 		box.view.setIsothermOn(isotherm);
 		box.view.setStreamlineOn(streamline);
 		box.view.setVelocityOn(velocity);
@@ -415,6 +417,8 @@ class XmlDecoder extends DefaultHandler {
 			velocity = Boolean.parseBoolean(str);
 		} else if (qName == "grid") {
 			grid = Boolean.parseBoolean(str);
+		} else if (qName == "grid_size") {
+			gridSize = Integer.parseInt(str);
 		} else if (qName == "rainbow") {
 			rainbow = Boolean.parseBoolean(str);
 		} else if (qName == "brand") {
@@ -553,6 +557,7 @@ class XmlDecoder extends DefaultHandler {
 		// view properties
 		ruler = false;
 		grid = false;
+		gridSize = 10;
 		isotherm = false;
 		streamline = false;
 		rainbow = false;

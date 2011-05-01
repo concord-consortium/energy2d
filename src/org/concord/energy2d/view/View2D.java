@@ -415,6 +415,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return gridRenderer != null;
 	}
 
+	public void setGridSize(int gridSize) {
+		if (gridRenderer != null)
+			gridRenderer.setGridSize(gridSize);
+	}
+
+	public int getGridSize() {
+		if (gridRenderer == null)
+			return 10;
+		return gridRenderer.getGridSize();
+	}
+
 	public void setRainbowOn(boolean b) {
 		showRainbow = b;
 	}
@@ -738,8 +749,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			rulerRenderer.render(this, g2);
 		}
 		if (showRainbow)
-			rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer
-					.getMinimum());
+			rainbow.render(this, g2, temperatureRenderer.getMaximum(),
+					temperatureRenderer.getMinimum());
 		if (velocityRenderer != null)
 			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(), this, g2);
 		drawThermometers(g2);
@@ -995,8 +1006,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setColor(x.getColor());
 			s = x.getString();
 			s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
-			g.drawString(s, convertPointToPixelX(x.getX()), getHeight()
-					- convertPointToPixelY(x.getY()));
+			g.drawString(s, convertPointToPixelX(x.getX()),
+					getHeight() - convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
@@ -1022,8 +1033,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				x = convertPointToPixelX(p.getX());
 				y = convertPointToPixelY(p.getY());
 				r = 1.0 / Math.hypot(p.getVx(), p.getVy());
-				g.drawLine((int) (x - photonLength * p.getVx() * r), (int) (y - photonLength
-						* p.getVy() * r), x, y);
+				g.drawLine((int) (x - photonLength * p.getVx() * r),
+						(int) (y - photonLength * p.getVy() * r), x, y);
 			}
 		}
 	}
@@ -1413,8 +1424,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				} else {
-					showTip(
-							"<html><font color=red>The selected object is not draggable!</font></html>",
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>",
 							x, y, 500);
 				}
 			}
@@ -1562,8 +1572,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				} else {
-					showTip(
-							"<html><font color=red>The selected object is not draggable!</font></html>",
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>",
 							x, y, 500);
 				}
 			} else {
@@ -1605,8 +1614,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case THERMOMETER_MODE:
 			addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
-			notifyManipulationListeners(model.getThermometers().get(
-					model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
+			notifyManipulationListeners(
+					model.getThermometers().get(model.getThermometers().size() - 1),
+					ManipulationEvent.OBJECT_ADDED);
 			break;
 		}
 		repaint();

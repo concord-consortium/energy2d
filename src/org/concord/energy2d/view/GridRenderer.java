@@ -23,10 +23,19 @@ class GridRenderer {
 	private Color color = new Color(128, 128, 225, 128);
 	private int nx;
 	private int ny;
+	private int gridSize = 10;
 
 	GridRenderer(int nx, int ny) {
 		this.nx = nx;
 		this.ny = ny;
+	}
+
+	void setGridSize(int gridSize) {
+		this.gridSize = gridSize;
+	}
+
+	int getGridSize() {
+		return gridSize;
 	}
 
 	void render(JComponent c, Graphics2D g) {
@@ -45,11 +54,11 @@ class GridRenderer {
 		g.setStroke(stroke);
 
 		int k;
-		for (int i = 0; i < nx; i += 10) {
+		for (int i = 0; i < nx; i += gridSize) {
 			k = Math.round(i * dx);
 			g.drawLine(k, 0, k, h);
 		}
-		for (int i = 0; i < ny; i += 10) {
+		for (int i = 0; i < ny; i += gridSize) {
 			k = Math.round(i * dy);
 			g.drawLine(0, k, w, k);
 		}

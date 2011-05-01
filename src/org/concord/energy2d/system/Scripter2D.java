@@ -257,9 +257,9 @@ class Scripter2D extends Scripter {
 								final ImageIcon image = new ImageIcon(url);
 								final Runnable r = new Runnable() {
 									public void run() {
-										s2d.view.addPicture(image, s2d.view
-												.convertPointToPixelX(z[0]), s2d.view
-												.convertPointToPixelY(z[1]));
+										s2d.view.addPicture(image,
+												s2d.view.convertPointToPixelX(z[0]),
+												s2d.view.convertPointToPixelY(z[1]));
 									}
 								};
 								EventQueue.invokeLater(new Runnable() {
@@ -552,6 +552,16 @@ class Scripter2D extends Scripter {
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("grid")) {
 					s2d.view.setGridOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("grid_size")) {
+					int gridSize = 0;
+					try {
+						gridSize = Integer.parseInt(t[1]);
+					} catch (NumberFormatException e) {
+						showException(ci, e);
+						return;
+					}
+					s2d.view.setGridSize(gridSize);
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("rainbow")) {
 					s2d.view.setRainbowOn("true".equalsIgnoreCase(t[1]));
