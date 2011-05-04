@@ -76,6 +76,9 @@ import org.concord.energy2d.util.MiscUtil;
  */
 public class View2D extends JPanel implements PropertyChangeListener {
 
+	public final static String DEFAULT_YLABEL = "Temperature (" + '\u2103' + ")";
+	public final static String DEFAULT_XLABEL = "Time (hr)";
+
 	public final static byte SELECT_MODE = 0;
 	public final static byte RECTANGLE_MODE = 1;
 	public final static byte ELLIPSE_MODE = 2;
@@ -466,8 +469,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		graphRenderer.setLabelX(xLabel);
 	}
 
+	public String getGraphXLabel() {
+		return graphRenderer.getLabelX();
+	}
+
 	public void setGraphYLabel(String yLabel) {
 		graphRenderer.setLabelY(yLabel);
+	}
+
+	public String getGraphYLabel() {
+		return graphRenderer.getLabelY();
 	}
 
 	public void setVelocityOn(boolean b) {

@@ -45,7 +45,7 @@ class GraphRenderer {
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
 	private Rectangle yExpandButton, yShrinkButton;
-	private String xLabel = "Time (hr)", yLabel = "Temperature (" + '\u2103' + ")";
+	private String xLabel = View2D.DEFAULT_XLABEL, yLabel = View2D.DEFAULT_YLABEL;
 
 	GraphRenderer(int x, int y, int w, int h) {
 		closeButton = new Rectangle();
@@ -60,8 +60,16 @@ class GraphRenderer {
 		this.xLabel = xLabel;
 	}
 
+	String getLabelX() {
+		return xLabel;
+	}
+
 	void setLabelY(String yLabel) {
 		this.yLabel = yLabel;
+	}
+
+	String getLabelY() {
+		return yLabel;
 	}
 
 	void setScopeX(float scopeX) {

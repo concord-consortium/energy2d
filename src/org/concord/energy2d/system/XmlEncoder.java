@@ -6,6 +6,7 @@ import java.util.List;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.view.View2D;
 
 /**
  * @author Charles Xie
@@ -147,6 +148,10 @@ class XmlEncoder {
 		if (box.view.isGraphOn()) {
 			sb.append("<graph>true</graph>\n");
 		}
+		if (!View2D.DEFAULT_XLABEL.equals(box.view.getGraphXLabel()))
+			sb.append("<graph_xlabel>" + box.view.getGraphXLabel() + "</graph_xlabel>");
+		if (!View2D.DEFAULT_YLABEL.equals(box.view.getGraphYLabel()))
+			sb.append("<graph_ylabel>" + box.view.getGraphYLabel() + "</graph_ylabel>");
 		if (!box.view.isClockOn()) {
 			sb.append("<clock>false</clock>\n");
 		}
@@ -166,5 +171,4 @@ class XmlEncoder {
 		return sb.toString();
 
 	}
-
 }

@@ -13,6 +13,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;
 
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
@@ -82,6 +83,7 @@ public class Part extends Manipulable {
 	private final static float COS30 = (float) Math.cos(Math.PI / 6);
 	private final static float SIN60 = (float) Math.sin(Math.PI / 3);
 	private final static float COS60 = (float) Math.cos(Math.PI / 3);
+	private final static DecimalFormat LABEL_FORMAT = new DecimalFormat("####.######");
 
 	public Part(Shape shape) {
 		super(shape);
@@ -562,10 +564,10 @@ public class Part extends Manipulable {
 		else if (label.equalsIgnoreCase("%area")) {
 			if (getShape() instanceof Rectangle2D.Float) {
 				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-				s = (float) (r.width * r.height) + " m\u00b2";
+				s = LABEL_FORMAT.format(r.width * r.height) + " m\u00b2";
 			} else if (getShape() instanceof Ellipse2D.Float) {
 				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-				s = (float) (e.width * e.height * 0.25 * Math.PI) + " m\u00b2";
+				s = LABEL_FORMAT.format(e.width * e.height * 0.25 * Math.PI) + " m\u00b2";
 			}
 		} else if (label.equalsIgnoreCase("%width")) {
 			if (getShape() instanceof Rectangle2D.Float) {

@@ -64,6 +64,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean smooth = true;
 	private float minimumTemperature;
 	private float maximumTemperature = 40;
+	private String graphXLabel, graphYLabel;
 
 	// part properties
 	private float partThermalConductivity = Float.NaN;
@@ -134,6 +135,10 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setClockOn(clock);
 		box.view.setSmooth(smooth);
 		box.view.setGraphOn(graphOn);
+		if (graphXLabel != null)
+			box.view.setGraphXLabel(graphXLabel);
+		if (graphYLabel != null)
+			box.view.setGraphYLabel(graphXLabel);
 
 		// since we don't know the width and height of the model
 		// until now, we have to fix the locations and the sizes of
@@ -437,6 +442,10 @@ class XmlDecoder extends DefaultHandler {
 			smooth = Boolean.parseBoolean(str);
 		} else if (qName == "graph") {
 			graphOn = Boolean.parseBoolean(str);
+		} else if (qName == "graph_xlabel") {
+			graphXLabel = str;
+		} else if (qName == "graph_ylabel") {
+			graphYLabel = str;
 		} else if (qName == "uid") {
 			partUid = str;
 		} else if (qName == "label") {
@@ -567,6 +576,8 @@ class XmlDecoder extends DefaultHandler {
 		smooth = true;
 		minimumTemperature = 0;
 		maximumTemperature = 40;
+		graphXLabel = null;
+		graphYLabel = null;
 
 	}
 
