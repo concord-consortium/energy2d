@@ -992,11 +992,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						multigon.reset();
 					int x, y;
 					Point2D.Float v;
+					int cx = 0, cy = 0;
 					for (int i = 0; i < n; i++) {
 						v = q.getVertex(i);
 						x = convertPointToPixelX(v.x);
 						y = convertPointToPixelY(v.y);
 						multigon.addPoint(x, y);
+						cx += x;
+						cy += y;
 					}
 					if (p.isFilled()) {
 						g.setColor(getPartColor(p));
@@ -1004,6 +1007,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					g.setColor(Color.black);
 					g.draw(multigon);
+					String label = p.getLabel();
+					if (label != null) {
+						String partLabel = p.getLabel(label);
+						if (partLabel != null)
+							label = partLabel;
+						g.setColor(Color.white);
+						g.setFont(labelFont);
+						FontMetrics fm = g.getFontMetrics();
+						int labelWidth = fm.stringWidth(label);
+						cx /= multigon.npoints;
+						cy /= multigon.npoints;
+						g.drawString(label, cx - labelWidth / 2, cy + fm.getHeight() / 4);
+					}
 				}
 			}
 		}
