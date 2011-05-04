@@ -343,6 +343,12 @@ public class Model2D {
 		thermometers.add(new Thermometer(x, y));
 	}
 
+	public void addThermometer(float x, float y, String label) {
+		Thermometer t = new Thermometer(x, y);
+		t.setLabel(label);
+		thermometers.add(t);
+	}
+
 	public List<Thermometer> getThermometers() {
 		return thermometers;
 	}

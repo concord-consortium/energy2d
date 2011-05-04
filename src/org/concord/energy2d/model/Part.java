@@ -537,8 +537,9 @@ public class Part extends Manipulable {
 			xml += "<uid>" + getUid() + "</uid>\n";
 		if (!getColor().equals(Color.gray))
 			xml += "<color>" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "</color>\n";
-		if (getLabel() != null && !getLabel().trim().equals(""))
-			xml += "<label>" + getLabel() + "</label>\n";
+		String label = getLabel();
+		if (label != null && !label.trim().equals(""))
+			xml += "<label>" + label + "</label>\n";
 		if (!isFilled())
 			xml += "<filled>false</filled>\n";
 		if (!isVisible())

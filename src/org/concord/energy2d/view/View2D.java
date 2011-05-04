@@ -871,6 +871,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.setColor(Color.white);
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
+						if (t.getLabel() != null) {
+							centerString(t.getLabel(), g, x + s.getIconWidth() / 2,
+									y + s.getIconHeight() + 10);
+						}
 					}
 				}
 			}

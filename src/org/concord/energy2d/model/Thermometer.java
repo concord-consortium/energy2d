@@ -119,6 +119,9 @@ public class Thermometer extends Manipulable {
 			xml += " thermostat=\"true\"";
 			xml += " thermostat_temperature=\"" + thermostatTemperature + "\"";
 		}
+		String label = getLabel();
+		if (label != null && !label.trim().equals(""))
+			xml += " label=\"" + label + "\"";
 		xml += " x=\"" + getX() + "\"";
 		xml += " y=\"" + getY() + "\"/>";
 		return xml;

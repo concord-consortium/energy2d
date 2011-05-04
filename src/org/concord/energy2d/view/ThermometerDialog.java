@@ -39,11 +39,13 @@ class ThermometerDialog extends JDialog {
 
 	private Window owner;
 	private JPanel thermostatPanel;
+	private ActionListener okListener;
+	private JTextField labelField;
 
-	ThermometerDialog(final View2D view, final Thermometer t, boolean modal) {
+	ThermometerDialog(final View2D view, final Thermometer thermometer, boolean modal) {
 
 		super(JOptionPane.getFrameForComponent(view), "Thermometer (#"
-				+ view.model.getThermometers().indexOf(t) + ") Options", modal);
+				+ view.model.getThermometers().indexOf(thermometer) + ") Options", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
@@ -53,14 +55,17 @@ class ThermometerDialog extends JDialog {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panel.add(buttonPanel, BorderLayout.SOUTH);
 
-		JButton button = new JButton("OK");
-		button.addActionListener(new ActionListener() {
+		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				thermometer.setLabel(labelField.getText());
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
 			}
-		});
+		};
+
+		JButton button = new JButton("OK");
+		button.addActionListener(okListener);
 		buttonPanel.add(button);
 
 		button = new JButton("Cancel");
@@ -75,9 +80,20 @@ class ThermometerDialog extends JDialog {
 		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panel.add(box, BorderLayout.CENTER);
 
-		// thermometer calibration
+		// general properties
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("General properties"));
+		box.add(p);
+
+		p.add(new JLabel("Label:"));
+		labelField = new JTextField(thermometer.getLabel(), 20);
+		labelField.addActionListener(okListener);
+		p.add(labelField);
+
+		// thermometer calibration
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.setBorder(BorderFactory.createTitledBorder("Measured area (stencil)"));
 		box.add(p);
 
@@ -104,12 +120,12 @@ class ThermometerDialog extends JDialog {
 		int count = 0;
 
 		JCheckBox checkBox = new JCheckBox("Activate");
-		checkBox.setSelected(t.isThermostat());
+		checkBox.setSelected(thermometer.isThermostat());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
 				boolean b = src.isSelected();
-				t.setThermostat(b);
+				thermometer.setThermostat(b);
 				enableThermostatSettings(b);
 				view.repaint();
 			}
@@ -118,14 +134,14 @@ class ThermometerDialog extends JDialog {
 
 		JLabel label = new JLabel("Target temperature: ");
 		thermostatPanel.add(label);
-		JTextField textField = new JTextField(t.getThermostatTemperature() + "", 10);
+		JTextField textField = new JTextField(thermometer.getThermostatTemperature() + "", 10);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextField src = (JTextField) e.getSource();
 				float x = parse(src.getText());
 				if (Float.isNaN(x))
 					return;
-				t.setThermostatTemperature(x);
+				thermometer.setThermostatTemperature(x);
 			}
 		});
 		thermostatPanel.add(textField);
@@ -145,7 +161,7 @@ class ThermometerDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(thermostatPanel, count, 4, 2, 5, 10, 2);
 
-		enableThermostatSettings(t.isThermostat());
+		enableThermostatSettings(thermometer.isThermostat());
 
 		pack();
 		setLocationRelativeTo(view);

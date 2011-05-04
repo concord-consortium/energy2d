@@ -320,6 +320,7 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "thermometer") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
+				String label = null;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -327,10 +328,12 @@ class XmlDecoder extends DefaultHandler {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
 						y = Float.parseFloat(attribValue);
+					} else if (attribName == "label") {
+						label = attribValue;
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y))
-					box.model.addThermometer(x, y);
+					box.model.addThermometer(x, y, label);
 			}
 		} else if (qName == "text") {
 			if (attrib != null) {
