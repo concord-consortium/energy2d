@@ -30,7 +30,7 @@ class GraphRenderer {
 	final static byte Y_EXPAND_BUTTON = 3;
 	final static byte Y_SHRINK_BUTTON = 4;
 
-	private final static DecimalFormat FORMAT = new DecimalFormat("##.#");
+	private final static DecimalFormat FORMAT = new DecimalFormat("##.##");
 	private Font smallFont = new Font(null, Font.PLAIN, 8);
 	private Stroke frameStroke = new BasicStroke(2);
 	private Stroke thinStroke = new BasicStroke(1);

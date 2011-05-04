@@ -34,6 +34,7 @@ class XmlDecoder extends DefaultHandler {
 	private float timeStep = 1;
 	private int measurementInterval = 500;
 	private int viewUpdateInterval = 100;
+	private float stopTime = -1;
 	private boolean sunny;
 	private float sunAngle = (float) Math.PI * 0.5f;
 	private float solarPowerDensity = 2000;
@@ -102,6 +103,7 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setTimeStep(timeStep);
 		box.model.setMeasurementInterval(measurementInterval);
 		box.model.setViewUpdateInterval(viewUpdateInterval);
+		box.model.setStopTime(stopTime);
 		box.model.setSunny(sunny);
 		box.model.setSunAngle(sunAngle);
 		box.model.setSolarPowerDensity(solarPowerDensity);
@@ -383,6 +385,8 @@ class XmlDecoder extends DefaultHandler {
 			measurementInterval = Integer.parseInt(str);
 		} else if (qName == "viewupdate_interval") {
 			viewUpdateInterval = Integer.parseInt(str);
+		} else if (qName == "stoptime") {
+			stopTime = Float.parseFloat(str);
 		} else if (qName == "sunny") {
 			sunny = Boolean.parseBoolean(str);
 		} else if (qName == "sun_angle") {
@@ -551,6 +555,7 @@ class XmlDecoder extends DefaultHandler {
 		timeStep = 1;
 		measurementInterval = 100;
 		viewUpdateInterval = 20;
+		stopTime = -1;
 		sunny = false;
 		sunAngle = (float) Math.PI * 0.5f;
 		solarPowerDensity = 2000;

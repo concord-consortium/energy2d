@@ -34,6 +34,7 @@ public class Model2D {
 	public final static byte BUOYANCY_AVERAGE_COLUMN = 1;
 
 	private int indexOfStep;
+	private float stopTime = -1;
 
 	private float backgroundConductivity = 10 * Constants.AIR_THERMAL_CONDUCTIVITY;
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
@@ -155,6 +156,14 @@ public class Model2D {
 		visualizationListeners = new ArrayList<VisualizationListener>();
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
 
+	}
+
+	public void setStopTime(float stopTime) {
+		this.stopTime = stopTime;
+	}
+
+	public float getStopTime() {
+		return stopTime;
 	}
 
 	public void setConvective(boolean convective) {
@@ -645,6 +654,12 @@ public class Model2D {
 	}
 
 	private void nextStep() {
+		if (stopTime > 0) {
+			if (indexOfStep > 0) {
+				if (indexOfStep % Math.round(stopTime / getTimeStep()) == 0)
+					stop();
+			}
+		}
 		if (radiative) {
 			if (indexOfStep % photonEmissionInterval == 0) {
 				refreshPowerArray();

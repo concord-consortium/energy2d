@@ -47,6 +47,9 @@ class XmlEncoder {
 			sb.append("<viewupdate_interval>" + box.model.getViewUpdateInterval()
 					+ "</viewupdate_interval>\n");
 		}
+		if (box.model.getStopTime() > 0) {
+			sb.append("<stoptime>" + box.model.getStopTime() + "</stoptime>");
+		}
 
 		if (box.model.isSunny()) {
 			sb.append("<sunny>true</sunny>");
