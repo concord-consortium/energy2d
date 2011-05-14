@@ -85,6 +85,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte POLYGON_MODE = 3;
 	public final static byte THERMOMETER_MODE = 11;
 
+	public final static byte PIXEL_NONE = 0;
+	public final static byte PIXEL_TEMPERATURE = 1;
+	public final static byte PIXEL_ENERGY = 2;
+
 	final static byte UPPER_LEFT = 0;
 	final static byte LOWER_LEFT = 1;
 	final static byte UPPER_RIGHT = 2;
@@ -116,6 +120,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showRainbow;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
+	private byte pixelProperty = PIXEL_TEMPERATURE;
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
@@ -257,6 +262,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		getInputMap().put(ks, "Paste");
 		getActionMap().put("Paste", pasteAction);
 
+	}
+
+	public void setPixelProperty(byte pixelProperty) {
+		this.pixelProperty = pixelProperty;
+	}
+
+	public byte getPixelProperty() {
+		return pixelProperty;
 	}
 
 	public void setActionMode(byte mode) {
@@ -715,7 +728,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Stroke stroke = g2.getStroke();
 		g.setColor(getBackground());
 		g.fillRect(0, 0, w, h);
-		drawTemperatureField(g2);
+		switch (pixelProperty) {
+		case PIXEL_TEMPERATURE:
+			drawTemperatureField(g2);
+			break;
+		case PIXEL_ENERGY:
+			drawEnergyField(g2);
+			break;
+		}
 		drawParts(g2);
 		if (isotherms != null) {
 			g2.setStroke(thinStroke);
