@@ -628,6 +628,13 @@ class Scripter2D extends Scripter {
 					}
 					s2d.view.setMaximumTemperature(max);
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("pixel_attribute")) {
+					if ("NONE".equalsIgnoreCase(t[1]))
+						s2d.view.setPixelAttribute(View2D.PIXEL_NONE);
+					else if ("TEMPERATURE".equalsIgnoreCase(t[1]))
+						s2d.view.setPixelAttribute(View2D.PIXEL_TEMPERATURE);
+					else if ("THERMAL_ENERGY".equalsIgnoreCase(t[1]))
+						s2d.view.setPixelAttribute(View2D.PIXEL_THERMAL_ENERGY);
 				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {
 					float resolution = 0;
 					try {

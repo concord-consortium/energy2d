@@ -15,6 +15,7 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.view.TextBox;
+import org.concord.energy2d.view.View2D;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -57,6 +58,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean streamline;
 	private boolean rainbow;
 	private boolean brand = true;
+	private byte pixelAttribute = View2D.PIXEL_TEMPERATURE;
 	private float rainbowX, rainbowY, rainbowW, rainbowH;
 	private int gridSize = 10;
 	private boolean velocity;
@@ -127,6 +129,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setVelocityOn(velocity);
 		box.view.setRainbowOn(rainbow);
 		box.view.setFrankOn(brand);
+		box.view.setPixelAttribute(pixelAttribute);
 		float xRainbow = rainbowX > 1 ? rainbowX / box.view.getWidth() : rainbowX;
 		float yRainbow = rainbowY > 1 ? rainbowY / box.view.getHeight() : rainbowY;
 		float wRainbow = rainbowW > 1 ? rainbowW / box.view.getWidth() : rainbowW;
@@ -435,6 +438,8 @@ class XmlDecoder extends DefaultHandler {
 			rainbow = Boolean.parseBoolean(str);
 		} else if (qName == "brand") {
 			brand = Boolean.parseBoolean(str);
+		} else if (qName == "pixel_attribute") {
+			pixelAttribute = Byte.parseByte(str);
 		} else if (qName == "rainbow_x") {
 			rainbowX = Float.parseFloat(str);
 		} else if (qName == "rainbow_y") {
@@ -586,6 +591,7 @@ class XmlDecoder extends DefaultHandler {
 		maximumTemperature = 40;
 		graphXLabel = null;
 		graphYLabel = null;
+		pixelAttribute = View2D.PIXEL_TEMPERATURE;
 
 	}
 

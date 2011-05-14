@@ -161,6 +161,9 @@ class XmlEncoder {
 		if (!box.view.isSmooth()) {
 			sb.append("<smooth>false</smooth>\n");
 		}
+		if (box.view.getPixelAttribute() != View2D.PIXEL_TEMPERATURE) {
+			sb.append("<pixel_attribute>" + box.view.getPixelAttribute() + "</pixel_attribute>\n");
+		}
 		int n = box.view.getTextBoxCount();
 		if (n > 0) {
 			for (int i = 0; i < n; i++) {
