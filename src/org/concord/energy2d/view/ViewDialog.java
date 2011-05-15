@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,6 +35,8 @@ import org.concord.energy2d.util.MiscUtil;
 class ViewDialog extends JDialog {
 
 	private Window owner;
+	private JTextField lowerTempField, upperTempField;
+	private JLabel nameLabel1, nameLabel2, unitLabel1, unitLabel2;
 
 	ViewDialog(final View2D view, boolean modal) {
 
@@ -199,42 +202,91 @@ class ViewDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
-		JLabel label = new JLabel("Lowest temperature for coloring");
+		JLabel label = new JLabel("Coloring");
 		p.add(label);
 
-		JTextField textField = new JTextField(view.getMinimumTemperature() + "", 8);
-		textField.addActionListener(new ActionListener() {
+		JComboBox comboBox = new JComboBox();
+		comboBox.addItem("None");
+		comboBox.addItem("Temperature");
+		comboBox.addItem("Thermal energy");
+		comboBox.setSelectedIndex(view.getPixelAttribute() - View2D.PIXEL_NONE);
+		comboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox src = (JComboBox) e.getSource();
+				int i = src.getSelectedIndex();
+				nameLabel1.setEnabled(i > 0);
+				nameLabel2.setEnabled(i > 0);
+				unitLabel1.setEnabled(i > 0);
+				unitLabel2.setEnabled(i > 0);
+				switch (i) {
+				case 0:
+					lowerTempField.setEnabled(false);
+					upperTempField.setEnabled(false);
+					nameLabel1.setText(null);
+					nameLabel2.setText(null);
+					unitLabel1.setText(null);
+					unitLabel2.setText(null);
+					break;
+				case 1:
+					lowerTempField.setEnabled(true);
+					upperTempField.setEnabled(true);
+					nameLabel1.setText("Lowest temperature");
+					nameLabel2.setText("Highest temperature");
+					unitLabel1.setText("\u00B0C");
+					unitLabel2.setText("\u00B0C");
+					break;
+				case 2:
+					lowerTempField.setEnabled(true);
+					upperTempField.setEnabled(true);
+					nameLabel1.setText("Lowest energy");
+					nameLabel2.setText("Highest energy");
+					unitLabel1.setText("J");
+					unitLabel2.setText("J");
+					break;
+				}
+				view.setPixelAttribute((byte) (i - View2D.PIXEL_NONE));
+				view.repaint();
+			}
+		});
+		p.add(comboBox);
+
+		p.add(new JPanel());
+		count++;
+
+		nameLabel1 = new JLabel("Lowest temperature");
+		p.add(nameLabel1);
+
+		lowerTempField = new JTextField(view.getMinimumTemperature() + "", 8);
+		lowerTempField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float x = parse(src.getText());
+				float x = parse(lowerTempField.getText());
 				if (Float.isNaN(x))
 					return;
 				view.setMinimumTemperature(x);
 				view.repaint();
 			}
 		});
-		p.add(textField);
-		label = new JLabel("<html><i>&deg;C");
-		p.add(label);
+		p.add(lowerTempField);
+		unitLabel1 = new JLabel("\u00B0C");
+		p.add(unitLabel1);
 		count++;
 
-		label = new JLabel("Highest temperature for coloring");
-		p.add(label);
+		nameLabel2 = new JLabel("Highest temperature");
+		p.add(nameLabel2);
 
-		textField = new JTextField(view.getMaximumTemperature() + "", 8);
-		textField.addActionListener(new ActionListener() {
+		upperTempField = new JTextField(view.getMaximumTemperature() + "", 8);
+		upperTempField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float x = parse(src.getText());
+				float x = parse(upperTempField.getText());
 				if (Float.isNaN(x))
 					return;
 				view.setMaximumTemperature(x);
 				view.repaint();
 			}
 		});
-		p.add(textField);
-		label = new JLabel("<html><i>&deg;C");
-		p.add(label);
+		p.add(upperTempField);
+		unitLabel2 = new JLabel("\u00B0C");
+		p.add(unitLabel2);
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
@@ -247,7 +299,7 @@ class ViewDialog extends JDialog {
 		label = new JLabel("Measurement interval");
 		p.add(label);
 
-		textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
+		JTextField textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextField src = (JTextField) e.getSource();
