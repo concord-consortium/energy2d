@@ -74,6 +74,7 @@ class Rainbow {
 		}
 		Font oldFont = g.getFont();
 		g.setFont(font);
+		System.out.println(w+","+h);
 		if (h > w) {
 			for (int i = 0; i < h; i++) {
 				g.setColor(new Color(getColor(i)));

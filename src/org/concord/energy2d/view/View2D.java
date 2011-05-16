@@ -100,8 +100,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 }, { 0, 128, 225 },
-			{ 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
+	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 }, { 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
 
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
@@ -124,9 +123,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
-	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-			1, new float[] { 2 }, 0);
-	private static Color lightColor = new Color(255, 255, 255, 128);
+	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 2 }, 0);
 	private final static Color TRANSLUCENT_GRAY = new Color(128, 128, 128, 128);
 	private float xmin, xmax, ymin, ymax;
 	private int nx, ny;
@@ -153,6 +150,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point mouseMovedPoint = new Point(-1, -1);
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
+	private Color lightColor = new Color(255, 255, 255, 128);
+	private Color textColor = Color.white;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -231,8 +230,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				cut();
 			}
 		};
-		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK);
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK);
 		cutAction.putValue(Action.NAME, "Cut");
 		cutAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Cut");
@@ -243,8 +241,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				copy();
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
 		copyAction.putValue(Action.NAME, "Copy");
 		copyAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Copy");
@@ -255,8 +252,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				paste();
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
 		pasteAction.putValue(Action.NAME, "Paste");
 		pasteAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Paste");
@@ -266,6 +262,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setPixelAttribute(byte pixelAttribute) {
 		this.pixelAttribute = pixelAttribute;
+		switch (pixelAttribute) {
+		case PIXEL_NONE:
+			lightColor = new Color(0, 0, 0, 128);
+			textColor = Color.black;
+			break;
+		case PIXEL_TEMPERATURE:
+			lightColor = new Color(255, 255, 255, 128);
+			textColor = Color.white;
+			break;
+		case PIXEL_THERMAL_ENERGY:
+			lightColor = new Color(255, 255, 255, 128);
+			textColor = Color.white;
+			break;
+		}
 	}
 
 	public byte getPixelAttribute() {
@@ -464,8 +474,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (b && model.getThermometers().isEmpty()) {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(View2D.this,
-							"No graph can be shown because there is no thermometer.");
+					JOptionPane.showMessageDialog(View2D.this, "No graph can be shown because there is no thermometer.");
 				}
 			});
 			notifyManipulationListeners(null, ManipulationEvent.GRAPH);
@@ -624,15 +633,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void paste() {
 		if (copiedManipulable instanceof Part) {
 			Part p = (Part) copiedManipulable;
-			model.addPart(p.duplicate(convertPixelToPointX(mouseReleasedPoint.x),
-					convertPixelToPointY(mouseReleasedPoint.y)));
+			model.addPart(p.duplicate(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)));
 			model.refreshPowerArray();
 			model.refreshTemperatureBoundaryArray();
 			model.refreshMaterialPropertyArrays();
 			model.setInitialTemperature();
 		} else if (copiedManipulable instanceof Thermometer) {
-			addThermometer(convertPixelToPointX(mouseReleasedPoint.x),
-					convertPixelToPointY(mouseReleasedPoint.y));
+			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		}
 		notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
@@ -726,7 +733,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		Stroke stroke = g2.getStroke();
-		g.setColor(getBackground());
+		g.setColor(Color.white);
 		g.fillRect(0, 0, w, h);
 		switch (pixelAttribute) {
 		case PIXEL_TEMPERATURE:
@@ -776,12 +783,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (gridRenderer != null)
 			gridRenderer.render(this, g2);
 		if (rulerRenderer != null) {
-			g2.setColor(Color.white);
+			g2.setColor(textColor);
 			rulerRenderer.render(this, g2);
 		}
-		if (showRainbow)
-			rainbow.render(this, g2, temperatureRenderer.getMaximum(),
-					temperatureRenderer.getMinimum());
+		if (showRainbow && pixelAttribute != PIXEL_NONE)
+			rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
 		if (velocityRenderer != null)
 			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(), this, g2);
 		drawThermometers(g2);
@@ -798,7 +804,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (clockOn) {
 			g2.setFont(smallFont);
-			g2.setColor(Color.white);
+			g2.setColor(textColor);
 			g2.drawString(MiscUtil.formatTime((int) time), w - 68, 16);
 		}
 
@@ -821,15 +827,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.fill(polygon);
 			g2.setColor(Color.white);
 			g2.draw(polygon);
-			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0
-					&& mouseReleasedPoint.y >= 0) {
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
 				g2.setColor(Color.green);
-				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x,
-						mouseReleasedPoint.y);
+				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
 				int np = polygon.npoints;
 				if (np > 0) {
-					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0],
-							polygon.ypoints[0]);
+					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0], polygon.ypoints[0]);
 				}
 			}
 			break;
@@ -888,12 +891,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					iy = Math.round(ny * ry);
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
-						g.setColor(Color.white);
+						g.setColor(textColor);
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
 						if (t.getLabel() != null) {
-							centerString(t.getLabel(), g, x + s.getIconWidth() / 2,
-									y + s.getIconHeight() + 10);
+							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 10);
 						}
 					}
 				}
@@ -1057,8 +1059,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setColor(x.getColor());
 			s = x.getString();
 			s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
-			g.drawString(s, convertPointToPixelX(x.getX()),
-					getHeight() - convertPointToPixelY(x.getY()));
+			g.drawString(s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
@@ -1068,8 +1069,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (pictures == null || pictures.isEmpty())
 			return;
 		for (Picture x : pictures) {
-			x.getImage().paintIcon(this, g, convertPointToPixelX(x.getX()),
-					getHeight() - convertPointToPixelY(x.getY()));
+			x.getImage().paintIcon(this, g, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
 		}
 	}
 
@@ -1084,8 +1084,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				x = convertPointToPixelX(p.getX());
 				y = convertPointToPixelY(p.getY());
 				r = 1.0 / Math.hypot(p.getVx(), p.getVy());
-				g.drawLine((int) (x - photonLength * p.getVx() * r),
-						(int) (y - photonLength * p.getVy() * r), x, y);
+				g.drawLine((int) (x - photonLength * p.getVx() * r), (int) (y - photonLength * p.getVy() * r), x, y);
 			}
 		}
 	}
@@ -1291,8 +1290,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case KeyEvent.VK_R:
-			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP
-					: ManipulationEvent.RUN);
+			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
 			runToggle = !runToggle;
 			break;
 		case KeyEvent.VK_T:
@@ -1392,7 +1390,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseDragged(MouseEvent e) {
 		if (MiscUtil.isRightClick(e))
 			return;
-		if (showGraph) {
+		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
 			e.consume();
 			return;
 		}
@@ -1467,16 +1465,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
-							int k = s.npoints < handle.length ? selectedSpot
-									: (int) ((float) selectedSpot * (float) s.npoints / (float) handle.length);
+							int k = s.npoints < handle.length ? selectedSpot : (int) ((float) selectedSpot * (float) s.npoints / (float) handle.length);
 							s.xpoints[k] = x;
 							s.ypoints[k] = y;
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
 				} else {
-					showTip("<html><font color=red>The selected object is not draggable!</font></html>",
-							x, y, 500);
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
 			}
 			break;
@@ -1525,7 +1521,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseReleasedPoint.setLocation(x, y);
-		if (showGraph) {
+		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
@@ -1561,8 +1557,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshTemperatureBoundaryArray();
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
-					notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-							ManipulationEvent.OBJECT_ADDED);
+					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 					polygon.reset();
 				}
 				break;
@@ -1613,18 +1608,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								Polygon p0 = (Polygon) shape[0];
 								int n = p0.npoints;
 								for (int i = 0; i < n; i++) {
-									p.setVertex(i, convertPixelToPointX(p0.xpoints[i]),
-											convertPixelToPointY(p0.ypoints[i]));
+									p.setVertex(i, convertPixelToPointX(p0.xpoints[i]), convertPixelToPointY(p0.ypoints[i]));
 								}
 								setSelectedManipulable(selectedManipulable);
-								notifyManipulationListeners(selectedManipulable,
-										ManipulationEvent.RESIZE);
+								notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
 							}
 						}
 					}
 				} else {
-					showTip("<html><font color=red>The selected object is not draggable!</font></html>",
-							x, y, 500);
+					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
 			} else {
 				selectManipulable(x, y);
@@ -1632,15 +1624,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case RECTANGLE_MODE:
 			if (rectangle.width * rectangle.height > 9) {
-				model.addRectangularPart(convertPixelToPointX(rectangle.x),
-						convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width),
-						convertPixelToLengthY(rectangle.height));
+				model.addRectangularPart(convertPixelToPointX(rectangle.x), convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width), convertPixelToLengthY(rectangle.height));
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
-				notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-						ManipulationEvent.OBJECT_ADDED);
+				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 			}
 			rectangle.setRect(-1000, -1000, 0, 0);
 			break;
@@ -1655,8 +1644,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
-				notifyManipulationListeners(model.getPart(model.getPartCount() - 1),
-						ManipulationEvent.OBJECT_ADDED);
+				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
@@ -1665,9 +1653,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case THERMOMETER_MODE:
 			addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
-			notifyManipulationListeners(
-					model.getThermometers().get(model.getThermometers().size() - 1),
-					ManipulationEvent.OBJECT_ADDED);
+			notifyManipulationListeners(model.getThermometers().get(model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
 			break;
 		}
 		repaint();
@@ -1702,12 +1688,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
-			return;
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
 			int iSpot = -1;
-			if (selectedManipulable instanceof Part) {
+			if (!showGraph && selectedManipulable instanceof Part) {
 				for (int i = 0; i < handle.length; i++) {
 					if (handle[i].x < -10 || handle[i].y < -10)
 						continue;
@@ -1761,7 +1746,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				}
-				if (!contained) {
+				if (!contained && !showGraph) {
 					synchronized (model.getParts()) {
 						for (Part p : model.getParts()) {
 							if (p.contains(rx, ry)) {
@@ -1771,13 +1756,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				}
-				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR
-						: Cursor.DEFAULT_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
 			}
 			break;
 		case POLYGON_MODE:
-			mouseMovedPoint.setLocation(x, y);
-			repaint();
+			if (!showGraph) {
+				mouseMovedPoint.setLocation(x, y);
+				repaint();
+			}
 			break;
 		}
 		e.consume();
@@ -1937,7 +1923,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.setColor(Color.gray);
 		g.fillRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
 		g.setStroke(moderateStroke);
-		g.setColor(Color.lightGray);
+		g.setColor(pixelAttribute != PIXEL_NONE ? Color.lightGray : Color.black);
 		g.drawRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
 		g.setColor(Color.black);
 		g.drawString(s, x + 1, y - 1);
