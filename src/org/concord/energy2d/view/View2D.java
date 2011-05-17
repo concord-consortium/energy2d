@@ -111,7 +111,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private GridRenderer gridRenderer;
 	private Rainbow rainbow;
 	private GraphRenderer graphRenderer;
-	private ScalarDistributionRenderer temperatureRenderer, energyRenderer;
+	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
 	private VectorDistributionRenderer velocityRenderer;
 	private boolean isothermOn;
 	private boolean streamlineOn;
@@ -120,6 +120,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte pixelAttribute = PIXEL_TEMPERATURE;
+	private float[][] distribution;
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
@@ -216,7 +217,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		createPopupMenu();
 		dialogFactory = new DialogFactory(this);
 		temperatureRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
-		energyRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
+		thermalEnergyRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
 		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -600,6 +601,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setMinimumTemperature(float min) {
 		temperatureRenderer.setMinimum(min);
+		thermalEnergyRenderer.setMinimum(min);
 	}
 
 	public float getMinimumTemperature() {
@@ -608,6 +610,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setMaximumTemperature(float max) {
 		temperatureRenderer.setMaximum(max);
+		thermalEnergyRenderer.setMaximum(max);
 	}
 
 	public float getMaximumTemperature() {
@@ -740,7 +743,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			drawTemperatureField(g2);
 			break;
 		case PIXEL_THERMAL_ENERGY:
-			drawEnergyField(g2);
+			drawThermalEnergyField(g2);
 			break;
 		}
 		drawParts(g2);
@@ -788,7 +791,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (showRainbow && pixelAttribute != PIXEL_NONE) {
 			g2.setStroke(thinStroke);
-			rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
+			switch (pixelAttribute) {
+			case PIXEL_TEMPERATURE:
+				rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
+				break;
+			case PIXEL_THERMAL_ENERGY:
+				rainbow.render(this, g2, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
+				break;
+			}
 		}
 		if (velocityRenderer != null)
 			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(), this, g2);
@@ -1092,11 +1102,24 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void drawTemperatureField(Graphics2D g) {
-		temperatureRenderer.render(model.getTemperature(), this, g);
+		temperatureRenderer.render(this, g, model.getTemperature());
 	}
 
-	private void drawEnergyField(Graphics2D g) {
-		energyRenderer.render(model.getTemperature(), this, g);
+	private void drawThermalEnergyField(Graphics2D g) {
+		float[][] density = model.getDensity();
+		float[][] specificHeat = model.getSpecificHeat();
+		float[][] temperature = model.getTemperature();
+		int nx = temperature.length;
+		int ny = temperature[0].length;
+		if (distribution == null)
+			distribution = new float[nx][ny];
+		float factor = 1f / model.getMaximumHeatCapacity();
+		for (int i = 0; i < nx; i++) {
+			for (int j = 0; j < ny; j++) {
+				distribution[i][j] = factor * density[i][j] * specificHeat[i][j] * temperature[i][j];
+			}
+		}
+		thermalEnergyRenderer.render(this, g, distribution);
 	}
 
 	private void setAnchorPointForRectangularShape(byte i, float x, float y, float w, float h) {

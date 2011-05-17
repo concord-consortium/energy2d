@@ -36,7 +36,7 @@ class HeatSolver2DImpl extends HeatSolver2D {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (Float.isNaN(tb[i][j])) {
-						sij = capacity[i][j] * density[i][j] * invTimeStep;
+						sij = specificHeat[i][j] * density[i][j] * invTimeStep;
 						rij = conductivity[i][j];
 						axij = hx * (rij + conductivity[i - 1][j]);
 						bxij = hx * (rij + conductivity[i + 1][j]);

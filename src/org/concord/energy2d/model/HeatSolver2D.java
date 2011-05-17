@@ -16,7 +16,7 @@ abstract class HeatSolver2D {
 	int nx, ny, nx1, ny1, nx2, ny2;
 	HeatBoundary boundary;
 	float[][] conductivity;
-	float[][] capacity;
+	float[][] specificHeat;
 	float[][] density;
 	float[][] q;
 	float[][] u, v;
@@ -77,8 +77,8 @@ abstract class HeatSolver2D {
 		this.conductivity = conductivity;
 	}
 
-	void setCapacity(float[][] capacity) {
-		this.capacity = capacity;
+	void setSpecificHeat(float[][] specificHeat) {
+		this.specificHeat = specificHeat;
 	}
 
 	void setDensity(float[][] density) {

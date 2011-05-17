@@ -70,14 +70,16 @@ public class Model2D {
 	// conductivity array
 	private float[][] conductivity;
 
-	// specific heat capacity array
-	private float[][] capacity;
+	// specific heat array
+	private float[][] specificHeat;
 
 	// density array
 	private float[][] density;
 
 	// fluid cell array
 	private boolean[][] fluidity;
+
+	private float maximumHeatCapacity = -1, minimumHeatCapacity = Float.MAX_VALUE;
 
 	private List<Thermometer> thermometers;
 
@@ -127,14 +129,14 @@ public class Model2D {
 		uWind = new float[nx][ny];
 		vWind = new float[nx][ny];
 		conductivity = new float[nx][ny];
-		capacity = new float[nx][ny];
+		specificHeat = new float[nx][ny];
 		density = new float[nx][ny];
 		fluidity = new boolean[nx][ny];
 
 		init();
 
 		heatSolver = new HeatSolver2DImpl(nx, ny);
-		heatSolver.setCapacity(capacity);
+		heatSolver.setSpecificHeat(specificHeat);
 		heatSolver.setConductivity(conductivity);
 		heatSolver.setDensity(density);
 		heatSolver.setPower(q);
@@ -443,15 +445,25 @@ public class Model2D {
 		checkPartRadiation();
 	}
 
+	public float getMaximumHeatCapacity() {
+		return maximumHeatCapacity;
+	}
+
+	public float getMinimumHeatCapacity() {
+		return minimumHeatCapacity;
+	}
+
 	public void refreshMaterialPropertyArrays() {
 		float x, y, windSpeed;
 		boolean initial = indexOfStep == 0;
+		maximumHeatCapacity = minimumHeatCapacity = backgroundDensity * backgroundSpecificHeat;
+		float heatCapacity = 0;
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
 				conductivity[i][j] = backgroundConductivity;
-				capacity[i][j] = backgroundSpecificHeat;
+				specificHeat[i][j] = backgroundSpecificHeat;
 				density[i][j] = backgroundDensity;
 				fluidity[i][j] = true;
 				uWind[i][j] = vWind[i][j] = 0;
@@ -460,7 +472,7 @@ public class Model2D {
 						if (p.getShape().contains(x, y)) {
 							// no overlap of parts will be allowed
 							conductivity[i][j] = p.getThermalConductivity();
-							capacity[i][j] = p.getSpecificHeat();
+							specificHeat[i][j] = p.getSpecificHeat();
 							density[i][j] = p.getDensity();
 							if (!initial && p.getConstantTemperature())
 								t[i][j] = p.getTemperature();
@@ -473,6 +485,11 @@ public class Model2D {
 						}
 					}
 				}
+				heatCapacity = specificHeat[i][j] * density[i][j];
+				if (maximumHeatCapacity < heatCapacity)
+					maximumHeatCapacity = heatCapacity;
+				if (minimumHeatCapacity > heatCapacity)
+					minimumHeatCapacity = heatCapacity;
 			}
 		}
 		if (initial) {
@@ -526,7 +543,7 @@ public class Model2D {
 	private void init() {
 		for (int i = 0; i < nx; i++) {
 			Arrays.fill(conductivity[i], backgroundConductivity);
-			Arrays.fill(capacity[i], backgroundSpecificHeat);
+			Arrays.fill(specificHeat[i], backgroundSpecificHeat);
 			Arrays.fill(density[i], backgroundDensity);
 		}
 		setInitialTemperature();
@@ -536,6 +553,8 @@ public class Model2D {
 		parts.clear();
 		photons.clear();
 		thermometers.clear();
+		maximumHeatCapacity = -1;
+		minimumHeatCapacity = Float.MAX_VALUE;
 	}
 
 	private void setInitialVelocity() {
@@ -815,6 +834,14 @@ public class Model2D {
 
 	public float[][] getStreamFunction() {
 		return fluidSolver.getStreamFunction(u, v);
+	}
+
+	public float[][] getSpecificHeat() {
+		return specificHeat;
+	}
+
+	public float[][] getDensity() {
+		return density;
 	}
 
 	private void takeMeasurement() {

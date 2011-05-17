@@ -70,8 +70,7 @@ class ScalarDistributionRenderer {
 		return (255 << 24) | (rc << 16) | (gc << 8) | bc;
 	}
 
-	void render(float[][] distribution, View2D view, Graphics2D g) {
-
+	void render(View2D view, Graphics2D g, float[][] distribution) {
 		if (!view.isVisible())
 			return;
 
@@ -88,6 +87,7 @@ class ScalarDistributionRenderer {
 
 		int rc = 0, gc = 0, bc = 0, iv;
 		float v;
+
 		if (smooth) {
 			int i0, j0, i1, j1;
 			float s0, s1, t0, t1;
@@ -107,9 +107,7 @@ class ScalarDistributionRenderer {
 						j1 = n - 1;
 					t1 = y - j0;
 					t0 = 1 - t1;
-					v = (s0 * (t0 * distribution[i0][j0] + t1 * distribution[i0][j1]) + s1
-							* (t0 * distribution[i1][j0] + t1 * distribution[i1][j1]) - min)
-							* scale;
+					v = (s0 * (t0 * distribution[i0][j0] + t1 * distribution[i0][j1]) + s1 * (t0 * distribution[i1][j0] + t1 * distribution[i1][j1]) - min) * scale;
 					if (v > rgbScale.length - 2)
 						v = rgbScale.length - 2;
 					else if (v < 0)
@@ -142,6 +140,7 @@ class ScalarDistributionRenderer {
 				}
 			}
 		}
+
 		image.setRGB(0, 0, w, h, pixels, 0, w);
 		g.drawImage(image, 0, 0, view);
 
