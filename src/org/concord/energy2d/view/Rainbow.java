@@ -74,7 +74,6 @@ class Rainbow {
 		}
 		Font oldFont = g.getFont();
 		g.setFont(font);
-		System.out.println(w+","+h);
 		if (h > w) {
 			for (int i = 0; i < h; i++) {
 				g.setColor(new Color(getColor(i)));
@@ -98,8 +97,7 @@ class Rainbow {
 			FontMetrics fm = g.getFontMetrics();
 			for (int i = 0; i < labelCount + 1; i++) {
 				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
-				g.drawString(s, x + w * (float) i / (float) labelCount - fm.stringWidth(s) * 0.5f,
-						y + h + 15);
+				g.drawString(s, x + w * (float) i / (float) labelCount - fm.stringWidth(s) * 0.5f, y + h + 15);
 			}
 		}
 		g.setFont(oldFont);

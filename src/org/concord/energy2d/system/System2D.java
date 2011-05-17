@@ -65,8 +65,7 @@ import com.apple.eawt.ApplicationEvent;
  * @author Charles Xie
  * 
  */
-public class System2D extends JApplet implements MwService, VisualizationListener,
-		ManipulationListener {
+public class System2D extends JApplet implements MwService, VisualizationListener, ManipulationListener {
 
 	final static String BRAND_NAME = "Energy2D V0.2";
 
@@ -349,8 +348,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	int askSaveOption() {
 		if (saved || owner == null || currentModel != null || currentURL != null)
 			return JOptionPane.NO_OPTION;
-		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Energy2D",
-				JOptionPane.YES_NO_CANCEL_OPTION);
+		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Energy2D", JOptionPane.YES_NO_CANCEL_OPTION);
 	}
 
 	boolean askSaveBeforeLoading() {
@@ -631,8 +629,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.view.setPreferredSize(new Dimension(600, 600));
 
 		final JFrame frame = new JFrame();
-		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png"))
-				.getImage());
+		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png")).getImage());
 		MenuBar menuBar = new MenuBar(box, frame);
 		frame.setJMenuBar(menuBar);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

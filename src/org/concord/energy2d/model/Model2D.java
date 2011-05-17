@@ -340,8 +340,7 @@ public class Model2D {
 
 	/** return the Prandtl Number of the background fluid */
 	public float getPrandtlNumber() {
-		return getBackgroundViscosity() * backgroundDensity * backgroundSpecificHeat
-				/ backgroundConductivity;
+		return getBackgroundViscosity() * backgroundDensity * backgroundSpecificHeat / backgroundConductivity;
 	}
 
 	public void addThermometer(Thermometer t) {

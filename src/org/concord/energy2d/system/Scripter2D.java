@@ -45,13 +45,9 @@ class Scripter2D extends Scripter {
 	private final static Pattern PART = compile("(^(?i)part\\b){1}");
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
-	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE
-			+ "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}"
-			+ REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE
-			+ "*(\\]){1}\\.");
-	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE
-			+ "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern NONNEGATIVE_DECIMAL = compile(REGEX_NONNEGATIVE_DECIMAL);
 
 	private System2D s2d;
@@ -257,9 +253,7 @@ class Scripter2D extends Scripter {
 								final ImageIcon image = new ImageIcon(url);
 								final Runnable r = new Runnable() {
 									public void run() {
-										s2d.view.addPicture(image,
-												s2d.view.convertPointToPixelX(z[0]),
-												s2d.view.convertPointToPixelY(z[1]));
+										s2d.view.addPicture(image, s2d.view.convertPointToPixelX(z[0]), s2d.view.convertPointToPixelY(z[1]));
 									}
 								};
 								EventQueue.invokeLater(new Runnable() {
@@ -596,8 +590,7 @@ class Scripter2D extends Scripter {
 								float x2 = s2d.view.convertPointToPixelX(x1) / s2d.view.getWidth();
 								float y2 = s2d.view.convertPointToPixelY(y1) / s2d.view.getHeight();
 								float w2 = s2d.view.convertLengthToPixelX(w1) / s2d.view.getWidth();
-								float h2 = s2d.view.convertLengthToPixelY(h1)
-										/ s2d.view.getHeight();
+								float h2 = s2d.view.convertLengthToPixelY(h1) / s2d.view.getHeight();
 								s2d.view.setRainbowRectangle(x2, y2, w2, h2);
 								s2d.view.repaint();
 							}

@@ -230,8 +230,7 @@ class XmlDecoder extends DefaultHandler {
 						outer = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(inner)
-						&& !Float.isNaN(outer))
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(inner) && !Float.isNaN(outer))
 					part = box.model.addRingPart(x, y, inner, outer);
 			}
 		} else if (qName == "polygon") {
@@ -274,8 +273,7 @@ class XmlDecoder extends DefaultHandler {
 						lower = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper)
-						&& !Float.isNaN(lower)) {
+				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
 					DirichletHeatBoundary b = null;
 					HeatBoundary boundary = box.model.getHeatBoundary();
 					if (boundary instanceof DirichletHeatBoundary) {
@@ -306,8 +304,7 @@ class XmlDecoder extends DefaultHandler {
 						lower = Float.parseFloat(attribValue);
 					}
 				}
-				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper)
-						&& !Float.isNaN(lower)) {
+				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
 					NeumannHeatBoundary b = null;
 					HeatBoundary boundary = box.model.getHeatBoundary();
 					if (boundary instanceof NeumannHeatBoundary) {
