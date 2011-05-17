@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.event.VisualizationEvent;
 import org.concord.energy2d.event.VisualizationListener;
 import org.concord.energy2d.math.Polygon2D;
@@ -113,6 +115,7 @@ public class Model2D {
 
 	private List<VisualizationListener> visualizationListeners;
 	private List<PropertyChangeListener> propertyChangeListeners;
+	private List<ManipulationListener> manipulationListeners;
 
 	public Model2D() {
 
@@ -155,6 +158,7 @@ public class Model2D {
 
 		visualizationListeners = new ArrayList<VisualizationListener>();
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
+		manipulationListeners = new ArrayList<ManipulationListener>();
 
 	}
 
@@ -655,8 +659,10 @@ public class Model2D {
 	private void nextStep() {
 		if (stopTime > 0) {
 			if (indexOfStep > 0) {
-				if (indexOfStep % Math.round(stopTime / getTimeStep()) == 0)
+				if (indexOfStep % Math.round(stopTime / getTimeStep()) == 0) {
 					stop();
+					notifyManipulationListeners(ManipulationEvent.AUTO_STOP);
+				}
 			}
 		}
 		if (radiative) {
@@ -859,6 +865,24 @@ public class Model2D {
 		VisualizationEvent e = new VisualizationEvent(this);
 		for (VisualizationListener x : visualizationListeners)
 			x.visualizationRequested(e);
+	}
+
+	public void addManipulationListener(ManipulationListener listener) {
+		if (!manipulationListeners.contains(listener))
+			manipulationListeners.add(listener);
+	}
+
+	public void removeManipulationListener(ManipulationListener listener) {
+		if (listener != null)
+			manipulationListeners.remove(listener);
+	}
+
+	private void notifyManipulationListeners(byte type) {
+		if (manipulationListeners.isEmpty())
+			return;
+		ManipulationEvent e = new ManipulationEvent(this, type);
+		for (ManipulationListener x : manipulationListeners)
+			x.manipulationOccured(e);
 	}
 
 }

@@ -45,11 +45,12 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="0.65" y="0.5"/>
-<thermometer x="0.35" y="0.5"/>
+<thermometer label="T2" x="0.65" y="0.5"/>
+<thermometer label="T1" x="0.35" y="0.5"/>
 </sensor>
 <view>
 <grid>true</grid>
+<grid_size>10</grid_size>
 <rainbow>true</rainbow>
 <rainbow_x>0.083333336</rainbow_x><rainbow_y>0.033333335</rainbow_y><rainbow_w>0.8333333</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>

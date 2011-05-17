@@ -98,6 +98,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		model = new Model2D();
 		model.addVisualizationListener(this);
+		model.addManipulationListener(this);
 		view = new View2D();
 		view.addManipulationListener(this);
 		view.setModel(model);
@@ -464,6 +465,18 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			} else {
 				reload();
 			}
+			break;
+		case ManipulationEvent.AUTO_STOP:
+			if (clickStop != null) {
+				EventQueue.invokeLater(clickStop);
+			} else {
+				stop();
+			}
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "This simulation was designed to automatically stopped here.");
+				}
+			});
 			break;
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());

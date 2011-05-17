@@ -27,9 +27,15 @@ public class ManipulationEvent extends EventObject {
 	public static final byte RELOAD = 14;
 	public static final byte GRID = 15;
 	public static final byte GRAPH = 16;
+	public static final byte AUTO_STOP = 17;
 
 	private Object target;
 	private byte type = -1;
+
+	public ManipulationEvent(Object source, byte type) {
+		super(source);
+		this.type = type;
+	}
 
 	public ManipulationEvent(Object source, Object target, byte type) {
 		super(source);
