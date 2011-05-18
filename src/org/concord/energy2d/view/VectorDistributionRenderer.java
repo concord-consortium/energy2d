@@ -22,7 +22,7 @@ class VectorDistributionRenderer {
 	private final static float SIN = (float) Math.sin(Math.toRadians(20));
 
 	private Color color = new Color(127, 127, 127, 128);
-	private Color heatFluxColor = new Color(255, 127, 0, 128);
+	private Color heatFluxColor = new Color(127, 127, 0, 128);
 	private Stroke stroke = new BasicStroke(1);
 	private int nx;
 	private int ny;

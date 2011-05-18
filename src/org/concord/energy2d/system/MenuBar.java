@@ -486,7 +486,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Comparing Conduction Area");
+		mi = new JMenuItem("Comparing Conduction Areas");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/conduction2.e2d");
@@ -494,7 +494,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Comparing Temperature Difference");
+		mi = new JMenuItem("Comparing Temperature Differences");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/conduction3.e2d");
@@ -502,7 +502,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Comparing Specific Heat Capacity");
+		mi = new JMenuItem("Comparing Specific Heats");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/conduction4.e2d");
