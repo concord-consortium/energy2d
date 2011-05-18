@@ -112,9 +112,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Rainbow rainbow;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
-	private VectorDistributionRenderer velocityRenderer;
+	private VectorDistributionRenderer vectorFieldRenderer;
 	private boolean isothermOn;
 	private boolean streamlineOn;
+	private boolean showVelocity;
+	private boolean showHeatFlux;
 	private boolean showGraph;
 	private boolean showRainbow;
 	private boolean clockOn = true;
@@ -505,16 +507,35 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setVelocityOn(boolean b) {
-		velocityRenderer = b ? new VectorDistributionRenderer(nx, ny) : null;
+		showVelocity = b;
+		if (b && vectorFieldRenderer == null)
+			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
 	}
 
 	public boolean isVelocityOn() {
-		return velocityRenderer != null;
+		return showVelocity;
 	}
 
-	public void setVelocitySpacing(int spacing) {
-		if (velocityRenderer != null)
-			velocityRenderer.setSpacing(spacing);
+	public void setHeatFluxOn(boolean b) {
+		showHeatFlux = b;
+		if (b && vectorFieldRenderer == null)
+			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
+	}
+
+	public boolean isHeatFluxOn() {
+		return showHeatFlux;
+	}
+
+	public void setVectorFieldSpacing(int spacing) {
+		if (vectorFieldRenderer == null)
+			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
+		vectorFieldRenderer.setSpacing(spacing);
+	}
+
+	public int getVectorFieldSpacing() {
+		if (vectorFieldRenderer == null)
+			return 5;
+		return vectorFieldRenderer.getSpacing();
 	}
 
 	public void setStreamlineOn(boolean b) {
@@ -800,8 +821,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				break;
 			}
 		}
-		if (velocityRenderer != null)
-			velocityRenderer.render(model.getXVelocity(), model.getYVelocity(), this, g2);
+		if (showVelocity)
+			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g2);
+		if (showHeatFlux)
+			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g2);
 		drawThermometers(g2);
 		drawPhotons(g2);
 		drawTextBoxes(g2);

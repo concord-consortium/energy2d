@@ -37,6 +37,10 @@ class VectorDistributionRenderer {
 		this.spacing = spacing;
 	}
 
+	int getSpacing() {
+		return spacing;
+	}
+
 	static void drawVector(Graphics2D g, int x, int y, float vx, float vy, float scale) {
 		float r = 1f / (float) Math.hypot(vx, vy);
 		float arrowx = vx * r;
@@ -53,7 +57,7 @@ class VectorDistributionRenderer {
 		g.drawLine((int) x1, (int) y1, (int) (x1 - wingx), (int) (y1 - wingy));
 	}
 
-	void render(float[][] u, float[][] v, JComponent c, Graphics2D g) {
+	void renderVectors(float[][] u, float[][] v, JComponent c, Graphics2D g) {
 
 		if (!c.isVisible())
 			return;
@@ -81,4 +85,32 @@ class VectorDistributionRenderer {
 
 	}
 
+	// special case
+	void renderHeatFlux(float[][] t, float[][] k, JComponent c, Graphics2D g) {
+
+		if (!c.isVisible())
+			return;
+
+		int w = c.getWidth();
+		int h = c.getHeight();
+		float dx = (float) w / (float) nx;
+		float dy = (float) h / (float) ny;
+
+		g.setColor(color);
+		g.setStroke(stroke);
+		int x, y;
+		float uij, vij;
+		for (int i = 1; i < nx - 1; i += spacing) {
+			x = Math.round(i * dx);
+			for (int j = 1; j < ny - 1; j += spacing) {
+				y = Math.round(j * dy);
+				uij = -k[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * dx);
+				vij = -k[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * dy);
+				if (uij * uij + vij * vij > 0) {
+					drawVector(g, x, y, uij, vij, scale);
+				}
+			}
+		}
+
+	}
 }

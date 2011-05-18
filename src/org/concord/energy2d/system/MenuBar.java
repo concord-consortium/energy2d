@@ -131,8 +131,7 @@ class MenuBar extends JMenuBar {
 					int n = recentFiles.length;
 					if (n > 0) {
 						for (int i = 0; i < n; i++) {
-							JMenuItem x = new JMenuItem((i + 1) + "  "
-									+ MiscUtil.getFileName(recentFiles[i]));
+							JMenuItem x = new JMenuItem((i + 1) + "  " + MiscUtil.getFileName(recentFiles[i]));
 							final File rf = new File(recentFiles[i]);
 							x.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
@@ -168,17 +167,14 @@ class MenuBar extends JMenuBar {
 					if (file.exists()) {
 						box.loadFile(file);
 					} else {
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box),
-								"File " + file + " was not found.", "File not found",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box), "File " + file + " was not found.", "File not found", JOptionPane.ERROR_MESSAGE);
 					}
 					e2dFileChooser.rememberFile(file.getPath());
 				}
 				e2dFileChooser.resetChoosableFileFilters();
 			}
 		};
-		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK)
-				: KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Open");
 		box.view.getActionMap().put("Open", openAction);
 		JMenuItem mi = new JMenuItem("Open...");
@@ -200,8 +196,7 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Save");
 		box.view.getActionMap().put("Save", saveAction);
 		mi = new JMenuItem("Save");
@@ -219,8 +214,7 @@ class MenuBar extends JMenuBar {
 				saveAs(box, frame);
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "SaveAs");
 		box.view.getActionMap().put("SaveAs", saveAsAction);
 		mi = new JMenuItem("Save As...");
@@ -236,11 +230,7 @@ class MenuBar extends JMenuBar {
 		saveAsAppletAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				if (box.getCurrentFile() == null) {
-					JOptionPane
-							.showMessageDialog(
-									JOptionPane.getFrameForComponent(box.view),
-									"Sorry, you have to save the current model as a local file in order to create an applet for it.",
-									"Applet not allowed", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Sorry, you have to save the current model as a local file in order to create an applet for it.", "Applet not allowed", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				saveAsApplet(box, frame);
@@ -301,8 +291,7 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		};
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke
-				.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Quit");
 		box.view.getActionMap().put("Quit", exitAction);
 		mi = new JMenuItem("Exit");
@@ -337,6 +326,7 @@ class MenuBar extends JMenuBar {
 
 		final JCheckBoxMenuItem miIsotherm = new JCheckBoxMenuItem("Isotherm");
 		final JCheckBoxMenuItem miVelocity = new JCheckBoxMenuItem("Velocity");
+		final JCheckBoxMenuItem miHeatFlux = new JCheckBoxMenuItem("Heat Flux");
 		final JCheckBoxMenuItem miRainbow = new JCheckBoxMenuItem("Rainbow");
 		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
 		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
@@ -352,6 +342,7 @@ class MenuBar extends JMenuBar {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 				miIsotherm.setSelected(box.view.isIsothermOn());
 				miVelocity.setSelected(box.view.isVelocityOn());
+				miHeatFlux.setSelected(box.view.isHeatFluxOn());
 				miRainbow.setSelected(box.view.isRainbowOn());
 				miRuler.setSelected(box.view.isRulerOn());
 				miGrid.setSelected(box.view.isGridOn());
@@ -368,6 +359,16 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(miIsotherm);
+
+		miHeatFlux.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setHeatFluxOn(src.isSelected());
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		menu.add(miHeatFlux);
 
 		miVelocity.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -434,8 +435,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 1");
+		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Specific Heats: Case 1");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/different-specific-heat1.e2d");
@@ -443,8 +443,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem(
-				"Thermal Equilibrium Between Objects with Different Specific Heats: Case 2");
+		mi = new JMenuItem("Thermal Equilibrium Between Objects with Different Specific Heats: Case 2");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/different-specific-heat2.e2d");
@@ -792,13 +791,11 @@ class MenuBar extends JMenuBar {
 		if (e2dFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = e2dFileChooser.getSelectedFile();
 			if (!file.toString().toLowerCase().endsWith(".e2d")) {
-				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString())
-						+ ".e2d");
+				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString()) + ".e2d");
 			}
 			boolean b = true;
 			if (file.exists()) {
-				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName()
-						+ " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName() + " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 					b = false;
 				}
 			}
@@ -825,13 +822,11 @@ class MenuBar extends JMenuBar {
 		if (htmFileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			File file = htmFileChooser.getSelectedFile();
 			if (!file.toString().toLowerCase().endsWith(".htm")) {
-				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString())
-						+ ".htm");
+				file = new File(file.getParentFile(), MiscUtil.getFileName(file.toString()) + ".htm");
 			}
 			boolean b = true;
 			if (file.exists()) {
-				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName()
-						+ " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(frame, "File " + file.getName() + " exists, overwrite?", "File exists", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 					b = false;
 				}
 			}

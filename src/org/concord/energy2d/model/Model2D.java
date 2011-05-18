@@ -844,6 +844,10 @@ public class Model2D {
 		return density;
 	}
 
+	public float[][] getConductivity() {
+		return conductivity;
+	}
+
 	private void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
 			int ix, iy;

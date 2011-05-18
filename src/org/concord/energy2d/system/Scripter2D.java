@@ -529,6 +529,9 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("velocity")) {
 					s2d.view.setVelocityOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("heat_flux")) {
+					s2d.view.setHeatFluxOn("true".equalsIgnoreCase(t[1]));
+					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("clock")) {
 					s2d.view.setClockOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
