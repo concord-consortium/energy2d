@@ -133,6 +133,9 @@ class XmlEncoder {
 		if (box.view.isVelocityOn()) {
 			sb.append("<velocity>true</velocity>\n");
 		}
+		if (box.view.isHeatFluxOn()) {
+			sb.append("<heat_flux>true</heat_flux>\n");
+		}
 		if (box.view.isStreamlineOn()) {
 			sb.append("<streamline>true</streamline>\n");
 		}
