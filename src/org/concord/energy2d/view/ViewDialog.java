@@ -102,6 +102,29 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
+		checkBox = new JCheckBox("Heat Flux Lines");
+		checkBox.setSelected(view.isHeatFluxLinesOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setHeatFluxLinesOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+		count++;
+
+		checkBox = new JCheckBox("Heat Flux Arrows");
+		checkBox.setSelected(view.isHeatFluxArrowsOn());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setHeatFluxArrowsOn(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+
 		checkBox = new JCheckBox("Ruler");
 		checkBox.setSelected(view.isRulerOn());
 		checkBox.addItemListener(new ItemListener() {
@@ -112,7 +135,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		count++;
 
 		checkBox = new JCheckBox("Graph");
 		checkBox.setSelected(view.isGraphOn());
@@ -135,6 +157,7 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
+		count++;
 
 		checkBox = new JCheckBox("Smooth");
 		checkBox.setSelected(view.isSmooth());
@@ -157,7 +180,6 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
-		count++;
 
 		checkBox = new JCheckBox("Grid");
 		checkBox.setSelected(view.isGridOn());
@@ -180,6 +202,7 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(checkBox);
+		count++;
 
 		checkBox = new JCheckBox("Brand");
 		checkBox.setSelected(view.isFrankOn());
@@ -192,6 +215,8 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
+		p.add(new JPanel());
+		p.add(new JPanel());
 		p.add(new JPanel());
 		count++;
 
@@ -344,8 +369,7 @@ class ViewDialog extends JDialog {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}
