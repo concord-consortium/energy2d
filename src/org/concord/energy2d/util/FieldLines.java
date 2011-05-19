@@ -31,6 +31,7 @@ public class FieldLines {
 	private Color maxColor = new Color(1.0f, 1.0f, 1.0f);
 	private Color color;
 	private float minimumMagnitude = 0.0001f;
+	private float arrowLength = .75f;
 
 	// a 2D array of flags, each corresponding to a region of the back buffer
 	private boolean[][] map;
@@ -99,6 +100,7 @@ public class FieldLines {
 		int i, j;
 		double magnitude = 0;
 		float newX = 0, newY = 0;
+		float arrowScale = sign * arrowLength * arrowPlotSpacing;
 
 		for (int k = 0; k < maxLength; k++) {
 
@@ -123,7 +125,7 @@ public class FieldLines {
 			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
 			// every few pixels, draw an arrow
 			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {
-				drawArrow(g, x, y, x + sign * 0.9f * arrowDirection * arrowPlotSpacing * vx, y + sign * 0.9f * arrowDirection * arrowPlotSpacing * vy);
+				drawArrow(g, x, y, x + arrowScale * vx, y + arrowScale * vy);
 			}
 
 			x = newX;
@@ -182,6 +184,7 @@ public class FieldLines {
 		int i, j;
 		double magnitude = 0;
 		float newX = 0, newY = 0;
+		float arrowScale = sign * arrowLength * arrowDirection * arrowPlotSpacing;
 
 		for (int k = 0; k < maxLength; k++) {
 
@@ -206,7 +209,7 @@ public class FieldLines {
 			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
 			// every few pixels, draw an arrow
 			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {
-				drawArrow(g, x, y, x + sign * 0.9f * arrowDirection * arrowPlotSpacing * vx, y + sign * 0.9f * arrowDirection * arrowPlotSpacing * vy);
+				drawArrow(g, x, y, x + arrowScale * vx, y + arrowScale * vy);
 			}
 
 			x = newX;
