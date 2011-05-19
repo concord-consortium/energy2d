@@ -20,7 +20,7 @@ public class FieldLines {
 	private static final int arrowPlotSpacing = 16; // in pixels
 	private static final int fluxLineSpacing = 2 * arrowPlotSpacing; // in pixels
 	private int nx, ny;
-	private float[][] func;
+	private float[][] func, funx, funy;
 	private Dimension size;
 	private float dx, dy;
 	private float vx, vy;
@@ -29,6 +29,8 @@ public class FieldLines {
 	private Color[] spectrum;
 	private Color minColor = new Color(0.0f, 0.0f, 1.0f);
 	private Color maxColor = new Color(1.0f, 1.0f, 1.0f);
+	private Color color;
+	private float minimumMagnitude = 0.0001f;
 
 	// a 2D array of flags, each corresponding to a region of the back buffer
 	private boolean[][] map;
@@ -41,6 +43,102 @@ public class FieldLines {
 		}
 	}
 
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public void setMinimumColor(Color c) {
+		minColor = c;
+	}
+
+	public void setMaximumColor(Color c) {
+		maxColor = c;
+	}
+
+	// draw field lines for a 2D vector function
+	public void render(Graphics2D g, Dimension size, float[][] funx, float[][] funy) {
+
+		this.funx = funx;
+		this.funy = funy;
+		this.nx = funx.length;
+		this.ny = funx[0].length;
+		this.size = size;
+		dx = (float) size.width / (float) nx;
+		dy = (float) size.height / (float) ny;
+		int mx = size.width / fluxLineSpacing + 1;
+		int my = size.height / fluxLineSpacing + 1;
+		if (map == null || map.length != mx || map[0].length != my)
+			map = new boolean[mx][my];
+		for (int i = 0; i < map.length; i++)
+			Arrays.fill(map[i], false);
+		int maxLength = Math.max(size.width, size.height);
+
+		float x = 0, y = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (!map[i][j]) {
+					// place a seed point in the center of the region
+					x = (i + 0.5f) * fluxLineSpacing;
+					y = (j + 0.5f) * fluxLineSpacing;
+					// draw flux lines forward and backward through the seed point
+					drawFluxLineForVector(g, x, y, 1, maxLength);
+					drawFluxLineForVector(g, x, y, -1, maxLength);
+				}
+			}
+		}
+
+	}
+
+	/*
+	 * @x, @y pixel location of point to start at
+	 * 
+	 * @sign +1 to travel with the field, -1 to travel against it
+	 */
+	private void drawFluxLineForVector(Graphics2D g, float x, float y, float sign, int maxLength) {
+
+		int i, j;
+		double magnitude = 0;
+		float newX = 0, newY = 0;
+
+		for (int k = 0; k < maxLength; k++) {
+
+			i = Math.round(x / dx);
+			j = Math.round(y / dy);
+			if (i <= 0 || i >= nx - 1 || j <= 0 || j >= ny - 1)
+				continue;
+
+			vx = funx[i][j];
+			vy = funy[i][j];
+			vx *= sign;
+			vy *= sign;
+			magnitude = Math.hypot(vx, vy);
+			if (magnitude < minimumMagnitude)
+				break;
+			vx /= magnitude;
+			vy /= magnitude;
+
+			newX = x + vx;
+			newY = y + vy;
+			g.setColor(color != null ? color : getColor(magnitude));
+			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
+			// every few pixels, draw an arrow
+			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {
+				drawArrow(g, x, y, x + sign * 0.9f * arrowDirection * arrowPlotSpacing * vx, y + sign * 0.9f * arrowDirection * arrowPlotSpacing * vy);
+			}
+
+			x = newX;
+			y = newY;
+			if (x < 0 || x >= size.width || y < 0 || y >= size.height)
+				// we're outside the image's boundaries
+				break;
+
+			// mark this part of the image as occupied by a flux line
+			map[Math.round(x) / fluxLineSpacing][Math.round(y) / fluxLineSpacing] = true;
+		}
+
+	}
+
+	// draw field lines for the gradient of a scalar function
 	public void render(Graphics2D g, Dimension size, float[][] func, int arrowDirection) {
 
 		this.func = func;
@@ -66,8 +164,8 @@ public class FieldLines {
 					x = (i + 0.5f) * fluxLineSpacing;
 					y = (j + 0.5f) * fluxLineSpacing;
 					// draw flux lines forward and backward through the seed point
-					drawFluxLine(g, x, y, 1, maxLength);
-					drawFluxLine(g, x, y, -1, maxLength);
+					drawFluxLineForScalar(g, x, y, 1, maxLength);
+					drawFluxLineForScalar(g, x, y, -1, maxLength);
 				}
 			}
 		}
@@ -79,7 +177,7 @@ public class FieldLines {
 	 * 
 	 * @sign +1 to travel with the field, -1 to travel against it
 	 */
-	private void drawFluxLine(Graphics2D g, float x, float y, float sign, int maxLength) {
+	private void drawFluxLineForScalar(Graphics2D g, float x, float y, float sign, int maxLength) {
 
 		int i, j;
 		double magnitude = 0;
@@ -97,14 +195,14 @@ public class FieldLines {
 			vx *= sign;
 			vy *= sign;
 			magnitude = Math.hypot(vx, vy);
-			if (magnitude < 0.001)
+			if (magnitude < minimumMagnitude)
 				break;
 			vx /= magnitude;
 			vy /= magnitude;
 
 			newX = x + vx;
 			newY = y + vy;
-			g.setColor(getColor(magnitude));
+			g.setColor(color == null ? getColor(magnitude) : color);
 			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
 			// every few pixels, draw an arrow
 			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {

@@ -644,16 +644,6 @@ class Scripter2D extends Scripter {
 					}
 					s2d.view.setIsothermResolution(resolution);
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("streamline_resolution")) {
-					float resolution = 0;
-					try {
-						resolution = Float.parseFloat(t[1]);
-					} catch (NumberFormatException e) {
-						showException(ci, e);
-						return;
-					}
-					s2d.view.setStreamlineResolution(resolution);
-					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("timestep")) {
 					float timestep = 0;
 					try {

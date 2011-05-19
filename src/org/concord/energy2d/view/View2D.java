@@ -142,7 +142,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point anchorPoint = new Point();
 	private AffineTransform scale, translate;
 	private ContourMap isotherms;
-	private ContourMap streamlines;
+	private FieldLines streamlines;
 	private FieldLines heatFluxLines;
 	private Polygon multigon;
 	private float photonLength = 10;
@@ -552,28 +552,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setStreamlineOn(boolean b) {
 		showStreamLines = b;
-		if (b) {
-			if (streamlines == null)
-				streamlines = new ContourMap();
-			streamlines.setResolution(0.0001f);
-		} else {
-			streamlines = null;
+		if (b && streamlines == null) {
+			streamlines = new FieldLines();
+			streamlines.setColor(Color.white);
 		}
 	}
 
 	public boolean isStreamlineOn() {
 		return showStreamLines;
-	}
-
-	public void setStreamlineResolution(float resolution) {
-		if (streamlines != null)
-			streamlines.setResolution(resolution);
-	}
-
-	public float getStreamlineResolution() {
-		if (streamlines == null)
-			return 5;
-		return streamlines.getResolution();
 	}
 
 	public void setIsothermOn(boolean b) {
@@ -784,11 +770,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.setStroke(thinStroke);
 			isotherms.render(g2, getSize(), model.getTemperature());
 		}
-		if (streamlines != null) {
+		if (showStreamLines && streamlines != null) {
 			g2.setStroke(thinStroke);
-			streamlines.render(g2, getSize(), model.getStreamFunction());
+			streamlines.render(g2, getSize(), model.getXVelocity(), model.getYVelocity());
 		}
-		if (heatFluxLines != null) {
+		if (showHeatFluxLines && heatFluxLines != null) {
+			g2.setStroke(thinStroke);
 			heatFluxLines.render(g2, getSize(), model.getTemperature(), -1);
 		}
 		if (selectedManipulable != null) {
