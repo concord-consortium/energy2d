@@ -68,6 +68,7 @@ import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.system.Helper;
 import org.concord.energy2d.util.ContourMap;
+import org.concord.energy2d.util.FieldLines;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -113,10 +114,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
 	private VectorDistributionRenderer vectorFieldRenderer;
-	private boolean isothermOn;
-	private boolean streamlineOn;
+	private boolean showIsotherm;
+	private boolean showStreamLines;
 	private boolean showVelocity;
-	private boolean showHeatFlux;
+	private boolean showHeatFluxArrows, showHeatFluxLines;
 	private boolean showGraph;
 	private boolean showRainbow;
 	private boolean clockOn = true;
@@ -142,6 +143,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private AffineTransform scale, translate;
 	private ContourMap isotherms;
 	private ContourMap streamlines;
+	private FieldLines heatFluxLines;
 	private Polygon multigon;
 	private float photonLength = 10;
 	private byte actionMode = SELECT_MODE;
@@ -516,14 +518,24 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return showVelocity;
 	}
 
-	public void setHeatFluxOn(boolean b) {
-		showHeatFlux = b;
+	public void setHeatFluxArrowsOn(boolean b) {
+		showHeatFluxArrows = b;
 		if (b && vectorFieldRenderer == null)
 			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
 	}
 
-	public boolean isHeatFluxOn() {
-		return showHeatFlux;
+	public boolean isHeatFluxArrowsOn() {
+		return showHeatFluxArrows;
+	}
+
+	public void setHeatFluxLinesOn(boolean b) {
+		showHeatFluxLines = b;
+		if (b && heatFluxLines == null)
+			heatFluxLines = new FieldLines();
+	}
+
+	public boolean isHeatFluxLinesOn() {
+		return showHeatFluxLines;
 	}
 
 	public void setVectorFieldSpacing(int spacing) {
@@ -539,7 +551,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setStreamlineOn(boolean b) {
-		streamlineOn = b;
+		showStreamLines = b;
 		if (b) {
 			if (streamlines == null)
 				streamlines = new ContourMap();
@@ -550,7 +562,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public boolean isStreamlineOn() {
-		return streamlineOn;
+		return showStreamLines;
 	}
 
 	public void setStreamlineResolution(float resolution) {
@@ -565,7 +577,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setIsothermOn(boolean b) {
-		isothermOn = b;
+		showIsotherm = b;
 		if (b) {
 			if (isotherms == null)
 				isotherms = new ContourMap();
@@ -575,7 +587,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public boolean isIsothermOn() {
-		return isothermOn;
+		return showIsotherm;
 	}
 
 	public void setIsothermResolution(float resolution) {
@@ -776,6 +788,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g2.setStroke(thinStroke);
 			streamlines.render(g2, getSize(), model.getStreamFunction());
 		}
+		if (heatFluxLines != null) {
+			heatFluxLines.render(g2, getSize(), model.getTemperature(), -1);
+		}
 		if (selectedManipulable != null) {
 			if (selectedManipulable instanceof Thermometer) {
 				Thermometer t = (Thermometer) selectedManipulable;
@@ -823,7 +838,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (showVelocity)
 			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g2);
-		if (showHeatFlux)
+		if (showHeatFluxArrows)
 			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g2);
 		drawThermometers(g2);
 		drawPhotons(g2);

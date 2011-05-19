@@ -18,8 +18,8 @@ import javax.swing.JComponent;
  */
 class VectorDistributionRenderer {
 
-	private final static float COS = (float) Math.cos(Math.toRadians(20));
-	private final static float SIN = (float) Math.sin(Math.toRadians(20));
+	private final static float COS = (float) Math.cos(Math.toRadians(30));
+	private final static float SIN = (float) Math.sin(Math.toRadians(30));
 
 	private Color color = new Color(127, 127, 127, 128);
 	private Color heatFluxColor = new Color(127, 127, 0, 128);

@@ -62,7 +62,8 @@ class XmlDecoder extends DefaultHandler {
 	private float rainbowX, rainbowY, rainbowW, rainbowH;
 	private int gridSize = 10;
 	private boolean velocity;
-	private boolean heatFlux;
+	private boolean heatFluxArrows;
+	private boolean heatFluxLines;
 	private boolean graphOn;
 	private boolean clock = true;
 	private boolean smooth = true;
@@ -128,7 +129,8 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setIsothermOn(isotherm);
 		box.view.setStreamlineOn(streamline);
 		box.view.setVelocityOn(velocity);
-		box.view.setHeatFluxOn(heatFlux);
+		box.view.setHeatFluxArrowsOn(heatFluxArrows);
+		box.view.setHeatFluxLinesOn(heatFluxLines);
 		box.view.setRainbowOn(rainbow);
 		box.view.setFrankOn(brand);
 		box.view.setPixelAttribute(pixelAttribute);
@@ -429,8 +431,10 @@ class XmlDecoder extends DefaultHandler {
 			streamline = Boolean.parseBoolean(str);
 		} else if (qName == "velocity") {
 			velocity = Boolean.parseBoolean(str);
-		} else if (qName == "heat_flux") {
-			heatFlux = Boolean.parseBoolean(str);
+		} else if (qName == "heat_flux_arrow") {
+			heatFluxArrows = Boolean.parseBoolean(str);
+		} else if (qName == "heat_flux_line") {
+			heatFluxLines = Boolean.parseBoolean(str);
 		} else if (qName == "grid") {
 			grid = Boolean.parseBoolean(str);
 		} else if (qName == "grid_size") {
@@ -585,7 +589,8 @@ class XmlDecoder extends DefaultHandler {
 		streamline = false;
 		rainbow = false;
 		velocity = false;
-		heatFlux = false;
+		heatFluxArrows = false;
+		heatFluxLines = false;
 		graphOn = false;
 		clock = true;
 		smooth = true;

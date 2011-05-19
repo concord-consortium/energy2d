@@ -133,8 +133,11 @@ class XmlEncoder {
 		if (box.view.isVelocityOn()) {
 			sb.append("<velocity>true</velocity>\n");
 		}
-		if (box.view.isHeatFluxOn()) {
-			sb.append("<heat_flux>true</heat_flux>\n");
+		if (box.view.isHeatFluxArrowsOn()) {
+			sb.append("<heat_flux_arrow>true</heat_flux_arrow>\n");
+		}
+		if (box.view.isHeatFluxLinesOn()) {
+			sb.append("<heat_flux_line>true</heat_flux_line>\n");
 		}
 		if (box.view.isStreamlineOn()) {
 			sb.append("<streamline>true</streamline>\n");

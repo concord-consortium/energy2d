@@ -326,7 +326,8 @@ class MenuBar extends JMenuBar {
 
 		final JCheckBoxMenuItem miIsotherm = new JCheckBoxMenuItem("Isotherm");
 		final JCheckBoxMenuItem miVelocity = new JCheckBoxMenuItem("Velocity");
-		final JCheckBoxMenuItem miHeatFlux = new JCheckBoxMenuItem("Heat Flux");
+		final JCheckBoxMenuItem miHeatFluxArrow = new JCheckBoxMenuItem("Heat Flux Arrows");
+		final JCheckBoxMenuItem miHeatFluxLine = new JCheckBoxMenuItem("Heat Flux Lines");
 		final JCheckBoxMenuItem miRainbow = new JCheckBoxMenuItem("Rainbow");
 		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
 		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
@@ -342,7 +343,8 @@ class MenuBar extends JMenuBar {
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 				miIsotherm.setSelected(box.view.isIsothermOn());
 				miVelocity.setSelected(box.view.isVelocityOn());
-				miHeatFlux.setSelected(box.view.isHeatFluxOn());
+				miHeatFluxArrow.setSelected(box.view.isHeatFluxArrowsOn());
+				miHeatFluxLine.setSelected(box.view.isHeatFluxLinesOn());
 				miRainbow.setSelected(box.view.isRainbowOn());
 				miRuler.setSelected(box.view.isRulerOn());
 				miGrid.setSelected(box.view.isGridOn());
@@ -360,15 +362,25 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(miIsotherm);
 
-		miHeatFlux.addItemListener(new ItemListener() {
+		miHeatFluxLine.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
-				box.view.setHeatFluxOn(src.isSelected());
+				box.view.setHeatFluxLinesOn(src.isSelected());
 				box.view.repaint();
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
-		menu.add(miHeatFlux);
+		menu.add(miHeatFluxLine);
+
+		miHeatFluxArrow.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setHeatFluxArrowsOn(src.isSelected());
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		menu.add(miHeatFluxArrow);
 
 		miVelocity.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
