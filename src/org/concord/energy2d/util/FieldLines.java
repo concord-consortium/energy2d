@@ -111,11 +111,11 @@ public class FieldLines {
 
 			vx = funx[i][j];
 			vy = funy[i][j];
-			vx *= sign;
-			vy *= sign;
 			magnitude = Math.hypot(vx, vy);
 			if (magnitude < minimumMagnitude)
 				break;
+			vx *= sign;
+			vy *= sign;
 			vx /= magnitude;
 			vy /= magnitude;
 

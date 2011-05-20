@@ -607,7 +607,7 @@ class MenuBar extends JMenuBar {
 		subMenu = new JMenu("Fluid Dynamics");
 		menu.add(subMenu);
 
-		mi = new JMenuItem("Benard Cell");
+		mi = new JMenuItem("Bénard Cell");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/benard-cell.e2d");
