@@ -835,7 +835,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			graphRenderer.setDrawFrame(true);
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					graphRenderer.render(this, g2, t.getData(), selectedManipulable == t);
+					graphRenderer.render(this, g2, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
 			}
 		}

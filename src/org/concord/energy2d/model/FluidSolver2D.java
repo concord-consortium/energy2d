@@ -281,18 +281,14 @@ abstract class FluidSolver2D {
 	}
 
 	/*
-	 * enforce the continuity condition div(V)=0 (velocity field must be
-	 * divergence-free to conserve mass) using the relaxation method:
-	 * http://en.wikipedia.org/wiki/Relaxation_method. This procedure solves the
-	 * Poisson equation.
+	 * enforce the continuity condition div(V)=0 (velocity field must be divergence-free to conserve mass) using the relaxation method: http://en.wikipedia.org/wiki/Relaxation_method. This procedure solves the Poisson equation.
 	 */
 	void conserve(float[][] u, float[][] v, float[][] phi, float[][] div) {
 
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					div[i][j] = (u[i + 1][j] - u[i - 1][j]) * i2dx + (v[i][j + 1] - v[i][j - 1])
-							* i2dy;
+					div[i][j] = (u[i + 1][j] - u[i - 1][j]) * i2dx + (v[i][j + 1] - v[i][j - 1]) * i2dy;
 					phi[i][j] = 0;
 				}
 			}
@@ -308,9 +304,7 @@ abstract class FluidSolver2D {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (fluidity[i][j]) {
-						phi[i][j] = s
-								* ((phi[i - 1][j] + phi[i + 1][j]) * idxsq
-										+ (phi[i][j - 1] + phi[i][j + 1]) * idysq - div[i][j]);
+						phi[i][j] = s * ((phi[i - 1][j] + phi[i + 1][j]) * idxsq + (phi[i][j - 1] + phi[i][j + 1]) * idysq - div[i][j]);
 					}
 				}
 			}
@@ -348,9 +342,7 @@ abstract class FluidSolver2D {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (fluidity[i][j]) {
-						stream[i][j] = s
-								* ((stream[i - 1][j] + stream[i + 1][j]) * idxsq
-										+ (stream[i][j - 1] + stream[i][j + 1]) * idysq + vorticity[i][j]);
+						stream[i][j] = s * ((stream[i - 1][j] + stream[i + 1][j]) * idxsq + (stream[i][j - 1] + stream[i][j + 1]) * idysq + vorticity[i][j]);
 					}
 				}
 			}

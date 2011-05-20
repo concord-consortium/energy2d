@@ -30,9 +30,7 @@ class FluidSolver2DImpl extends FluidSolver2D {
 			for (int i = 1; i < nx1; i++) {
 				for (int j = 1; j < ny1; j++) {
 					if (fluidity[i][j]) {
-						f[i][j] = (f0[i][j] + hx * (f[i - 1][j] + f[i + 1][j]) + hy
-								* (f[i][j - 1] + f[i][j + 1]))
-								* dn;
+						f[i][j] = (f0[i][j] + hx * (f[i - 1][j] + f[i + 1][j]) + hy * (f[i][j - 1] + f[i][j + 1])) * dn;
 					}
 				}
 			}
@@ -53,13 +51,7 @@ class FluidSolver2DImpl extends FluidSolver2D {
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					f[i][j] = f0[i][j]
-							- tx
-							* (u0[i + 1][j] * f0[i + 1][j] - u0[i - 1][j]
-									* f0[i - 1][j])
-							- ty
-							* (v0[i][j + 1] * f0[i][j + 1] - v0[i][j - 1]
-									* f0[i][j - 1]);
+					f[i][j] = f0[i][j] - tx * (u0[i + 1][j] * f0[i + 1][j] - u0[i - 1][j] * f0[i - 1][j]) - ty * (v0[i][j + 1] * f0[i][j + 1] - v0[i][j - 1] * f0[i][j - 1]);
 				}
 			}
 		}
@@ -69,9 +61,7 @@ class FluidSolver2DImpl extends FluidSolver2D {
 		for (int i = 1; i < nx1; i++) {
 			for (int j = 1; j < ny1; j++) {
 				if (fluidity[i][j]) {
-					f0[i][j] = 0.5f * (f0[i][j] + f[i][j]) - 0.5f * tx
-							* u0[i][j] * (f[i + 1][j] - f[i - 1][j]) - 0.5f
-							* ty * v0[i][j] * (f[i][j + 1] - f[i][j - 1]);
+					f0[i][j] = 0.5f * (f0[i][j] + f[i][j]) - 0.5f * tx * u0[i][j] * (f[i + 1][j] - f[i - 1][j]) - 0.5f * ty * v0[i][j] * (f[i][j + 1] - f[i][j - 1]);
 				}
 			}
 		}

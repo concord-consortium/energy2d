@@ -31,7 +31,8 @@ class GraphRenderer {
 	final static byte Y_SHRINK_BUTTON = 4;
 
 	private final static DecimalFormat FORMAT = new DecimalFormat("##.##");
-	private Font smallFont = new Font(null, Font.PLAIN, 8);
+	private Font smallFont = new Font(null, Font.PLAIN, 9);
+	private Font labelFont = new Font(null, Font.PLAIN | Font.BOLD, 12);
 	private Stroke frameStroke = new BasicStroke(2);
 	private Stroke thinStroke = new BasicStroke(1);
 	private Stroke curveStroke = new BasicStroke(1.5f);
@@ -130,7 +131,7 @@ class GraphRenderer {
 		g.drawString(s, x - stringWidth / 2, y);
 	}
 
-	void render(JComponent c, Graphics2D g, List<TimedData> data, boolean highlight) {
+	void render(JComponent c, Graphics2D g, List<TimedData> data, String label, boolean highlight) {
 
 		if (!c.isVisible())
 			return;
@@ -234,7 +235,7 @@ class GraphRenderer {
 					g.drawLine(x, k, x + 2, k);
 				}
 			}
-			centerString(yLabel, g, x + 36, y + 10);
+			centerString(yLabel, g, x + 40, y + 10);
 			drawFrame = false;
 
 		}
@@ -249,7 +250,7 @@ class GraphRenderer {
 			float t1 = d.getTime();
 			float v1 = d.getValue();
 			float t2, v2;
-			int x1, y1, x2, y2;
+			int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 			float scaleX = w / scopeX;
 			float scaleY = h / scopeY;
 			synchronized (data) {
@@ -267,6 +268,10 @@ class GraphRenderer {
 					t1 = t2;
 					v1 = v2;
 				}
+			}
+			if (label != null) {
+				g.setFont(labelFont);
+				g.drawString(label, x2 + 5, y2);
 			}
 		}
 
