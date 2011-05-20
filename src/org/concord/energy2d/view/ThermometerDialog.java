@@ -40,12 +40,18 @@ class ThermometerDialog extends JDialog {
 	private Window owner;
 	private JPanel thermostatPanel;
 	private ActionListener okListener;
+	private JTextField xField;
+	private JTextField yField;
 	private JTextField labelField;
+	private JTextField thermostatField;
+	private JRadioButton onePointButton;
+	private JRadioButton fivePointsButton;
+	private JRadioButton ninePointsButton;
+	private JCheckBox thermostatCheckBox;
 
 	ThermometerDialog(final View2D view, final Thermometer thermometer, boolean modal) {
 
-		super(JOptionPane.getFrameForComponent(view), "Thermometer (#"
-				+ view.model.getThermometers().indexOf(thermometer) + ") Options", modal);
+		super(JOptionPane.getFrameForComponent(view), "Thermometer (#" + view.model.getThermometers().indexOf(thermometer) + ") Options", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
@@ -57,7 +63,36 @@ class ThermometerDialog extends JDialog {
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				float x = parse(xField.getText());
+				if (Float.isNaN(x))
+					return;
+				thermometer.setX(x);
+
+				x = parse(yField.getText());
+				if (Float.isNaN(x))
+					return;
+				thermometer.setY(view.model.getLy() - x);
+
 				thermometer.setLabel(labelField.getText());
+
+				if (onePointButton.isSelected())
+					thermometer.setStencil(Thermometer.ONE_POINT);
+				else if (fivePointsButton.isSelected())
+					thermometer.setStencil(Thermometer.FIVE_POINT);
+				else if (ninePointsButton.isSelected())
+					thermometer.setStencil(Thermometer.NINE_POINT);
+
+				if (thermostatCheckBox.isSelected()) {
+					thermometer.setThermostat(true);
+					x = parse(thermostatField.getText());
+					if (Float.isNaN(x))
+						return;
+					thermometer.setThermostatTemperature(x);
+				} else {
+					thermometer.setThermostat(false);
+				}
+
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
@@ -86,6 +121,16 @@ class ThermometerDialog extends JDialog {
 		p.setBorder(BorderFactory.createTitledBorder("General properties"));
 		box.add(p);
 
+		p.add(new JLabel("X:"));
+		xField = new JTextField(thermometer.getX() + "", 10);
+		xField.addActionListener(okListener);
+		p.add(xField);
+
+		p.add(new JLabel("Y:"));
+		yField = new JTextField((view.model.getLy() - thermometer.getY()) + "", 10);
+		yField.addActionListener(okListener);
+		p.add(yField);
+
 		p.add(new JLabel("Label:"));
 		labelField = new JTextField(thermometer.getLabel(), 20);
 		labelField.addActionListener(okListener);
@@ -94,23 +139,23 @@ class ThermometerDialog extends JDialog {
 		// thermometer calibration
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setBorder(BorderFactory.createTitledBorder("Measured area (stencil)"));
+		p.setBorder(BorderFactory.createTitledBorder("Sampled area (stencil)"));
 		box.add(p);
 
 		ButtonGroup bg = new ButtonGroup();
 
-		JRadioButton rb = new JRadioButton("One point");
-		rb.setSelected(true);
-		p.add(rb);
-		bg.add(rb);
+		onePointButton = new JRadioButton("One point");
+		onePointButton.setSelected(true);
+		p.add(onePointButton);
+		bg.add(onePointButton);
 
-		rb = new JRadioButton("Five points");
-		p.add(rb);
-		bg.add(rb);
+		fivePointsButton = new JRadioButton("Five points");
+		p.add(fivePointsButton);
+		bg.add(fivePointsButton);
 
-		rb = new JRadioButton("Nine points");
-		p.add(rb);
-		bg.add(rb);
+		ninePointsButton = new JRadioButton("Nine points");
+		p.add(ninePointsButton);
+		bg.add(ninePointsButton);
 
 		// thermostat properties
 
@@ -119,32 +164,21 @@ class ThermometerDialog extends JDialog {
 		box.add(thermostatPanel);
 		int count = 0;
 
-		JCheckBox checkBox = new JCheckBox("Activate");
-		checkBox.setSelected(thermometer.isThermostat());
-		checkBox.addItemListener(new ItemListener() {
+		thermostatCheckBox = new JCheckBox("Activate");
+		thermostatCheckBox.setSelected(thermometer.isThermostat());
+		thermostatCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
-				boolean b = src.isSelected();
-				thermometer.setThermostat(b);
-				enableThermostatSettings(b);
-				view.repaint();
+				enableThermostatSettings(src.isSelected());
 			}
 		});
-		thermostatPanel.add(checkBox);
+		thermostatPanel.add(thermostatCheckBox);
 
 		JLabel label = new JLabel("Target temperature: ");
 		thermostatPanel.add(label);
-		JTextField textField = new JTextField(thermometer.getThermostatTemperature() + "", 10);
-		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float x = parse(src.getText());
-				if (Float.isNaN(x))
-					return;
-				thermometer.setThermostatTemperature(x);
-			}
-		});
-		thermostatPanel.add(textField);
+		thermostatField = new JTextField(thermometer.getThermostatTemperature() + "", 10);
+		thermostatField.addActionListener(okListener);
+		thermostatPanel.add(thermostatField);
 		label = new JLabel("\u2103");
 		thermostatPanel.add(label);
 		count++;
@@ -179,8 +213,7 @@ class ThermometerDialog extends JDialog {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}

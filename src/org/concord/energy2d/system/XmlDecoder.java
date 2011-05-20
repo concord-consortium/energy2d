@@ -327,6 +327,7 @@ class XmlDecoder extends DefaultHandler {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
 				String label = null;
+				byte stencil = Thermometer.ONE_POINT;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -334,12 +335,14 @@ class XmlDecoder extends DefaultHandler {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
 						y = Float.parseFloat(attribValue);
+					} else if (attribName == "stencil") {
+						stencil = Byte.parseByte(attribValue);
 					} else if (attribName == "label") {
 						label = attribValue;
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y))
-					box.model.addThermometer(x, y, label);
+					box.model.addThermometer(x, y, label, stencil);
 			}
 		} else if (qName == "text") {
 			if (attrib != null) {

@@ -19,11 +19,16 @@ import org.concord.energy2d.event.MeasurementListener;
  */
 public class Thermometer extends Manipulable {
 
+	public final static byte ONE_POINT = 1;
+	public final static byte FIVE_POINT = 5;
+	public final static byte NINE_POINT = 9;
+
 	private final static int MAX = 1000;
 	private List<TimedData> data;
 	private List<MeasurementListener> listeners;
 	private boolean thermostat;
 	private float thermostatTemperature = 20;
+	private byte stencil = ONE_POINT;
 
 	public final static float RELATIVE_WIDTH = 0.025f;
 	public final static float RELATIVE_HEIGHT = 0.05f;
@@ -56,9 +61,27 @@ public class Thermometer extends Manipulable {
 		return thermostatTemperature;
 	}
 
+	public void setStencil(byte stencil) {
+		this.stencil = stencil;
+	}
+
+	public byte getStencil() {
+		return stencil;
+	}
+
 	public void setCenter(float x, float y) {
 		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.x = x - 0.5f * r.width;
+		r.y = y - 0.5f * r.height;
+	}
+
+	public void setX(float x) {
+		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+		r.x = x - 0.5f * r.width;
+	}
+
+	public void setY(float y) {
+		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 		r.y = y - 0.5f * r.height;
 	}
 
@@ -115,6 +138,8 @@ public class Thermometer extends Manipulable {
 
 	public String toXml() {
 		String xml = "<thermometer";
+		if (stencil != ONE_POINT)
+			xml += " stencil=\"" + stencil + "\"";
 		if (thermostat) {
 			xml += " thermostat=\"true\"";
 			xml += " thermostat_temperature=\"" + thermostatTemperature + "\"";

@@ -24,8 +24,7 @@ import org.concord.energy2d.math.Ring2D;
 /**
  * Units:
  * 
- * Temperature: centigrade; Length: meter; Time: second; Thermal diffusivity:
- * m^2/s; Power: centigrade/second
+ * Temperature: centigrade; Length: meter; Time: second; Thermal diffusivity: m^2/s; Power: centigrade/second
  * 
  * @author Charles Xie
  * 
@@ -44,11 +43,7 @@ public class Model2D {
 	private float backgroundTemperature;
 
 	/*
-	 * temperature array. On Java 6, using a 1D array and then a convenience
-	 * function I(i, j) =i + j x ny to find t(i, j) is about 12% faster than
-	 * using a 2D array directly. Hence, using 1D array for 2D functions doesn't
-	 * result in significant performance improvements (the JRE probably have
-	 * already optimized this for us).
+	 * temperature array. On Java 6, using a 1D array and then a convenience function I(i, j) =i + j x ny to find t(i, j) is about 12% faster than using a 2D array directly. Hence, using 1D array for 2D functions doesn't result in significant performance improvements (the JRE probably have already optimized this for us).
 	 */
 	private float[][] t;
 
@@ -357,9 +352,10 @@ public class Model2D {
 		thermometers.add(new Thermometer(x, y));
 	}
 
-	public void addThermometer(float x, float y, String label) {
+	public void addThermometer(float x, float y, String label, byte stencil) {
 		Thermometer t = new Thermometer(x, y);
 		t.setLabel(label);
+		t.setStencil(stencil);
 		thermometers.add(t);
 	}
 
@@ -855,8 +851,71 @@ public class Model2D {
 				for (Thermometer m : thermometers) {
 					ix = Math.round(m.getX() / deltaX);
 					iy = Math.round(m.getY() / deltaY);
-					if (ix >= 0 && ix < nx && iy >= 0 && iy < ny)
-						m.addData(getTime(), t[ix][iy]);
+					if (ix >= 0 && ix < nx && iy >= 0 && iy < ny) {
+						switch (m.getStencil()) {
+						case Thermometer.ONE_POINT:
+							m.addData(getTime(), t[ix][iy]);
+							break;
+						case Thermometer.FIVE_POINT:
+							float temp = t[ix][iy];
+							int count = 1;
+							if (ix > 0) {
+								temp += t[ix - 1][iy];
+								count++;
+							}
+							if (ix < nx - 1) {
+								temp += t[ix + 1][iy];
+								count++;
+							}
+							if (iy > 0) {
+								temp += t[ix][iy - 1];
+								count++;
+							}
+							if (iy < ny - 1) {
+								temp += t[ix][iy + 1];
+								count++;
+							}
+							m.addData(getTime(), temp / count);
+							break;
+						case Thermometer.NINE_POINT:
+							temp = t[ix][iy];
+							count = 1;
+							if (ix > 0) {
+								temp += t[ix - 1][iy];
+								count++;
+							}
+							if (ix < nx - 1) {
+								temp += t[ix + 1][iy];
+								count++;
+							}
+							if (iy > 0) {
+								temp += t[ix][iy - 1];
+								count++;
+							}
+							if (iy < ny - 1) {
+								temp += t[ix][iy + 1];
+								count++;
+							}
+							if (ix > 0 && iy > 0) {
+								temp += t[ix - 1][iy - 1];
+								count++;
+							}
+							if (ix > 0 && iy < ny - 1) {
+								temp += t[ix - 1][iy + 1];
+								count++;
+							}
+							if (ix < nx - 1 && iy > 0) {
+								temp += t[ix + 1][iy - 1];
+								count++;
+							}
+							if (ix < nx - 1 && iy < ny - 1) {
+								temp += t[ix + 1][iy + 1];
+								count++;
+							}
+							m.addData(getTime(), temp / count);
+							break;
+						}
+					}
 				}
 			}
 		}
