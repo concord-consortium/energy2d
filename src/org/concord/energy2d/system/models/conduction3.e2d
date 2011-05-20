@@ -100,8 +100,10 @@
 </sensor>
 <view>
 <grid>true</grid>
+<grid_size>10</grid_size>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.49333334</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
+<heat_flux_line>true</heat_flux_line>
 <clock>false</clock>
 </view>
 </state>

@@ -81,9 +81,11 @@
 <sensor>
 </sensor>
 <view>
+<grid_size>10</grid_size>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.49333334</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
 <velocity>true</velocity>
+<streamline>true</streamline>
 <text string="Vortex street forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="9.0"/>
 <text string="Vortex street not forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="1.0"/>
 </view>

@@ -57,6 +57,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<label>Roof</label>
 </part>
 <part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -91,18 +92,21 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>ffffff</color>
+<label>Window</label>
 </part>
 </structure>
 </model>
 <sensor>
-<thermometer x="0.9" y="6.0"/>
-<thermometer x="1.65" y="6.0"/>
-<thermometer x="8.15" y="6.0"/>
+<thermometer label="T1" x="0.9" y="6.0"/>
+<thermometer label="T2" x="1.65" y="6.0"/>
+<thermometer label="T3" x="8.15" y="6.0"/>
 </sensor>
 <view>
+<grid_size>10</grid_size>
 <ruler>true</ruler>
 <isotherm>true</isotherm>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.49333334</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
+<heat_flux_line>true</heat_flux_line>
 </view>
 </state>

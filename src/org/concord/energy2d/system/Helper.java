@@ -48,10 +48,10 @@ public class Helper {
 
 	public final static void showAbout(Frame frame) {
 		String s = "<html><h2>Energy2D</h2>";
-		s += "<h4><i>Interactive simulation of heat and mass flow</i></h4>";
-		s += "http://energy.concord.org/energy2d/index.html<br>The Concord Consortium, 2011";
+		s += "<h4><i>The only heat transfer simulation tool for everyone</i></h4>";
+		s += "http://energy.concord.org/energy2d<br>The Concord Consortium, 2011";
 		s += "<hr>";
-		s += "<h4>Credit:</h4>This program is created by Dr. Charles Xie (qxie@concord.org).<br>";
+		s += "<h4>Credit:</h4>This program is created by Dr. Charles Xie (charxie@gmail.com).<br>";
 		s += "Funding of this project is provided by the US National Science Foundation<br>";
 		s += "under grant #0918449.";
 		s += "<h4>License:</h4>GNU Lesser General Public License V3.0";

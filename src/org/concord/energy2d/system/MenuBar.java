@@ -526,10 +526,18 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Comparing Specific Heats");
+		mi = new JMenuItem("Comparing Conducting Distances");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/conduction4.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Comparing Specific Heats");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/conduction5.e2d");
 			}
 		});
 		subMenu.add(mi);

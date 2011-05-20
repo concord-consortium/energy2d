@@ -33,8 +33,9 @@
 <sensor>
 </sensor>
 <view>
+<grid_size>10</grid_size>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<velocity>true</velocity>
+<streamline>true</streamline>
 </view>
 </state>

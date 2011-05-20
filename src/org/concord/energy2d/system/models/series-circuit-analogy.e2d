@@ -94,16 +94,18 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="0.09" y="0.06"/>
-<thermometer x="0.073" y="0.06"/>
-<thermometer x="0.057" y="0.06"/>
-<thermometer x="0.042" y="0.06"/>
-<thermometer x="0.027" y="0.06"/>
+<thermometer label="T5" x="0.09" y="0.06"/>
+<thermometer label="T4" x="0.073" y="0.06"/>
+<thermometer label="T3" x="0.057" y="0.06"/>
+<thermometer label="T2" x="0.042" y="0.06"/>
+<thermometer label="T1" x="0.027" y="0.06"/>
 </sensor>
 <view>
 <grid>true</grid>
+<grid_size>10</grid_size>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
+<heat_flux_line>true</heat_flux_line>
 <clock>false</clock>
 </view>
 </state>
