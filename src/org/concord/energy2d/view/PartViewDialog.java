@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Part;
-import org.concord.energy2d.util.BackgroundComboBox;
+import org.concord.energy2d.util.FillPatternComboBox;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ColorMenu;
 import org.concord.energy2d.util.FillEffectChooser;
@@ -39,7 +39,7 @@ class PartViewDialog extends JDialog {
 	private FillEffectChooser fillEffectChooser;
 	private JCheckBox visibleCheckBox;
 	private JCheckBox draggableCheckBox;
-	private BackgroundComboBox bgComboBox;
+	private FillPatternComboBox bgComboBox;
 	private ActionListener okListener;
 
 	PartViewDialog(final View2D view, final Part part, boolean modal) {
@@ -98,7 +98,7 @@ class PartViewDialog extends JDialog {
 		colorChooser = new JColorChooser();
 		fillEffectChooser = new FillEffectChooser();
 
-		bgComboBox = new BackgroundComboBox(this, colorChooser, fillEffectChooser);
+		bgComboBox = new FillPatternComboBox(this, colorChooser, fillEffectChooser);
 		bgComboBox.setToolTipText("Background filling");
 		bgComboBox.setFillPattern(part.getFillPattern());
 		bgComboBox.getColorMenu().setNoFillAction(new AbstractAction("No Fill") {

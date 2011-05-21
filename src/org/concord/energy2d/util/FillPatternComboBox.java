@@ -35,13 +35,13 @@ import javax.swing.plaf.basic.BasicBorders;
  * 
  */
 
-public class BackgroundComboBox extends JComponent implements FocusListener, PropertyChangeListener {
+public class FillPatternComboBox extends JComponent implements FocusListener, PropertyChangeListener {
 
 	protected SelectionPanel selectionPanel;
 	protected JButton popButton;
 	protected ColorMenu colorMenu;
 
-	public BackgroundComboBox(Component parent, JColorChooser colorChooser, FillEffectChooser fillEffectChooser) {
+	public FillPatternComboBox(Component parent, JColorChooser colorChooser, FillEffectChooser fillEffectChooser) {
 
 		setLayout(new BorderLayout());
 		setBorder(new BasicBorders.ButtonBorder(Color.lightGray, Color.white, Color.black, Color.gray));
@@ -113,15 +113,13 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 		String name = e.getPropertyName();
 
 		if (name.equals(ColorMenu.FILLING)) {
-
 			Object obj = e.getNewValue();
-
 			if (obj instanceof ColorFill) {
 				selectionPanel.setFillPattern((ColorFill) obj);
 			} else if (obj instanceof Texture) {
 				selectionPanel.setFillPattern((Texture) obj);
 			}
-
+			selectionPanel.repaint();
 		}
 
 	}
@@ -140,12 +138,8 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 			return false;
 		}
 
-		public void setFillPattern(FillPattern fm) {
-			fillPattern = fm;
-			if (fillPattern instanceof ColorFill) {
-				setBackground(((ColorFill) fillPattern).getColor());
-			}
-			repaint();
+		public void setFillPattern(FillPattern fp) {
+			fillPattern = fp;
 		}
 
 		public FillPattern getFillPattern() {
@@ -158,6 +152,9 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setPaint(((Texture) fillPattern).getPaint());
 				g2.fillRect(0, 0, getWidth(), getHeight());
+			} else if (fillPattern instanceof ColorFill) {
+				g.setColor(((ColorFill) fillPattern).getColor());
+				g.fillRect(0, 0, getWidth(), getHeight());
 			}
 		}
 

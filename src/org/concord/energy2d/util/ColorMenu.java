@@ -225,7 +225,13 @@ public class ColorMenu extends JMenu {
 		String hex = JOptionPane.showInputDialog(parent, "Input a hex color number:", s);
 		if (hex == null)
 			return null;
-		return MiscUtil.convertToColor(hex);
+		Color c = oldColor;
+		try {
+			c = MiscUtil.convertToColor(hex);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(ColorMenu.this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return c;
 	}
 
 	public void addMoreColorListener(final ActionListener a) {
