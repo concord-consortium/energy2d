@@ -17,9 +17,9 @@ public class Texture implements FillPattern {
 
 	private int fgColor = 0xff000000;
 	private int bgColor = 0xffffffff;
-	private byte type;
-	private int cellWidth;
-	private int cellHeight;
+	private byte type = TextureFactory.DIAGONAL_UP_STRIPE;
+	private int cellWidth = 10;
+	private int cellHeight = 10;
 	private transient Paint texturePaint;
 
 	public Texture() {

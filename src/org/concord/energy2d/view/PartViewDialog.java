@@ -26,7 +26,6 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.BackgroundComboBox;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ColorMenu;
-import org.concord.energy2d.util.ColoredLabel;
 import org.concord.energy2d.util.FillEffectChooser;
 import org.concord.energy2d.util.FillPattern;
 
@@ -38,8 +37,8 @@ class PartViewDialog extends JDialog {
 
 	private JColorChooser colorChooser;
 	private FillEffectChooser fillEffectChooser;
-	private ColoredLabel coloredLabel;
-	private JCheckBox visibleCheckBox, draggableCheckBox, borderOnlyCheckBox;
+	private JCheckBox visibleCheckBox;
+	private JCheckBox draggableCheckBox;
 	private BackgroundComboBox bgComboBox;
 	private ActionListener okListener;
 
@@ -53,11 +52,6 @@ class PartViewDialog extends JDialog {
 
 				part.setDraggable(draggableCheckBox.isSelected());
 				part.setVisible(visibleCheckBox.isSelected());
-				part.setFilled(!borderOnlyCheckBox.isSelected());
-				FillPattern fillPattern = part.getFillPattern();
-				if (fillPattern instanceof ColorFill) {
-					part.setFillPattern(new ColorFill(coloredLabel.getBackground()));
-				}
 
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.setSelectedManipulable(view.getSelectedManipulable());
@@ -100,15 +94,6 @@ class PartViewDialog extends JDialog {
 		p.add(draggableCheckBox);
 		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
 		p.add(visibleCheckBox);
-		borderOnlyCheckBox = new JCheckBox("Show border only", !part.isFilled());
-		p.add(borderOnlyCheckBox);
-		FillPattern fillPattern = part.getFillPattern();
-		Color color = Color.gray;
-		if (fillPattern instanceof ColorFill) {
-			color = ((ColorFill) fillPattern).getColor();
-		}
-		coloredLabel = new ColoredLabel(color);
-		p.add(coloredLabel);
 
 		colorChooser = new JColorChooser();
 		fillEffectChooser = new FillEffectChooser();
@@ -118,28 +103,31 @@ class PartViewDialog extends JDialog {
 		bgComboBox.setFillPattern(part.getFillPattern());
 		bgComboBox.getColorMenu().setNoFillAction(new AbstractAction("No Fill") {
 			public void actionPerformed(ActionEvent e) {
-				part.setFilled(true);
+				part.setFilled(false);
 				view.repaint();
 				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, null);
 			}
 		});
 		bgComboBox.getColorMenu().setColorArrayAction(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				FillPattern fm = new ColorFill(bgComboBox.getColorMenu().getColor());
-				if (fm.equals(part.getFillPattern()))
+				FillPattern fp = new ColorFill(bgComboBox.getColorMenu().getColor());
+				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFillPattern(fm);
+				part.setFilled(true);
+				part.setFillPattern(fp);
 				view.repaint();
+				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
 			}
 		});
 		bgComboBox.getColorMenu().setMoreColorAction(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FillPattern fm = new ColorFill(bgComboBox.getColorMenu().getColorChooser().getColor());
-				if (fm.equals(part.getFillPattern()))
+				FillPattern fp = new ColorFill(bgComboBox.getColorMenu().getColorChooser().getColor());
+				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFillPattern(fm);
+				part.setFilled(true);
+				part.setFillPattern(fp);
 				view.repaint();
-				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fm);
+				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
 			}
 		});
 		bgComboBox.getColorMenu().addHexColorListener(new ActionListener() {
@@ -147,22 +135,24 @@ class PartViewDialog extends JDialog {
 				Color c = bgComboBox.getColorMenu().getHexInputColor(part.getFillPattern() instanceof ColorFill ? ((ColorFill) part.getFillPattern()).getColor() : null);
 				if (c == null)
 					return;
-				FillPattern fm = new ColorFill(c);
-				if (fm.equals(part.getFillPattern()))
+				FillPattern fp = new ColorFill(c);
+				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFillPattern(fm);
+				part.setFilled(true);
+				part.setFillPattern(fp);
 				view.repaint();
-				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fm);
+				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
 			}
 		});
 		bgComboBox.getColorMenu().setFillEffectActions(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FillPattern fm = bgComboBox.getColorMenu().getFillEffectChooser().getFillPattern();
-				if (fm.equals(part.getFillPattern()))
+				FillPattern fp = bgComboBox.getColorMenu().getFillEffectChooser().getFillPattern();
+				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFillPattern(fm);
+				part.setFilled(true);
+				part.setFillPattern(fp);
 				view.repaint();
-				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fm);
+				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
 			}
 		}, null);
 		p.add(bgComboBox);

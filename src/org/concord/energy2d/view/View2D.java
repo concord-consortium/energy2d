@@ -959,6 +959,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return proposedColor;
 	}
 
+	private void setPaint(Graphics2D g, Texture texture) {
+		Color bg = new Color((128 << 24) | (0x00ffffff & texture.getBackground()), true);
+		Color fg = new Color((0 << 24) | (0x00ffffff & texture.getForeground()), true);
+		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), fg, bg));
+	}
+
 	private void drawParts(Graphics2D g) {
 		List<Part> parts = model.getParts();
 		if (parts.isEmpty())
@@ -977,16 +983,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int w = convertLengthToPixelX(e.width);
 					int h = convertLengthToPixelY(e.height);
 					if (p.isFilled()) {
-						FillPattern fillMode = p.getFillPattern();
-						if (fillMode instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
-							g.fillOval(x, y, w, h);
-						} else if (fillMode instanceof Texture) {
-							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
-							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
-							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
-							g.fillOval(x, y, w, h);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern);
 						}
+						g.fillOval(x, y, w, h);
 					}
 					g.setColor(Color.black);
 					g.drawOval(x - 1, y - 1, w + 2, h + 2);
@@ -1016,16 +1019,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int w = convertLengthToPixelX(r.width);
 					int h = convertLengthToPixelY(r.height);
 					if (p.isFilled()) {
-						FillPattern fillMode = p.getFillPattern();
-						if (fillMode instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
-							g.fillRect(x, y, w, h);
-						} else if (fillMode instanceof Texture) {
-							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
-							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
-							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
-							g.fillRect(x, y, w, h);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern);
 						}
+						g.fillRect(x, y, w, h);
 					}
 					g.setColor(Color.black);
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);
@@ -1055,11 +1055,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					Area area = (Area) s;
 					area.transform(scale);
 					if (p.isFilled()) {
-						FillPattern fillMode = p.getFillPattern();
-						if (fillMode instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
-							g.fill(area);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern);
 						}
+						g.fill(area);
 					}
 					g.setColor(Color.black);
 					g.draw(area);
@@ -1084,16 +1086,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						cy += y;
 					}
 					if (p.isFilled()) {
-						FillPattern fillMode = p.getFillPattern();
-						if (fillMode instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
-							g.fill(multigon);
-						} else if (fillMode instanceof Texture) {
-							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
-							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
-							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
-							g.fill(multigon);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern);
 						}
+						g.fill(multigon);
 					}
 					g.setColor(Color.black);
 					g.draw(multigon);
