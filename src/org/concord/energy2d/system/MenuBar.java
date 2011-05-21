@@ -438,7 +438,7 @@ class MenuBar extends JMenuBar {
 		mi = new JMenuItem("More...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				box.view.createDialog(box.view);
+				box.view.createDialog(box.view, false);
 			}
 		});
 		menu.add(mi);

@@ -6,7 +6,6 @@
 package org.concord.energy2d.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Shape;
 import java.awt.Window;
@@ -21,7 +20,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,16 +30,13 @@ import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Part;
-import org.concord.energy2d.util.ColorFill;
-import org.concord.energy2d.util.ColoredLabel;
-import org.concord.energy2d.util.FillPattern;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
  * @author Charles Xie
  * 
  */
-class PartDialog extends JDialog {
+class PartModelDialog extends JDialog {
 
 	private final static DecimalFormat FORMAT = new DecimalFormat("####.######");
 
@@ -61,13 +56,13 @@ class PartDialog extends JDialog {
 	private JTextField xField, yField, wField, hField;
 	private JTextField uidField;
 	private JTextField labelField;
-	private ColoredLabel coloredLabel;
-	private JCheckBox visibleCheckBox, draggableCheckBox, borderOnlyCheckBox;
-	private JRadioButton notHeatSourceRadioButton, powerRadioButton, constantTemperatureRadioButton;
+	private JRadioButton notHeatSourceRadioButton;
+	private JRadioButton powerRadioButton;
+	private JRadioButton constantTemperatureRadioButton;
 	private Window owner;
 	private ActionListener okListener;
 
-	PartDialog(final View2D view, final Part part, boolean modal) {
+	PartModelDialog(final View2D view, final Part part, boolean modal) {
 
 		super(JOptionPane.getFrameForComponent(view), "Part (#" + view.model.getParts().indexOf(part) + ") Properties", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -161,13 +156,6 @@ class PartDialog extends JDialog {
 				part.setReflection(reflection);
 				part.setTransmission(transmission);
 				part.setEmissivity(emission);
-				part.setDraggable(draggableCheckBox.isSelected());
-				part.setVisible(visibleCheckBox.isSelected());
-				part.setFilled(!borderOnlyCheckBox.isSelected());
-				FillPattern fillPattern = part.getFillPattern();
-				if (fillPattern instanceof ColorFill) {
-					part.setFillPattern(new ColorFill(coloredLabel.getBackground()));
-				}
 				part.setLabel(labelField.getText());
 				part.setUid(uid);
 
@@ -175,7 +163,7 @@ class PartDialog extends JDialog {
 				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
 
-				PartDialog.this.dispose();
+				PartModelDialog.this.dispose();
 
 			}
 		};
@@ -193,7 +181,7 @@ class PartDialog extends JDialog {
 		button = new JButton("Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PartDialog.this.dispose();
+				PartModelDialog.this.dispose();
 			}
 		});
 		buttonPanel.add(button);
@@ -423,22 +411,6 @@ class PartDialog extends JDialog {
 		labelField = new JTextField(part.getLabel(), 20);
 		labelField.addActionListener(okListener);
 		p.add(labelField);
-
-		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		miscBox.add(p);
-		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
-		p.add(draggableCheckBox);
-		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
-		p.add(visibleCheckBox);
-		borderOnlyCheckBox = new JCheckBox("Show border only", !part.isFilled());
-		p.add(borderOnlyCheckBox);
-		FillPattern fillPattern = part.getFillPattern();
-		Color color = Color.gray;
-		if (fillPattern instanceof ColorFill) {
-			color = ((ColorFill) fillPattern).getColor();
-		}
-		coloredLabel = new ColoredLabel(color);
-		p.add(coloredLabel);
 
 		pack();
 		setLocationRelativeTo(view);

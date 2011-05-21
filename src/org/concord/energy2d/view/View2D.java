@@ -687,7 +687,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		JMenuItem mi = new JMenuItem("Properties...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createDialog(selectedManipulable != null ? selectedManipulable : model);
+				createDialog(selectedManipulable != null ? selectedManipulable : model, true);
 			}
 		});
 		popupMenu.add(mi);
@@ -695,7 +695,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mi = new JMenuItem("View Options...");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createDialog(View2D.this);
+				createDialog(selectedManipulable != null ? selectedManipulable : View2D.this, false);
 			}
 		});
 		popupMenu.add(mi);
@@ -732,8 +732,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	}
 
-	public void createDialog(Object o) {
-		JDialog d = dialogFactory.createDialog(o);
+	public void createDialog(Object o, boolean forModel) {
+		JDialog d = forModel ? dialogFactory.createModelDialog(o) : dialogFactory.createViewDialog(o);
 		if (d != null)
 			d.setVisible(true);
 	}

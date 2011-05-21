@@ -28,15 +28,21 @@ final class DialogFactory {
 		this.modal = modal;
 	}
 
-	JDialog createDialog(Object o) {
+	JDialog createModelDialog(Object o) {
 		if (o instanceof Model2D)
 			return new ModelDialog(view, (Model2D) o, modal);
+		if (o instanceof Part)
+			return new PartModelDialog(view, (Part) o, modal);
+		if (o instanceof Thermometer)
+			return new ThermometerDialog(view, (Thermometer) o, modal);
+		return null;
+	}
+
+	JDialog createViewDialog(Object o) {
 		if (o instanceof View2D)
 			return new ViewDialog(view, modal);
 		if (o instanceof Part)
-			return new PartDialog(view, (Part) o, modal);
-		if (o instanceof Thermometer)
-			return new ThermometerDialog(view, (Thermometer) o, modal);
+			return new PartViewDialog(view, (Part) o, modal);
 		return null;
 	}
 

@@ -144,6 +144,26 @@ public final class MiscUtil {
 		return false;
 	}
 
+	/**
+	 * convert hexadecimal RGB to color --- Color.decode(String nm) does not seem to work. The passed string can start with an "#".
+	 */
+	public static Color convertToColor(String s) {
+		if (s == null)
+			throw new IllegalArgumentException("Did you mean to convert hexadecimal RGB to color?");
+		if (s.length() == 7 && s.charAt(0) == '#') {
+			int r = Integer.parseInt(s.substring(1, 3), 16);
+			int g = Integer.parseInt(s.substring(3, 5), 16);
+			int b = Integer.parseInt(s.substring(5, 7), 16);
+			return new Color(r, g, b);
+		} else if (s.length() == 6) {
+			int r = Integer.parseInt(s.substring(0, 2), 16);
+			int g = Integer.parseInt(s.substring(2, 4), 16);
+			int b = Integer.parseInt(s.substring(4, 6), 16);
+			return new Color(r, g, b);
+		}
+		throw new NumberFormatException("hex color code error");
+	}
+
 	public static Color getContrastColor(Color c) {
 		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
 	}

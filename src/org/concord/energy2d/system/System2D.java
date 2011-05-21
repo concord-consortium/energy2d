@@ -137,7 +137,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				view.createDialog(model);
+				view.createDialog(model, true);
 			}
 		};
 		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
