@@ -17,10 +17,12 @@ import java.text.DecimalFormat;
 
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
+import org.concord.energy2d.util.ColorFill;
+import org.concord.energy2d.util.FillPattern;
+import org.concord.energy2d.util.Texture;
 
 /**
- * Default properties set to be that of polystyrene. See
- * http://en.wikipedia.org/wiki/Polystyrene
+ * Default properties set to be that of polystyrene. See http://en.wikipedia.org/wiki/Polystyrene
  * 
  * @author Charles Xie
  * 
@@ -31,8 +33,7 @@ public class Part extends Manipulable {
 	private final static float STEFAN_CONSTANT = 0.0000000567f;
 
 	/*
-	 * constant power input/output: positive = source, negative = sink, zero =
-	 * off. Unit: W/m^3
+	 * constant power input/output: positive = source, negative = sink, zero = off. Unit: W/m^3
 	 */
 	private float power;
 
@@ -40,9 +41,7 @@ public class Part extends Manipulable {
 	private float temperature;
 
 	/*
-	 * when this flag is true, temperature is maintained at the set value.
-	 * Otherwise, it will be just the initial value that defines the heat energy
-	 * this part initially possesses.
+	 * when this flag is true, temperature is maintained at the set value. Otherwise, it will be just the initial value that defines the heat energy this part initially possesses.
 	 */
 	private boolean constantTemperature;
 
@@ -85,8 +84,28 @@ public class Part extends Manipulable {
 	private final static float COS60 = (float) Math.cos(Math.PI / 3);
 	private final static DecimalFormat LABEL_FORMAT = new DecimalFormat("####.######");
 
+	private FillPattern fillPattern;
+	private boolean filled = true;
+
 	public Part(Shape shape) {
 		super(shape);
+		fillPattern = new ColorFill(Color.gray);
+	}
+
+	public void setFilled(boolean filled) {
+		this.filled = filled;
+	}
+
+	public boolean isFilled() {
+		return filled;
+	}
+
+	public void setFillPattern(FillPattern fillPattern) {
+		this.fillPattern = fillPattern;
+	}
+
+	public FillPattern getFillPattern() {
+		return fillPattern;
 	}
 
 	public Part duplicate(float x, float y) {
@@ -111,8 +130,8 @@ public class Part extends Manipulable {
 			((Polygon2D) s).translateBy(dx, dy);
 		}
 		Part p = new Part(s);
-		p.setFilled(isFilled());
-		p.setColor(getColor());
+		p.filled = filled;
+		p.fillPattern = fillPattern;
 		p.power = power;
 		p.temperature = temperature;
 		p.constantTemperature = constantTemperature;
@@ -535,13 +554,31 @@ public class Part extends Manipulable {
 		}
 		if (getUid() != null && !getUid().trim().equals(""))
 			xml += "<uid>" + getUid() + "</uid>\n";
-		if (!getColor().equals(Color.gray))
-			xml += "<color>" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "</color>\n";
+		if (fillPattern instanceof ColorFill) {
+			Color color = ((ColorFill) fillPattern).getColor();
+			if (!color.equals(Color.gray)) {
+				xml += "<color>" + Integer.toHexString(0x00ffffff & color.getRGB()) + "</color>\n";
+			}
+		} else if (fillPattern instanceof Texture) {
+			Texture pf = (Texture) fillPattern;
+			xml += "<texture>";
+			int i = pf.getForeground();
+			xml += "<texture_fg>" + Integer.toString(i, 16) + "</texture_fg>\n";
+			i = pf.getBackground();
+			xml += "<texture_bg>" + Integer.toString(i, 16) + "</texture_bg>\n";
+			i = ((Texture) fillPattern).getStyle();
+			xml += "<texture_style>" + i + "</texture_style>\n";
+			i = pf.getCellWidth();
+			xml += "<texture_width>" + i + "</texture_width>\n";
+			i = pf.getCellHeight();
+			xml += "<texture_height>" + i + "</texture_height>\n";
+			xml += "</texture>\n";
+		}
+		if (!isFilled())
+			xml += "<filled>false</filled>\n";
 		String label = getLabel();
 		if (label != null && !label.trim().equals(""))
 			xml += "<label>" + label + "</label>\n";
-		if (!isFilled())
-			xml += "<filled>false</filled>\n";
 		if (!isVisible())
 			xml += "<visible>false</visible>\n";
 		if (!isDraggable())

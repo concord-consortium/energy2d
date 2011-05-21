@@ -11,6 +11,7 @@ import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 
 import javax.swing.AbstractButton;
 import javax.swing.Spring;
@@ -23,6 +24,61 @@ import javax.swing.SpringLayout;
 public final class MiscUtil {
 
 	private final static String FILE_SEPARATOR = System.getProperty("file.separator");
+
+	private static final int fODD_PRIME_NUMBER = 37;
+
+	public static int hash(int aSeed, boolean aBoolean) {
+		return firstTerm(aSeed) + (aBoolean ? 1 : 0);
+	}
+
+	public static int hash(int aSeed, char aChar) {
+		return firstTerm(aSeed) + aChar;
+	}
+
+	// Note that byte and short are handled by this method, through implicit conversion.
+	public static int hash(int aSeed, int aInt) {
+		return firstTerm(aSeed) + aInt;
+	}
+
+	public static int hash(int aSeed, long aLong) {
+		return firstTerm(aSeed) + (int) (aLong ^ (aLong >>> 32));
+	}
+
+	public static int hash(int aSeed, float aFloat) {
+		return hash(aSeed, Float.floatToIntBits(aFloat));
+	}
+
+	public static int hash(int aSeed, double aDouble) {
+		return hash(aSeed, Double.doubleToLongBits(aDouble));
+	}
+
+	/**
+	 * <code>aObject</code> is a possibly-null object field, and possibly an array. If <code>aObject</code> is an array, then each element may be a primitive or a possibly-null object.
+	 */
+	public static int hash(int aSeed, Object aObject) {
+		int result = aSeed;
+		if (aObject == null) {
+			result = hash(result, 0);
+		} else if (!isArray(aObject)) {
+			result = hash(result, aObject.hashCode());
+		} else {
+			int length = Array.getLength(aObject);
+			for (int idx = 0; idx < length; ++idx) {
+				Object item = Array.get(aObject, idx);
+				// recursive call!
+				result = hash(result, item);
+			}
+		}
+		return result;
+	}
+
+	private static int firstTerm(int aSeed) {
+		return fODD_PRIME_NUMBER * aSeed;
+	}
+
+	private static boolean isArray(Object aObject) {
+		return aObject.getClass().isArray();
+	}
 
 	/** return the file name of this path */
 	public static String getFileName(String path) {
@@ -78,10 +134,7 @@ public final class MiscUtil {
 	}
 
 	/**
-	 * platform-independent check for Windows' equivalent of right click of
-	 * mouse button. This can be used as an alternative as
-	 * MouseEvent.isPopupTrigger(), which requires checking within both
-	 * mousePressed() and mouseReleased() methods.
+	 * platform-independent check for Windows' equivalent of right click of mouse button. This can be used as an alternative as MouseEvent.isPopupTrigger(), which requires checking within both mousePressed() and mouseReleased() methods.
 	 */
 	public static boolean isRightClick(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0)
@@ -114,11 +167,7 @@ public final class MiscUtil {
 	}
 
 	/**
-	 * Aligns the first <code>rows</code> <code>cols</code> components of
-	 * <code>parent</code> in a grid. Each component in a column is as wide as
-	 * the maximum preferred width of the components in that column; height is
-	 * similarly determined for each row. The parent is made just big enough to
-	 * fit them all.
+	 * Aligns the first <code>rows</code> <code>cols</code> components of <code>parent</code> in a grid. Each component in a column is as wide as the maximum preferred width of the components in that column; height is similarly determined for each row. The parent is made just big enough to fit them all.
 	 * 
 	 * @param rows
 	 *            number of rows
@@ -133,8 +182,7 @@ public final class MiscUtil {
 	 * @param yPad
 	 *            y padding between cells
 	 */
-	public static void makeCompactGrid(Container parent, int rows, int cols, int initialX,
-			int initialY, int xPad, int yPad) {
+	public static void makeCompactGrid(Container parent, int rows, int cols, int initialX, int initialY, int xPad, int yPad) {
 		SpringLayout layout;
 		try {
 			layout = (SpringLayout) parent.getLayout();
@@ -181,8 +229,7 @@ public final class MiscUtil {
 	}
 
 	/* Used by makeCompactGrid. */
-	private static SpringLayout.Constraints getConstraintsForCell(int r, int c, Container parent,
-			int cols) {
+	private static SpringLayout.Constraints getConstraintsForCell(int r, int c, Container parent, int cols) {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
 		Component component = parent.getComponent(r * cols + c);
 		return layout.getConstraints(component);

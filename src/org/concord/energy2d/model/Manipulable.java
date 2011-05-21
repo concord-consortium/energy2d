@@ -5,7 +5,6 @@
 
 package org.concord.energy2d.model;
 
-import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
@@ -18,9 +17,7 @@ import org.concord.energy2d.math.Polygon2D;
 public abstract class Manipulable {
 
 	private boolean selected;
-	private boolean filled = true;
 	private Shape shape;
-	private Color color = Color.gray;
 	private boolean draggable = true;
 	private boolean visible = true;
 	private String label;
@@ -50,14 +47,6 @@ public abstract class Manipulable {
 
 	public boolean contains(float x, float y) {
 		return shape.contains(x, y);
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
-	public Color getColor() {
-		return color;
 	}
 
 	public void setShape(Shape shape) {
@@ -97,14 +86,6 @@ public abstract class Manipulable {
 
 	public boolean isVisible() {
 		return visible;
-	}
-
-	public void setFilled(boolean b) {
-		filled = b;
-	}
-
-	public boolean isFilled() {
-		return filled;
 	}
 
 }

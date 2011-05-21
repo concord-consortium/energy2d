@@ -6,6 +6,7 @@
 package org.concord.energy2d.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Shape;
 import java.awt.Window;
@@ -31,7 +32,9 @@ import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ColoredLabel;
+import org.concord.energy2d.util.FillPattern;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -60,15 +63,13 @@ class PartDialog extends JDialog {
 	private JTextField labelField;
 	private ColoredLabel coloredLabel;
 	private JCheckBox visibleCheckBox, draggableCheckBox, borderOnlyCheckBox;
-	private JRadioButton notHeatSourceRadioButton, powerRadioButton,
-			constantTemperatureRadioButton;
+	private JRadioButton notHeatSourceRadioButton, powerRadioButton, constantTemperatureRadioButton;
 	private Window owner;
 	private ActionListener okListener;
 
 	PartDialog(final View2D view, final Part part, boolean modal) {
 
-		super(JOptionPane.getFrameForComponent(view), "Part (#"
-				+ view.model.getParts().indexOf(part) + ") Properties", modal);
+		super(JOptionPane.getFrameForComponent(view), "Part (#" + view.model.getParts().indexOf(part) + ") Properties", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
@@ -125,16 +126,13 @@ class PartDialog extends JDialog {
 					uid = uid.trim();
 					if (!uid.equals("") && !uid.equals(part.getUid())) {
 						if (view.model.isUidUsed(uid)) {
-							JOptionPane.showMessageDialog(owner,
-									"UID: " + uid + " has been taken.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(owner, "UID: " + uid + " has been taken.", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 					}
 				}
 
-				if (notHeatSourceRadioButton.isSelected()
-						|| constantTemperatureRadioButton.isSelected()) {
+				if (notHeatSourceRadioButton.isSelected() || constantTemperatureRadioButton.isSelected()) {
 					float temperature = parse(temperatureField.getText());
 					if (Float.isNaN(temperature))
 						return;
@@ -150,8 +148,7 @@ class PartDialog extends JDialog {
 				Shape shape = part.getShape();
 				if (shape instanceof RectangularShape) {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
-						view.resizeManipulableTo(part, xcenter - 0.5f * width, ycenter - 0.5f
-								* height, width, height);
+						view.resizeManipulableTo(part, xcenter - 0.5f * width, ycenter - 0.5f * height, width, height);
 					}
 				}
 
@@ -167,7 +164,10 @@ class PartDialog extends JDialog {
 				part.setDraggable(draggableCheckBox.isSelected());
 				part.setVisible(visibleCheckBox.isSelected());
 				part.setFilled(!borderOnlyCheckBox.isSelected());
-				part.setColor(coloredLabel.getBackground());
+				FillPattern fillPattern = part.getFillPattern();
+				if (fillPattern instanceof ColorFill) {
+					part.setFillPattern(new ColorFill(coloredLabel.getBackground()));
+				}
 				part.setLabel(labelField.getText());
 				part.setUid(uid);
 
@@ -432,7 +432,12 @@ class PartDialog extends JDialog {
 		p.add(visibleCheckBox);
 		borderOnlyCheckBox = new JCheckBox("Show border only", !part.isFilled());
 		p.add(borderOnlyCheckBox);
-		coloredLabel = new ColoredLabel(part.getColor());
+		FillPattern fillPattern = part.getFillPattern();
+		Color color = Color.gray;
+		if (fillPattern instanceof ColorFill) {
+			color = ((ColorFill) fillPattern).getColor();
+		}
+		coloredLabel = new ColoredLabel(color);
 		p.add(coloredLabel);
 
 		pack();
@@ -445,8 +450,7 @@ class PartDialog extends JDialog {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}

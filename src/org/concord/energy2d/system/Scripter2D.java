@@ -29,6 +29,7 @@ import org.concord.energy2d.model.DirichletHeatBoundary;
 import org.concord.energy2d.model.HeatBoundary;
 import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.view.Picture;
@@ -916,7 +917,7 @@ class Scripter2D extends Scripter {
 			part.setTemperature(z);
 			arrayUpdateRequested = true;
 		} else if (s == "color") {
-			part.setColor(new Color((int) z));
+			part.setFillPattern(new ColorFill(new Color((int) z)));
 		} else if (s == "filled") {
 			part.setFilled(z > 0);
 		} else if (s == "draggable") {

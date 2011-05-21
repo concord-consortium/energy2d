@@ -67,9 +67,13 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.system.Helper;
+import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ContourMap;
 import org.concord.energy2d.util.FieldLines;
+import org.concord.energy2d.util.FillPattern;
 import org.concord.energy2d.util.MiscUtil;
+import org.concord.energy2d.util.Texture;
+import org.concord.energy2d.util.TextureFactory;
 
 /**
  * @author Charles Xie
@@ -945,14 +949,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.drawString(s, x - stringWidth / 2, y);
 	}
 
-	private Color getPartColor(Part p) {
+	private Color getPartColor(Part p, Color proposedColor) {
 		if (p.getPower() > 0)
 			return new Color(0xFFFF00);
 		if (p.getPower() < 0)
 			return new Color(0xB0C4DE);
 		if (p.getConstantTemperature())
 			return new Color(temperatureRenderer.getColor(p.getTemperature()));
-		return p.getColor();
+		return proposedColor;
 	}
 
 	private void drawParts(Graphics2D g) {
@@ -973,8 +977,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int w = convertLengthToPixelX(e.width);
 					int h = convertLengthToPixelY(e.height);
 					if (p.isFilled()) {
-						g.setColor(getPartColor(p));
-						g.fillOval(x, y, w, h);
+						FillPattern fillMode = p.getFillPattern();
+						if (fillMode instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
+							g.fillOval(x, y, w, h);
+						} else if (fillMode instanceof Texture) {
+							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
+							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
+							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
+							g.fillOval(x, y, w, h);
+						}
 					}
 					g.setColor(Color.black);
 					g.drawOval(x - 1, y - 1, w + 2, h + 2);
@@ -1004,8 +1016,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int w = convertLengthToPixelX(r.width);
 					int h = convertLengthToPixelY(r.height);
 					if (p.isFilled()) {
-						g.setColor(getPartColor(p));
-						g.fillRect(x, y, w, h);
+						FillPattern fillMode = p.getFillPattern();
+						if (fillMode instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
+							g.fillRect(x, y, w, h);
+						} else if (fillMode instanceof Texture) {
+							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
+							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
+							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
+							g.fillRect(x, y, w, h);
+						}
 					}
 					g.setColor(Color.black);
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);
@@ -1035,8 +1055,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					Area area = (Area) s;
 					area.transform(scale);
 					if (p.isFilled()) {
-						g.setColor(getPartColor(p));
-						g.fill(area);
+						FillPattern fillMode = p.getFillPattern();
+						if (fillMode instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
+							g.fill(area);
+						}
 					}
 					g.setColor(Color.black);
 					g.draw(area);
@@ -1061,8 +1084,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						cy += y;
 					}
 					if (p.isFilled()) {
-						g.setColor(getPartColor(p));
-						g.fill(multigon);
+						FillPattern fillMode = p.getFillPattern();
+						if (fillMode instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fillMode).getColor()));
+							g.fill(multigon);
+						} else if (fillMode instanceof Texture) {
+							Color c1 = new Color((128 << 24) | (0x00ffffff & Color.white.getRGB()), true);
+							Color c2 = new Color((0 << 24) | (0x00ffffff & Color.black.getRGB()), true);
+							g.setPaint(TextureFactory.createPattern(TextureFactory.HORIZONTAL_BRICK, 10, 10, c1, c2));
+							g.fill(multigon);
+						}
 					}
 					g.setColor(Color.black);
 					g.draw(multigon);

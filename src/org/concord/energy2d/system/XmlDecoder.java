@@ -13,7 +13,9 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.Scripter;
+import org.concord.energy2d.util.Texture;
 import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
 import org.xml.sax.Attributes;
@@ -84,10 +86,11 @@ class XmlDecoder extends DefaultHandler {
 	private float partWindAngle;
 	private boolean partConstantTemperature = false;
 	private float partPower = Float.NaN;
-	private boolean partFilled = true;
 	private boolean partVisible = true;
 	private boolean partDraggable = true;
 	private Color partColor = Color.gray;
+	private byte partStyle;
+	private boolean partFilled = true;
 	private String partUid;
 	private String partLabel;
 	private Part part;
@@ -496,6 +499,8 @@ class XmlDecoder extends DefaultHandler {
 			partWindAngle = Float.parseFloat(str);
 		} else if (qName == "color") {
 			partColor = new Color(Integer.parseInt(str, 16));
+		} else if (qName == "pattern_style") {
+			partStyle = Byte.parseByte(str);
 		} else if (qName == "filled") {
 			partFilled = Boolean.parseBoolean(str);
 		} else if (qName == "visible") {
@@ -529,8 +534,12 @@ class XmlDecoder extends DefaultHandler {
 				part.setConstantTemperature(partConstantTemperature);
 				part.setDraggable(partDraggable);
 				part.setVisible(partVisible);
+				if (partColor != null)
+					part.setFillPattern(new ColorFill(partColor));
+				if (partStyle != 0) {
+					part.setFillPattern(new Texture(Color.white.getRGB(), Color.black.getRGB(), partStyle, 10, 10));
+				}
 				part.setFilled(partFilled);
-				part.setColor(partColor);
 				part.setUid(partUid);
 				part.setLabel(partLabel);
 				resetPartVariables();
@@ -552,10 +561,11 @@ class XmlDecoder extends DefaultHandler {
 		partTransmission = Float.NaN;
 		partWindSpeed = 0;
 		partWindAngle = 0;
-		partFilled = true;
 		partVisible = true;
 		partDraggable = true;
 		partColor = Color.gray;
+		partFilled = true;
+		partStyle = 0;
 		partUid = null;
 		partLabel = null;
 	}
