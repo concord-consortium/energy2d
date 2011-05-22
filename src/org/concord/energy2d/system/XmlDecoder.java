@@ -89,7 +89,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean partVisible = true;
 	private boolean partDraggable = true;
 	private Color partColor = Color.gray;
-	private byte partStyle;
+	private byte partTextureStyle;
 	private boolean partFilled = true;
 	private String partUid;
 	private String partLabel;
@@ -499,8 +499,8 @@ class XmlDecoder extends DefaultHandler {
 			partWindAngle = Float.parseFloat(str);
 		} else if (qName == "color") {
 			partColor = new Color(Integer.parseInt(str, 16));
-		} else if (qName == "pattern_style") {
-			partStyle = Byte.parseByte(str);
+		} else if (qName == "texture_style") {
+			partTextureStyle = Byte.parseByte(str);
 		} else if (qName == "filled") {
 			partFilled = Boolean.parseBoolean(str);
 		} else if (qName == "visible") {
@@ -536,8 +536,8 @@ class XmlDecoder extends DefaultHandler {
 				part.setVisible(partVisible);
 				if (partColor != null)
 					part.setFillPattern(new ColorFill(partColor));
-				if (partStyle != 0) {
-					part.setFillPattern(new Texture(Color.white.getRGB(), Color.black.getRGB(), partStyle, 10, 10));
+				if (partTextureStyle != 0) {
+					part.setFillPattern(new Texture(Color.white.getRGB(), Color.black.getRGB(), partTextureStyle, 10, 10));
 				}
 				part.setFilled(partFilled);
 				part.setUid(partUid);
@@ -565,7 +565,7 @@ class XmlDecoder extends DefaultHandler {
 		partDraggable = true;
 		partColor = Color.gray;
 		partFilled = true;
-		partStyle = 0;
+		partTextureStyle = 0;
 		partUid = null;
 		partLabel = null;
 	}

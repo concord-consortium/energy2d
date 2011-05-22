@@ -960,9 +960,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void setPaint(Graphics2D g, Texture texture) {
-		Color bg = new Color((128 << 24) | (0x00ffffff & texture.getBackground()), true);
-		Color fg = new Color((0 << 24) | (0x00ffffff & texture.getForeground()), true);
-		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), fg, bg));
+		Color bg = new Color((100 << 24) | (0x00ffffff & texture.getBackground()), true);
+		Color fg = new Color((128 << 24) | (0x00ffffff & texture.getForeground()), true);
+		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), bg, fg));
 	}
 
 	private void drawParts(Graphics2D g) {
@@ -1019,11 +1019,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int w = convertLengthToPixelX(r.width);
 					int h = convertLengthToPixelY(r.height);
 					if (p.isFilled()) {
-						FillPattern fillPattern = p.getFillPattern();
-						if (fillPattern instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
-						} else if (fillPattern instanceof Texture) {
-							setPaint(g, (Texture) fillPattern);
+						FillPattern fp = p.getFillPattern();
+						if (fp instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+						} else if (fp instanceof Texture) {
+							setPaint(g, (Texture) fp);
 						}
 						g.fillRect(x, y, w, h);
 					}
@@ -1086,11 +1086,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						cy += y;
 					}
 					if (p.isFilled()) {
-						FillPattern fillPattern = p.getFillPattern();
-						if (fillPattern instanceof ColorFill) {
-							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
-						} else if (fillPattern instanceof Texture) {
-							setPaint(g, (Texture) fillPattern);
+						FillPattern fp = p.getFillPattern();
+						if (fp instanceof ColorFill) {
+							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+						} else if (fp instanceof Texture) {
+							setPaint(g, (Texture) fp);
 						}
 						g.fill(multigon);
 					}

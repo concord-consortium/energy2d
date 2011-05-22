@@ -122,4 +122,8 @@ public class Texture implements FillPattern {
 		return result;
 	}
 
+	public String toString() {
+		return "Texture " + type;
+	}
+
 }
