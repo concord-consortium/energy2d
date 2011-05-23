@@ -35,18 +35,18 @@ import javax.swing.plaf.basic.BasicBorders;
  * 
  */
 
-public class FillPatternComboBox extends JComponent implements FocusListener, PropertyChangeListener {
+public class BackgroundComboBox extends JComponent implements FocusListener, PropertyChangeListener {
 
-	protected SelectionPanel selectionPanel;
-	protected JButton popButton;
-	protected ColorMenu colorMenu;
+	private SelectionPanel selectionPanel;
+	private JButton popButton;
+	private ColorMenu colorMenu;
 
-	public FillPatternComboBox(Component parent, JColorChooser colorChooser, FillEffectChooser fillEffectChooser) {
+	public BackgroundComboBox(Component parent, JColorChooser colorChooser, TextureChooser textureChooser) {
 
 		setLayout(new BorderLayout());
 		setBorder(new BasicBorders.ButtonBorder(Color.lightGray, Color.white, Color.black, Color.gray));
 
-		colorMenu = new ColorMenu(parent, "Background", colorChooser, fillEffectChooser);
+		colorMenu = new ColorMenu(parent, "Background", colorChooser, textureChooser);
 		colorMenu.addPropertyChangeListener(this);
 
 		selectionPanel = new SelectionPanel();
@@ -85,8 +85,8 @@ public class FillPatternComboBox extends JComponent implements FocusListener, Pr
 		return colorMenu;
 	}
 
-	public void setFillPattern(FillPattern fm) {
-		selectionPanel.setFillPattern(fm);
+	public void setFillPattern(FillPattern fp) {
+		selectionPanel.setFillPattern(fp);
 	}
 
 	public FillPattern getFillPattern() {

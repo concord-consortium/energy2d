@@ -40,20 +40,69 @@ import javax.swing.border.EmptyBorder;
  * 
  */
 
-public class FillEffectChooser extends JTabbedPane {
+public class TextureChooser extends JTabbedPane {
 
-	private final static float[] dash = { 2.0f };
-	private final static BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dash, 0.0f);
 	private static ResourceBundle bundle;
 	private static boolean isUSLocale;
 
 	private TexturePanel[] pp;
 	private FillPattern fillPattern;
+	private ColorComboBox bgComboBox;
+	private ColorComboBox fgComboBox;
+
+	public TextureChooser() {
+
+		super();
+
+		if (bundle == null) {
+			isUSLocale = Locale.getDefault().equals(Locale.US);
+			try {
+				bundle = ResourceBundle.getBundle("org.concord.energy2d.util.resources.TextureChooser", Locale.getDefault());
+			} catch (MissingResourceException e) {
+			}
+		}
+
+		setPreferredSize(new Dimension(300, 300));
+
+		String s = getInternationalText("Texture");
+		addTab(s == null ? "Texture" : s, createTexturePanel());
+
+	}
+
+	private static String getInternationalText(String name) {
+		if (bundle == null)
+			return null;
+		if (name == null)
+			return null;
+		if (isUSLocale)
+			return null;
+		String s = null;
+		try {
+			s = bundle.getString(name);
+		} catch (MissingResourceException e) {
+			s = null;
+		}
+		return s;
+	}
+
+	public void setSelectedForegroundColor(Color c) {
+		fgComboBox.setColor(c);
+		setTexturePanelForeground(c);
+	}
+
+	public void setSelectedBackgroundColor(Color c) {
+		bgComboBox.setColor(c);
+		setTexturePanelBackground(c);
+	}
+
+	public void setSelectedStyle(byte style, int cellWidth, int cellHeight) {
+		setSelectedTexturePanel(style, cellWidth, cellHeight);
+	}
 
 	/**
-	 * Creates and returns a new dialog containing the specified FillEffectChooser pane along with "OK", "Cancel", and "Reset" buttons. If the "OK" or "Cancel" buttons are pressed, the dialog is automatically hidden (but not disposed). If the "Reset" button is pressed, the chooser's selection will be reset to the option which was set the last time show was invoked on the dialog and the dialog will remain showing.
+	 * Creates and returns a new dialog containing the specified TextureChooser pane along with "OK", "Cancel", and "Reset" buttons. If the "OK" or "Cancel" buttons are pressed, the dialog is automatically hidden (but not disposed). If the "Reset" button is pressed, the chooser's selection will be reset to the option which was set the last time show was invoked on the dialog and the dialog will remain showing.
 	 */
-	public static JDialog createDialog(Component parent, String title, boolean modal, FillEffectChooser chooser, ActionListener okListener, ActionListener cancelListener) {
+	public static JDialog createDialog(Component parent, String title, boolean modal, TextureChooser chooser, ActionListener okListener, ActionListener cancelListener) {
 
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(parent), title == null ? "Fill Effects" : title, modal);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -85,10 +134,10 @@ public class FillEffectChooser extends JTabbedPane {
 		panel.add(new JLabel(), c);
 
 		final ActionListener okListener1 = okListener;
-		final FillEffectChooser chooser1 = chooser;
+		final TextureChooser chooser1 = chooser;
 
 		JButton button = new JButton("OK");
-		String s = getInternationalText("OKButton");
+		String s = getInternationalText("OK");
 		if (s != null)
 			button.setText(s);
 		button.addActionListener(new ActionListener() {
@@ -111,7 +160,7 @@ public class FillEffectChooser extends JTabbedPane {
 		panel.add(button, c);
 
 		button = new JButton("Cancel");
-		s = getInternationalText("CancelButton");
+		s = getInternationalText("Cancel");
 		if (s != null)
 			button.setText(s);
 		if (cancelListener != null) {
@@ -138,39 +187,9 @@ public class FillEffectChooser extends JTabbedPane {
 
 	}
 
-	public FillEffectChooser() {
-
-		super();
-
-		if (bundle == null) {
-			isUSLocale = Locale.getDefault().equals(Locale.US);
-			try {
-				bundle = ResourceBundle.getBundle("org.concord.energy2d.util.resources.FillEffectChooser", Locale.getDefault());
-			} catch (MissingResourceException e) {
-			}
-		}
-
-		setPreferredSize(new Dimension(300, 300));
-
-		String s = getInternationalText("Texture");
-		addTab(s == null ? "Texture" : s, createTexturePanel());
-
-	}
-
-	private static String getInternationalText(String name) {
-		if (bundle == null)
-			return null;
-		if (name == null)
-			return null;
-		if (isUSLocale)
-			return null;
-		String s = null;
-		try {
-			s = bundle.getString(name);
-		} catch (MissingResourceException e) {
-			s = null;
-		}
-		return s;
+	private void setSelectedTexturePanel(byte style, int cellWidth, int cellHeight) {
+		for (TexturePanel p : pp)
+			p.setSelected(p.getStyle() == style && p.getCellWidth() == cellWidth && p.getCellHeight() == cellHeight);
 	}
 
 	private TexturePanel getSelectedTexturePanel() {
@@ -239,11 +258,10 @@ public class FillEffectChooser extends JTabbedPane {
 		String s = getInternationalText("ForegroundColor");
 		JLabel label = new JLabel((s != null ? s : "Foreground Color") + " :");
 		p3.add(label, BorderLayout.NORTH);
-		ColorComboBox colorComboBox = new ColorComboBox(this);
-		colorComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
-		colorComboBox.setToolTipText(s != null ? s : "Foreground color");
-		colorComboBox.setSelectedIndex(0);
-		colorComboBox.addActionListener(new ActionListener() {
+		fgComboBox = new ColorComboBox(this);
+		fgComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
+		fgComboBox.setToolTipText(s != null ? s : "Foreground color");
+		fgComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final ColorComboBox cb = (ColorComboBox) e.getSource();
 				int id = cb.getSelectedIndex();
@@ -260,8 +278,8 @@ public class FillEffectChooser extends JTabbedPane {
 				}
 			}
 		});
-		p3.add(colorComboBox, BorderLayout.CENTER);
-		label.setLabelFor(colorComboBox);
+		p3.add(fgComboBox, BorderLayout.CENTER);
+		label.setLabelFor(fgComboBox);
 
 		p3 = new JPanel(new BorderLayout());
 		p4.add(p3);
@@ -269,11 +287,11 @@ public class FillEffectChooser extends JTabbedPane {
 		s = getInternationalText("BackgroundColor");
 		label = new JLabel((s != null ? s : "Background Color") + " :");
 		p3.add(label, BorderLayout.NORTH);
-		colorComboBox = new ColorComboBox(this);
-		colorComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
-		colorComboBox.setToolTipText(s != null ? s : "Background color");
-		colorComboBox.setSelectedIndex(ColorRectangle.COLORS.length);
-		colorComboBox.addActionListener(new ActionListener() {
+		bgComboBox = new ColorComboBox(this);
+		bgComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
+		bgComboBox.setToolTipText(s != null ? s : "Background color");
+		bgComboBox.setSelectedIndex(ColorRectangle.COLORS.length);
+		bgComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final ColorComboBox cb = (ColorComboBox) e.getSource();
 				int id = cb.getSelectedIndex();
@@ -290,8 +308,8 @@ public class FillEffectChooser extends JTabbedPane {
 				}
 			}
 		});
-		p3.add(colorComboBox, BorderLayout.CENTER);
-		label.setLabelFor(colorComboBox);
+		p3.add(bgComboBox, BorderLayout.CENTER);
+		label.setLabelFor(bgComboBox);
 
 		return p;
 
@@ -299,6 +317,7 @@ public class FillEffectChooser extends JTabbedPane {
 
 	class TexturePanel extends JPanel {
 
+		private final BasicStroke highlight = new BasicStroke(4.0f);
 		private boolean selected;
 		private byte style = TextureFactory.POLKA;
 		private int cellWidth = 12;
@@ -352,8 +371,8 @@ public class FillEffectChooser extends JTabbedPane {
 			g2d.setPaint(TextureFactory.createPattern(style, cellWidth, cellHeight, getForeground(), getBackground()));
 			g2d.fillRect(0, 0, w, h);
 			if (selected) {
-				g2d.setStroke(dashed);
-				g2d.setColor(Color.white);
+				g2d.setStroke(highlight);
+				g2d.setColor(Color.black);
 				g2d.drawRect(2, 2, w - 5, h - 5);
 			}
 		}
@@ -364,8 +383,8 @@ public class FillEffectChooser extends JTabbedPane {
 		return fillPattern;
 	}
 
-	public void setFillPattern(FillPattern fm) {
-		fillPattern = fm;
+	public void setFillPattern(FillPattern fp) {
+		fillPattern = fp;
 	}
 
 }

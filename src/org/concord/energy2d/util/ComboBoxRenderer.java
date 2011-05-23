@@ -39,6 +39,7 @@ public abstract class ComboBoxRenderer {
 			}
 			return this;
 		}
+
 	}
 
 	public static class ColorCell extends ColorRectangle implements ListCellRenderer {
@@ -59,6 +60,7 @@ public abstract class ComboBoxRenderer {
 			setColorID((Integer) value);
 			return this;
 		}
+
 	}
 
 }

@@ -10,19 +10,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-import java.util.EventListener;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.event.PopupMenuListener;
 
 /**
  * @author Charles Xie
@@ -36,37 +34,37 @@ public class ColorMenu extends JMenu {
 	private static boolean isUSLocale;
 
 	protected JColorChooser colorChooser;
-	protected FillEffectChooser fillEffectChooser;
+	protected TextureChooser textureChooser;
 
 	private Component parent;
 	private JMenuItem noFillMenuItem;
 	private JMenuItem moreColorMenuItem;
 	private JMenuItem hexColorMenuItem;
-	private JMenuItem fillEffectMenuItem;
+	private JMenuItem textureMenuItem;
 	private ColorArrayPane cap;
 
 	public ColorMenu(Component parent, String name, JColorChooser color) {
 		this(parent, name, color, null);
 	}
 
-	public ColorMenu(Component parent, String name, JColorChooser color, FillEffectChooser fillEffect) {
+	public ColorMenu(Component parent, String name, JColorChooser color, TextureChooser texture) {
 
 		super(name);
 
 		if (bundle == null) {
 			isUSLocale = Locale.getDefault().equals(Locale.US);
 			try {
-				bundle = ResourceBundle.getBundle("org.concord.modeler.ui.images.ColorMenu", Locale.getDefault());
+				bundle = ResourceBundle.getBundle("org.concord.energy2d.util.resources.ColorMenu", Locale.getDefault());
 			} catch (MissingResourceException e) {
 			}
 		}
 
 		this.parent = parent;
 		colorChooser = color;
-		fillEffectChooser = fillEffect;
+		textureChooser = texture;
 
 		String s = getInternationalText("NoFill");
-		noFillMenuItem = new JMenuItem(s != null ? s : "No Fill");
+		noFillMenuItem = new JCheckBoxMenuItem(s != null ? s : "No Fill");
 		add(noFillMenuItem);
 		addSeparator();
 
@@ -88,23 +86,12 @@ public class ColorMenu extends JMenu {
 		hexColorMenuItem = new JMenuItem((s != null ? s : "Hex Color") + "...");
 		add(hexColorMenuItem);
 
-		if (fillEffectChooser != null) {
-			s = getInternationalText("FillEffects");
-			fillEffectMenuItem = new JMenuItem((s != null ? s : "Fill Effects") + "...");
-			add(fillEffectMenuItem);
+		if (textureChooser != null) {
+			s = getInternationalText("Texture");
+			textureMenuItem = new JMenuItem((s != null ? s : "Texture") + "...");
+			add(textureMenuItem);
 		}
 
-	}
-
-	public void setColorSelectionOnly(boolean b) {
-		if (b) {
-			remove(noFillMenuItem);
-			if (fillEffectMenuItem != null)
-				remove(fillEffectMenuItem);
-			remove(0);
-		} else {
-			insert(noFillMenuItem, 0);
-		}
 	}
 
 	static String getInternationalText(String name) {
@@ -123,27 +110,6 @@ public class ColorMenu extends JMenu {
 		return s;
 	}
 
-	public void destroy() {
-		EventListener[] a = getListeners(PropertyChangeListener.class);
-		if (a != null) {
-			for (EventListener x : a) {
-				removePropertyChangeListener((PropertyChangeListener) x);
-			}
-		}
-		PopupMenuListener[] pml = getPopupMenu().getPopupMenuListeners();
-		if (pml != null) {
-			for (PopupMenuListener x : pml)
-				getPopupMenu().removePopupMenuListener(x);
-		}
-		setParent(null);
-		setColorChooser(null);
-		setFillEffectChooser(null);
-		clearNoFillActions();
-		clearColorArrayActions();
-		clearMoreColorActions();
-		clearFillEffectActions();
-	}
-
 	public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
 		super.firePropertyChange(propertyName, oldValue, newValue);
 	}
@@ -160,12 +126,12 @@ public class ColorMenu extends JMenu {
 		return colorChooser;
 	}
 
-	public void setFillEffectChooser(FillEffectChooser fec) {
-		fillEffectChooser = fec;
+	public void setTextureChooser(TextureChooser fec) {
+		textureChooser = fec;
 	}
 
-	public FillEffectChooser getFillEffectChooser() {
-		return fillEffectChooser;
+	public TextureChooser getTextureChooser() {
+		return textureChooser;
 	}
 
 	public void addNoFillListener(ActionListener a) {
@@ -183,17 +149,6 @@ public class ColorMenu extends JMenu {
 			noFillMenuItem.setText(s);
 	}
 
-	void clearNoFillActions() {
-		if (noFillMenuItem == null)
-			return;
-		noFillMenuItem.setAction(null);
-		ActionListener[] a = noFillMenuItem.getActionListeners();
-		if (a == null)
-			return;
-		for (ActionListener l : a)
-			noFillMenuItem.removeActionListener(l);
-	}
-
 	public void addColorArrayListener(ActionListener a) {
 		addActionListener(a);
 	}
@@ -204,15 +159,6 @@ public class ColorMenu extends JMenu {
 
 	public void setColorArrayAction(Action a) {
 		setAction(a);
-	}
-
-	void clearColorArrayActions() {
-		setAction(null);
-		ActionListener[] a = getActionListeners();
-		if (a == null)
-			return;
-		for (ActionListener l : a)
-			removeActionListener(l);
 	}
 
 	public Color getHexInputColor(Color oldColor) {
@@ -259,46 +205,26 @@ public class ColorMenu extends JMenu {
 			moreColorMenuItem.setText(s);
 	}
 
-	void clearMoreColorActions() {
-		if (moreColorMenuItem == null)
-			return;
-		moreColorMenuItem.setAction(null);
-		ActionListener[] a = moreColorMenuItem.getActionListeners();
-		if (a == null)
-			return;
-		for (ActionListener l : a)
-			moreColorMenuItem.removeActionListener(l);
-	}
-
-	public void addFillEffectListeners(final ActionListener ok, final ActionListener cancel) {
-		if (fillEffectMenuItem != null)
-			fillEffectMenuItem.addActionListener(new ActionListener() {
+	public void addTextureListeners(final ActionListener ok, final ActionListener cancel) {
+		if (textureMenuItem != null)
+			textureMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String s = getInternationalText("FillEffects");
-					FillEffectChooser.createDialog(parent, s != null ? s : "Background Filling", true, fillEffectChooser, ok, cancel).setVisible(true);
+					String s = getInternationalText("Texture");
+					TextureChooser.createDialog(parent, s != null ? s : "Texture", true, textureChooser, ok, cancel).setVisible(true);
 				}
 			});
 	}
 
-	public void setFillEffectActions(final ActionListener ok, final ActionListener cancel) {
-		fillEffectMenuItem.setAction(new AbstractAction("Fill Effects") {
+	public void setTextureActions(final ActionListener ok, final ActionListener cancel) {
+		textureMenuItem.setAction(new AbstractAction("Texture") {
 			public void actionPerformed(ActionEvent e) {
-				String s = getInternationalText("FillEffects");
-				FillEffectChooser.createDialog(parent, s != null ? s : "Background Filling", true, fillEffectChooser, ok, cancel).setVisible(true);
+				String s = getInternationalText("Texture");
+				TextureChooser.createDialog(parent, s != null ? s : "Texture", true, textureChooser, ok, cancel).setVisible(true);
 			}
 		});
-		String s = getInternationalText("FillEffects");
+		String s = getInternationalText("Texture");
 		if (s != null)
-			fillEffectMenuItem.setText(s);
-	}
-
-	void clearFillEffectActions() {
-		if (fillEffectMenuItem == null)
-			return;
-		fillEffectMenuItem.setAction(null);
-		ActionListener[] a = fillEffectMenuItem.getActionListeners();
-		for (ActionListener l : a)
-			fillEffectMenuItem.removeActionListener(l);
+			textureMenuItem.setText(s);
 	}
 
 	public void setColor(Color c) {

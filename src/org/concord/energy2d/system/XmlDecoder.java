@@ -90,6 +90,10 @@ class XmlDecoder extends DefaultHandler {
 	private boolean partDraggable = true;
 	private Color partColor = Color.gray;
 	private byte partTextureStyle;
+	private int partTextureWidth = 10;
+	private int partTextureHeight = 10;
+	private Color partTextureForeground = Color.black;
+	private Color partTextureBackground = Color.white;
 	private boolean partFilled = true;
 	private String partUid;
 	private String partLabel;
@@ -501,6 +505,14 @@ class XmlDecoder extends DefaultHandler {
 			partColor = new Color(Integer.parseInt(str, 16));
 		} else if (qName == "texture_style") {
 			partTextureStyle = Byte.parseByte(str);
+		} else if (qName == "texture_width") {
+			partTextureWidth = Integer.parseInt(str);
+		} else if (qName == "texture_height") {
+			partTextureHeight = Integer.parseInt(str);
+		} else if (qName == "texture_fg") {
+			partTextureForeground = new Color(Integer.parseInt(str, 16));
+		} else if (qName == "texture_bg") {
+			partTextureBackground = new Color(Integer.parseInt(str, 16));
 		} else if (qName == "filled") {
 			partFilled = Boolean.parseBoolean(str);
 		} else if (qName == "visible") {
@@ -536,9 +548,8 @@ class XmlDecoder extends DefaultHandler {
 				part.setVisible(partVisible);
 				if (partColor != null)
 					part.setFillPattern(new ColorFill(partColor));
-				if (partTextureStyle != 0) {
-					part.setFillPattern(new Texture(Color.white.getRGB(), Color.black.getRGB(), partTextureStyle, 10, 10));
-				}
+				if (partTextureStyle != 0)
+					part.setFillPattern(new Texture(partTextureForeground.getRGB(), partTextureBackground.getRGB(), partTextureStyle, partTextureWidth, partTextureHeight));
 				part.setFilled(partFilled);
 				part.setUid(partUid);
 				part.setLabel(partLabel);
@@ -566,6 +577,10 @@ class XmlDecoder extends DefaultHandler {
 		partColor = Color.gray;
 		partFilled = true;
 		partTextureStyle = 0;
+		partTextureWidth = 10;
+		partTextureHeight = 10;
+		partTextureForeground = Color.black;
+		partTextureBackground = Color.white;
 		partUid = null;
 		partLabel = null;
 	}

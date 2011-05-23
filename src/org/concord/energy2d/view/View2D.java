@@ -960,7 +960,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void setPaint(Graphics2D g, Texture texture) {
-		Color bg = new Color((100 << 24) | (0x00ffffff & texture.getBackground()), true);
+		Color bg = new Color((128 << 24) | (0x00ffffff & texture.getBackground()), true);
 		Color fg = new Color((128 << 24) | (0x00ffffff & texture.getForeground()), true);
 		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), bg, fg));
 	}
