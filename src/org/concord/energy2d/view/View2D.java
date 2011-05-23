@@ -959,10 +959,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return proposedColor;
 	}
 
-	private void setPaint(Graphics2D g, Texture texture) {
-		Color bg = new Color((128 << 24) | (0x00ffffff & texture.getBackground()), true);
-		Color fg = new Color((128 << 24) | (0x00ffffff & texture.getForeground()), true);
-		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), bg, fg));
+	private void setPaint(Graphics2D g, Texture texture, boolean filled) {
+		Color bg = new Color(((filled ? texture.getAlpha() : 0) << 24) | (0x00ffffff & texture.getBackground()), true);
+		Color fg = new Color((texture.getAlpha() << 24) | (0x00ffffff & texture.getForeground()), true);
+		g.setPaint(TextureFactory.createPattern(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight(), fg, bg));
 	}
 
 	private void drawParts(Graphics2D g) {
@@ -982,13 +982,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int y = convertPointToPixelY(e.y);
 					int w = convertLengthToPixelX(e.width);
 					int h = convertLengthToPixelY(e.height);
-					if (p.isFilled()) {
-						FillPattern fillPattern = p.getFillPattern();
-						if (fillPattern instanceof ColorFill) {
+					FillPattern fillPattern = p.getFillPattern();
+					if (fillPattern instanceof ColorFill) {
+						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
-						} else if (fillPattern instanceof Texture) {
-							setPaint(g, (Texture) fillPattern);
+							g.fillOval(x, y, w, h);
 						}
+					} else if (fillPattern instanceof Texture) {
+						setPaint(g, (Texture) fillPattern, p.isFilled());
 						g.fillOval(x, y, w, h);
 					}
 					g.setColor(Color.black);
@@ -1018,13 +1019,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					int y = convertPointToPixelY(r.y);
 					int w = convertLengthToPixelX(r.width);
 					int h = convertLengthToPixelY(r.height);
-					if (p.isFilled()) {
-						FillPattern fp = p.getFillPattern();
-						if (fp instanceof ColorFill) {
+					FillPattern fp = p.getFillPattern();
+					if (fp instanceof ColorFill) {
+						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
-						} else if (fp instanceof Texture) {
-							setPaint(g, (Texture) fp);
+							g.fillRect(x, y, w, h);
 						}
+					} else if (fp instanceof Texture) {
+						setPaint(g, (Texture) fp, p.isFilled());
 						g.fillRect(x, y, w, h);
 					}
 					g.setColor(Color.black);
@@ -1054,13 +1056,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					scale.setToScale(getWidth() / (xmax - xmin), getHeight() / (ymax - ymin));
 					Area area = (Area) s;
 					area.transform(scale);
-					if (p.isFilled()) {
-						FillPattern fillPattern = p.getFillPattern();
-						if (fillPattern instanceof ColorFill) {
+					FillPattern fillPattern = p.getFillPattern();
+					if (fillPattern instanceof ColorFill) {
+						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
-						} else if (fillPattern instanceof Texture) {
-							setPaint(g, (Texture) fillPattern);
+							g.fill(area);
 						}
+					} else if (fillPattern instanceof Texture) {
+						setPaint(g, (Texture) fillPattern, p.isFilled());
 						g.fill(area);
 					}
 					g.setColor(Color.black);
@@ -1085,13 +1088,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						cx += x;
 						cy += y;
 					}
-					if (p.isFilled()) {
-						FillPattern fp = p.getFillPattern();
-						if (fp instanceof ColorFill) {
+					FillPattern fp = p.getFillPattern();
+					if (fp instanceof ColorFill) {
+						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
-						} else if (fp instanceof Texture) {
-							setPaint(g, (Texture) fp);
+							g.fill(multigon);
 						}
+					} else if (fp instanceof Texture) {
+						setPaint(g, (Texture) fp, p.isFilled());
 						g.fill(multigon);
 					}
 					g.setColor(Color.black);

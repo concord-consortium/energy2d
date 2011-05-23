@@ -19,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -87,16 +88,13 @@ class PartViewDialog extends JDialog {
 		panel.add(box, BorderLayout.CENTER);
 
 		Box miscBox = Box.createVerticalBox();
-		miscBox.setBorder(BorderFactory.createTitledBorder("Miscellaneous"));
+		miscBox.setBorder(BorderFactory.createTitledBorder("General"));
 		box.add(miscBox);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		miscBox.add(p);
-		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
-		p.add(draggableCheckBox);
-		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
-		p.add(visibleCheckBox);
 
+		p.add(new JLabel("Filling"));
 		colorChooser = new JColorChooser();
 		textureChooser = new TextureChooser();
 		FillPattern fp = part.getFillPattern();
@@ -109,7 +107,7 @@ class PartViewDialog extends JDialog {
 			textureChooser.setSelectedStyle(texture.getStyle(), texture.getCellWidth(), texture.getCellHeight());
 		}
 
-		bgComboBox = new BackgroundComboBox(this, colorChooser, textureChooser);
+		bgComboBox = new BackgroundComboBox(this, part.isFilled(), colorChooser, textureChooser);
 		bgComboBox.setToolTipText("Background filling");
 		bgComboBox.setFillPattern(part.getFillPattern());
 		bgComboBox.getColorMenu().setNoFillAction(new AbstractAction("No Fill") {
@@ -128,7 +126,6 @@ class PartViewDialog extends JDialog {
 				FillPattern fp = new ColorFill(bgComboBox.getColorMenu().getColor());
 				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFilled(true);
 				part.setFillPattern(fp);
 				view.repaint();
 				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
@@ -139,7 +136,6 @@ class PartViewDialog extends JDialog {
 				FillPattern fp = new ColorFill(bgComboBox.getColorMenu().getColorChooser().getColor());
 				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFilled(true);
 				part.setFillPattern(fp);
 				view.repaint();
 				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
@@ -153,7 +149,6 @@ class PartViewDialog extends JDialog {
 				FillPattern fp = new ColorFill(c);
 				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFilled(true);
 				part.setFillPattern(fp);
 				view.repaint();
 				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
@@ -164,13 +159,17 @@ class PartViewDialog extends JDialog {
 				FillPattern fp = bgComboBox.getColorMenu().getTextureChooser().getFillPattern();
 				if (fp.equals(part.getFillPattern()))
 					return;
-				part.setFilled(true);
 				part.setFillPattern(fp);
 				view.repaint();
 				bgComboBox.getColorMenu().firePropertyChange(ColorMenu.FILLING, null, fp);
 			}
 		}, null);
 		p.add(bgComboBox);
+
+		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
+		p.add(visibleCheckBox);
+		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
+		p.add(draggableCheckBox);
 
 		pack();
 		setLocationRelativeTo(view);

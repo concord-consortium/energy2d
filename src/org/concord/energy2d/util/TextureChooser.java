@@ -317,7 +317,8 @@ public class TextureChooser extends JTabbedPane {
 
 	class TexturePanel extends JPanel {
 
-		private final BasicStroke highlight = new BasicStroke(4.0f);
+		private final BasicStroke highlightOutside = new BasicStroke(4);
+		private final BasicStroke highlightInside = new BasicStroke(2);
 		private boolean selected;
 		private byte style = TextureFactory.POLKA;
 		private int cellWidth = 12;
@@ -371,8 +372,11 @@ public class TextureChooser extends JTabbedPane {
 			g2d.setPaint(TextureFactory.createPattern(style, cellWidth, cellHeight, getForeground(), getBackground()));
 			g2d.fillRect(0, 0, w, h);
 			if (selected) {
-				g2d.setStroke(highlight);
+				g2d.setStroke(highlightOutside);
 				g2d.setColor(Color.black);
+				g2d.drawRect(2, 2, w - 5, h - 5);
+				g2d.setStroke(highlightInside);
+				g2d.setColor(Color.white);
 				g2d.drawRect(2, 2, w - 5, h - 5);
 			}
 		}

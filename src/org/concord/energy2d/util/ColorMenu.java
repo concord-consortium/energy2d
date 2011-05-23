@@ -43,11 +43,7 @@ public class ColorMenu extends JMenu {
 	private JMenuItem textureMenuItem;
 	private ColorArrayPane cap;
 
-	public ColorMenu(Component parent, String name, JColorChooser color) {
-		this(parent, name, color, null);
-	}
-
-	public ColorMenu(Component parent, String name, JColorChooser color, TextureChooser texture) {
+	public ColorMenu(Component parent, String name, boolean filled, JColorChooser color, TextureChooser texture) {
 
 		super(name);
 
@@ -64,7 +60,7 @@ public class ColorMenu extends JMenu {
 		textureChooser = texture;
 
 		String s = getInternationalText("NoFill");
-		noFillMenuItem = new JCheckBoxMenuItem(s != null ? s : "No Fill");
+		noFillMenuItem = new JCheckBoxMenuItem(s != null ? s : "No Fill", !filled);
 		add(noFillMenuItem);
 		addSeparator();
 
