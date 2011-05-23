@@ -67,10 +67,10 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="0.65" y="0.4"/>
-<thermometer x="0.35" y="0.4"/>
-<thermometer x="0.65" y="0.7"/>
-<thermometer x="0.35" y="0.7"/>
+<thermometer label="T2" x="0.65" y="0.39999998"/>
+<thermometer label="T1" x="0.35" y="0.39999998"/>
+<thermometer label="T4" x="0.65" y="0.7"/>
+<thermometer label="T3" x="0.35" y="0.7"/>
 </sensor>
 <view>
 <grid>true</grid>

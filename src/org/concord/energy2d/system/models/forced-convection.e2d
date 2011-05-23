@@ -76,8 +76,8 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="2.525" y="7.55"/>
-<thermometer x="2.525" y="2.4500003"/>
+<thermometer label="T2" x="2.525" y="7.55"/>
+<thermometer label="T1" x="2.525" y="2.4499998"/>
 </sensor>
 <view>
 <grid_size>10</grid_size>

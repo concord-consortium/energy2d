@@ -28,6 +28,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>12</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Wall</label>
 </part>
 <part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -39,7 +45,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
-<color>333333</color>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>10</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Ground</label>
 </part>
 <part><rectangle x="4.5" y="2.75" width="1.0" height="5.25"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -51,6 +62,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>12</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Wall</label>
 </part>
 <part><rectangle x="0.78333336" y="2.25" width="2.2166667" height="0.5"/><thermal_conductivity>0.01</thermal_conductivity>
@@ -62,6 +79,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>7</texture_style>
+<texture_width>4</texture_width>
+<texture_height>4</texture_height>
+</texture>
 </part>
 <part><rectangle x="2.25" y="7.475" width="1.5" height="0.45"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>10.0</specific_heat>
@@ -73,8 +96,8 @@
 <temperature>60.0</temperature>
 <constant_temperature>false</constant_temperature>
 <power>1000.0</power>
-<label>Heater</label>
 <filled>false</filled>
+<label>Heater</label>
 </part>
 <part><rectangle x="3.2" y="2.25" width="3.6" height="0.5"/><thermal_conductivity>0.01</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
@@ -85,6 +108,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>7</texture_style>
+<texture_width>4</texture_width>
+<texture_height>4</texture_height>
+</texture>
 <label>Roof</label>
 </part>
 <part><rectangle x="6.25" y="7.475" width="1.5" height="0.45"/><thermal_conductivity>1.0</thermal_conductivity>
@@ -97,8 +126,8 @@
 <temperature>60.0</temperature>
 <constant_temperature>false</constant_temperature>
 <power>1000.0</power>
-<label>Heater</label>
 <filled>false</filled>
+<label>Heater</label>
 </part>
 <part><rectangle x="8.55" y="6.0" width="0.5" height="2.0"/><thermal_conductivity>0.01</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
@@ -109,6 +138,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>12</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Wall</label>
 </part>
 <part><rectangle x="6.8" y="2.25" width="2.4" height="0.5"/><thermal_conductivity>0.01</thermal_conductivity>
@@ -120,6 +155,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>7</texture_style>
+<texture_width>4</texture_width>
+<texture_height>4</texture_height>
+</texture>
 </part>
 <part><rectangle x="8.55" y="2.9666667" width="0.5" height="0.78333336"/><thermal_conductivity>0.01</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
@@ -130,6 +171,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>12</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Wall</label>
 </part>
 <part><rectangle x="0.95000005" y="2.75" width="0.5" height="1.0"/><thermal_conductivity>0.01</thermal_conductivity>
@@ -141,6 +188,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>12</texture_style>
+<texture_width>10</texture_width>
+<texture_height>10</texture_height>
+</texture>
 <label>Wall</label>
 </part>
 <part><rectangle x="1.125" y="3.675" width="0.15" height="2.35"/><thermal_conductivity>0.1</thermal_conductivity>
@@ -173,6 +226,7 @@
 </sensor>
 <view>
 <grid>true</grid>
+<grid_size>10</grid_size>
 <ruler>true</ruler>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>

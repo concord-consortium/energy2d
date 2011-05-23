@@ -108,11 +108,12 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="0.75" y="6.0"/>
-<thermometer x="1.75" y="6.0"/>
-<thermometer x="8.0" y="6.0"/>
+<thermometer label="T1" x="0.75" y="6.0"/>
+<thermometer label="T2" x="1.75" y="6.0"/>
+<thermometer label="T3" x="8.0" y="6.0"/>
 </sensor>
 <view>
+<grid_size>10</grid_size>
 <ruler>true</ruler>
 <isotherm>true</isotherm>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>

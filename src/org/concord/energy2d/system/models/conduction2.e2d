@@ -29,8 +29,8 @@
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
 <constant_temperature>true</constant_temperature>
-<label>%temperature</label>
 <filled>false</filled>
+<label>%temperature</label>
 <draggable>false</draggable>
 </part>
 <part><rectangle x="0.080000006" y="0.0" width="0.02" height="0.04"/><thermal_conductivity>0.08</thermal_conductivity>
@@ -65,8 +65,8 @@
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
 <constant_temperature>true</constant_temperature>
-<label>%temperature</label>
 <filled>false</filled>
+<label>%temperature</label>
 <draggable>false</draggable>
 </part>
 <part><rectangle x="0.080000006" y="0.06" width="0.02" height="0.04"/><thermal_conductivity>0.08</thermal_conductivity>
@@ -95,8 +95,8 @@
 </structure>
 </model>
 <sensor>
-<thermometer x="0.09025" y="0.08049999"/>
-<thermometer x="0.09025" y="0.020500002"/>
+<thermometer label="T2" x="0.09" y="0.08"/>
+<thermometer label="T1" x="0.09" y="0.020000003"/>
 </sensor>
 <view>
 <grid>true</grid>

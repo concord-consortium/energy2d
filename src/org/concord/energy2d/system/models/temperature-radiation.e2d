@@ -64,8 +64,8 @@
 <temperature>100.0</temperature>
 <constant_temperature>true</constant_temperature>
 <uid>left_radiator</uid>
-<label>%temperature</label>
 <filled>false</filled>
+<label>%temperature</label>
 </part>
 <part><rectangle x="8.95" y="2.5" width="0.5" height="5.0"/><thermal_conductivity>0.1</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
@@ -77,16 +77,17 @@
 <temperature>500.0</temperature>
 <constant_temperature>true</constant_temperature>
 <uid>right_radiator</uid>
-<label>%temperature</label>
 <filled>false</filled>
+<label>%temperature</label>
 </part>
 </structure>
 </model>
 <sensor>
-<thermometer x="5.5" y="5.0"/>
-<thermometer x="4.5" y="5.0"/>
+<thermometer label="T2" x="5.5" y="5.0"/>
+<thermometer label="T1" x="4.5" y="5.0"/>
 </sensor>
 <view>
+<grid_size>10</grid_size>
 <rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
 <clock>false</clock>
