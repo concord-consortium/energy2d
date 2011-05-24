@@ -44,6 +44,8 @@ class AppletConverter {
 		s += LINE_SEPARATOR;
 		s += "    <title>" + System2D.BRAND_NAME + "</title>";
 		s += LINE_SEPARATOR;
+		s += "    <script type=\"text/javascript\" src=\"library.js\"></script>";
+		s += LINE_SEPARATOR;
 		s += "  </head>";
 		s += LINE_SEPARATOR;
 
@@ -51,23 +53,37 @@ class AppletConverter {
 		s += LINE_SEPARATOR;
 
 		s += "    <p><font color=\"red\">If nothing shows up below, try the following: ";
-		s += "1) Download <a href=\"http://energy.concord.org/energy2d/energy2d.jar\">energy2d.jar</a> ";
+		s += "<ol><li>Download <a href=\"http://energy.concord.org/energy2d/energy2d.jar\">energy2d.jar</a> ";
+		s += "and <a href=\"http://energy.concord.org/energy2d/library.js\">library.js</a> ";
 		s += "to where this HTML file is located; ";
-		s += "2); Make sure " + s2d.getCurrentFile()
-				+ " is copied or moved to where this HTML file is located; ";
-		s += "3) <b>Restart the browser</b> and reload this page. ";
-		s += "This line of message should be removed if the applet works.</font></p>";
+		s += "<li>Make sure " + s2d.getCurrentFile() + " is copied or moved to where this HTML file is located; ";
+		s += "<li><b>Restart the browser</b> and reload this page.";
+		s += "</ol><p>This line of message should be removed if the applet works.</font></p>";
 		s += LINE_SEPARATOR;
 
 		s += "    <center>";
 		s += LINE_SEPARATOR;
 
-		s += "      <applet code=\"org.concord.energy2d.system.System2D\" archive=\"energy2d.jar\" width=\"500\" height=\"500\">";
+		s += "      <applet id=\"applet1\" code=\"org.concord.energy2d.system.System2D\" archive=\"energy2d.jar\" width=\"500\" height=\"500\">";
 		s += LINE_SEPARATOR;
-		s += "        <param name=\"script\" value=\"load "
-				+ MiscUtil.getFileName(s2d.getCurrentFile().toString()) + "\"/>";
+		s += "        <param name=\"script\" value=\"load " + MiscUtil.getFileName(s2d.getCurrentFile().toString()) + "\"/>";
 		s += LINE_SEPARATOR;
 		s += "      </applet>";
+		s += LINE_SEPARATOR;
+
+		s += "      <br>";
+		s += LINE_SEPARATOR;
+		s += "      <form autocomplete=\"off\">";
+		s += LINE_SEPARATOR;
+		s += "      <input type=\"button\" value=\"Run\" onclick=\"run('applet1')\">";
+		s += LINE_SEPARATOR;
+		s += "      <input type=\"button\" value=\"Stop\" onclick=\"stop('applet1')\">";
+		s += LINE_SEPARATOR;
+		s += "      <input type=\"button\" value=\"Reset\" onclick=\"jsReset('applet1')\">";
+		s += LINE_SEPARATOR;
+		s += "      <input type=\"button\" value=\"Reload\" onclick=\"jsReload('applet1')\">";
+		s += LINE_SEPARATOR;
+		s += "      </form>";
 		s += LINE_SEPARATOR;
 
 		s += "      <br><br>";
@@ -96,5 +112,4 @@ class AppletConverter {
 		}
 
 	}
-
 }
