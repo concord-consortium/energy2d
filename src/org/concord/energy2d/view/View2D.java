@@ -124,6 +124,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showHeatFluxArrows, showHeatFluxLines;
 	private boolean showGraph;
 	private boolean showRainbow;
+	private boolean showGrid;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte pixelAttribute = PIXEL_TEMPERATURE;
@@ -443,16 +444,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setGridOn(boolean b) {
-		gridRenderer = b ? new GridRenderer(nx, ny) : null;
+		showGrid = b;
+		if (b && gridRenderer == null)
+			gridRenderer = new GridRenderer(nx, ny);
 	}
 
 	public boolean isGridOn() {
-		return gridRenderer != null;
+		return showGrid;
 	}
 
 	public void setGridSize(int gridSize) {
-		if (gridRenderer != null)
-			gridRenderer.setGridSize(gridSize);
+		if (gridRenderer == null)
+			gridRenderer = new GridRenderer(nx, ny);
+		gridRenderer.setGridSize(gridSize);
 	}
 
 	public int getGridSize() {
@@ -810,7 +814,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				movingShape.render(g2);
 			}
 		}
-		if (gridRenderer != null)
+		if (showGrid && gridRenderer != null)
 			gridRenderer.render(this, g2);
 		if (rulerRenderer != null) {
 			g2.setColor(textColor);

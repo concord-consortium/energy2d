@@ -228,7 +228,7 @@ public class TextureChooser extends JTabbedPane {
 				cell = 4;
 				break;
 			case TextureFactory.MEDIUM:
-				cell = 10;
+				cell = 8;
 				break;
 			case TextureFactory.LARGE:
 				cell = 12;
