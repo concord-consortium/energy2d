@@ -607,7 +607,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public boolean getSeeThrough() {
 		if (model.getPartCount() == 0)
 			return false;
-		return !model.getPart(0).isFilled();
+		List<Part> parts = model.getParts();
+		synchronized (parts) {
+			for (Part p : parts) {
+				if (p.isFilled())
+					return false;
+			}
+		}
+		return true;
 	}
 
 	public void setClockOn(boolean b) {

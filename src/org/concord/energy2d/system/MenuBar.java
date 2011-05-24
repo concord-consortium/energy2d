@@ -343,15 +343,15 @@ class MenuBar extends JMenuBar {
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				miSeeThrough.setSelected(box.view.getSeeThrough());
-				miIsotherm.setSelected(box.view.isIsothermOn());
-				miVelocity.setSelected(box.view.isVelocityOn());
-				miStreamline.setSelected(box.view.isStreamlineOn());
-				miHeatFluxArrow.setSelected(box.view.isHeatFluxArrowsOn());
-				miHeatFluxLine.setSelected(box.view.isHeatFluxLinesOn());
-				miRainbow.setSelected(box.view.isRainbowOn());
-				miRuler.setSelected(box.view.isRulerOn());
-				miGrid.setSelected(box.view.isGridOn());
+				MiscUtil.setSelectedSilently(miSeeThrough, box.view.getSeeThrough());
+				MiscUtil.setSelectedSilently(miIsotherm, box.view.isIsothermOn());
+				MiscUtil.setSelectedSilently(miVelocity, box.view.isVelocityOn());
+				MiscUtil.setSelectedSilently(miStreamline, box.view.isStreamlineOn());
+				MiscUtil.setSelectedSilently(miHeatFluxArrow, box.view.isHeatFluxArrowsOn());
+				MiscUtil.setSelectedSilently(miHeatFluxLine, box.view.isHeatFluxLinesOn());
+				MiscUtil.setSelectedSilently(miRainbow, box.view.isRainbowOn());
+				MiscUtil.setSelectedSilently(miRuler, box.view.isRulerOn());
+				MiscUtil.setSelectedSilently(miGrid, box.view.isGridOn());
 			}
 		});
 		add(menu);

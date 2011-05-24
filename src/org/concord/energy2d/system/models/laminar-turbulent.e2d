@@ -27,8 +27,8 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.02</wind_speed>
-<label>V=2</label>
 <filled>false</filled>
+<label>V=2</label>
 </part>
 <part><rectangle x="0.05000019" y="2.4000003" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -60,8 +60,8 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.01</wind_speed>
-<label>V=1</label>
 <filled>false</filled>
+<label>V=1</label>
 </part>
 <part><rectangle x="0.05000019" y="-0.049999997" width="9.9" height="0.3"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -91,10 +91,10 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
-<constant_temperature>true</constant_temperature>
+<constant_temperature>false</constant_temperature>
 <wind_speed>0.05</wind_speed>
-<label>V=5</label>
 <filled>false</filled>
+<label>V=5</label>
 </part>
 <part><rectangle x="1.15" y="3.3" width="0.7" height="0.6"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -147,10 +147,10 @@
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
-<constant_temperature>true</constant_temperature>
+<constant_temperature>false</constant_temperature>
 <wind_speed>0.1</wind_speed>
-<label>V=10</label>
 <filled>false</filled>
+<label>V=10</label>
 </part>
 <part><rectangle x="1.15" y="8.2" width="0.7" height="0.6"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
