@@ -595,7 +595,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return isotherms.getResolution();
 	}
 
-	public void setOutlineOn(boolean b) {
+	public void setSeeThrough(boolean b) {
 		List<Part> parts = model.getParts();
 		synchronized (parts) {
 			for (Part p : parts) {
@@ -604,7 +604,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	public boolean isOutlineOn() {
+	public boolean getSeeThrough() {
 		if (model.getPartCount() == 0)
 			return false;
 		return !model.getPart(0).isFilled();

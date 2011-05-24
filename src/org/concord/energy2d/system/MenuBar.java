@@ -324,6 +324,7 @@ class MenuBar extends JMenuBar {
 
 		// view menu
 
+		final JCheckBoxMenuItem miSeeThrough = new JCheckBoxMenuItem("See-Through");
 		final JCheckBoxMenuItem miIsotherm = new JCheckBoxMenuItem("Isotherm");
 		final JCheckBoxMenuItem miVelocity = new JCheckBoxMenuItem("Velocity");
 		final JCheckBoxMenuItem miStreamline = new JCheckBoxMenuItem("Streamlines");
@@ -342,6 +343,7 @@ class MenuBar extends JMenuBar {
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				miSeeThrough.setSelected(box.view.getSeeThrough());
 				miIsotherm.setSelected(box.view.isIsothermOn());
 				miVelocity.setSelected(box.view.isVelocityOn());
 				miStreamline.setSelected(box.view.isStreamlineOn());
@@ -353,6 +355,16 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		add(menu);
+
+		miSeeThrough.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setSeeThrough(src.isSelected());
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		menu.add(miSeeThrough);
 
 		miIsotherm.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

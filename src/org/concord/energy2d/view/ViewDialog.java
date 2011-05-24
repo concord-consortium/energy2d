@@ -147,12 +147,12 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		checkBox = new JCheckBox("Outline");
-		checkBox.setSelected(view.isOutlineOn());
+		checkBox = new JCheckBox("See-Through");
+		checkBox.setSelected(view.getSeeThrough());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
-				view.setOutlineOn(src.isSelected());
+				view.setSeeThrough(src.isSelected());
 				view.repaint();
 			}
 		});
