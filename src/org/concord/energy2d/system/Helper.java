@@ -47,7 +47,7 @@ public class Helper {
 	}
 
 	public final static void showAbout(Frame frame) {
-		String s = "<html><h2>Energy2D</h2>";
+		String s = "<html><h2>" + System2D.BRAND_NAME + "</h2>";
 		s += "<h4><i>A heat transfer simulation tool for everyone</i></h4>";
 		s += "http://energy.concord.org/energy2d<br>The Advanced Educational Modeling Laboratory, The Concord Consortium, 2011";
 		s += "<hr>";

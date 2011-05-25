@@ -567,7 +567,7 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("rainbow")) {
 					s2d.view.setRainbowOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("outline")) {
+				} else if (t[0].equalsIgnoreCase("seethrough")) {
 					s2d.view.setSeeThrough("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("isotherm")) {
