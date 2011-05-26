@@ -132,6 +132,7 @@ class PartModelDialog extends JDialog {
 					if (Float.isNaN(temperature))
 						return;
 					part.setTemperature(temperature);
+					part.setPower(0);
 				} else if (powerRadioButton.isSelected()) {
 					float power = parse(powerField.getText());
 					if (Float.isNaN(power))
