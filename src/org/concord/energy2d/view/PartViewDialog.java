@@ -157,7 +157,7 @@ class PartViewDialog extends JDialog {
 		bgComboBox.getColorMenu().setTextureActions(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FillPattern fp = bgComboBox.getColorMenu().getTextureChooser().getFillPattern();
-				if (fp.equals(part.getFillPattern()))
+				if (fp != null && fp.equals(part.getFillPattern()))
 					return;
 				part.setFillPattern(fp);
 				view.repaint();
