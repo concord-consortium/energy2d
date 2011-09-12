@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
@@ -90,6 +91,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public System2D() {
 
+		if (preferences != null)
+			Locale.setDefault(Locale.US);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -630,6 +633,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public static void main(String[] args) {
 
+		Locale.setDefault(Locale.US);
+
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND_NAME);
@@ -640,7 +645,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(600, 600));
-
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png")).getImage());
 		MenuBar menuBar = new MenuBar(box, frame);
