@@ -778,7 +778,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Graphics2D g2 = createGraphics2D();
 		draw(g2);
 		g2.dispose();
-		g.drawImage(bimg, 0, 0, this);
+		if (bimg != null)
+			g.drawImage(bimg, 0, 0, this);
 	}
 
 	private void draw(Graphics2D g) {
