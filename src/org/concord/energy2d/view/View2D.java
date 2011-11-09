@@ -36,6 +36,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
@@ -112,6 +113,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
 	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 12);
 
+	private BufferedImage bimg;
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
 	private Rainbow rainbow;
@@ -756,42 +758,55 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		this.ymax = ymax;
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		update(g);
+	private Graphics2D createGraphics2D() {
+		int w = getWidth();
+		int h = getHeight();
+		Graphics2D g;
+		if (bimg == null || bimg.getWidth() != w || bimg.getHeight() != h) {
+			bimg = (BufferedImage) createImage(w, h);
+		}
+		g = bimg.createGraphics();
+		g.setBackground(getBackground());
+		g.clearRect(0, 0, w, h);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		return g;
 	}
 
 	@Override
-	public void update(Graphics g) {
+	public void paint(Graphics g) {
+		Graphics2D g2 = createGraphics2D();
+		draw(g2);
+		g2.dispose();
+		g.drawImage(bimg, 0, 0, this);
+	}
+
+	private void draw(Graphics2D g) {
 		int w = getWidth();
 		int h = getHeight();
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		Stroke stroke = g2.getStroke();
+		Stroke stroke = g.getStroke();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, w, h);
 		switch (pixelAttribute) {
 		case PIXEL_TEMPERATURE:
-			drawTemperatureField(g2);
+			drawTemperatureField(g);
 			break;
 		case PIXEL_THERMAL_ENERGY:
-			drawThermalEnergyField(g2);
+			drawThermalEnergyField(g);
 			break;
 		}
-		drawParts(g2);
+		drawParts(g);
 		if (isotherms != null) {
-			g2.setStroke(thinStroke);
-			isotherms.render(g2, getSize(), model.getTemperature());
+			g.setStroke(thinStroke);
+			isotherms.render(g, getSize(), model.getTemperature());
 		}
 		if (showStreamLines && streamlines != null) {
-			g2.setStroke(thinStroke);
-			streamlines.render(g2, getSize(), model.getXVelocity(), model.getYVelocity());
+			g.setStroke(thinStroke);
+			streamlines.render(g, getSize(), model.getXVelocity(), model.getYVelocity());
 		}
 		if (showHeatFluxLines && heatFluxLines != null) {
-			g2.setStroke(thinStroke);
-			heatFluxLines.render(g2, getSize(), model.getTemperature(), -1);
+			g.setStroke(thinStroke);
+			heatFluxLines.render(g, getSize(), model.getTemperature(), -1);
 		}
 		if (selectedManipulable != null) {
 			if (selectedManipulable instanceof Thermometer) {
@@ -801,99 +816,99 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int ht = convertLengthToPixelY(r.height);
 				int xt = convertPointToPixelX(t.getX()) - wt / 2;
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
-				g2.setColor(Color.yellow);
-				g2.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+				g.setColor(Color.yellow);
+				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
 			} else {
 				for (Rectangle r : handle) {
 					if (r.x != 0 || r.y != 0) {
-						g2.setColor(Color.yellow);
-						g2.fill(r);
-						g2.setColor(Color.black);
-						g2.draw(r);
+						g.setColor(Color.yellow);
+						g.fill(r);
+						g.setColor(Color.black);
+						g.draw(r);
 					}
 				}
 			}
 		}
 		if (mouseBeingDragged) {
 			if (movingShape != null) {
-				g2.setColor(Color.white);
-				g2.setStroke(dashed);
-				movingShape.render(g2);
+				g.setColor(Color.white);
+				g.setStroke(dashed);
+				movingShape.render(g);
 			}
 		}
 		if (showGrid && gridRenderer != null)
-			gridRenderer.render(this, g2);
+			gridRenderer.render(this, g);
 		if (rulerRenderer != null) {
-			g2.setColor(textColor);
-			rulerRenderer.render(this, g2);
+			g.setColor(textColor);
+			rulerRenderer.render(this, g);
 		}
 		if (showRainbow && pixelAttribute != PIXEL_NONE) {
-			g2.setStroke(thinStroke);
+			g.setStroke(thinStroke);
 			switch (pixelAttribute) {
 			case PIXEL_TEMPERATURE:
-				rainbow.render(this, g2, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
+				rainbow.render(this, g, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
 				break;
 			case PIXEL_THERMAL_ENERGY:
-				rainbow.render(this, g2, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
+				rainbow.render(this, g, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
 				break;
 			}
 		}
 		if (showVelocity)
-			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g2);
+			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
 		if (showHeatFluxArrows)
-			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g2);
-		drawThermometers(g2);
-		drawPhotons(g2);
-		drawTextBoxes(g2);
-		drawPictures(g2);
+			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g);
+		drawThermometers(g);
+		drawPhotons(g);
+		drawTextBoxes(g);
+		drawPictures(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					graphRenderer.render(this, g2, t.getData(), t.getLabel(), selectedManipulable == t);
+					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
 			}
 		}
 		if (clockOn) {
-			g2.setFont(smallFont);
-			g2.setColor(textColor);
-			g2.drawString(MiscUtil.formatTime((int) time), w - 68, 16);
+			g.setFont(smallFont);
+			g.setColor(textColor);
+			g.drawString(MiscUtil.formatTime((int) time), w - 68, 16);
 		}
 
-		g2.setStroke(dashed);
+		g.setStroke(dashed);
 		switch (actionMode) {
 		case RECTANGLE_MODE:
-			g2.setColor(TRANSLUCENT_GRAY);
-			g2.fill(rectangle);
-			g2.setColor(Color.white);
-			g2.draw(rectangle);
+			g.setColor(TRANSLUCENT_GRAY);
+			g.fill(rectangle);
+			g.setColor(Color.white);
+			g.draw(rectangle);
 			break;
 		case ELLIPSE_MODE:
-			g2.setColor(TRANSLUCENT_GRAY);
-			g2.fill(ellipse);
-			g2.setColor(Color.white);
-			g2.draw(ellipse);
+			g.setColor(TRANSLUCENT_GRAY);
+			g.fill(ellipse);
+			g.setColor(Color.white);
+			g.draw(ellipse);
 			break;
 		case POLYGON_MODE:
-			g2.setColor(TRANSLUCENT_GRAY);
-			g2.fill(polygon);
-			g2.setColor(Color.white);
-			g2.draw(polygon);
+			g.setColor(TRANSLUCENT_GRAY);
+			g.fill(polygon);
+			g.setColor(Color.white);
+			g.draw(polygon);
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
-				g2.setColor(Color.green);
-				g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
+				g.setColor(Color.green);
+				g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
 				int np = polygon.npoints;
 				if (np > 0) {
-					g2.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0], polygon.ypoints[0]);
+					g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0], polygon.ypoints[0]);
 				}
 			}
 			break;
 		}
 
-		g2.setStroke(stroke);
+		g.setStroke(stroke);
 		if (frankOn) {
 			int dy = rulerRenderer != null ? 30 : 15;
-			drawFrank(g2, getWidth() - 84, getHeight() - dy);
+			drawFrank(g, getWidth() - 84, getHeight() - dy);
 		}
 
 		if (errorMessage != null) {
