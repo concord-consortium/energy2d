@@ -349,7 +349,7 @@ class MenuBar extends JMenuBar {
 				MiscUtil.setSelectedSilently(miStreamline, box.view.isStreamlineOn());
 				MiscUtil.setSelectedSilently(miHeatFluxArrow, box.view.isHeatFluxArrowsOn());
 				MiscUtil.setSelectedSilently(miHeatFluxLine, box.view.isHeatFluxLinesOn());
-				MiscUtil.setSelectedSilently(miRainbow, box.view.isRainbowOn());
+				MiscUtil.setSelectedSilently(miRainbow, box.view.isColorPaletteOn());
 				MiscUtil.setSelectedSilently(miRuler, box.view.isRulerOn());
 				MiscUtil.setSelectedSilently(miGrid, box.view.isGridOn());
 			}
@@ -419,7 +419,7 @@ class MenuBar extends JMenuBar {
 		miRainbow.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
-				box.view.setRainbowOn(src.isSelected());
+				box.view.setColorPaletteOn(src.isSelected());
 				box.view.repaint();
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}

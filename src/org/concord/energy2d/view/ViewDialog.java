@@ -193,11 +193,11 @@ class ViewDialog extends JDialog {
 		p.add(checkBox);
 
 		checkBox = new JCheckBox("Rainbow");
-		checkBox.setSelected(view.isRainbowOn());
+		checkBox.setSelected(view.isColorPaletteOn());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBox src = (JCheckBox) e.getSource();
-				view.setRainbowOn(src.isSelected());
+				view.setColorPaletteOn(src.isSelected());
 				view.repaint();
 			}
 		});
@@ -234,7 +234,7 @@ class ViewDialog extends JDialog {
 		comboBox.addItem("None");
 		comboBox.addItem("Temperature");
 		comboBox.addItem("Thermal energy");
-		comboBox.setSelectedIndex(view.getPixelAttribute() - View2D.PIXEL_NONE);
+		comboBox.setSelectedIndex(view.getHeatMapType() - View2D.HEATMAP_NONE);
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JComboBox src = (JComboBox) e.getSource();
@@ -269,7 +269,7 @@ class ViewDialog extends JDialog {
 					unitLabel2.setText("J");
 					break;
 				}
-				view.setPixelAttribute((byte) (i - View2D.PIXEL_NONE));
+				view.setHeatMapType((byte) (i - View2D.HEATMAP_NONE));
 				view.repaint();
 			}
 		});

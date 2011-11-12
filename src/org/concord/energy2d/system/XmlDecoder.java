@@ -58,10 +58,10 @@ class XmlDecoder extends DefaultHandler {
 	private boolean grid;
 	private boolean isotherm;
 	private boolean streamline;
-	private boolean rainbow;
+	private boolean colorPalette;
 	private boolean brand = true;
-	private byte pixelAttribute = View2D.PIXEL_TEMPERATURE;
-	private float rainbowX, rainbowY, rainbowW, rainbowH;
+	private byte heatMapType = View2D.HEATMAP_TEMPERATURE;
+	private float colorPaletteX, colorPaletteY, colorPaletteW, colorPaletteH;
 	private int gridSize = 10;
 	private boolean velocity;
 	private boolean heatFluxArrows;
@@ -138,14 +138,14 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setVelocityOn(velocity);
 		box.view.setHeatFluxArrowsOn(heatFluxArrows);
 		box.view.setHeatFluxLinesOn(heatFluxLines);
-		box.view.setRainbowOn(rainbow);
+		box.view.setColorPaletteOn(colorPalette);
 		box.view.setFrankOn(brand);
-		box.view.setPixelAttribute(pixelAttribute);
-		float xRainbow = rainbowX > 1 ? rainbowX / box.view.getWidth() : rainbowX;
-		float yRainbow = rainbowY > 1 ? rainbowY / box.view.getHeight() : rainbowY;
-		float wRainbow = rainbowW > 1 ? rainbowW / box.view.getWidth() : rainbowW;
-		float hRainbow = rainbowH > 1 ? rainbowH / box.view.getHeight() : rainbowH;
-		box.view.setRainbowRectangle(xRainbow, yRainbow, wRainbow, hRainbow);
+		box.view.setHeatMapType(heatMapType);
+		float xColorPalette = colorPaletteX > 1 ? colorPaletteX / box.view.getWidth() : colorPaletteX;
+		float yColorPalette = colorPaletteY > 1 ? colorPaletteY / box.view.getHeight() : colorPaletteY;
+		float wColorPalette = colorPaletteW > 1 ? colorPaletteW / box.view.getWidth() : colorPaletteW;
+		float hColorPalette = colorPaletteH > 1 ? colorPaletteH / box.view.getHeight() : colorPaletteH;
+		box.view.setColorPaletteRectangle(xColorPalette, yColorPalette, wColorPalette, hColorPalette);
 		box.view.setMinimumTemperature(minimumTemperature);
 		box.view.setMaximumTemperature(maximumTemperature);
 		box.view.setClockOn(clock);
@@ -449,20 +449,20 @@ class XmlDecoder extends DefaultHandler {
 			grid = Boolean.parseBoolean(str);
 		} else if (qName == "grid_size") {
 			gridSize = Integer.parseInt(str);
-		} else if (qName == "rainbow") {
-			rainbow = Boolean.parseBoolean(str);
+		} else if (qName == "color_palette") {
+			colorPalette = Boolean.parseBoolean(str);
 		} else if (qName == "brand") {
 			brand = Boolean.parseBoolean(str);
-		} else if (qName == "pixel_attribute") {
-			pixelAttribute = Byte.parseByte(str);
-		} else if (qName == "rainbow_x") {
-			rainbowX = Float.parseFloat(str);
-		} else if (qName == "rainbow_y") {
-			rainbowY = Float.parseFloat(str);
-		} else if (qName == "rainbow_w") {
-			rainbowW = Float.parseFloat(str);
-		} else if (qName == "rainbow_h") {
-			rainbowH = Float.parseFloat(str);
+		} else if (qName == "heat_map") {
+			heatMapType = Byte.parseByte(str);
+		} else if (qName == "color_palette_x") {
+			colorPaletteX = Float.parseFloat(str);
+		} else if (qName == "color_palette_y") {
+			colorPaletteY = Float.parseFloat(str);
+		} else if (qName == "color_palette_w") {
+			colorPaletteW = Float.parseFloat(str);
+		} else if (qName == "color_palette_h") {
+			colorPaletteH = Float.parseFloat(str);
 		} else if (qName == "clock") {
 			clock = Boolean.parseBoolean(str);
 		} else if (qName == "smooth") {
@@ -615,7 +615,7 @@ class XmlDecoder extends DefaultHandler {
 		gridSize = 10;
 		isotherm = false;
 		streamline = false;
-		rainbow = false;
+		colorPalette = false;
 		velocity = false;
 		heatFluxArrows = false;
 		heatFluxLines = false;
@@ -626,7 +626,7 @@ class XmlDecoder extends DefaultHandler {
 		maximumTemperature = 40;
 		graphXLabel = null;
 		graphYLabel = null;
-		pixelAttribute = View2D.PIXEL_TEMPERATURE;
+		heatMapType = View2D.HEATMAP_TEMPERATURE;
 
 	}
 

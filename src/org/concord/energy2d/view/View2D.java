@@ -91,9 +91,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte POLYGON_MODE = 3;
 	public final static byte THERMOMETER_MODE = 11;
 
-	public final static byte PIXEL_NONE = 0;
-	public final static byte PIXEL_TEMPERATURE = 1;
-	public final static byte PIXEL_THERMAL_ENERGY = 2;
+	public final static byte HEATMAP_NONE = 0;
+	public final static byte HEATMAP_TEMPERATURE = 1;
+	public final static byte HEATMAP_THERMAL_ENERGY = 2;
 
 	final static byte UPPER_LEFT = 0;
 	final static byte LOWER_LEFT = 1;
@@ -106,8 +106,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	final static short[][] TEMPERATURE_COLOR_SCALE = { { 0, 0, 128 }, { 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
-
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
@@ -116,7 +114,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private BufferedImage bimg;
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
-	private Rainbow rainbow;
+	private ColorPalette colorPalette;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
 	private VectorDistributionRenderer vectorFieldRenderer;
@@ -125,11 +123,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showVelocity;
 	private boolean showHeatFluxArrows, showHeatFluxLines;
 	private boolean showGraph;
-	private boolean showRainbow;
+	private boolean showColorPalette;
 	private boolean showGrid;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
-	private byte pixelAttribute = PIXEL_TEMPERATURE;
+	private byte heatMapType = HEATMAP_TEMPERATURE;
+	private byte colorPaletteType = ColorPalette.RAINBOW;
 	private float[][] distribution;
 
 	private static Stroke thinStroke = new BasicStroke(1);
@@ -226,11 +225,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		});
 		createActions();
 		createPopupMenu();
+		setColorPaletteType(colorPaletteType);
 		dialogFactory = new DialogFactory(this);
-		temperatureRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
-		thermalEnergyRenderer = new ScalarDistributionRenderer(TEMPERATURE_COLOR_SCALE);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
-		rainbow = new Rainbow(TEMPERATURE_COLOR_SCALE);
 		manipulationListeners = new ArrayList<ManipulationListener>();
 		graphListeners = new ArrayList<GraphListener>();
 	}
@@ -272,26 +269,37 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	}
 
-	public void setPixelAttribute(byte pixelAttribute) {
-		this.pixelAttribute = pixelAttribute;
-		switch (pixelAttribute) {
-		case PIXEL_NONE:
+	public void setHeatMapType(byte heatMapType) {
+		this.heatMapType = heatMapType;
+		switch (heatMapType) {
+		case HEATMAP_NONE:
 			lightColor = new Color(0, 0, 0, 128);
 			textColor = Color.black;
 			break;
-		case PIXEL_TEMPERATURE:
+		case HEATMAP_TEMPERATURE:
 			lightColor = new Color(255, 255, 255, 128);
 			textColor = Color.white;
 			break;
-		case PIXEL_THERMAL_ENERGY:
+		case HEATMAP_THERMAL_ENERGY:
 			lightColor = new Color(255, 255, 255, 128);
 			textColor = Color.white;
 			break;
 		}
 	}
 
-	public byte getPixelAttribute() {
-		return pixelAttribute;
+	public byte getHeatMapType() {
+		return heatMapType;
+	}
+
+	public void setColorPaletteType(byte colorPaletteType) {
+		this.colorPaletteType = colorPaletteType;
+		temperatureRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType));
+		thermalEnergyRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType));
+		colorPalette = new ColorPalette(ColorPalette.getRgbArray(colorPaletteType));
+	}
+
+	public byte getColorPaletteType() {
+		return colorPaletteType;
 	}
 
 	public void setActionMode(byte mode) {
@@ -467,22 +475,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return gridRenderer.getGridSize();
 	}
 
-	public void setRainbowOn(boolean b) {
-		showRainbow = b;
+	public void setColorPaletteOn(boolean b) {
+		showColorPalette = b;
 	}
 
-	public boolean isRainbowOn() {
-		return showRainbow;
-	}
-
-	/** relative to the width and height of the view */
-	public void setRainbowRectangle(float rx, float ry, float rw, float rh) {
-		rainbow.setRect(rx, ry, rw, rh);
+	public boolean isColorPaletteOn() {
+		return showColorPalette;
 	}
 
 	/** relative to the width and height of the view */
-	public Rectangle2D.Float getRainbowRectangle() {
-		return rainbow.getRect();
+	public void setColorPaletteRectangle(float rx, float ry, float rw, float rh) {
+		colorPalette.setRect(rx, ry, rw, rh);
+	}
+
+	/** relative to the width and height of the view */
+	public Rectangle2D.Float getColorPaletteRectangle() {
+		return colorPalette.getRect();
 	}
 
 	public void setGraphOn(boolean b) {
@@ -789,11 +797,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Stroke stroke = g.getStroke();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, w, h);
-		switch (pixelAttribute) {
-		case PIXEL_TEMPERATURE:
+		switch (heatMapType) {
+		case HEATMAP_TEMPERATURE:
 			drawTemperatureField(g);
 			break;
-		case PIXEL_THERMAL_ENERGY:
+		case HEATMAP_THERMAL_ENERGY:
 			drawThermalEnergyField(g);
 			break;
 		}
@@ -844,14 +852,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setColor(textColor);
 			rulerRenderer.render(this, g);
 		}
-		if (showRainbow && pixelAttribute != PIXEL_NONE) {
+		if (showColorPalette && heatMapType != HEATMAP_NONE) {
 			g.setStroke(thinStroke);
-			switch (pixelAttribute) {
-			case PIXEL_TEMPERATURE:
-				rainbow.render(this, g, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
+			switch (heatMapType) {
+			case HEATMAP_TEMPERATURE:
+				colorPalette.render(this, g, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
 				break;
-			case PIXEL_THERMAL_ENERGY:
-				rainbow.render(this, g, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
+			case HEATMAP_THERMAL_ENERGY:
+				colorPalette.render(this, g, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
 				break;
 			}
 		}
@@ -2035,7 +2043,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.setColor(Color.gray);
 		g.fillRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
 		g.setStroke(moderateStroke);
-		g.setColor(pixelAttribute != PIXEL_NONE ? Color.lightGray : Color.black);
+		g.setColor(heatMapType != HEATMAP_NONE ? Color.lightGray : Color.black);
 		g.drawRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
 		g.setColor(Color.black);
 		g.drawString(s, x + 1, y - 1);

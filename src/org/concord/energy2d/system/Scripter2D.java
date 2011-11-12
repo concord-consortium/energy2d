@@ -564,8 +564,8 @@ class Scripter2D extends Scripter {
 					}
 					s2d.view.setGridSize(gridSize);
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("rainbow")) {
-					s2d.view.setRainbowOn("true".equalsIgnoreCase(t[1]));
+				} else if (t[0].equalsIgnoreCase("color_palette")) {
+					s2d.view.setColorPaletteOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
 				} else if (t[0].equalsIgnoreCase("seethrough")) {
 					s2d.view.setSeeThrough("true".equalsIgnoreCase(t[1]));
@@ -576,7 +576,7 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("streamline")) {
 					s2d.view.setStreamlineOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("rainbow_rectangle")) {
+				} else if (t[0].equalsIgnoreCase("color_palette_rectangle")) {
 					if (t.length > 4) {
 						float x = 0, y = 0, w = 0, h = 0;
 						try {
@@ -598,7 +598,7 @@ class Scripter2D extends Scripter {
 								float y2 = s2d.view.convertPointToPixelY(y1) / s2d.view.getHeight();
 								float w2 = s2d.view.convertLengthToPixelX(w1) / s2d.view.getWidth();
 								float h2 = s2d.view.convertLengthToPixelY(h1) / s2d.view.getHeight();
-								s2d.view.setRainbowRectangle(x2, y2, w2, h2);
+								s2d.view.setColorPaletteRectangle(x2, y2, w2, h2);
 								s2d.view.repaint();
 							}
 						};
@@ -628,13 +628,13 @@ class Scripter2D extends Scripter {
 					}
 					s2d.view.setMaximumTemperature(max);
 					s2d.view.repaint();
-				} else if (t[0].equalsIgnoreCase("pixel_attribute")) {
+				} else if (t[0].equalsIgnoreCase("heat_map")) {
 					if ("NONE".equalsIgnoreCase(t[1]))
-						s2d.view.setPixelAttribute(View2D.PIXEL_NONE);
+						s2d.view.setHeatMapType(View2D.HEATMAP_NONE);
 					else if ("TEMPERATURE".equalsIgnoreCase(t[1]))
-						s2d.view.setPixelAttribute(View2D.PIXEL_TEMPERATURE);
+						s2d.view.setHeatMapType(View2D.HEATMAP_TEMPERATURE);
 					else if ("THERMAL_ENERGY".equalsIgnoreCase(t[1]))
-						s2d.view.setPixelAttribute(View2D.PIXEL_THERMAL_ENERGY);
+						s2d.view.setHeatMapType(View2D.HEATMAP_THERMAL_ENERGY);
 				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {
 					float resolution = 0;
 					try {

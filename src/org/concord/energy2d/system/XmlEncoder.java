@@ -117,17 +117,17 @@ class XmlEncoder {
 		if (box.view.isIsothermOn()) {
 			sb.append("<isotherm>true</isotherm>\n");
 		}
-		if (box.view.isRainbowOn()) {
-			sb.append("<rainbow>true</rainbow>\n");
+		if (box.view.isColorPaletteOn()) {
+			sb.append("<color_palette>true</color_palette>\n");
 		}
 		if (!box.view.isFrankOn()) {
 			sb.append("<brand>false</brand>\n");
 		}
-		Rectangle2D.Float rainbow = box.view.getRainbowRectangle();
-		sb.append("<rainbow_x>" + rainbow.x + "</rainbow_x>");
-		sb.append("<rainbow_y>" + rainbow.y + "</rainbow_y>");
-		sb.append("<rainbow_w>" + rainbow.width + "</rainbow_w>");
-		sb.append("<rainbow_h>" + rainbow.height + "</rainbow_h>");
+		Rectangle2D.Float colorPalette = box.view.getColorPaletteRectangle();
+		sb.append("<color_palette_x>" + colorPalette.x + "</color_palette_x>");
+		sb.append("<color_palette_y>" + colorPalette.y + "</color_palette_y>");
+		sb.append("<color_palette_w>" + colorPalette.width + "</color_palette_w>");
+		sb.append("<color_palette_h>" + colorPalette.height + "</color_palette_h>");
 		sb.append("<minimum_temperature>" + box.view.getMinimumTemperature() + "</minimum_temperature>\n");
 		sb.append("<maximum_temperature>" + box.view.getMaximumTemperature() + "</maximum_temperature>\n");
 		if (box.view.isVelocityOn()) {
@@ -155,8 +155,8 @@ class XmlEncoder {
 		if (!box.view.isSmooth()) {
 			sb.append("<smooth>false</smooth>\n");
 		}
-		if (box.view.getPixelAttribute() != View2D.PIXEL_TEMPERATURE) {
-			sb.append("<pixel_attribute>" + box.view.getPixelAttribute() + "</pixel_attribute>\n");
+		if (box.view.getHeatMapType() != View2D.HEATMAP_TEMPERATURE) {
+			sb.append("<heat_map>" + box.view.getHeatMapType() + "</heat_map>\n");
 		}
 		int n = box.view.getTextBoxCount();
 		if (n > 0) {

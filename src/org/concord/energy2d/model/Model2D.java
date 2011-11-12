@@ -188,6 +188,14 @@ public class Model2D {
 		return heatSolver.solveZ;
 	}
 
+	public void setZHeatDiffusivity(float zHeatDiffusivity) {
+		heatSolver.zHeatDiffusivity = zHeatDiffusivity;
+	}
+
+	public float getZHeatDiffusivity() {
+		return heatSolver.zHeatDiffusivity;
+	}
+
 	public void setThermalBuoyancy(float thermalBuoyancy) {
 		fluidSolver.setThermalBuoyancy(thermalBuoyancy);
 	}

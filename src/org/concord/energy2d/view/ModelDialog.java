@@ -16,7 +16,6 @@ import java.text.DecimalFormat;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -81,6 +81,9 @@ class ModelDialog extends JDialog {
 	private JCheckBox convectiveCheckBox;
 	private JLabel buoyancyApproximationLabel;
 	private JComboBox buoyancyApproximationComboBox;
+	private JCheckBox zDiffusionCheckBox;
+	private JTextField zDiffusivityField;
+	private JLabel zDiffusionLabel;
 	private Window owner;
 	private ActionListener okListener;
 
@@ -144,11 +147,12 @@ class ModelDialog extends JDialog {
 				float emissionInterval = parse(emissionIntervalField.getText());
 				if (Float.isNaN(emissionInterval))
 					return;
+				float zHeatDiffusivity = parse(zDiffusivityField.getText());
+				if (Float.isNaN(zHeatDiffusivity))
+					return;
 
 				if (steplength <= 0) {
-					JOptionPane.showMessageDialog(ModelDialog.this,
-							"Time step must be greater than zero!", "Time step error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(ModelDialog.this, "Time step must be greater than zero!", "Time step error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
@@ -166,6 +170,7 @@ class ModelDialog extends JDialog {
 				model.setSolarRayCount((int) rayNumber);
 				model.setPhotonEmissionInterval((int) emissionInterval);
 				model.setSunAngle((float) Math.toRadians(sunAngleSlider.getValue()));
+				model.setZHeatDiffusivity(zHeatDiffusivity);
 
 				switch (boundaryComboBox.getSelectedIndex()) {
 				case 0:
@@ -188,8 +193,8 @@ class ModelDialog extends JDialog {
 
 				model.setSunny(sunnyCheckBox.isSelected());
 				model.setConvective(convectiveCheckBox.isSelected());
-				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox
-						.getSelectedIndex());
+				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox.getSelectedIndex());
+				model.setZHeatDiffusion(zDiffusionCheckBox.isSelected());
 
 				model.refreshMaterialPropertyArrays();
 
@@ -221,13 +226,14 @@ class ModelDialog extends JDialog {
 		});
 		buttonPanel.add(button);
 
-		Box box = Box.createVerticalBox();
-		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(box, BorderLayout.CENTER);
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panel.add(tabbedPane, BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("General"));
-		box.add(p);
+		JPanel pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "General");
 		int count = 0;
 
 		convectiveCheckBox = new JCheckBox("Convective");
@@ -293,11 +299,42 @@ class ModelDialog extends JDialog {
 		p.add(label);
 		count++;
 
+		zDiffusionCheckBox = new JCheckBox("Z-heat diffusion");
+		zDiffusionCheckBox.setSelected(model.isZHeatDiffusion());
+		zDiffusionCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				boolean b = zDiffusionCheckBox.isSelected();
+				zDiffusivityField.setEnabled(b);
+				zDiffusionLabel.setEnabled(b);
+			}
+		});
+		p.add(zDiffusionCheckBox);
+
+		// dummy
+		label = new JLabel();
+		p.add(label);
+
+		// dummy
+		label = new JLabel();
+		p.add(label);
+
+		zDiffusionLabel = new JLabel("Z-diffusivity");
+		zDiffusionLabel.setEnabled(model.isZHeatDiffusion());
+		p.add(zDiffusionLabel);
+		zDiffusivityField = new JTextField(FORMAT.format(model.getZHeatDiffusivity()), 8);
+		zDiffusivityField.setEnabled(model.isZHeatDiffusion());
+		zDiffusivityField.addActionListener(okListener);
+		p.add(zDiffusivityField);
+		label = new JLabel("");
+		p.add(label);
+		count++;
+
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Fluid"));
-		box.add(p);
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Fluid");
 		count = 0;
 
 		label = new JLabel("Background temperature");
@@ -361,8 +398,7 @@ class ModelDialog extends JDialog {
 		buoyancyApproximationLabel = new JLabel("Buoyancy approximation");
 		buoyancyApproximationLabel.setEnabled(model.isConvective());
 		p.add(buoyancyApproximationLabel);
-		buoyancyApproximationComboBox = new JComboBox(new String[] { "All-cell average",
-				"Column average" });
+		buoyancyApproximationComboBox = new JComboBox(new String[] { "All-cell average", "Column average" });
 		buoyancyApproximationComboBox.setEnabled(model.isConvective());
 		buoyancyApproximationComboBox.setSelectedIndex(model.getBuoyancyApproximation());
 		p.add(buoyancyApproximationComboBox);
@@ -373,8 +409,9 @@ class ModelDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Radiation"));
-		box.add(p);
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Radiation");
 		count = 0;
 
 		solarPowerLabel = new JLabel("Solar power density");
@@ -445,14 +482,14 @@ class ModelDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Boundary"));
-		box.add(p);
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Boundary");
 		count = 0;
 
 		label = new JLabel("Heat boundary condition");
 		p.add(label);
-		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)",
-				"Neumann (constant heat flux)" });
+		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)" });
 		if (model.getHeatBoundary() instanceof DirichletHeatBoundary) {
 			boundaryComboBox.setSelectedIndex(0);
 		} else if (model.getHeatBoundary() instanceof NeumannHeatBoundary) {
@@ -559,8 +596,7 @@ class ModelDialog extends JDialog {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}
