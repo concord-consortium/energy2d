@@ -773,6 +773,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return g;
 	}
 
+	/* Need to use this old double-buffering technique in order to avoid flickering when run as an applet on the Mac */
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2 = createGraphics2D();

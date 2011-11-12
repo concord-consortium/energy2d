@@ -108,6 +108,8 @@ public class Model2D {
 	// optimization flags
 	private boolean hasPartPower;
 	private boolean radiative;
+
+	// condition flags
 	private boolean convective = true;
 
 	private List<VisualizationListener> visualizationListeners;
@@ -173,6 +175,17 @@ public class Model2D {
 
 	public boolean isConvective() {
 		return convective;
+	}
+
+	/**
+	 * Imagine that the 2D plane is thermally coupled with a thin layer that has the background temperature
+	 */
+	public void setZHeatDiffusion(boolean zHeatDiffusion) {
+		heatSolver.solveZ = zHeatDiffusion;
+	}
+
+	public boolean isZHeatDiffusion() {
+		return heatSolver.solveZ;
 	}
 
 	public void setThermalBuoyancy(float thermalBuoyancy) {
@@ -309,6 +322,7 @@ public class Model2D {
 
 	public void setBackgroundTemperature(float backgroundTemperature) {
 		this.backgroundTemperature = backgroundTemperature;
+		heatSolver.backgroundTemperature = backgroundTemperature;
 	}
 
 	public float getBackgroundTemperature() {
