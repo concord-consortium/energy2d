@@ -192,7 +192,7 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		checkBox = new JCheckBox("Rainbow");
+		checkBox = new JCheckBox("Color Palette");
 		checkBox.setSelected(view.isColorPaletteOn());
 		checkBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

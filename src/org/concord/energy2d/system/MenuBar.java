@@ -330,7 +330,7 @@ class MenuBar extends JMenuBar {
 		final JCheckBoxMenuItem miStreamline = new JCheckBoxMenuItem("Streamlines");
 		final JCheckBoxMenuItem miHeatFluxArrow = new JCheckBoxMenuItem("Heat Flux Arrows");
 		final JCheckBoxMenuItem miHeatFluxLine = new JCheckBoxMenuItem("Heat Flux Lines");
-		final JCheckBoxMenuItem miRainbow = new JCheckBoxMenuItem("Rainbow");
+		final JCheckBoxMenuItem miColorPalette = new JCheckBoxMenuItem("Color Palette");
 		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
 		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
 
@@ -349,7 +349,7 @@ class MenuBar extends JMenuBar {
 				MiscUtil.setSelectedSilently(miStreamline, box.view.isStreamlineOn());
 				MiscUtil.setSelectedSilently(miHeatFluxArrow, box.view.isHeatFluxArrowsOn());
 				MiscUtil.setSelectedSilently(miHeatFluxLine, box.view.isHeatFluxLinesOn());
-				MiscUtil.setSelectedSilently(miRainbow, box.view.isColorPaletteOn());
+				MiscUtil.setSelectedSilently(miColorPalette, box.view.isColorPaletteOn());
 				MiscUtil.setSelectedSilently(miRuler, box.view.isRulerOn());
 				MiscUtil.setSelectedSilently(miGrid, box.view.isGridOn());
 			}
@@ -416,7 +416,7 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(miStreamline);
 
-		miRainbow.addItemListener(new ItemListener() {
+		miColorPalette.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
 				box.view.setColorPaletteOn(src.isSelected());
@@ -424,7 +424,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
-		menu.add(miRainbow);
+		menu.add(miColorPalette);
 
 		miRuler.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

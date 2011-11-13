@@ -45,6 +45,7 @@ class XmlDecoder extends DefaultHandler {
 	private float solarRaySpeed = 0.1f;
 	private int photonEmissionInterval = 20;
 	private boolean convective = true;
+	private float zHeatDiffusivity;
 	private float backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
 	private float backgroundDensity = Constants.AIR_DENSITY;
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
@@ -122,6 +123,7 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setSolarRaySpeed(solarRaySpeed);
 		box.model.setPhotonEmissionInterval(photonEmissionInterval);
 		box.model.setConvective(convective);
+		box.model.setZHeatDiffusivity(zHeatDiffusivity);
 		box.model.setBackgroundConductivity(backgroundConductivity);
 		box.model.setBackgroundDensity(backgroundDensity);
 		box.model.setBackgroundSpecificHeat(backgroundSpecificHeat);
@@ -413,6 +415,8 @@ class XmlDecoder extends DefaultHandler {
 			solarRaySpeed = Float.parseFloat(str);
 		} else if (qName == "photon_emission_interval") {
 			photonEmissionInterval = Integer.parseInt(str);
+		} else if (qName == "z_heat_diffusivity") {
+			zHeatDiffusivity = Float.parseFloat(str);
 		} else if (qName == "convective") {
 			convective = Boolean.parseBoolean(str);
 		} else if (qName == "background_conductivity") {
@@ -600,6 +604,7 @@ class XmlDecoder extends DefaultHandler {
 		solarRayCount = 24;
 		solarRaySpeed = 0.1f;
 		photonEmissionInterval = 20;
+		zHeatDiffusivity = 0;
 		convective = true;
 		backgroundConductivity = Constants.AIR_THERMAL_CONDUCTIVITY;
 		backgroundDensity = Constants.AIR_DENSITY;

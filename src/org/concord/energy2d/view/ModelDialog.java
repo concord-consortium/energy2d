@@ -81,9 +81,7 @@ class ModelDialog extends JDialog {
 	private JCheckBox convectiveCheckBox;
 	private JLabel buoyancyApproximationLabel;
 	private JComboBox buoyancyApproximationComboBox;
-	private JCheckBox zDiffusionCheckBox;
 	private JTextField zDiffusivityField;
-	private JLabel zDiffusionLabel;
 	private Window owner;
 	private ActionListener okListener;
 
@@ -194,7 +192,6 @@ class ModelDialog extends JDialog {
 				model.setSunny(sunnyCheckBox.isSelected());
 				model.setConvective(convectiveCheckBox.isSelected());
 				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox.getSelectedIndex());
-				model.setZHeatDiffusion(zDiffusionCheckBox.isSelected());
 
 				model.refreshMaterialPropertyArrays();
 
@@ -299,34 +296,28 @@ class ModelDialog extends JDialog {
 		p.add(label);
 		count++;
 
-		zDiffusionCheckBox = new JCheckBox("Z-heat diffusion");
-		zDiffusionCheckBox.setSelected(model.isZHeatDiffusion());
-		zDiffusionCheckBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				boolean b = zDiffusionCheckBox.isSelected();
-				zDiffusivityField.setEnabled(b);
-				zDiffusionLabel.setEnabled(b);
-			}
-		});
-		p.add(zDiffusionCheckBox);
-
-		// dummy
-		label = new JLabel();
+		label = new JLabel("Z heat diffusivity");
 		p.add(label);
-
-		// dummy
-		label = new JLabel();
-		p.add(label);
-
-		zDiffusionLabel = new JLabel("Z-diffusivity");
-		zDiffusionLabel.setEnabled(model.isZHeatDiffusion());
-		p.add(zDiffusionLabel);
 		zDiffusivityField = new JTextField(FORMAT.format(model.getZHeatDiffusivity()), 8);
-		zDiffusivityField.setEnabled(model.isZHeatDiffusion());
 		zDiffusivityField.addActionListener(okListener);
 		p.add(zDiffusivityField);
-		label = new JLabel("");
+
+		// dummy
+		label = new JLabel();
 		p.add(label);
+
+		// dummy
+		label = new JLabel();
+		p.add(label);
+
+		// dummy
+		label = new JLabel();
+		p.add(label);
+
+		// dummy
+		label = new JLabel();
+		p.add(label);
+
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);

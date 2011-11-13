@@ -180,14 +180,6 @@ public class Model2D {
 	/**
 	 * Imagine that the 2D plane is thermally coupled with a thin layer that has the background temperature
 	 */
-	public void setZHeatDiffusion(boolean zHeatDiffusion) {
-		heatSolver.solveZ = zHeatDiffusion;
-	}
-
-	public boolean isZHeatDiffusion() {
-		return heatSolver.solveZ;
-	}
-
 	public void setZHeatDiffusivity(float zHeatDiffusivity) {
 		heatSolver.zHeatDiffusivity = zHeatDiffusivity;
 	}

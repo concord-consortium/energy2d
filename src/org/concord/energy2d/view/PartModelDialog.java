@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -187,13 +188,14 @@ class PartModelDialog extends JDialog {
 		});
 		buttonPanel.add(button);
 
-		Box box = Box.createVerticalBox();
-		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(box, BorderLayout.CENTER);
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panel.add(tabbedPane, BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Geometry"));
-		box.add(p);
+		JPanel pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Geometrical");
 		int count = 0;
 
 		JLabel label = new JLabel("Center x");
@@ -237,42 +239,9 @@ class PartModelDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Thermal properties"));
-		box.add(p);
-		count = 0;
-
-		label = new JLabel("Thermal conductivity");
-		p.add(label);
-		thermalConductivityField = new JTextField(FORMAT.format(part.getThermalConductivity()), 8);
-		thermalConductivityField.addActionListener(okListener);
-		p.add(thermalConductivityField);
-		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
-		p.add(label);
-		count++;
-
-		label = new JLabel("Specific heat");
-		p.add(label);
-		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
-		specificHeatField.addActionListener(okListener);
-		p.add(specificHeatField);
-		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
-		p.add(label);
-		count++;
-
-		label = new JLabel("Density");
-		p.add(label);
-		densityField = new JTextField(FORMAT.format(part.getDensity()), 8);
-		densityField.addActionListener(okListener);
-		p.add(densityField);
-		label = new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>");
-		p.add(label);
-		count++;
-
-		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
-
-		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Source properties"));
-		box.add(p);
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Source");
 		count = 0;
 
 		ButtonGroup bg = new ButtonGroup();
@@ -366,8 +335,44 @@ class PartModelDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Optical properties"));
-		box.add(p);
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Thermal");
+		count = 0;
+
+		label = new JLabel("Thermal conductivity");
+		p.add(label);
+		thermalConductivityField = new JTextField(FORMAT.format(part.getThermalConductivity()), 8);
+		thermalConductivityField.addActionListener(okListener);
+		p.add(thermalConductivityField);
+		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
+		p.add(label);
+		count++;
+
+		label = new JLabel("Specific heat");
+		p.add(label);
+		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
+		specificHeatField.addActionListener(okListener);
+		p.add(specificHeatField);
+		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
+		p.add(label);
+		count++;
+
+		label = new JLabel("Density");
+		p.add(label);
+		densityField = new JTextField(FORMAT.format(part.getDensity()), 8);
+		densityField.addActionListener(okListener);
+		p.add(densityField);
+		label = new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>");
+		p.add(label);
+		count++;
+
+		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
+
+		p = new JPanel(new SpringLayout());
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Optical");
 		count = 0;
 
 		label = new JLabel("Absorption");
@@ -399,8 +404,9 @@ class PartModelDialog extends JDialog {
 		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
 
 		Box miscBox = Box.createVerticalBox();
-		miscBox.setBorder(BorderFactory.createTitledBorder("Miscellaneous"));
-		box.add(miscBox);
+		pp = new JPanel(new BorderLayout());
+		pp.add(miscBox, BorderLayout.NORTH);
+		tabbedPane.add(pp, "Miscellaneous");
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		miscBox.add(p);
