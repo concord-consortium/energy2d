@@ -227,7 +227,7 @@ class ViewDialog extends JDialog {
 		box.add(p);
 		count = 0;
 
-		JLabel label = new JLabel("Coloring");
+		JLabel label = new JLabel("Coloring property");
 		p.add(label);
 
 		JComboBox comboBox = new JComboBox();
@@ -270,6 +270,27 @@ class ViewDialog extends JDialog {
 					break;
 				}
 				view.setHeatMapType((byte) (i - View2D.HEATMAP_NONE));
+				view.repaint();
+			}
+		});
+		p.add(comboBox);
+
+		p.add(new JPanel());
+		count++;
+
+		label = new JLabel("Color palette");
+		p.add(label);
+
+		comboBox = new JComboBox();
+		comboBox.addItem("Rainbow");
+		comboBox.addItem("Iron");
+		comboBox.addItem("Gray");
+		comboBox.setSelectedIndex(view.getColorPaletteType() - View2D.RAINBOW);
+		comboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox src = (JComboBox) e.getSource();
+				int i = src.getSelectedIndex();
+				view.setColorPaletteType((byte) (i - View2D.RAINBOW));
 				view.repaint();
 			}
 		});

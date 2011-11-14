@@ -95,6 +95,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte HEATMAP_TEMPERATURE = 1;
 	public final static byte HEATMAP_THERMAL_ENERGY = 2;
 
+	public final static byte RAINBOW = 0;
+	public final static byte IRON = 1;
+	public final static byte GRAY = 2;
+
 	final static byte UPPER_LEFT = 0;
 	final static byte LOWER_LEFT = 1;
 	final static byte UPPER_RIGHT = 2;
@@ -128,7 +132,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
-	private byte colorPaletteType = ColorPalette.RAINBOW;
+	private byte colorPaletteType = RAINBOW;
 	private float[][] distribution;
 
 	private static Stroke thinStroke = new BasicStroke(1);

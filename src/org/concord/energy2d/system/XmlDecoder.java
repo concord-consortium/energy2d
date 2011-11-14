@@ -60,6 +60,7 @@ class XmlDecoder extends DefaultHandler {
 	private boolean isotherm;
 	private boolean streamline;
 	private boolean colorPalette;
+	private byte colorPaletteType = View2D.RAINBOW;
 	private boolean brand = true;
 	private byte heatMapType = View2D.HEATMAP_TEMPERATURE;
 	private float colorPaletteX, colorPaletteY, colorPaletteW, colorPaletteH;
@@ -141,6 +142,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setHeatFluxArrowsOn(heatFluxArrows);
 		box.view.setHeatFluxLinesOn(heatFluxLines);
 		box.view.setColorPaletteOn(colorPalette);
+		box.view.setColorPaletteType(colorPaletteType);
 		box.view.setFrankOn(brand);
 		box.view.setHeatMapType(heatMapType);
 		float xColorPalette = colorPaletteX > 1 ? colorPaletteX / box.view.getWidth() : colorPaletteX;
@@ -455,6 +457,8 @@ class XmlDecoder extends DefaultHandler {
 			gridSize = Integer.parseInt(str);
 		} else if (qName == "color_palette") {
 			colorPalette = Boolean.parseBoolean(str);
+		} else if (qName == "color_palette_type") {
+			colorPaletteType = Byte.parseByte(str);
 		} else if (qName == "brand") {
 			brand = Boolean.parseBoolean(str);
 		} else if (qName == "heat_map") {

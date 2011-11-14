@@ -122,6 +122,7 @@ class XmlEncoder {
 		if (box.view.isColorPaletteOn()) {
 			sb.append("<color_palette>true</color_palette>\n");
 		}
+		sb.append("<color_palette_type>" + box.view.getColorPaletteType() + "</color_palette_type>\n");
 		if (!box.view.isFrankOn()) {
 			sb.append("<brand>false</brand>\n");
 		}

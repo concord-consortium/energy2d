@@ -19,10 +19,6 @@ import javax.swing.JComponent;
  */
 class ColorPalette {
 
-	final static byte RAINBOW = 0;
-	final static byte IRON = 1;
-	final static byte GRAY = 2;
-
 	// the following color scales model after FLIR I-series IR cameras
 	private final static short[][] RAINBOW_RGB = { { 0, 0, 128 }, { 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
 	private final static short[][] IRON_RGB = { { 40, 20, 100 }, { 80, 20, 150 }, { 150, 20, 150 }, { 200, 50, 120 }, { 220, 80, 80 }, { 230, 120, 30 }, { 240, 200, 20 }, { 240, 220, 80 }, { 255, 255, 125 }, { 255, 255, 255 }, { 255, 255, 255 } };
@@ -40,9 +36,9 @@ class ColorPalette {
 
 	static short[][] getRgbArray(byte type) {
 		switch (type) {
-		case RAINBOW:
+		case View2D.RAINBOW:
 			return RAINBOW_RGB;
-		case IRON:
+		case View2D.IRON:
 			return IRON_RGB;
 		default:
 			return RAINBOW_RGB;
