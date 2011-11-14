@@ -625,6 +625,7 @@ class XmlDecoder extends DefaultHandler {
 		isotherm = false;
 		streamline = false;
 		colorPalette = false;
+		colorPaletteType = View2D.RAINBOW;
 		velocity = false;
 		heatFluxArrows = false;
 		heatFluxLines = false;

@@ -22,6 +22,7 @@ class ColorPalette {
 	// the following color scales model after FLIR I-series IR cameras
 	private final static short[][] RAINBOW_RGB = { { 0, 0, 128 }, { 0, 128, 225 }, { 0, 225, 255 }, { 225, 175, 0 }, { 255, 0, 0 }, { 255, 255, 255 } };
 	private final static short[][] IRON_RGB = { { 40, 20, 100 }, { 80, 20, 150 }, { 150, 20, 150 }, { 200, 50, 120 }, { 220, 80, 80 }, { 230, 120, 30 }, { 240, 200, 20 }, { 240, 220, 80 }, { 255, 255, 125 }, { 255, 255, 255 }, { 255, 255, 255 } };
+	private final static short[][] GRAY_RGB = { { 50, 50, 50 }, { 75, 75, 75 }, { 100, 100, 100 }, { 125, 125, 125 }, { 150, 150, 150 }, { 175, 175, 175 }, { 200, 200, 200 }, { 225, 225, 225 }, { 250, 250, 250 } };
 
 	private short[][] rgbScale;
 	private Font font = new Font(null, Font.PLAIN | Font.BOLD, 8);
@@ -40,6 +41,8 @@ class ColorPalette {
 			return RAINBOW_RGB;
 		case View2D.IRON:
 			return IRON_RGB;
+		case View2D.GRAY:
+			return GRAY_RGB;
 		default:
 			return RAINBOW_RGB;
 		}
