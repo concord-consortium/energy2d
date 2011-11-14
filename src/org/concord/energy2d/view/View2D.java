@@ -166,7 +166,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
-	private Color textColor = Color.white;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -278,15 +277,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (heatMapType) {
 		case HEATMAP_NONE:
 			lightColor = new Color(0, 0, 0, 128);
-			textColor = Color.black;
 			break;
 		case HEATMAP_TEMPERATURE:
 			lightColor = new Color(255, 255, 255, 128);
-			textColor = Color.white;
 			break;
 		case HEATMAP_THERMAL_ENERGY:
 			lightColor = new Color(255, 255, 255, 128);
-			textColor = Color.white;
 			break;
 		}
 	}
@@ -853,7 +849,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showGrid && gridRenderer != null)
 			gridRenderer.render(this, g);
 		if (rulerRenderer != null) {
-			g.setColor(textColor);
 			rulerRenderer.render(this, g);
 		}
 		if (showColorPalette && heatMapType != HEATMAP_NONE) {
@@ -885,7 +880,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (clockOn) {
 			g.setFont(smallFont);
-			g.setColor(textColor);
+			g.setColor(getContrastColor(w - 68, 16));
 			g.drawString(MiscUtil.formatTime((int) time), w - 68, 16);
 		}
 
@@ -939,6 +934,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		this.errorMessage = message;
 	}
 
+	Color getContrastColor(int x, int y) {
+		switch (heatMapType) {
+		case HEATMAP_TEMPERATURE:
+			return new Color(~temperatureRenderer.getRGB(x, y));
+		case HEATMAP_THERMAL_ENERGY:
+			return new Color(~thermalEnergyRenderer.getRGB(x, y));
+		default:
+			return Color.black;
+		}
+	}
+
 	private void drawThermometers(Graphics2D g) {
 		List<Thermometer> thermometers = model.getThermometers();
 		if (thermometers.isEmpty())
@@ -972,7 +978,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					iy = Math.round(ny * ry);
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
-						g.setColor(textColor);
+						g.setColor(getContrastColor(x, y));
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
 						if (t.getLabel() != null) {
@@ -1039,18 +1045,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						String partLabel = p.getLabel(label);
 						if (partLabel != null)
 							label = partLabel;
-						g.setColor(Color.white);
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
 						float x0 = x + 0.5f * w;
 						float y0 = y + 0.5f * h;
+						float x1 = x0 - labelWidth / 2;
+						float y1 = y0 + fm.getHeight() / 4;
+						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
 						if (w < h * 0.25f) {
 							g.rotate(Math.PI * 0.5, x0, y0);
-							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+							g.drawString(label, x1, y1);
 							g.rotate(-Math.PI * 0.5, x0, y0);
 						} else {
-							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+							g.drawString(label, x1, y1);
 						}
 					}
 				} else if (s instanceof Rectangle2D.Float) {
@@ -1076,18 +1084,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						String partLabel = p.getLabel(label);
 						if (partLabel != null)
 							label = partLabel;
-						g.setColor(Color.white);
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
 						float x0 = x + 0.5f * w;
 						float y0 = y + 0.5f * h;
+						float x1 = x0 - labelWidth / 2;
+						float y1 = y0 + fm.getHeight() / 4;
+						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
 						if (w < h * 0.25f) {
 							g.rotate(Math.PI * 0.5, x0, y0);
-							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+							g.drawString(label, x1, y1);
 							g.rotate(-Math.PI * 0.5, x0, y0);
 						} else {
-							g.drawString(label, x0 - labelWidth / 2, y0 + fm.getHeight() / 4);
+							g.drawString(label, x1, y1);
 						}
 					}
 				} else if (s instanceof Area) {
@@ -1145,13 +1155,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						String partLabel = p.getLabel(label);
 						if (partLabel != null)
 							label = partLabel;
-						g.setColor(Color.white);
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
 						cx /= multigon.npoints;
 						cy /= multigon.npoints;
-						g.drawString(label, cx - labelWidth / 2, cy + fm.getHeight() / 4);
+						float x1 = cx - labelWidth / 2;
+						float y1 = cy + fm.getHeight() / 4;
+						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+						g.drawString(label, x1, y1);
 					}
 				}
 			}

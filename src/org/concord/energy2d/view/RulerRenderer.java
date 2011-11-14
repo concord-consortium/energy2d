@@ -11,8 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.text.DecimalFormat;
 
-import javax.swing.JComponent;
-
 /**
  * @author Charles Xie
  * 
@@ -44,7 +42,7 @@ class RulerRenderer {
 		g.drawString(s, x - stringWidth / 2, y);
 	}
 
-	void render(JComponent c, Graphics2D g) {
+	void render(View2D c, Graphics2D g) {
 
 		if (!c.isVisible())
 			return;
@@ -60,6 +58,7 @@ class RulerRenderer {
 		int k;
 		for (int i = 1; i < nx; i++) {
 			k = Math.round(i * w / nx);
+			g.setColor(c.getContrastColor(k, h - 12));
 			if (i % 10 == 0) {
 				g.drawLine(k, h, k, h - 10);
 				centerString(SIZE_FORMAT.format(xmin + i * dx), g, k, h - 12);
@@ -67,9 +66,11 @@ class RulerRenderer {
 				g.drawLine(k, h, k, h - 5);
 			}
 		}
+		g.setColor(c.getContrastColor(w - 10, h - 12));
 		centerString(unit, g, w - 10, h - 12);
 		for (int i = 1; i < ny; i++) {
 			k = Math.round((1f - (float) i / (float) ny) * h);
+			g.setColor(c.getContrastColor(15, k + 3));
 			if (i % 10 == 0) {
 				g.drawLine(0, k, 10, k);
 				centerString(SIZE_FORMAT.format(ymin + i * dy), g, 15, k + 3);
@@ -77,6 +78,7 @@ class RulerRenderer {
 				g.drawLine(0, k, 5, k);
 			}
 		}
+		g.setColor(c.getContrastColor(15, 10));
 		centerString(unit, g, 15, 10);
 
 		g.setStroke(oldStroke);

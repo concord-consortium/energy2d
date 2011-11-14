@@ -5,6 +5,7 @@
 
 package org.concord.energy2d.view;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -54,6 +55,12 @@ class ScalarDistributionRenderer {
 
 	float getMinimum() {
 		return min;
+	}
+
+	int getRGB(int x, int y) {
+		if (image == null)
+			return Color.white.getRGB();
+		return image.getRGB(x, y);
 	}
 
 	int getColor(float value) {
