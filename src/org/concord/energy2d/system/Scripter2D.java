@@ -567,6 +567,18 @@ class Scripter2D extends Scripter {
 				} else if (t[0].equalsIgnoreCase("color_palette")) {
 					s2d.view.setColorPaletteOn("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
+				} else if (t[0].equalsIgnoreCase("color_palette_type")) {
+					if ("RAINBOW".equalsIgnoreCase(t[1])) {
+						s2d.view.setColorPaletteType(View2D.RAINBOW);
+						s2d.view.repaint();
+					} else if ("IRON".equalsIgnoreCase(t[1])) {
+						s2d.view.setColorPaletteType(View2D.IRON);
+						s2d.view.repaint();
+					} else if ("GRAY".equalsIgnoreCase(t[1])) {
+						s2d.view.setColorPaletteType(View2D.GRAY);
+						s2d.view.repaint();
+					} else
+						showError(ci, "color palette type not supported");
 				} else if (t[0].equalsIgnoreCase("seethrough")) {
 					s2d.view.setSeeThrough("true".equalsIgnoreCase(t[1]));
 					s2d.view.repaint();
@@ -635,6 +647,8 @@ class Scripter2D extends Scripter {
 						s2d.view.setHeatMapType(View2D.HEATMAP_TEMPERATURE);
 					else if ("THERMAL_ENERGY".equalsIgnoreCase(t[1]))
 						s2d.view.setHeatMapType(View2D.HEATMAP_THERMAL_ENERGY);
+					else
+						showError(ci, "heat map type not supported");
 				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {
 					float resolution = 0;
 					try {
