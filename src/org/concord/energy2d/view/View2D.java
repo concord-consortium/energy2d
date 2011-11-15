@@ -293,8 +293,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setColorPaletteType(byte colorPaletteType) {
 		this.colorPaletteType = colorPaletteType;
-		temperatureRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType));
-		thermalEnergyRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType));
+		temperatureRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType), temperatureRenderer == null ? 0 : temperatureRenderer.getMinimum(), temperatureRenderer == null ? 40 : temperatureRenderer.getMaximum());
+		thermalEnergyRenderer = new ScalarDistributionRenderer(ColorPalette.getRgbArray(colorPaletteType), thermalEnergyRenderer == null ? 0 : thermalEnergyRenderer.getMinimum(), thermalEnergyRenderer == null ? 40 : thermalEnergyRenderer.getMaximum());
 		colorPalette = new ColorPalette(ColorPalette.getRgbArray(colorPaletteType));
 	}
 

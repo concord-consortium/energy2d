@@ -26,8 +26,10 @@ class ScalarDistributionRenderer {
 	private short[][] rgbScale;
 	private boolean smooth = true;
 
-	ScalarDistributionRenderer(short[][] rgbScale) {
+	ScalarDistributionRenderer(short[][] rgbScale, float min, float max) {
 		this.rgbScale = rgbScale;
+		this.min = min;
+		this.max = max;
 		scale = rgbScale.length / (max - min);
 	}
 
