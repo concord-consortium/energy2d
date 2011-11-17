@@ -550,6 +550,23 @@ public class Model2D {
 		}
 	}
 
+	/** get the total thermal energy stored in this part */
+	public float getThermalEnergy(Part p) {
+		float x, y;
+		float energy = 0;
+		for (int i = 0; i < nx; i++) {
+			x = i * deltaX;
+			for (int j = 0; j < ny; j++) {
+				y = j * deltaY;
+				if (p.getShape().contains(x, y)) {
+					// no overlap of parts will be allowed
+					energy += t[i][j] * density[i][j] * specificHeat[i][j];
+				}
+			}
+		}
+		return energy * deltaX * deltaY;
+	}
+
 	private void init() {
 		for (int i = 0; i < nx; i++) {
 			Arrays.fill(conductivity[i], backgroundConductivity);

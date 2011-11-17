@@ -587,7 +587,7 @@ public class Part extends Manipulable {
 		return xml;
 	}
 
-	public String getLabel(String label) {
+	public String getLabel(String label, Model2D model) {
 		String s = null;
 		if (label.equalsIgnoreCase("%temperature"))
 			s = (int) temperature + " \u00b0C";
@@ -599,7 +599,9 @@ public class Part extends Manipulable {
 			s = (float) thermalConductivity + " W/(m\u00d7\u00b0C)";
 		else if (label.equalsIgnoreCase("%power_density"))
 			s = (int) power + " W/m\u00b3";
-		else if (label.equalsIgnoreCase("%area")) {
+		else if (label.equalsIgnoreCase("%thermal_energy")) {
+			s = Math.round(model.getThermalEnergy(this)) + " J";
+		} else if (label.equalsIgnoreCase("%area")) {
 			if (getShape() instanceof Rectangle2D.Float) {
 				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
 				s = LABEL_FORMAT.format(r.width * r.height) + " m\u00b2";
