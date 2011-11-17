@@ -1394,18 +1394,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private void processKeyPressed(KeyEvent e) {
 		if (selectedManipulable != null) {
+			boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
+			float delta = keyDown ? 1 : 5;
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				translateManipulableBy(selectedManipulable, -.01f * (xmax - xmin), 0);
+				translateManipulableBy(selectedManipulable, -delta * (xmax - xmin) / getWidth(), 0);
 				break;
 			case KeyEvent.VK_RIGHT:
-				translateManipulableBy(selectedManipulable, .01f * (xmax - xmin), 0);
+				translateManipulableBy(selectedManipulable, delta * (xmax - xmin) / getWidth(), 0);
 				break;
 			case KeyEvent.VK_DOWN:
-				translateManipulableBy(selectedManipulable, 0, .01f * (ymax - ymin));
+				translateManipulableBy(selectedManipulable, 0, delta * (ymax - ymin) / getHeight());
 				break;
 			case KeyEvent.VK_UP:
-				translateManipulableBy(selectedManipulable, 0, -.01f * (ymax - ymin));
+				translateManipulableBy(selectedManipulable, 0, -delta * (ymax - ymin) / getHeight());
 				break;
 			}
 			setSelectedManipulable(selectedManipulable);
