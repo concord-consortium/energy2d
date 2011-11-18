@@ -719,6 +719,15 @@ class Scripter2D extends Scripter {
 					s2d.view.setArea(0, s2d.model.getLx(), 0, height);
 					temperatureInitializationRequested = true;
 					arrayUpdateRequested = true;
+				} else if (t[0].equalsIgnoreCase("z_heat_diffusivity")) {
+					float zHeatDiffusivity = 0;
+					try {
+						zHeatDiffusivity = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						showException(ci, e);
+						return;
+					}
+					s2d.model.setZHeatDiffusivity(zHeatDiffusivity);
 				} else if (t[0].equalsIgnoreCase("background_viscosity")) {
 					float viscosity = 0;
 					try {
