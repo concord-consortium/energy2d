@@ -41,7 +41,7 @@ class GraphRenderer {
 	private Color frameColor = new Color(205, 205, 205, 128);
 	private int x, y, w, h;
 	private float scopeX = 360000; // 100 hours
-	private float scopeY = 50;
+	private float scopeY = 25;
 	private boolean drawFrame = true;
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
@@ -77,12 +77,24 @@ class GraphRenderer {
 		this.scopeX = scopeX;
 	}
 
+	float getScopeX() {
+		return scopeX;
+	}
+
 	void expandScopeX() {
 		scopeX *= 2;
 	}
 
 	void shrinkScopeX() {
 		scopeX *= 0.5f;
+	}
+
+	void setScopeY(float scopeY) {
+		this.scopeY = scopeY;
+	}
+
+	float getScopeY() {
+		return scopeY;
 	}
 
 	void expandScopeY() {

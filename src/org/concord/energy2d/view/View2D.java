@@ -113,7 +113,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
-	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 12);
+	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
 
 	private BufferedImage bimg;
 	private RulerRenderer rulerRenderer;
@@ -872,8 +872,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPictures(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
+			if (model.getTime() > graphRenderer.getScopeX())
+				graphRenderer.expandScopeX();
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
+					if (t.getCurrentData() > graphRenderer.getScopeY())
+						graphRenderer.expandScopeY();
 					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
 			}
