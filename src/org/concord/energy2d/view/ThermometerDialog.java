@@ -145,7 +145,6 @@ class ThermometerDialog extends JDialog {
 		ButtonGroup bg = new ButtonGroup();
 
 		onePointButton = new JRadioButton("One point");
-		onePointButton.setSelected(true);
 		p.add(onePointButton);
 		bg.add(onePointButton);
 
@@ -156,6 +155,17 @@ class ThermometerDialog extends JDialog {
 		ninePointsButton = new JRadioButton("Nine points");
 		p.add(ninePointsButton);
 		bg.add(ninePointsButton);
+
+		switch (thermometer.getStencil()) {
+		case 5:
+			fivePointsButton.setSelected(true);
+			break;
+		case 9:
+			ninePointsButton.setSelected(true);
+			break;
+		default:
+			onePointButton.setSelected(true);
+		}
 
 		// thermostat properties
 

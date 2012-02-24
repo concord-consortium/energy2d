@@ -279,6 +279,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			loadStateApp(new FileInputStream(file));
 		} catch (IOException e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), e.getLocalizedMessage(), "File error", JOptionPane.ERROR_MESSAGE);
 		}
 		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
 		currentFile = file;
