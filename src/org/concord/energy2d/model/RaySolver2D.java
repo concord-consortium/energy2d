@@ -9,8 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This solver models the ray optics of sunlight. Reflection, refraction, and
- * absorption are included.
+ * This solver models the ray optics of sunlight. Reflection, refraction, and absorption are included.
  * 
  * @author Charles Xie
  * 
@@ -25,8 +24,7 @@ class RaySolver2D {
 	private float rayPower = solarPowerDensity;
 
 	/*
-	 * the speed of the particle that carries light energy. Note that this is
-	 * NOT the speed of light. This is just an artificial parameter.
+	 * the speed of the particle that carries light energy. Note that this is NOT the speed of light. This is just an artificial parameter.
 	 */
 	private float raySpeed = .1f;
 
@@ -119,6 +117,10 @@ class RaySolver2D {
 								if (part.absorb(p)) {
 									i = Math.min(nx, Math.round(p.getX() * idx));
 									j = Math.min(ny, Math.round(p.getY() * idy));
+									if (i < 0)
+										i = 0;
+									if (j < 0)
+										j = 0;
 									q[i][j] = p.getEnergy() * factor;
 									remove = true;
 									break;

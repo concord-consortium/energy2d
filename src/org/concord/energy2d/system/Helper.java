@@ -48,12 +48,10 @@ public class Helper {
 
 	public final static void showAbout(Frame frame) {
 		String s = "<html><h2>" + System2D.BRAND_NAME + "</h2>";
-		s += "<h4><i>A heat transfer simulation tool for everyone</i></h4>";
-		s += "http://energy.concord.org/energy2d<br>The Advanced Educational Modeling Laboratory, The Concord Consortium, 2011";
+		s += "<h4><i>Interactive heat transfer simulations for everyone</i></h4>";
+		s += "http://energy.concord.org/energy2d<br>The Advanced Educational Modeling Laboratory, The Concord Consortium, 2011-2012";
 		s += "<hr>";
-		s += "<h4>Credit:</h4>This program is being created by Dr. Charles Xie (charxie@gmail.com).<br>";
-		s += "Funding of this project is provided by the U.S. National Science Foundation<br>";
-		s += "under grant #0918449.";
+		s += "<h4>Credit:</h4>This program is being created by Dr. Charles Xie. Funding of this project is provided by<br>the National Science Foundation under grants #0918449 and #1124281.";
 		s += "<h4>License:</h4>GNU Lesser General Public License V3.0";
 		s += "</html>";
 		JOptionPane.showMessageDialog(frame, new JLabel(s));
