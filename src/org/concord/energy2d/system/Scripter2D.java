@@ -50,6 +50,7 @@ class Scripter2D extends Scripter {
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern NONNEGATIVE_DECIMAL = compile(REGEX_NONNEGATIVE_DECIMAL);
+	private final static Pattern BOUNDARY_FIELD = compile("^%?((?i)boundary){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 
 	private System2D s2d;
 	private List<ScriptListener> listenerList;
@@ -811,6 +812,20 @@ class Scripter2D extends Scripter {
 						setPartField(s1, s2, s3);
 						return;
 					}
+					// boundary field
+					matcher = BOUNDARY_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0)
+							return;
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setBoundaryField(s1, s2, s3);
+						return;
+					}
 					// text field
 					matcher = TEXT_FIELD.matcher(s);
 					if (matcher.find()) {
@@ -993,6 +1008,52 @@ class Scripter2D extends Scripter {
 				arrayUpdateRequested = true;
 			}
 		} else if (shape instanceof Area) {
+		}
+	}
+
+	private void setBoundaryField(String str1, String str2, String str3) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		String side = str1.substring(lb + 1, rb);
+		if (!side.equalsIgnoreCase("LEFT") && !side.equalsIgnoreCase("RIGHT") && !side.equalsIgnoreCase("LOWER") && !side.equalsIgnoreCase("UPPER")) {
+			showError(str1 + str2 + str3, "Side parameter of boundary not recognized: must be LEFT, RIGHT, UPPER, or LOWER.");
+		}
+		float z = 0;
+		try {
+			z = Float.parseFloat(str3);
+		} catch (Exception e) {
+			showException(str3, e);
+			return;
+		}
+		String s = str2.toLowerCase().intern();
+		if (s == "temperature") {
+			HeatBoundary b = s2d.model.getHeatBoundary();
+			if (b instanceof DirichletHeatBoundary) {
+				DirichletHeatBoundary db = (DirichletHeatBoundary) b;
+				if (side.equalsIgnoreCase("LEFT")) {
+					db.setTemperatureAtBorder(Boundary.LEFT, z);
+				} else if (side.equalsIgnoreCase("RIGHT")) {
+					db.setTemperatureAtBorder(Boundary.RIGHT, z);
+				} else if (side.equalsIgnoreCase("LOWER")) {
+					db.setTemperatureAtBorder(Boundary.LOWER, z);
+				} else if (side.equalsIgnoreCase("UPPER")) {
+					db.setTemperatureAtBorder(Boundary.UPPER, z);
+				}
+			}
+		} else if (s == "flux") {
+			HeatBoundary b = s2d.model.getHeatBoundary();
+			if (b instanceof NeumannHeatBoundary) {
+				NeumannHeatBoundary db = (NeumannHeatBoundary) b;
+				if (side.equalsIgnoreCase("LEFT")) {
+					db.setFluxAtBorder(Boundary.LEFT, z);
+				} else if (side.equalsIgnoreCase("RIGHT")) {
+					db.setFluxAtBorder(Boundary.RIGHT, z);
+				} else if (side.equalsIgnoreCase("LOWER")) {
+					db.setFluxAtBorder(Boundary.LOWER, z);
+				} else if (side.equalsIgnoreCase("UPPER")) {
+					db.setFluxAtBorder(Boundary.UPPER, z);
+				}
+			}
 		}
 	}
 
