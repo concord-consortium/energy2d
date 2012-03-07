@@ -49,7 +49,6 @@ class Scripter2D extends Scripter {
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	private final static Pattern NONNEGATIVE_DECIMAL = compile(REGEX_NONNEGATIVE_DECIMAL);
 	private final static Pattern BOUNDARY_FIELD = compile("^%?((?i)boundary){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 
 	private System2D s2d;
@@ -866,30 +865,19 @@ class Scripter2D extends Scripter {
 	}
 
 	private void setPartField(String str1, String str2, String str3) {
-		float z = 0;
 		Part part = null;
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
 		String s = str1.substring(lb + 1, rb).trim();
-		Matcher matcher = NONNEGATIVE_DECIMAL.matcher(s);
-		if (matcher.find()) {
-			try {
-				z = Float.parseFloat(s);
-			} catch (Exception e) {
-				showException(str1, e);
-				return;
-			}
-			int i = (int) Math.round(z);
-			if (i < 0 || i >= s2d.model.getPartCount()) {
-				showError(str1, "Array index out of bound");
-				return;
-			}
-			part = s2d.model.getPart(i);
-		} else {
-			part = s2d.model.getPart(s);
+		float z = Float.NaN;
+		try {
+			z = Float.parseFloat(s);
+		} catch (Exception e) {
+			z = Float.NaN;
 		}
+		part = Float.isNaN(z) ? s2d.model.getPart(s) : s2d.model.getPart((int) Math.round(z));
 		if (part == null) {
-			showError(str1, "Part cannot be found");
+			showError(str1, "Part " + s + " not found");
 			return;
 		}
 		s = str2.toLowerCase().intern();

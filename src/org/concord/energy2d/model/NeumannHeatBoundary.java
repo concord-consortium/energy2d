@@ -16,8 +16,7 @@ public class NeumannHeatBoundary implements HeatBoundary {
 
 	public NeumannHeatBoundary() {
 		fluxAtBorder = new float[4];
-		// by default all fluxes are zero, meaning that the borders are
-		// completely insulative
+		// by default all fluxes are zero, meaning that the borders are completely insulative
 		setFluxAtBorder(UPPER, 0);
 		setFluxAtBorder(LOWER, 0);
 		setFluxAtBorder(LEFT, 0);
