@@ -29,6 +29,7 @@ import org.concord.energy2d.model.DirichletHeatBoundary;
 import org.concord.energy2d.model.HeatBoundary;
 import org.concord.energy2d.model.NeumannHeatBoundary;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.Scripter;
@@ -47,6 +48,7 @@ class Scripter2D extends Scripter {
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern SENSOR_FIELD = compile("^%?((?i)sensor){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern BOUNDARY_FIELD = compile("^%?((?i)boundary){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
@@ -811,6 +813,20 @@ class Scripter2D extends Scripter {
 						setPartField(s1, s2, s3);
 						return;
 					}
+					// sensor field
+					matcher = SENSOR_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0)
+							return;
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setSensorField(s1, s2, s3);
+						return;
+					}
 					// boundary field
 					matcher = BOUNDARY_FIELD.matcher(s);
 					if (matcher.find()) {
@@ -1042,6 +1058,44 @@ class Scripter2D extends Scripter {
 					db.setFluxAtBorder(Boundary.UPPER, z);
 				}
 			}
+		}
+	}
+
+	private void setSensorField(String str1, String str2, String str3) {
+		Thermometer sensor = null;
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		String s = str1.substring(lb + 1, rb).trim();
+		float z = Float.NaN;
+		try {
+			z = Float.parseFloat(s);
+		} catch (Exception e) {
+			z = Float.NaN;
+		}
+		sensor = Float.isNaN(z) ? s2d.model.getThermometer(s) : s2d.model.getThermometer((int) Math.round(z));
+		if (sensor == null) {
+			showError(str1, "Sensor " + s + " not found");
+			return;
+		}
+		s = str2.toLowerCase().intern();
+		if (s == "label") {
+			sensor.setLabel(str3);
+			return;
+		}
+		if (s == "uid") {
+			sensor.setUid(str3);
+			return;
+		}
+		try {
+			z = Float.parseFloat(str3);
+		} catch (Exception e) {
+			showException(str3, e);
+			return;
+		}
+		if (s == "x") {
+			sensor.setX(z);
+		} else if (s == "y") {
+			sensor.setY(convertVerticalCoordinate(z));
 		}
 	}
 

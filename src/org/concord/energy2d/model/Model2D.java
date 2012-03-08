@@ -377,6 +377,24 @@ public class Model2D {
 		return thermometers;
 	}
 
+	public Thermometer getThermometer(String uid) {
+		if (uid == null)
+			return null;
+		synchronized (thermometers) {
+			for (Thermometer t : thermometers) {
+				if (uid.equals(t.getUid()))
+					return t;
+			}
+		}
+		return null;
+	}
+
+	public Thermometer getThermometer(int i) {
+		if (i < 0 || i >= thermometers.size())
+			return null;
+		return thermometers.get(i);
+	}
+
 	public Part addRectangularPart(float x, float y, float w, float h) {
 		Part p = new Part(new Rectangle2D.Float(x, y, w, h));
 		addPart(p);

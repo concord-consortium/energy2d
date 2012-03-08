@@ -17,7 +17,7 @@ import org.concord.energy2d.event.MeasurementListener;
  * @author Charles Xie
  * 
  */
-public class Thermometer extends Manipulable {
+public class Thermometer extends Sensor {
 
 	public final static byte ONE_POINT = 1;
 	public final static byte FIVE_POINT = 5;
