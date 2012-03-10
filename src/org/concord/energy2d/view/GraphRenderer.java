@@ -40,8 +40,9 @@ class GraphRenderer {
 	private Color fgColor = Color.black;
 	private Color frameColor = new Color(205, 205, 205, 128);
 	private int x, y, w, h;
-	private float scopeX = 360000; // 100 hours
-	private float scopeY = 25;
+	private float xmax = 360000; // 100 hours
+	//private float ymin = 0;
+	private float ymax = 25;
 	private boolean drawFrame = true;
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
@@ -74,35 +75,35 @@ class GraphRenderer {
 	}
 
 	void setScopeX(float scopeX) {
-		this.scopeX = scopeX;
+		this.xmax = scopeX;
 	}
 
 	float getScopeX() {
-		return scopeX;
+		return xmax;
 	}
 
 	void expandScopeX() {
-		scopeX *= 2;
+		xmax *= 2;
 	}
 
 	void shrinkScopeX() {
-		scopeX *= 0.5f;
+		xmax *= 0.5f;
 	}
 
 	void setScopeY(float scopeY) {
-		this.scopeY = scopeY;
+		this.ymax = scopeY;
 	}
 
 	float getScopeY() {
-		return scopeY;
+		return ymax;
 	}
 
 	void expandScopeY() {
-		scopeY *= 2;
+		ymax *= 2;
 	}
 
 	void shrinkScopeY() {
-		scopeY *= 0.5f;
+		ymax *= 0.5f;
 	}
 
 	void setDrawFrame(boolean b) {
@@ -231,7 +232,7 @@ class GraphRenderer {
 				k = x + Math.round(i * w * 0.1f);
 				if (i % 2 == 0) {
 					g.drawLine(k, y + h, k, y + h - 4);
-					centerString(FORMAT.format(scopeX * i * 0.1f / 3600f), g, k + 3, y + h - 8);
+					centerString(FORMAT.format(xmax * i * 0.1f / 3600f), g, k + 3, y + h - 8);
 				} else {
 					g.drawLine(k, y + h, k, y + h - 2);
 				}
@@ -242,7 +243,7 @@ class GraphRenderer {
 				k = y + Math.round(i * h * 0.1f);
 				if (i % 2 == 0) {
 					g.drawLine(x, k, x + 4, k);
-					centerString(FORMAT.format(scopeY * (1 - i * 0.1f)), g, x + 12, k + 3);
+					centerString(FORMAT.format(ymax * (1 - i * 0.1f)), g, x + 12, k + 3);
 				} else {
 					g.drawLine(x, k, x + 2, k);
 				}
@@ -263,8 +264,8 @@ class GraphRenderer {
 			float v1 = d.getValue();
 			float t2, v2;
 			int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-			float scaleX = w / scopeX;
-			float scaleY = h / scopeY;
+			float scaleX = w / xmax;
+			float scaleY = h / ymax;
 			synchronized (data) {
 				for (int i = m; i < n - m; i += m) {
 					x1 = (int) (x + t1 * scaleX);

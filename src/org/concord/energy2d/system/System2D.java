@@ -124,6 +124,18 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	}
 
+	public View2D getView() {
+		return view;
+	}
+
+	public Model2D getModel() {
+		return model;
+	}
+
+	public void setOwner(JFrame owner) {
+		this.owner = owner;
+	}
+
 	private void createActions() {
 
 		Action a = new AbstractAction() {
