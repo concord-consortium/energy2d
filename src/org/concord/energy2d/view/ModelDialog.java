@@ -163,6 +163,7 @@ class ModelDialog extends JDialog {
 				model.setThermalBuoyancy(buoyancy);
 				model.setLx(width);
 				model.setLy(height);
+				view.setArea(0, width, 0, height);
 				model.setSolarPowerDensity(solarPower);
 				model.setSolarRaySpeed(raySpeed);
 				model.setSolarRayCount((int) rayNumber);
@@ -193,6 +194,8 @@ class ModelDialog extends JDialog {
 				model.setConvective(convectiveCheckBox.isSelected());
 				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox.getSelectedIndex());
 
+				model.refreshPowerArray();
+				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 
 				view.repaint();

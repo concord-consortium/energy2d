@@ -41,7 +41,7 @@ class GraphRenderer {
 	private Color frameColor = new Color(205, 205, 205, 128);
 	private int x, y, w, h;
 	private float xmax = 360000; // 100 hours
-	//private float ymin = 0;
+	private float ymin = 0;
 	private float ymax = 25;
 	private boolean drawFrame = true;
 	private Rectangle closeButton;
@@ -74,35 +74,35 @@ class GraphRenderer {
 		return yLabel;
 	}
 
-	void setScopeX(float scopeX) {
-		this.xmax = scopeX;
+	void setXmax(float xmax) {
+		this.xmax = xmax;
 	}
 
-	float getScopeX() {
+	float getXmax() {
 		return xmax;
 	}
 
-	void expandScopeX() {
+	void doubleXmax() {
 		xmax *= 2;
 	}
 
-	void shrinkScopeX() {
+	void halfXmax() {
 		xmax *= 0.5f;
 	}
 
-	void setScopeY(float scopeY) {
-		this.ymax = scopeY;
+	void setYmax(float ymax) {
+		this.ymax = ymax;
 	}
 
-	float getScopeY() {
+	float getYmax() {
 		return ymax;
 	}
 
-	void expandScopeY() {
+	void doubleYmax() {
 		ymax *= 2;
 	}
 
-	void shrinkScopeY() {
+	void halfYmax() {
 		ymax *= 0.5f;
 	}
 
@@ -265,7 +265,7 @@ class GraphRenderer {
 			float t2, v2;
 			int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 			float scaleX = w / xmax;
-			float scaleY = h / ymax;
+			float scaleY = h / (ymax - ymin);
 			synchronized (data) {
 				for (int i = m; i < n - m; i += m) {
 					x1 = (int) (x + t1 * scaleX);

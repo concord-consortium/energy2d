@@ -872,12 +872,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPictures(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
-			if (model.getTime() > graphRenderer.getScopeX())
-				graphRenderer.expandScopeX();
+			if (model.getTime() > graphRenderer.getXmax())
+				graphRenderer.doubleXmax();
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					if (t.getCurrentData() > graphRenderer.getScopeY())
-						graphRenderer.expandScopeY();
+					if (t.getCurrentData() > graphRenderer.getYmax())
+						graphRenderer.doubleYmax();
 					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
 			}
@@ -1668,13 +1668,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
-				graphRenderer.expandScopeX();
+				graphRenderer.doubleXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
-				graphRenderer.shrinkScopeX();
+				graphRenderer.halfXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
-				graphRenderer.expandScopeY();
+				graphRenderer.doubleYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
-				graphRenderer.shrinkScopeY();
+				graphRenderer.halfYmax();
 			}
 			repaint();
 			e.consume();
@@ -1918,7 +1918,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals("Time step")) {
 			float timeStep = (Float) e.getNewValue();
-			graphRenderer.setScopeX(7200 * timeStep);
+			graphRenderer.setXmax(7200 * timeStep);
 			photonLength = Math.max(5, timeStep * 0.1f);
 		}
 	}
