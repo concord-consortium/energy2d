@@ -9,12 +9,12 @@ package org.concord.energy2d.model;
  * @author Charles Xie
  * 
  */
-public class NeumannHeatBoundary implements HeatBoundary {
+public class NeumannThermalBoundary implements ThermalBoundary {
 
 	// heat flux: unit w/m^2
 	private float[] fluxAtBorder;
 
-	public NeumannHeatBoundary() {
+	public NeumannThermalBoundary() {
 		fluxAtBorder = new float[4];
 		// by default all fluxes are zero, meaning that the borders are completely insulative
 		setFluxAtBorder(UPPER, 0);

@@ -41,6 +41,11 @@ public class Thermometer extends Sensor {
 		setCenter(x, y);
 	}
 
+	public Thermometer(float x, float y, String label) {
+		this(x, y);
+		setLabel(label);
+	}
+
 	public Thermometer duplicate(float x, float y) {
 		return new Thermometer(x, y);
 	}

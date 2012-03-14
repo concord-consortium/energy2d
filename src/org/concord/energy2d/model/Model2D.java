@@ -312,11 +312,11 @@ public class Model2D {
 		return ly;
 	}
 
-	public HeatBoundary getHeatBoundary() {
+	public ThermalBoundary getHeatBoundary() {
 		return heatSolver.getBoundary();
 	}
 
-	public void setHeatBoundary(HeatBoundary b) {
+	public void setHeatBoundary(ThermalBoundary b) {
 		heatSolver.setBoundary(b);
 	}
 

@@ -14,7 +14,7 @@ import java.util.Arrays;
 abstract class HeatSolver2D {
 
 	int nx, ny, nx1, ny1, nx2, ny2;
-	HeatBoundary boundary;
+	ThermalBoundary boundary;
 	float[][] conductivity;
 	float[][] specificHeat;
 	float[][] density;
@@ -36,7 +36,7 @@ abstract class HeatSolver2D {
 		nx2 = nx - 2;
 		ny2 = ny - 2;
 		t0 = new float[nx][ny];
-		boundary = new DirichletHeatBoundary();
+		boundary = new DirichletThermalBoundary();
 	}
 
 	void reset() {
@@ -62,11 +62,11 @@ abstract class HeatSolver2D {
 		this.deltaY = deltaY;
 	}
 
-	void setBoundary(HeatBoundary boundary) {
+	void setBoundary(ThermalBoundary boundary) {
 		this.boundary = boundary;
 	}
 
-	HeatBoundary getBoundary() {
+	ThermalBoundary getBoundary() {
 		return boundary;
 	}
 
@@ -99,8 +99,8 @@ abstract class HeatSolver2D {
 
 	void applyBoundary(float[][] t) {
 
-		if (boundary instanceof DirichletHeatBoundary) {
-			DirichletHeatBoundary b = (DirichletHeatBoundary) boundary;
+		if (boundary instanceof DirichletThermalBoundary) {
+			DirichletThermalBoundary b = (DirichletThermalBoundary) boundary;
 			float tN = b.getTemperatureAtBorder(Boundary.UPPER);
 			float tS = b.getTemperatureAtBorder(Boundary.LOWER);
 			float tW = b.getTemperatureAtBorder(Boundary.LEFT);
@@ -113,8 +113,8 @@ abstract class HeatSolver2D {
 				t[0][j] = tW;
 				t[nx1][j] = tE;
 			}
-		} else if (boundary instanceof NeumannHeatBoundary) {
-			NeumannHeatBoundary b = (NeumannHeatBoundary) boundary;
+		} else if (boundary instanceof NeumannThermalBoundary) {
+			NeumannThermalBoundary b = (NeumannThermalBoundary) boundary;
 			float fN = b.getFluxAtBorder(Boundary.UPPER);
 			float fS = b.getFluxAtBorder(Boundary.LOWER);
 			float fW = b.getFluxAtBorder(Boundary.LEFT);

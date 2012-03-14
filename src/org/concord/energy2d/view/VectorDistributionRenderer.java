@@ -21,7 +21,6 @@ class VectorDistributionRenderer {
 	private final static float COS = (float) Math.cos(Math.toRadians(30));
 	private final static float SIN = (float) Math.sin(Math.toRadians(30));
 
-	private Color heatFluxColor = new Color(127, 127, 0, 128);
 	private Stroke stroke = new BasicStroke(1);
 	private int nx;
 	private int ny;
@@ -101,10 +100,10 @@ class VectorDistributionRenderer {
 		float dx = (float) w / (float) nx;
 		float dy = (float) h / (float) ny;
 
-		g.setColor(heatFluxColor);
 		g.setStroke(stroke);
 		int x, y;
 		float uij, vij;
+		Color color = null;
 		for (int i = 1; i < nx - 1; i += spacing) {
 			x = Math.round(i * dx);
 			for (int j = 1; j < ny - 1; j += spacing) {
@@ -112,6 +111,9 @@ class VectorDistributionRenderer {
 				uij = -k[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * dx);
 				vij = -k[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * dy);
 				if (uij * uij + vij * vij > 0.00000001f) {
+					color = view.getContrastColor(x, y);
+					color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
+					g.setColor(color);
 					drawVector(g, x, y, uij, vij, scale);
 				}
 			}

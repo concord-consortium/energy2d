@@ -30,10 +30,10 @@ import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Boundary;
-import org.concord.energy2d.model.DirichletHeatBoundary;
-import org.concord.energy2d.model.HeatBoundary;
+import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.ThermalBoundary;
 import org.concord.energy2d.model.Model2D;
-import org.concord.energy2d.model.NeumannHeatBoundary;
+import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.util.MiscUtil;
 
 /**
@@ -173,7 +173,7 @@ class ModelDialog extends JDialog {
 
 				switch (boundaryComboBox.getSelectedIndex()) {
 				case 0:
-					DirichletHeatBoundary dhb = new DirichletHeatBoundary();
+					DirichletThermalBoundary dhb = new DirichletThermalBoundary();
 					dhb.setTemperatureAtBorder(Boundary.LEFT, valueAtLeft);
 					dhb.setTemperatureAtBorder(Boundary.RIGHT, valueAtRight);
 					dhb.setTemperatureAtBorder(Boundary.UPPER, valueAtUpper);
@@ -181,7 +181,7 @@ class ModelDialog extends JDialog {
 					model.setHeatBoundary(dhb);
 					break;
 				case 1:
-					NeumannHeatBoundary nhb = new NeumannHeatBoundary();
+					NeumannThermalBoundary nhb = new NeumannThermalBoundary();
 					nhb.setFluxAtBorder(Boundary.LEFT, valueAtLeft);
 					nhb.setFluxAtBorder(Boundary.RIGHT, valueAtRight);
 					nhb.setFluxAtBorder(Boundary.UPPER, valueAtUpper);
@@ -484,9 +484,9 @@ class ModelDialog extends JDialog {
 		label = new JLabel("Heat boundary condition");
 		p.add(label);
 		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)" });
-		if (model.getHeatBoundary() instanceof DirichletHeatBoundary) {
+		if (model.getHeatBoundary() instanceof DirichletThermalBoundary) {
 			boundaryComboBox.setSelectedIndex(0);
-		} else if (model.getHeatBoundary() instanceof NeumannHeatBoundary) {
+		} else if (model.getHeatBoundary() instanceof NeumannThermalBoundary) {
 			boundaryComboBox.setSelectedIndex(1);
 		}
 		boundaryComboBox.addItemListener(new ItemListener() {
@@ -494,10 +494,10 @@ class ModelDialog extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					switch (boundaryComboBox.getSelectedIndex()) {
 					case 0:
-						setHeatBoundaryFields(new DirichletHeatBoundary());
+						setHeatBoundaryFields(new DirichletThermalBoundary());
 						break;
 					case 1:
-						setHeatBoundaryFields(new NeumannHeatBoundary());
+						setHeatBoundaryFields(new NeumannThermalBoundary());
 						break;
 					}
 				}
@@ -553,9 +553,9 @@ class ModelDialog extends JDialog {
 
 	}
 
-	private void setHeatBoundaryFields(HeatBoundary heatBoundary) {
-		if (heatBoundary instanceof DirichletHeatBoundary) {
-			DirichletHeatBoundary b = (DirichletHeatBoundary) heatBoundary;
+	private void setHeatBoundaryFields(ThermalBoundary heatBoundary) {
+		if (heatBoundary instanceof DirichletThermalBoundary) {
+			DirichletThermalBoundary b = (DirichletThermalBoundary) heatBoundary;
 			leftBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LEFT)));
 			rightBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.RIGHT)));
 			upperBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.UPPER)));
@@ -568,8 +568,8 @@ class ModelDialog extends JDialog {
 			rightBoundaryLabel2.setText("<html><i>\u2103");
 			upperBoundaryLabel2.setText("<html><i>\u2103");
 			lowerBoundaryLabel2.setText("<html><i>\u2103");
-		} else if (heatBoundary instanceof NeumannHeatBoundary) {
-			NeumannHeatBoundary b = (NeumannHeatBoundary) heatBoundary;
+		} else if (heatBoundary instanceof NeumannThermalBoundary) {
+			NeumannThermalBoundary b = (NeumannThermalBoundary) heatBoundary;
 			leftBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LEFT)));
 			rightBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.RIGHT)));
 			upperBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.UPPER)));

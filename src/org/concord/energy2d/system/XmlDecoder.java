@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Constants;
-import org.concord.energy2d.model.DirichletHeatBoundary;
-import org.concord.energy2d.model.HeatBoundary;
+import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.ThermalBoundary;
 import org.concord.energy2d.model.Model2D;
-import org.concord.energy2d.model.NeumannHeatBoundary;
+import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.ColorFill;
@@ -289,12 +289,12 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
-					DirichletHeatBoundary b = null;
-					HeatBoundary boundary = box.model.getHeatBoundary();
-					if (boundary instanceof DirichletHeatBoundary) {
-						b = (DirichletHeatBoundary) boundary;
+					DirichletThermalBoundary b = null;
+					ThermalBoundary boundary = box.model.getHeatBoundary();
+					if (boundary instanceof DirichletThermalBoundary) {
+						b = (DirichletThermalBoundary) boundary;
 					} else {
-						b = new DirichletHeatBoundary();
+						b = new DirichletThermalBoundary();
 						box.model.setHeatBoundary(b);
 					}
 					b.setTemperatureAtBorder(Boundary.UPPER, upper);
@@ -320,12 +320,12 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
-					NeumannHeatBoundary b = null;
-					HeatBoundary boundary = box.model.getHeatBoundary();
-					if (boundary instanceof NeumannHeatBoundary) {
-						b = (NeumannHeatBoundary) boundary;
+					NeumannThermalBoundary b = null;
+					ThermalBoundary boundary = box.model.getHeatBoundary();
+					if (boundary instanceof NeumannThermalBoundary) {
+						b = (NeumannThermalBoundary) boundary;
 					} else {
-						b = new NeumannHeatBoundary();
+						b = new NeumannThermalBoundary();
 						box.model.setHeatBoundary(b);
 					}
 					b.setFluxAtBorder(Boundary.UPPER, upper);

@@ -6,15 +6,19 @@
 package org.concord.energy2d.model;
 
 /**
+ * This is a simple Dirichlet thermal boundary that has the same temperature on each side.
+ * 
+ * If you need different temperatures within each side, use ComplexDirichletThermalBoundary.
+ * 
  * @author Charles Xie
  * 
  */
-public class DirichletHeatBoundary implements HeatBoundary {
+public class DirichletThermalBoundary implements ThermalBoundary {
 
 	// unit: centigrade
 	private float[] temperatureAtBorder;
 
-	public DirichletHeatBoundary() {
+	public DirichletThermalBoundary() {
 		temperatureAtBorder = new float[4];
 		// by default all temperatures are zero
 		setTemperatureAtBorder(UPPER, 0);

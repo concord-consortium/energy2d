@@ -25,9 +25,9 @@ import javax.swing.ImageIcon;
 import org.concord.energy2d.event.ScriptEvent;
 import org.concord.energy2d.event.ScriptListener;
 import org.concord.energy2d.model.Boundary;
-import org.concord.energy2d.model.DirichletHeatBoundary;
-import org.concord.energy2d.model.HeatBoundary;
-import org.concord.energy2d.model.NeumannHeatBoundary;
+import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.ThermalBoundary;
+import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.ColorFill;
@@ -388,12 +388,12 @@ class Scripter2D extends Scripter {
 				s = s.substring(1, s.length() - 1);
 				String[] t = s.split(REGEX_SEPARATOR + "+");
 				if (t.length == 4) {
-					DirichletHeatBoundary b = null;
-					HeatBoundary boundary = s2d.model.getHeatBoundary();
-					if (boundary instanceof DirichletHeatBoundary) {
-						b = (DirichletHeatBoundary) boundary;
+					DirichletThermalBoundary b = null;
+					ThermalBoundary boundary = s2d.model.getHeatBoundary();
+					if (boundary instanceof DirichletThermalBoundary) {
+						b = (DirichletThermalBoundary) boundary;
 					} else {
-						b = new DirichletHeatBoundary();
+						b = new DirichletThermalBoundary();
 						s2d.model.setHeatBoundary(b);
 					}
 					try {
@@ -415,12 +415,12 @@ class Scripter2D extends Scripter {
 				s = s.substring(1, s.length() - 1);
 				String[] t = s.split(REGEX_SEPARATOR + "+");
 				if (t.length == 4) {
-					NeumannHeatBoundary b = null;
-					HeatBoundary boundary = s2d.model.getHeatBoundary();
-					if (boundary instanceof NeumannHeatBoundary) {
-						b = (NeumannHeatBoundary) boundary;
+					NeumannThermalBoundary b = null;
+					ThermalBoundary boundary = s2d.model.getHeatBoundary();
+					if (boundary instanceof NeumannThermalBoundary) {
+						b = (NeumannThermalBoundary) boundary;
 					} else {
-						b = new NeumannHeatBoundary();
+						b = new NeumannThermalBoundary();
 						s2d.model.setHeatBoundary(b);
 					}
 					try {
@@ -1031,9 +1031,9 @@ class Scripter2D extends Scripter {
 		}
 		String s = str2.toLowerCase().intern();
 		if (s == "temperature") {
-			HeatBoundary b = s2d.model.getHeatBoundary();
-			if (b instanceof DirichletHeatBoundary) {
-				DirichletHeatBoundary db = (DirichletHeatBoundary) b;
+			ThermalBoundary b = s2d.model.getHeatBoundary();
+			if (b instanceof DirichletThermalBoundary) {
+				DirichletThermalBoundary db = (DirichletThermalBoundary) b;
 				if (side.equalsIgnoreCase("LEFT")) {
 					db.setTemperatureAtBorder(Boundary.LEFT, z);
 				} else if (side.equalsIgnoreCase("RIGHT")) {
@@ -1045,9 +1045,9 @@ class Scripter2D extends Scripter {
 				}
 			}
 		} else if (s == "flux") {
-			HeatBoundary b = s2d.model.getHeatBoundary();
-			if (b instanceof NeumannHeatBoundary) {
-				NeumannHeatBoundary db = (NeumannHeatBoundary) b;
+			ThermalBoundary b = s2d.model.getHeatBoundary();
+			if (b instanceof NeumannThermalBoundary) {
+				NeumannThermalBoundary db = (NeumannThermalBoundary) b;
 				if (side.equalsIgnoreCase("LEFT")) {
 					db.setFluxAtBorder(Boundary.LEFT, z);
 				} else if (side.equalsIgnoreCase("RIGHT")) {
