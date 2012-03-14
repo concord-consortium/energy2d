@@ -389,7 +389,7 @@ class Scripter2D extends Scripter {
 				String[] t = s.split(REGEX_SEPARATOR + "+");
 				if (t.length == 4) {
 					DirichletThermalBoundary b = null;
-					ThermalBoundary boundary = s2d.model.getHeatBoundary();
+					ThermalBoundary boundary = s2d.model.getThermalBoundary();
 					if (boundary instanceof DirichletThermalBoundary) {
 						b = (DirichletThermalBoundary) boundary;
 					} else {
@@ -416,7 +416,7 @@ class Scripter2D extends Scripter {
 				String[] t = s.split(REGEX_SEPARATOR + "+");
 				if (t.length == 4) {
 					NeumannThermalBoundary b = null;
-					ThermalBoundary boundary = s2d.model.getHeatBoundary();
+					ThermalBoundary boundary = s2d.model.getThermalBoundary();
 					if (boundary instanceof NeumannThermalBoundary) {
 						b = (NeumannThermalBoundary) boundary;
 					} else {
@@ -1031,7 +1031,7 @@ class Scripter2D extends Scripter {
 		}
 		String s = str2.toLowerCase().intern();
 		if (s == "temperature") {
-			ThermalBoundary b = s2d.model.getHeatBoundary();
+			ThermalBoundary b = s2d.model.getThermalBoundary();
 			if (b instanceof DirichletThermalBoundary) {
 				DirichletThermalBoundary db = (DirichletThermalBoundary) b;
 				if (side.equalsIgnoreCase("LEFT")) {
@@ -1045,7 +1045,7 @@ class Scripter2D extends Scripter {
 				}
 			}
 		} else if (s == "flux") {
-			ThermalBoundary b = s2d.model.getHeatBoundary();
+			ThermalBoundary b = s2d.model.getThermalBoundary();
 			if (b instanceof NeumannThermalBoundary) {
 				NeumannThermalBoundary db = (NeumannThermalBoundary) b;
 				if (side.equalsIgnoreCase("LEFT")) {

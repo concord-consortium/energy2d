@@ -290,7 +290,7 @@ class XmlDecoder extends DefaultHandler {
 				}
 				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
 					DirichletThermalBoundary b = null;
-					ThermalBoundary boundary = box.model.getHeatBoundary();
+					ThermalBoundary boundary = box.model.getThermalBoundary();
 					if (boundary instanceof DirichletThermalBoundary) {
 						b = (DirichletThermalBoundary) boundary;
 					} else {
@@ -321,7 +321,7 @@ class XmlDecoder extends DefaultHandler {
 				}
 				if (!Float.isNaN(left) && !Float.isNaN(right) && !Float.isNaN(upper) && !Float.isNaN(lower)) {
 					NeumannThermalBoundary b = null;
-					ThermalBoundary boundary = box.model.getHeatBoundary();
+					ThermalBoundary boundary = box.model.getThermalBoundary();
 					if (boundary instanceof NeumannThermalBoundary) {
 						b = (NeumannThermalBoundary) boundary;
 					} else {

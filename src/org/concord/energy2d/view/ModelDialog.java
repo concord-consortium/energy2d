@@ -481,23 +481,28 @@ class ModelDialog extends JDialog {
 		tabbedPane.add(pp, "Boundary");
 		count = 0;
 
-		label = new JLabel("Heat boundary condition");
+		label = new JLabel("Thermal boundary condition");
 		p.add(label);
-		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)" });
-		if (model.getHeatBoundary() instanceof DirichletThermalBoundary) {
+		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)", "Other" });
+		if (model.getThermalBoundary() instanceof DirichletThermalBoundary) {
 			boundaryComboBox.setSelectedIndex(0);
-		} else if (model.getHeatBoundary() instanceof NeumannThermalBoundary) {
+		} else if (model.getThermalBoundary() instanceof NeumannThermalBoundary) {
 			boundaryComboBox.setSelectedIndex(1);
+		} else {
+			boundaryComboBox.setSelectedIndex(2);
 		}
 		boundaryComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					switch (boundaryComboBox.getSelectedIndex()) {
 					case 0:
-						setHeatBoundaryFields(new DirichletThermalBoundary());
+						setThermalBoundaryFields(new DirichletThermalBoundary());
 						break;
 					case 1:
-						setHeatBoundaryFields(new NeumannThermalBoundary());
+						setThermalBoundaryFields(new NeumannThermalBoundary());
+						break;
+					case 2:
+						enableBoundaryFieldsAndLabels(false);
 						break;
 					}
 				}
@@ -545,7 +550,7 @@ class ModelDialog extends JDialog {
 		p.add(lowerBoundaryLabel2);
 		count++;
 
-		setHeatBoundaryFields(model.getHeatBoundary());
+		setThermalBoundaryFields(model.getThermalBoundary());
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		pack();
@@ -553,8 +558,9 @@ class ModelDialog extends JDialog {
 
 	}
 
-	private void setHeatBoundaryFields(ThermalBoundary heatBoundary) {
+	private void setThermalBoundaryFields(ThermalBoundary heatBoundary) {
 		if (heatBoundary instanceof DirichletThermalBoundary) {
+			enableBoundaryFieldsAndLabels(true);
 			DirichletThermalBoundary b = (DirichletThermalBoundary) heatBoundary;
 			leftBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LEFT)));
 			rightBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.RIGHT)));
@@ -564,11 +570,12 @@ class ModelDialog extends JDialog {
 			rightBoundaryLabel.setText("Right boundary temperature");
 			upperBoundaryLabel.setText("Upper boundary temperature");
 			lowerBoundaryLabel.setText("Lower boundary temperature");
-			leftBoundaryLabel2.setText("<html><i>\u2103");
-			rightBoundaryLabel2.setText("<html><i>\u2103");
-			upperBoundaryLabel2.setText("<html><i>\u2103");
-			lowerBoundaryLabel2.setText("<html><i>\u2103");
+			leftBoundaryLabel2.setText("<html><i>\u2103  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			rightBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			upperBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			lowerBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		} else if (heatBoundary instanceof NeumannThermalBoundary) {
+			enableBoundaryFieldsAndLabels(true);
 			NeumannThermalBoundary b = (NeumannThermalBoundary) heatBoundary;
 			leftBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LEFT)));
 			rightBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.RIGHT)));
@@ -582,7 +589,24 @@ class ModelDialog extends JDialog {
 			rightBoundaryLabel2.setText("<html><i>\u2103/m");
 			upperBoundaryLabel2.setText("<html><i>\u2103/m");
 			lowerBoundaryLabel2.setText("<html><i>\u2103/m");
+		} else {
+			enableBoundaryFieldsAndLabels(false);
 		}
+	}
+
+	private void enableBoundaryFieldsAndLabels(boolean b) {
+		leftBoundaryField.setEnabled(b);
+		rightBoundaryField.setEnabled(b);
+		upperBoundaryField.setEnabled(b);
+		lowerBoundaryField.setEnabled(b);
+		leftBoundaryLabel.setEnabled(b);
+		rightBoundaryLabel.setEnabled(b);
+		upperBoundaryLabel.setEnabled(b);
+		lowerBoundaryLabel.setEnabled(b);
+		leftBoundaryLabel2.setEnabled(b);
+		rightBoundaryLabel2.setEnabled(b);
+		upperBoundaryLabel2.setEnabled(b);
+		lowerBoundaryLabel2.setEnabled(b);
 	}
 
 	private float parse(String s) {

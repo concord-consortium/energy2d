@@ -101,17 +101,31 @@ abstract class HeatSolver2D {
 
 		if (boundary instanceof DirichletThermalBoundary) {
 			DirichletThermalBoundary b = (DirichletThermalBoundary) boundary;
-			float tN = b.getTemperatureAtBorder(Boundary.UPPER);
-			float tS = b.getTemperatureAtBorder(Boundary.LOWER);
-			float tW = b.getTemperatureAtBorder(Boundary.LEFT);
-			float tE = b.getTemperatureAtBorder(Boundary.RIGHT);
+			float tUpper = b.getTemperatureAtBorder(Boundary.UPPER);
+			float tLower = b.getTemperatureAtBorder(Boundary.LOWER);
+			float tLeft = b.getTemperatureAtBorder(Boundary.LEFT);
+			float tRight = b.getTemperatureAtBorder(Boundary.RIGHT);
 			for (int i = 0; i < nx; i++) {
-				t[i][0] = tN;
-				t[i][ny1] = tS;
+				t[i][0] = tUpper;
+				t[i][ny1] = tLower;
 			}
 			for (int j = 0; j < ny; j++) {
-				t[0][j] = tW;
-				t[nx1][j] = tE;
+				t[0][j] = tLeft;
+				t[nx1][j] = tRight;
+			}
+		} else if (boundary instanceof ComplexDirichletThermalBoundary) {
+			ComplexDirichletThermalBoundary b = (ComplexDirichletThermalBoundary) boundary;
+			float[] tUpper = b.getTemperaturesAtBorder(Boundary.UPPER);
+			float[] tLower = b.getTemperaturesAtBorder(Boundary.LOWER);
+			float[] tLeft = b.getTemperaturesAtBorder(Boundary.LEFT);
+			float[] tRight = b.getTemperaturesAtBorder(Boundary.RIGHT);
+			for (int i = 0; i < nx; i++) {
+				t[i][0] = tUpper[i];
+				t[i][ny1] = tLower[i];
+			}
+			for (int j = 0; j < ny; j++) {
+				t[0][j] = tLeft[j];
+				t[nx1][j] = tRight[j];
 			}
 		} else if (boundary instanceof NeumannThermalBoundary) {
 			NeumannThermalBoundary b = (NeumannThermalBoundary) boundary;

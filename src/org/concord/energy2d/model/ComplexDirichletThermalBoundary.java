@@ -62,7 +62,7 @@ public class ComplexDirichletThermalBoundary implements ThermalBoundary {
 		}
 	}
 
-	public float[] getTemperatureAtBorder(byte side) {
+	public float[] getTemperaturesAtBorder(byte side) {
 		if (side < UPPER || side > LEFT)
 			throw new IllegalArgumentException("side parameter illegal");
 		switch (side) {

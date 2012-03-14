@@ -161,6 +161,14 @@ public class Model2D {
 
 	}
 
+	public int getNx() {
+		return nx;
+	}
+
+	public int getNy() {
+		return ny;
+	}
+
 	public void setStopTime(float stopTime) {
 		this.stopTime = stopTime;
 	}
@@ -312,7 +320,7 @@ public class Model2D {
 		return ly;
 	}
 
-	public ThermalBoundary getHeatBoundary() {
+	public ThermalBoundary getThermalBoundary() {
 		return heatSolver.getBoundary();
 	}
 
