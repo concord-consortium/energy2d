@@ -529,7 +529,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setVelocityOn(boolean b) {
 		showVelocity = b;
 		if (b && vectorFieldRenderer == null)
-			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
+			vectorFieldRenderer = new VectorDistributionRenderer(this, nx, ny);
 	}
 
 	public boolean isVelocityOn() {
@@ -539,7 +539,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setHeatFluxArrowsOn(boolean b) {
 		showHeatFluxArrows = b;
 		if (b && vectorFieldRenderer == null)
-			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
+			vectorFieldRenderer = new VectorDistributionRenderer(this, nx, ny);
 	}
 
 	public boolean isHeatFluxArrowsOn() {
@@ -558,7 +558,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setVectorFieldSpacing(int spacing) {
 		if (vectorFieldRenderer == null)
-			vectorFieldRenderer = new VectorDistributionRenderer(nx, ny);
+			vectorFieldRenderer = new VectorDistributionRenderer(this, nx, ny);
 		vectorFieldRenderer.setSpacing(spacing);
 	}
 
