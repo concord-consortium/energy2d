@@ -178,7 +178,7 @@ class ModelDialog extends JDialog {
 					dhb.setTemperatureAtBorder(Boundary.RIGHT, valueAtRight);
 					dhb.setTemperatureAtBorder(Boundary.UPPER, valueAtUpper);
 					dhb.setTemperatureAtBorder(Boundary.LOWER, valueAtLower);
-					model.setHeatBoundary(dhb);
+					model.setThermalBoundary(dhb);
 					break;
 				case 1:
 					NeumannThermalBoundary nhb = new NeumannThermalBoundary();
@@ -186,7 +186,7 @@ class ModelDialog extends JDialog {
 					nhb.setFluxAtBorder(Boundary.RIGHT, valueAtRight);
 					nhb.setFluxAtBorder(Boundary.UPPER, valueAtUpper);
 					nhb.setFluxAtBorder(Boundary.LOWER, valueAtLower);
-					model.setHeatBoundary(nhb);
+					model.setThermalBoundary(nhb);
 					break;
 				}
 

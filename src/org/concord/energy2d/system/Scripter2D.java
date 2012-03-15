@@ -394,7 +394,7 @@ class Scripter2D extends Scripter {
 						b = (DirichletThermalBoundary) boundary;
 					} else {
 						b = new DirichletThermalBoundary();
-						s2d.model.setHeatBoundary(b);
+						s2d.model.setThermalBoundary(b);
 					}
 					try {
 						float tN = Float.parseFloat(t[0]);
@@ -421,7 +421,7 @@ class Scripter2D extends Scripter {
 						b = (NeumannThermalBoundary) boundary;
 					} else {
 						b = new NeumannThermalBoundary();
-						s2d.model.setHeatBoundary(b);
+						s2d.model.setThermalBoundary(b);
 					}
 					try {
 						float fN = Float.parseFloat(t[0]);

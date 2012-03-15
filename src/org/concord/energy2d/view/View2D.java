@@ -975,8 +975,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
-					x = (int) (rx * getWidth() - lx * 0.5);
-					y = (int) (ry * getHeight() - ly * 0.5);
+					x = (int) (rx * getWidth() - lx * 0.5f);
+					y = (int) (ry * getHeight() - ly * 0.5f);
 					s.paintIcon(this, g, x, y);
 					ix = Math.round(nx * rx);
 					iy = Math.round(ny * ry);
@@ -1804,13 +1804,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mouseBeingDragged = false;
 	}
 
-	private void addThermometer(float x, float y) {
+	public void addThermometer(float x, float y, String label) {
+		Thermometer t = addThermometer(x, y);
+		t.setLabel(label);
+	}
+
+	private Thermometer addThermometer(float x, float y) {
 		Thermometer t = new Thermometer(x, y);
 		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
 		r.width = Thermometer.RELATIVE_WIDTH * model.getLx();
 		r.height = Thermometer.RELATIVE_HEIGHT * model.getLy();
 		t.setCenter(x, y);
 		model.addThermometer(t);
+		return t;
 	}
 
 	private void processMouseMoved(MouseEvent e) {

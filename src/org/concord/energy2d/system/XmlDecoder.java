@@ -295,7 +295,7 @@ class XmlDecoder extends DefaultHandler {
 						b = (DirichletThermalBoundary) boundary;
 					} else {
 						b = new DirichletThermalBoundary();
-						box.model.setHeatBoundary(b);
+						box.model.setThermalBoundary(b);
 					}
 					b.setTemperatureAtBorder(Boundary.UPPER, upper);
 					b.setTemperatureAtBorder(Boundary.RIGHT, right);
@@ -326,7 +326,7 @@ class XmlDecoder extends DefaultHandler {
 						b = (NeumannThermalBoundary) boundary;
 					} else {
 						b = new NeumannThermalBoundary();
-						box.model.setHeatBoundary(b);
+						box.model.setThermalBoundary(b);
 					}
 					b.setFluxAtBorder(Boundary.UPPER, upper);
 					b.setFluxAtBorder(Boundary.RIGHT, right);

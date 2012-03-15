@@ -86,8 +86,8 @@ abstract class Symbol implements Icon {
 			g.drawRect(x, y, w - 1, h - 1);
 			int n = h / 2;
 			for (int i = 1; i < n; i++) {
-				g.drawLine(x, y + i * 2, x + 2, y + i * 2);
-				g.drawLine(x + w - 1, y + i * 2, x + w - 3, y + i * 2);
+				g.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
+				g.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
 			}
 		}
 
