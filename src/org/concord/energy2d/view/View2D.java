@@ -1455,6 +1455,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			showGraph = !showGraph;
 			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
 			break;
+		case KeyEvent.VK_ESCAPE: // allow the app to shut down when in full screen mode
+			Object r = getClientProperty("close_full_screen");
+			if (r instanceof Runnable)
+				((Runnable) r).run();
+			break;
 		}
 		repaint();
 		// e.consume();//don't call, or this stops key binding
