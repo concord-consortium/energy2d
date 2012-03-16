@@ -113,6 +113,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
+	private Font sensorReadingFont = new Font(null, Font.PLAIN, 10);
 	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
 
 	private BufferedImage bimg;
@@ -526,6 +527,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return graphRenderer.getLabelY();
 	}
 
+	public void setVectorStroke(Stroke s) {
+		if (vectorFieldRenderer == null)
+			vectorFieldRenderer = new VectorDistributionRenderer(this, nx, ny);
+		vectorFieldRenderer.setStroke(s);
+	}
+
 	public void setVelocityOn(boolean b) {
 		showVelocity = b;
 		if (b && vectorFieldRenderer == null)
@@ -641,6 +648,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public boolean isSmooth() {
 		return temperatureRenderer.isSmooth();
+	}
+
+	public void setLabelFont(Font font) {
+		labelFont = font;
+	}
+
+	public void setSensorReadingFont(Font font) {
+		sensorReadingFont = font;
 	}
 
 	public void setMinimumTemperature(float min) {
@@ -963,7 +978,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		float ly = s.getIconHeight();
 		float temp;
 		String str;
-		g.setFont(smallFont);
+		g.setFont(sensorReadingFont);
 		int x, y;
 		float rx, ry;
 		int ix, iy;

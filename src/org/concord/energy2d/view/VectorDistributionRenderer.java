@@ -34,6 +34,10 @@ class VectorDistributionRenderer {
 		this.view = view;
 	}
 
+	void setStroke(Stroke s) {
+		stroke = s;
+	}
+
 	void setSpacing(int spacing) {
 		this.spacing = spacing;
 	}
@@ -42,12 +46,13 @@ class VectorDistributionRenderer {
 		return spacing;
 	}
 
-	static void drawVector(Graphics2D g, int x, int y, float vx, float vy, float scale) {
+	void drawVector(Graphics2D g, int x, int y, float vx, float vy, float scale) {
 		float r = 1f / (float) Math.hypot(vx, vy);
 		float arrowx = vx * r;
 		float arrowy = vy * r;
-		float x1 = x + arrowx * 8 + vx * scale;
-		float y1 = y + arrowy * 8 + vy * scale;
+		r = ((BasicStroke) stroke).getLineWidth();
+		float x1 = x + arrowx * (6 + r * 2) + vx * scale;
+		float y1 = y + arrowy * (6 + r * 2) + vy * scale;
 		g.drawLine(x, y, Math.round(x1), Math.round(y1));
 		r = 4;
 		float wingx = r * (arrowx * COS + arrowy * SIN);
