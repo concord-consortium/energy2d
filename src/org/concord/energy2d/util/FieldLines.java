@@ -17,8 +17,8 @@ import java.util.Arrays;
  */
 public class FieldLines {
 
-	private static final int arrowPlotSpacing = 16; // in pixels
-	private static final int fluxLineSpacing = 2 * arrowPlotSpacing; // in pixels
+	private int arrowSpacing = 16; // in pixels
+	private int fluxLineSpacing = 2 * arrowSpacing; // in pixels
 	private int nx, ny;
 	private float[][] func, funx, funy;
 	private Dimension size;
@@ -42,6 +42,14 @@ public class FieldLines {
 			float u = i / (float) (numColors - 1);
 			spectrum[i] = new Color(Math.round((1 - u) * minColor.getRed() + u * maxColor.getRed()), Math.round((1 - u) * minColor.getGreen() + u * maxColor.getGreen()), Math.round((1 - u) * minColor.getBlue() + u * maxColor.getBlue()));
 		}
+	}
+
+	public void setArrowSpacing(int arrowSpacing) {
+		this.arrowSpacing = arrowSpacing;
+	}
+
+	public void setFluxLineSpacing(int fluxLineSpacing) {
+		this.fluxLineSpacing = fluxLineSpacing;
 	}
 
 	public void setColor(Color color) {
@@ -100,7 +108,7 @@ public class FieldLines {
 		int i, j;
 		double magnitude = 0;
 		float newX = 0, newY = 0;
-		float arrowScale = sign * arrowLength * arrowPlotSpacing;
+		float arrowScale = sign * arrowLength * arrowSpacing;
 
 		for (int k = 0; k < maxLength; k++) {
 
@@ -124,7 +132,7 @@ public class FieldLines {
 			g.setColor(color != null ? color : getColor(magnitude));
 			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
 			// every few pixels, draw an arrow
-			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {
+			if (k > 0 && (k % (5 * arrowSpacing) == 0)) {
 				drawArrow(g, x, y, x + arrowScale * vx, y + arrowScale * vy);
 			}
 
@@ -184,7 +192,7 @@ public class FieldLines {
 		int i, j;
 		double magnitude = 0;
 		float newX = 0, newY = 0;
-		float arrowScale = sign * arrowLength * arrowDirection * arrowPlotSpacing;
+		float arrowScale = sign * arrowLength * arrowDirection * arrowSpacing;
 
 		for (int k = 0; k < maxLength; k++) {
 
@@ -208,7 +216,7 @@ public class FieldLines {
 			g.setColor(color == null ? getColor(magnitude) : color);
 			g.drawLine(Math.round(x), Math.round(y), Math.round(newX), Math.round(newY));
 			// every few pixels, draw an arrow
-			if (k > 0 && (k % (5 * arrowPlotSpacing) == 0)) {
+			if (k > 0 && (k % (5 * arrowSpacing) == 0)) {
 				drawArrow(g, x, y, x + arrowScale * vx, y + arrowScale * vy);
 			}
 

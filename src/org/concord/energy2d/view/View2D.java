@@ -583,6 +583,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
+	public FieldLines getStreamlines() {
+		if (streamlines == null)
+			streamlines = new FieldLines();
+		return streamlines;
+	}
+
 	public boolean isStreamlineOn() {
 		return showStreamLines;
 	}
