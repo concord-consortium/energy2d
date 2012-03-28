@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -265,6 +266,22 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 					buttonStop.doClick();
 			}
 		});
+	}
+
+	public void saveState(Writer writer) throws IOException {
+		if (clickStop != null) {
+			EventQueue.invokeLater(clickStop);
+		} else {
+			stop();
+		}
+		if (writer == null)
+			return;
+		try {
+			writer.write(encoder.encode().toCharArray());
+		} finally {
+			writer.close();
+		}
+		saved = true;
 	}
 
 	public void saveState(OutputStream os) throws IOException {
