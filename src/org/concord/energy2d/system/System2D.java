@@ -14,11 +14,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
@@ -241,6 +244,33 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		new AppletConverter(this).write(file);
 	}
 
+	private void loadStateApp(Reader reader) throws IOException {
+		stop();
+		reset();
+		clear();
+		loadState(reader);
+	}
+
+	private void loadState(Reader reader) throws IOException {
+		saved = true;
+		stop();
+		if (reader == null)
+			return;
+		try {
+			saxParser.parse(new InputSource(reader), saxHandler);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} finally {
+			reader.close();
+		}
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				if (buttonStop != null)
+					buttonStop.doClick();
+			}
+		});
+	}
+
 	private void loadStateApp(InputStream is) throws IOException {
 		stop();
 		reset();
@@ -268,7 +298,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		});
 	}
 
-	public void saveState(Writer writer) throws IOException {
+	void saveState(Writer writer) throws IOException {
 		if (clickStop != null) {
 			EventQueue.invokeLater(clickStop);
 		} else {
@@ -305,7 +335,8 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (file == null)
 			return;
 		try {
-			loadStateApp(new FileInputStream(file));
+			// loadStateApp(new FileInputStream(file));
+			loadStateApp(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
 		} catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), e.getLocalizedMessage(), "File error", JOptionPane.ERROR_MESSAGE);
