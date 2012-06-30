@@ -731,7 +731,7 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Fixed Flux Boundary");
+		mi = new JMenuItem("Fixed Heat Flux Boundary");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/fixed-flux-boundary.e2d");
