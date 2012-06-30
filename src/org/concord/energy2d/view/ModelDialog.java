@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -23,6 +24,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -31,6 +33,8 @@ import javax.swing.SpringLayout;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.MassBoundary;
+import org.concord.energy2d.model.SimpleMassBoundary;
 import org.concord.energy2d.model.ThermalBoundary;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannThermalBoundary;
@@ -54,18 +58,27 @@ class ModelDialog extends JDialog {
 	private JLabel buoyancyLabel;
 	private JTextField buoyancyField;
 	private JTextField wField, hField;
-	private JLabel upperBoundaryLabel;
-	private JLabel lowerBoundaryLabel;
-	private JLabel leftBoundaryLabel;
-	private JLabel rightBoundaryLabel;
-	private JLabel upperBoundaryLabel2;
-	private JLabel lowerBoundaryLabel2;
-	private JLabel leftBoundaryLabel2;
-	private JLabel rightBoundaryLabel2;
-	private JTextField upperBoundaryField;
-	private JTextField lowerBoundaryField;
-	private JTextField leftBoundaryField;
-	private JTextField rightBoundaryField;
+	private JTabbedPane boundaryTab;
+	private JLabel upperThermalBoundaryLabel;
+	private JLabel lowerThermalBoundaryLabel;
+	private JLabel leftThermalBoundaryLabel;
+	private JLabel rightThermalBoundaryLabel;
+	private JLabel upperThermalBoundaryLabel2;
+	private JLabel lowerThermalBoundaryLabel2;
+	private JLabel leftThermalBoundaryLabel2;
+	private JLabel rightThermalBoundaryLabel2;
+	private JTextField upperThermalBoundaryField;
+	private JTextField lowerThermalBoundaryField;
+	private JTextField leftThermalBoundaryField;
+	private JTextField rightThermalBoundaryField;
+	private JRadioButton upperMassBoundaryReflect;
+	private JRadioButton lowerMassBoundaryReflect;
+	private JRadioButton leftMassBoundaryReflect;
+	private JRadioButton rightMassBoundaryReflect;
+	private JRadioButton upperMassBoundaryThrough;
+	private JRadioButton lowerMassBoundaryThrough;
+	private JRadioButton leftMassBoundaryThrough;
+	private JRadioButton rightMassBoundaryThrough;
 	private JLabel solarPowerLabel;
 	private JTextField solarPowerField;
 	private JLabel raySpeedLabel;
@@ -74,7 +87,7 @@ class ModelDialog extends JDialog {
 	private JTextField rayNumberField;
 	private JLabel emissionIntervalLabel;
 	private JTextField emissionIntervalField;
-	private JComboBox boundaryComboBox;
+	private JComboBox thermalBoundaryComboBox;
 	private JLabel sunAngleLabel;
 	private JSlider sunAngleSlider;
 	private JCheckBox sunnyCheckBox;
@@ -121,16 +134,16 @@ class ModelDialog extends JDialog {
 				float height = parse(hField.getText());
 				if (Float.isNaN(height))
 					return;
-				float valueAtLeft = parse(leftBoundaryField.getText());
+				float valueAtLeft = parse(leftThermalBoundaryField.getText());
 				if (Float.isNaN(valueAtLeft))
 					return;
-				float valueAtRight = parse(rightBoundaryField.getText());
+				float valueAtRight = parse(rightThermalBoundaryField.getText());
 				if (Float.isNaN(valueAtRight))
 					return;
-				float valueAtUpper = parse(upperBoundaryField.getText());
+				float valueAtUpper = parse(upperThermalBoundaryField.getText());
 				if (Float.isNaN(valueAtUpper))
 					return;
-				float valueAtLower = parse(lowerBoundaryField.getText());
+				float valueAtLower = parse(lowerThermalBoundaryField.getText());
 				if (Float.isNaN(valueAtLower))
 					return;
 				float solarPower = parse(solarPowerField.getText());
@@ -171,7 +184,7 @@ class ModelDialog extends JDialog {
 				model.setSunAngle((float) Math.toRadians(sunAngleSlider.getValue()));
 				model.setZHeatDiffusivity(zHeatDiffusivity);
 
-				switch (boundaryComboBox.getSelectedIndex()) {
+				switch (thermalBoundaryComboBox.getSelectedIndex()) {
 				case 0:
 					DirichletThermalBoundary dhb = new DirichletThermalBoundary();
 					dhb.setTemperatureAtBorder(Boundary.LEFT, valueAtLeft);
@@ -188,6 +201,28 @@ class ModelDialog extends JDialog {
 					nhb.setFluxAtBorder(Boundary.LOWER, valueAtLower);
 					model.setThermalBoundary(nhb);
 					break;
+				}
+
+				SimpleMassBoundary massBoundary = (SimpleMassBoundary) model.getMassBoundary();
+				if (leftMassBoundaryReflect.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.LEFT, MassBoundary.REFLECTIVE);
+				} else if (leftMassBoundaryThrough.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.LEFT, MassBoundary.THROUGH);
+				}
+				if (rightMassBoundaryReflect.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.RIGHT, MassBoundary.REFLECTIVE);
+				} else if (rightMassBoundaryThrough.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.RIGHT, MassBoundary.THROUGH);
+				}
+				if (upperMassBoundaryReflect.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.UPPER, MassBoundary.REFLECTIVE);
+				} else if (upperMassBoundaryThrough.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.UPPER, MassBoundary.THROUGH);
+				}
+				if (lowerMassBoundaryReflect.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.LOWER, MassBoundary.REFLECTIVE);
+				} else if (lowerMassBoundaryThrough.isSelected()) {
+					massBoundary.setFlowTypeAtBorder(Boundary.LOWER, MassBoundary.THROUGH);
 				}
 
 				model.setSunny(sunnyCheckBox.isSelected());
@@ -475,26 +510,29 @@ class ModelDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
+		boundaryTab = new JTabbedPane();
+		tabbedPane.add(boundaryTab, "Boundary");
+
 		p = new JPanel(new SpringLayout());
 		pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
-		tabbedPane.add(pp, "Boundary");
+		boundaryTab.add(pp, "Thermal Boundary");
 		count = 0;
 
 		label = new JLabel("Thermal boundary condition");
 		p.add(label);
-		boundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)", "Other" });
+		thermalBoundaryComboBox = new JComboBox(new String[] { "Dirichlet (constant temperature)", "Neumann (constant heat flux)", "Other" });
 		if (model.getThermalBoundary() instanceof DirichletThermalBoundary) {
-			boundaryComboBox.setSelectedIndex(0);
+			thermalBoundaryComboBox.setSelectedIndex(0);
 		} else if (model.getThermalBoundary() instanceof NeumannThermalBoundary) {
-			boundaryComboBox.setSelectedIndex(1);
+			thermalBoundaryComboBox.setSelectedIndex(1);
 		} else {
-			boundaryComboBox.setSelectedIndex(2);
+			thermalBoundaryComboBox.setSelectedIndex(2);
 		}
-		boundaryComboBox.addItemListener(new ItemListener() {
+		thermalBoundaryComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					switch (boundaryComboBox.getSelectedIndex()) {
+					switch (thermalBoundaryComboBox.getSelectedIndex()) {
 					case 0:
 						setThermalBoundaryFields(new DirichletThermalBoundary());
 						break;
@@ -508,49 +546,135 @@ class ModelDialog extends JDialog {
 				}
 			}
 		});
-		boundaryComboBox.addActionListener(okListener);
-		p.add(boundaryComboBox);
+		thermalBoundaryComboBox.addActionListener(okListener);
+		p.add(thermalBoundaryComboBox);
 		label = new JLabel();
 		p.add(label);
 		count++;
 
-		leftBoundaryLabel = new JLabel();
-		p.add(leftBoundaryLabel);
-		leftBoundaryField = new JTextField();
-		leftBoundaryField.addActionListener(okListener);
-		p.add(leftBoundaryField);
-		leftBoundaryLabel2 = new JLabel();
-		p.add(leftBoundaryLabel2);
+		leftThermalBoundaryLabel = new JLabel();
+		p.add(leftThermalBoundaryLabel);
+		leftThermalBoundaryField = new JTextField();
+		leftThermalBoundaryField.addActionListener(okListener);
+		p.add(leftThermalBoundaryField);
+		leftThermalBoundaryLabel2 = new JLabel();
+		p.add(leftThermalBoundaryLabel2);
 		count++;
 
-		rightBoundaryLabel = new JLabel();
-		p.add(rightBoundaryLabel);
-		rightBoundaryField = new JTextField();
-		rightBoundaryField.addActionListener(okListener);
-		p.add(rightBoundaryField);
-		rightBoundaryLabel2 = new JLabel();
-		p.add(rightBoundaryLabel2);
+		rightThermalBoundaryLabel = new JLabel();
+		p.add(rightThermalBoundaryLabel);
+		rightThermalBoundaryField = new JTextField();
+		rightThermalBoundaryField.addActionListener(okListener);
+		p.add(rightThermalBoundaryField);
+		rightThermalBoundaryLabel2 = new JLabel();
+		p.add(rightThermalBoundaryLabel2);
 		count++;
 
-		upperBoundaryLabel = new JLabel();
-		p.add(upperBoundaryLabel);
-		upperBoundaryField = new JTextField();
-		upperBoundaryField.addActionListener(okListener);
-		p.add(upperBoundaryField);
-		upperBoundaryLabel2 = new JLabel();
-		p.add(upperBoundaryLabel2);
+		upperThermalBoundaryLabel = new JLabel();
+		p.add(upperThermalBoundaryLabel);
+		upperThermalBoundaryField = new JTextField();
+		upperThermalBoundaryField.addActionListener(okListener);
+		p.add(upperThermalBoundaryField);
+		upperThermalBoundaryLabel2 = new JLabel();
+		p.add(upperThermalBoundaryLabel2);
 		count++;
 
-		lowerBoundaryLabel = new JLabel();
-		p.add(lowerBoundaryLabel);
-		lowerBoundaryField = new JTextField();
-		lowerBoundaryField.addActionListener(okListener);
-		p.add(lowerBoundaryField);
-		lowerBoundaryLabel2 = new JLabel();
-		p.add(lowerBoundaryLabel2);
+		lowerThermalBoundaryLabel = new JLabel();
+		p.add(lowerThermalBoundaryLabel);
+		lowerThermalBoundaryField = new JTextField();
+		lowerThermalBoundaryField.addActionListener(okListener);
+		p.add(lowerThermalBoundaryField);
+		lowerThermalBoundaryLabel2 = new JLabel();
+		p.add(lowerThermalBoundaryLabel2);
 		count++;
 
 		setThermalBoundaryFields(model.getThermalBoundary());
+		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
+
+		p = new JPanel(new SpringLayout());
+		pp = new JPanel(new BorderLayout());
+		pp.add(p, BorderLayout.NORTH);
+		boundaryTab.add(pp, "Mass Boundary");
+		count = 0;
+
+		SimpleMassBoundary massBoundary = (SimpleMassBoundary) model.getMassBoundary();
+
+		label = new JLabel("Left boundary");
+		p.add(label);
+		leftMassBoundaryReflect = new JRadioButton("Reflect");
+		p.add(leftMassBoundaryReflect);
+		leftMassBoundaryThrough = new JRadioButton("Through");
+		p.add(leftMassBoundaryThrough);
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(leftMassBoundaryReflect);
+		bg.add(leftMassBoundaryThrough);
+		switch (massBoundary.getFlowTypeAtBorder(Boundary.LEFT)) {
+		case MassBoundary.REFLECTIVE:
+			leftMassBoundaryReflect.setSelected(true);
+			break;
+		case MassBoundary.THROUGH:
+			leftMassBoundaryThrough.setSelected(true);
+			break;
+		}
+		count++;
+
+		label = new JLabel("Right boundary");
+		p.add(label);
+		rightMassBoundaryReflect = new JRadioButton("Reflect");
+		p.add(rightMassBoundaryReflect);
+		rightMassBoundaryThrough = new JRadioButton("Through");
+		p.add(rightMassBoundaryThrough);
+		bg = new ButtonGroup();
+		bg.add(rightMassBoundaryReflect);
+		bg.add(rightMassBoundaryThrough);
+		switch (massBoundary.getFlowTypeAtBorder(Boundary.RIGHT)) {
+		case MassBoundary.REFLECTIVE:
+			rightMassBoundaryReflect.setSelected(true);
+			break;
+		case MassBoundary.THROUGH:
+			rightMassBoundaryThrough.setSelected(true);
+			break;
+		}
+		count++;
+
+		label = new JLabel("Lower boundary");
+		p.add(label);
+		lowerMassBoundaryReflect = new JRadioButton("Reflect");
+		p.add(lowerMassBoundaryReflect);
+		lowerMassBoundaryThrough = new JRadioButton("Through");
+		p.add(lowerMassBoundaryThrough);
+		bg = new ButtonGroup();
+		bg.add(lowerMassBoundaryReflect);
+		bg.add(lowerMassBoundaryThrough);
+		switch (massBoundary.getFlowTypeAtBorder(Boundary.LOWER)) {
+		case MassBoundary.REFLECTIVE:
+			lowerMassBoundaryReflect.setSelected(true);
+			break;
+		case MassBoundary.THROUGH:
+			lowerMassBoundaryThrough.setSelected(true);
+			break;
+		}
+		count++;
+
+		label = new JLabel("Upper boundary");
+		p.add(label);
+		upperMassBoundaryReflect = new JRadioButton("Reflect");
+		p.add(upperMassBoundaryReflect);
+		upperMassBoundaryThrough = new JRadioButton("Through");
+		p.add(upperMassBoundaryThrough);
+		bg = new ButtonGroup();
+		bg.add(upperMassBoundaryReflect);
+		bg.add(upperMassBoundaryThrough);
+		switch (massBoundary.getFlowTypeAtBorder(Boundary.UPPER)) {
+		case MassBoundary.REFLECTIVE:
+			upperMassBoundaryReflect.setSelected(true);
+			break;
+		case MassBoundary.THROUGH:
+			upperMassBoundaryThrough.setSelected(true);
+			break;
+		}
+		count++;
+
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
 		pack();
@@ -562,51 +686,51 @@ class ModelDialog extends JDialog {
 		if (heatBoundary instanceof DirichletThermalBoundary) {
 			enableBoundaryFieldsAndLabels(true);
 			DirichletThermalBoundary b = (DirichletThermalBoundary) heatBoundary;
-			leftBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LEFT)));
-			rightBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.RIGHT)));
-			upperBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.UPPER)));
-			lowerBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LOWER)));
-			leftBoundaryLabel.setText("Left boundary temperature");
-			rightBoundaryLabel.setText("Right boundary temperature");
-			upperBoundaryLabel.setText("Upper boundary temperature");
-			lowerBoundaryLabel.setText("Lower boundary temperature");
-			leftBoundaryLabel2.setText("<html><i>\u2103  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			rightBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			upperBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			lowerBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			leftThermalBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LEFT)));
+			rightThermalBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.RIGHT)));
+			upperThermalBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.UPPER)));
+			lowerThermalBoundaryField.setText(FORMAT.format(b.getTemperatureAtBorder(Boundary.LOWER)));
+			leftThermalBoundaryLabel.setText("Left boundary temperature");
+			rightThermalBoundaryLabel.setText("Right boundary temperature");
+			upperThermalBoundaryLabel.setText("Upper boundary temperature");
+			lowerThermalBoundaryLabel.setText("Lower boundary temperature");
+			leftThermalBoundaryLabel2.setText("<html><i>\u2103  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			rightThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			upperThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			lowerThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		} else if (heatBoundary instanceof NeumannThermalBoundary) {
 			enableBoundaryFieldsAndLabels(true);
 			NeumannThermalBoundary b = (NeumannThermalBoundary) heatBoundary;
-			leftBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LEFT)));
-			rightBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.RIGHT)));
-			upperBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.UPPER)));
-			lowerBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LOWER)));
-			leftBoundaryLabel.setText("Left boundary heat flux");
-			rightBoundaryLabel.setText("Right boundary heat flux");
-			upperBoundaryLabel.setText("Upper boundary heat flux");
-			lowerBoundaryLabel.setText("Lower boundary heat flux");
-			leftBoundaryLabel2.setText("<html><i>\u2103/m");
-			rightBoundaryLabel2.setText("<html><i>\u2103/m");
-			upperBoundaryLabel2.setText("<html><i>\u2103/m");
-			lowerBoundaryLabel2.setText("<html><i>\u2103/m");
+			leftThermalBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LEFT)));
+			rightThermalBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.RIGHT)));
+			upperThermalBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.UPPER)));
+			lowerThermalBoundaryField.setText(FORMAT.format(b.getFluxAtBorder(Boundary.LOWER)));
+			leftThermalBoundaryLabel.setText("Left boundary heat flux");
+			rightThermalBoundaryLabel.setText("Right boundary heat flux");
+			upperThermalBoundaryLabel.setText("Upper boundary heat flux");
+			lowerThermalBoundaryLabel.setText("Lower boundary heat flux");
+			leftThermalBoundaryLabel2.setText("<html><i>\u2103/m");
+			rightThermalBoundaryLabel2.setText("<html><i>\u2103/m");
+			upperThermalBoundaryLabel2.setText("<html><i>\u2103/m");
+			lowerThermalBoundaryLabel2.setText("<html><i>\u2103/m");
 		} else {
 			enableBoundaryFieldsAndLabels(false);
 		}
 	}
 
 	private void enableBoundaryFieldsAndLabels(boolean b) {
-		leftBoundaryField.setEnabled(b);
-		rightBoundaryField.setEnabled(b);
-		upperBoundaryField.setEnabled(b);
-		lowerBoundaryField.setEnabled(b);
-		leftBoundaryLabel.setEnabled(b);
-		rightBoundaryLabel.setEnabled(b);
-		upperBoundaryLabel.setEnabled(b);
-		lowerBoundaryLabel.setEnabled(b);
-		leftBoundaryLabel2.setEnabled(b);
-		rightBoundaryLabel2.setEnabled(b);
-		upperBoundaryLabel2.setEnabled(b);
-		lowerBoundaryLabel2.setEnabled(b);
+		leftThermalBoundaryField.setEnabled(b);
+		rightThermalBoundaryField.setEnabled(b);
+		upperThermalBoundaryField.setEnabled(b);
+		lowerThermalBoundaryField.setEnabled(b);
+		leftThermalBoundaryLabel.setEnabled(b);
+		rightThermalBoundaryLabel.setEnabled(b);
+		upperThermalBoundaryLabel.setEnabled(b);
+		lowerThermalBoundaryLabel.setEnabled(b);
+		leftThermalBoundaryLabel2.setEnabled(b);
+		rightThermalBoundaryLabel2.setEnabled(b);
+		upperThermalBoundaryLabel2.setEnabled(b);
+		lowerThermalBoundaryLabel2.setEnabled(b);
 	}
 
 	private float parse(String s) {

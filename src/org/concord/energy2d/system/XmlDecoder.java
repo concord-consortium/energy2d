@@ -8,6 +8,8 @@ import java.util.List;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.MassBoundary;
+import org.concord.energy2d.model.SimpleMassBoundary;
 import org.concord.energy2d.model.ThermalBoundary;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannThermalBoundary;
@@ -106,6 +108,15 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void startDocument() {
+		// reset for elements added later before XML was saved
+		MassBoundary b = box.model.getMassBoundary();
+		if (b instanceof SimpleMassBoundary) {
+			SimpleMassBoundary smb = (SimpleMassBoundary) b;
+			smb.setFlowTypeAtBorder(Boundary.LEFT, MassBoundary.REFLECTIVE);
+			smb.setFlowTypeAtBorder(Boundary.RIGHT, MassBoundary.REFLECTIVE);
+			smb.setFlowTypeAtBorder(Boundary.LOWER, MassBoundary.REFLECTIVE);
+			smb.setFlowTypeAtBorder(Boundary.UPPER, MassBoundary.REFLECTIVE);
+		}
 	}
 
 	public void endDocument() {
@@ -303,7 +314,7 @@ class XmlDecoder extends DefaultHandler {
 					b.setTemperatureAtBorder(Boundary.LEFT, left);
 				}
 			}
-		} else if (qName == "flux_at_border") {
+		} else if (qName == "flux_at_border") { // heat flux
 			if (attrib != null) {
 				float left = Float.NaN, right = Float.NaN, upper = Float.NaN, lower = Float.NaN;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
@@ -333,6 +344,31 @@ class XmlDecoder extends DefaultHandler {
 					b.setFluxAtBorder(Boundary.LOWER, lower);
 					b.setFluxAtBorder(Boundary.LEFT, left);
 				}
+			}
+		} else if (qName == "mass_flow_at_border") {
+			if (attrib != null) {
+				byte left = MassBoundary.REFLECTIVE;
+				byte right = MassBoundary.REFLECTIVE;
+				byte upper = MassBoundary.REFLECTIVE;
+				byte lower = MassBoundary.REFLECTIVE;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "left") {
+						left = Byte.parseByte(attribValue);
+					} else if (attribName == "right") {
+						right = Byte.parseByte(attribValue);
+					} else if (attribName == "upper") {
+						upper = Byte.parseByte(attribValue);
+					} else if (attribName == "lower") {
+						lower = Byte.parseByte(attribValue);
+					}
+				}
+				SimpleMassBoundary b = (SimpleMassBoundary) box.model.getMassBoundary();
+				b.setFlowTypeAtBorder(Boundary.UPPER, upper);
+				b.setFlowTypeAtBorder(Boundary.RIGHT, right);
+				b.setFlowTypeAtBorder(Boundary.LOWER, lower);
+				b.setFlowTypeAtBorder(Boundary.LEFT, left);
 			}
 		} else if (qName == "thermometer") {
 			if (attrib != null) {

@@ -328,6 +328,14 @@ public class Model2D {
 		heatSolver.setBoundary(b);
 	}
 
+	public MassBoundary getMassBoundary() {
+		return fluidSolver.getBoundary();
+	}
+
+	public void setMassBoundary(MassBoundary b) {
+		fluidSolver.setBoundary(b);
+	}
+
 	public void setBackgroundTemperature(float backgroundTemperature) {
 		this.backgroundTemperature = backgroundTemperature;
 		heatSolver.backgroundTemperature = backgroundTemperature;

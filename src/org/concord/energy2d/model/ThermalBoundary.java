@@ -11,6 +11,4 @@ package org.concord.energy2d.model;
  */
 public interface ThermalBoundary extends Boundary {
 
-	public String toXml();
-
 }

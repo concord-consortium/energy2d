@@ -16,4 +16,6 @@ public interface Boundary {
 	public static final byte LOWER = 2;
 	public static final byte LEFT = 3;
 
+	public String toXml();
+
 }

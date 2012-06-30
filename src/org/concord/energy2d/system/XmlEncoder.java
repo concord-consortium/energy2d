@@ -83,6 +83,7 @@ class XmlEncoder {
 
 		sb.append("<boundary>\n");
 		sb.append(box.model.getThermalBoundary().toXml());
+		sb.append(box.model.getMassBoundary().toXml());
 		sb.append("</boundary>\n");
 
 		List<Part> parts = box.model.getParts();

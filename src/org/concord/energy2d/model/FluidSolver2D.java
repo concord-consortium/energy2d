@@ -33,7 +33,7 @@ abstract class FluidSolver2D {
 	float timeStep = .1f;
 	float deltaX, deltaY;
 	boolean[][] fluidity;
-	Boundary boundary;
+	MassBoundary boundary;
 	float[][] t;
 	float[][] uWind, vWind;
 	private float[][] vorticity, stream;
@@ -50,6 +50,7 @@ abstract class FluidSolver2D {
 		ny2 = ny - 2;
 		u0 = new float[nx][ny];
 		v0 = new float[nx][ny];
+		boundary = new SimpleMassBoundary();
 	}
 
 	void reset() {
@@ -67,6 +68,14 @@ abstract class FluidSolver2D {
 				Arrays.fill(stream[i], 0);
 			}
 		}
+	}
+
+	void setBoundary(MassBoundary boundary) {
+		this.boundary = boundary;
+	}
+
+	MassBoundary getBoundary() {
+		return boundary;
 	}
 
 	void setBuoyancyApproximation(byte buoyancyApproximation) {
@@ -121,32 +130,6 @@ abstract class FluidSolver2D {
 
 	float getTimeStep() {
 		return timeStep;
-	}
-
-	/* b=1 horizontal; b=2 vertical */
-	void applyBoundary(int b, float[][] f) {
-		boolean horizontal = b == 1;
-		boolean vertical = b == 2;
-		for (int i = 1; i < nx1; i++) {
-			// upper side
-			f[i][0] = vertical ? -f[i][1] : f[i][1];
-			// lower side
-			f[i][ny1] = vertical ? -f[i][ny2] : f[i][ny2];
-		}
-		for (int j = 1; j < ny1; j++) {
-			// left side
-			f[0][j] = horizontal ? -f[1][j] : f[1][j];
-			// right side
-			f[nx1][j] = horizontal ? -f[nx2][j] : f[nx2][j];
-		}
-		// upper-left corner
-		f[0][0] = 0.5f * (f[1][0] + f[0][1]);
-		// upper-right corner
-		f[nx1][0] = 0.5f * (f[nx2][0] + f[nx1][1]);
-		// lower-left corner
-		f[0][ny1] = 0.5f * (f[1][ny1] + f[0][ny2]);
-		// lower-right corner
-		f[nx1][ny1] = 0.5f * (f[nx2][ny1] + f[nx1][ny2]);
 	}
 
 	private void setObstacleVelocity(float[][] u, float[][] v) {
@@ -266,7 +249,7 @@ abstract class FluidSolver2D {
 			applyBuoyancy(v);
 		}
 		setObstacleVelocity(u, v);
-		if (viscosity > 0) { // inviscid case
+		if (viscosity > 0) { // viscid
 			diffuse(1, u0, u);
 			diffuse(2, v0, v);
 			conserve(u, v, u0, v0);
@@ -364,6 +347,49 @@ abstract class FluidSolver2D {
 		}
 		applyBoundary(0, vorticity);
 		setObstacleBoundary(vorticity);
+	}
+
+	/* b=1 horizontal; b=2 vertical */
+	void applyBoundary(int direction, float[][] f) {
+		SimpleMassBoundary b = (SimpleMassBoundary) boundary;
+		boolean horizontal = direction == 1;
+		boolean vertical = direction == 2;
+		for (int i = 1; i < nx1; i++) {
+			// upper side
+			if (vertical && b.getFlowTypeAtBorder(Boundary.UPPER) == MassBoundary.REFLECTIVE) {
+				f[i][0] = -f[i][1];
+			} else {
+				f[i][0] = f[i][1];
+			}
+			// lower side
+			if (vertical && b.getFlowTypeAtBorder(Boundary.LOWER) == MassBoundary.REFLECTIVE) {
+				f[i][ny1] = -f[i][ny2];
+			} else {
+				f[i][ny1] = f[i][ny2];
+			}
+		}
+		for (int j = 1; j < ny1; j++) {
+			// left side
+			if (horizontal && b.getFlowTypeAtBorder(Boundary.LEFT) == MassBoundary.REFLECTIVE) {
+				f[0][j] = -f[1][j];
+			} else {
+				f[0][j] = f[1][j];
+			}
+			// right side
+			if (horizontal && b.getFlowTypeAtBorder(Boundary.RIGHT) == MassBoundary.REFLECTIVE) {
+				f[nx1][j] = -f[nx2][j];
+			} else {
+				f[nx1][j] = f[nx2][j];
+			}
+		}
+		// upper-left corner
+		f[0][0] = 0.5f * (f[1][0] + f[0][1]);
+		// upper-right corner
+		f[nx1][0] = 0.5f * (f[nx2][0] + f[nx1][1]);
+		// lower-left corner
+		f[0][ny1] = 0.5f * (f[1][ny1] + f[0][ny2]);
+		// lower-right corner
+		f[nx1][ny1] = 0.5f * (f[nx2][ny1] + f[nx1][ny2]);
 	}
 
 }
