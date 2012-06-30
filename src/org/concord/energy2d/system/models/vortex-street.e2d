@@ -9,12 +9,13 @@
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>20</photon_emission_interval>
-<background_conductivity>0.1</background_conductivity>
+<z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>0.1</background_conductivity>
 <background_viscosity>1.0E-4</background_viscosity>
 <thermal_buoyancy>0.0</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
 <flux_at_border upper="0.0" lower="0.0" left="0.0" right="-2.0"/>
+<mass_flow_at_border upper="0" lower="0" left="0" right="1"/>
 </boundary>
 <structure>
 <part><rectangle x="0.0" y="0.0" width="0.2" height="5.0"/><thermal_conductivity>0.08</thermal_conductivity>
@@ -54,7 +55,7 @@
 <constant_temperature>false</constant_temperature>
 <draggable>false</draggable>
 </part>
-<part><ellipse x="1.2999999523162842" y="7.5" a="0.5" b="0.5"/><thermal_conductivity>10.0</thermal_conductivity>
+<part><ellipse x="1.2999999523162842" y="7.5" a="1.0" b="1.0"/><thermal_conductivity>10.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -65,7 +66,7 @@
 <constant_temperature>true</constant_temperature>
 <filled>false</filled>
 </part>
-<part><ellipse x="1.2999999523162842" y="2.5" a="1.0" b="1.0"/><thermal_conductivity>10.0</thermal_conductivity>
+<part><ellipse x="1.2999999523162842" y="2.5" a="1.0" b="1.8"/><thermal_conductivity>10.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -82,10 +83,9 @@
 </sensor>
 <view>
 <grid_size>10</grid_size>
-<rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.49333334</rainbow_w><rainbow_h>0.033333335</rainbow_h><minimum_temperature>0.0</minimum_temperature>
-<maximum_temperature>40.0</maximum_temperature>
-<velocity>true</velocity>
-<streamline>true</streamline>
+<color_palette_type>1</color_palette_type>
+<color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
+<maximum_temperature>50.0</maximum_temperature>
 <text string="Vortex street forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="9.0"/>
 <text string="Vortex street not forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="1.0"/>
 </view>
