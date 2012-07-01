@@ -411,6 +411,16 @@ public class Model2D {
 		return thermometers.get(i);
 	}
 
+	public void clearThermometerData() {
+		if (thermometers == null || thermometers.isEmpty())
+			return;
+		synchronized (thermometers) {
+			for (Thermometer t : thermometers) {
+				t.clear();
+			}
+		}
+	}
+
 	public Part addRectangularPart(float x, float y, float w, float h) {
 		Part p = new Part(new Rectangle2D.Float(x, y, w, h));
 		addPart(p);
@@ -661,13 +671,7 @@ public class Model2D {
 				}
 			}
 		}
-		if (thermometers != null && !thermometers.isEmpty()) {
-			synchronized (thermometers) {
-				for (Thermometer t : thermometers) {
-					t.clear();
-				}
-			}
-		}
+		clearThermometerData();
 	}
 
 	public void run() {

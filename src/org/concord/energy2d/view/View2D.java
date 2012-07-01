@@ -1445,11 +1445,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_DELETE:
 		case KeyEvent.VK_BACK_SPACE:
-			// this is different than cut() in that it doesn't
-			// create a copy for pasting
+			// this is different than cut() in that it doesn't create a copy for pasting
 			if (selectedManipulable != null) {
-				notifyManipulationListeners(selectedManipulable, ManipulationEvent.DELETE);
-				setSelectedManipulable(null);
+				if (JOptionPane.showConfirmDialog(this, "Are you sure you want to delete the selected object?", "Delete Object", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					notifyManipulationListeners(selectedManipulable, ManipulationEvent.DELETE);
+					setSelectedManipulable(null);
+				}
+			} else {
+				if (showGraph) {
+					if (JOptionPane.showConfirmDialog(this, "Are you sure you want to clear the graph?", "Clear Graph", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+						clearGraphData();
+					}
+				}
 			}
 			break;
 		case KeyEvent.VK_R:
@@ -1953,6 +1960,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			graphRenderer.setXmax(7200 * timeStep);
 			photonLength = Math.max(5, timeStep * 0.1f);
 		}
+	}
+
+	private void clearGraphData() {
+		model.clearThermometerData();
+		repaint();
 	}
 
 	private void addPolygonPoint(int x, int y) {

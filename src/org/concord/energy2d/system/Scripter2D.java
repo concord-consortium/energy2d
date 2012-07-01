@@ -26,6 +26,8 @@ import org.concord.energy2d.event.ScriptEvent;
 import org.concord.energy2d.event.ScriptListener;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.MassBoundary;
+import org.concord.energy2d.model.SimpleMassBoundary;
 import org.concord.energy2d.model.ThermalBoundary;
 import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.model.Part;
@@ -1056,6 +1058,25 @@ class Scripter2D extends Scripter {
 					db.setFluxAtBorder(Boundary.LOWER, z);
 				} else if (side.equalsIgnoreCase("UPPER")) {
 					db.setFluxAtBorder(Boundary.UPPER, z);
+				}
+			}
+		} else if (s == "mass_flow_type") {
+			MassBoundary b = s2d.model.getMassBoundary();
+			if (b instanceof SimpleMassBoundary) {
+				byte z2 = (byte) z;
+				if (z2 == MassBoundary.REFLECTIVE || z2 == MassBoundary.THROUGH) {
+					SimpleMassBoundary db = (SimpleMassBoundary) b;
+					if (side.equalsIgnoreCase("LEFT")) {
+						db.setFlowTypeAtBorder(Boundary.LEFT, z2);
+					} else if (side.equalsIgnoreCase("RIGHT")) {
+						db.setFlowTypeAtBorder(Boundary.RIGHT, z2);
+					} else if (side.equalsIgnoreCase("LOWER")) {
+						db.setFlowTypeAtBorder(Boundary.LOWER, z2);
+					} else if (side.equalsIgnoreCase("UPPER")) {
+						db.setFlowTypeAtBorder(Boundary.UPPER, z2);
+					}
+				} else {
+					showError(str1 + str2 + str3, "Property value not recognized.");
 				}
 			}
 		}

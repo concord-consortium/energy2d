@@ -243,7 +243,7 @@ class GraphRenderer {
 				k = y + Math.round(i * h * 0.1f);
 				if (i % 2 == 0) {
 					g.drawLine(x, k, x + 4, k);
-					centerString(FORMAT.format(ymax * (1 - i * 0.1f)), g, x + 12, k + 3);
+					centerString(FORMAT.format(ymin + (ymax - ymin) * (1 - i * 0.1f)), g, x + 12, k + 3);
 				} else {
 					g.drawLine(x, k, x + 2, k);
 				}
@@ -269,14 +269,14 @@ class GraphRenderer {
 			synchronized (data) {
 				for (int i = m; i < n - m; i += m) {
 					x1 = (int) (x + t1 * scaleX);
-					y1 = (int) (y + h - v1 * scaleY);
+					y1 = (int) (y + h - (v1 - ymin) * scaleY);
 					if (x1 > x + w)
 						break;
 					d = data.get(i);
 					t2 = d.getTime();
 					v2 = d.getValue();
 					x2 = (int) (x + t2 * scaleX);
-					y2 = (int) (y + h - v2 * scaleY);
+					y2 = (int) (y + h - (v2 - ymin) * scaleY);
 					g.drawLine(x1, y1, x2, y2);
 					t1 = t2;
 					v1 = v2;
