@@ -430,6 +430,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		runToggle = false;
 		setSelectedManipulable(null);
 		setTime(0);
+		if (graphRenderer != null)
+			graphRenderer.reset();
 	}
 
 	public void setTime(float time) {
@@ -897,8 +899,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				graphRenderer.doubleXmax();
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					if (t.getCurrentData() > graphRenderer.getYmax())
-						graphRenderer.doubleYmax();
+					if (t.getCurrentData() > graphRenderer.getYmax() + 2) { // allow 2 degrees of overshot above max
+						graphRenderer.increaseYmax();
+					} else if (t.getCurrentData() < graphRenderer.getYmin() - 2) { // allow 2 degrees of overshot below min
+						graphRenderer.decreaseYmin();
+					}
 					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
 			}
@@ -1453,8 +1458,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			} else {
 				if (showGraph) {
-					if (JOptionPane.showConfirmDialog(this, "Are you sure you want to clear the graph?", "Clear Graph", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-						clearGraphData();
+					if (JOptionPane.showConfirmDialog(this, "Are you sure you want to erase the graph?", "Erase Graph", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+						eraseGraph();
 					}
 				}
 			}
@@ -1705,9 +1710,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
 				graphRenderer.halfXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
-				graphRenderer.doubleYmax();
+				graphRenderer.increaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
-				graphRenderer.halfYmax();
+				graphRenderer.decreaseYmax();
 			}
 			repaint();
 			e.consume();
@@ -1962,8 +1967,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private void clearGraphData() {
-		model.clearThermometerData();
+	private void eraseGraph() {
+		model.clearSensorData();
 		repaint();
 	}
 

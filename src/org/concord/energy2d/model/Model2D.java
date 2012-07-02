@@ -411,7 +411,9 @@ public class Model2D {
 		return thermometers.get(i);
 	}
 
-	public void clearThermometerData() {
+	/** Since the sensor data are erased, the index of step (and hence the clock) is also reset. */
+	public void clearSensorData() {
+		indexOfStep = 0;
 		if (thermometers == null || thermometers.isEmpty())
 			return;
 		synchronized (thermometers) {
@@ -671,7 +673,7 @@ public class Model2D {
 				}
 			}
 		}
-		clearThermometerData();
+		clearSensorData();
 	}
 
 	public void run() {

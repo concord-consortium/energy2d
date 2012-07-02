@@ -58,6 +58,11 @@ class GraphRenderer {
 		setFrame(x, y, w, h);
 	}
 
+	void reset() {
+		ymin = 0;
+		ymax = 25;
+	}
+
 	void setLabelX(String xLabel) {
 		this.xLabel = xLabel;
 	}
@@ -90,6 +95,18 @@ class GraphRenderer {
 		xmax *= 0.5f;
 	}
 
+	void setYmin(float ymin) {
+		this.ymin = ymin;
+	}
+
+	float getYmin() {
+		return ymin;
+	}
+
+	void decreaseYmin() {
+		ymin -= 10;
+	}
+
 	void setYmax(float ymax) {
 		this.ymax = ymax;
 	}
@@ -98,12 +115,12 @@ class GraphRenderer {
 		return ymax;
 	}
 
-	void doubleYmax() {
-		ymax *= 2;
+	void increaseYmax() {
+		ymax += 10;
 	}
 
-	void halfYmax() {
-		ymax *= 0.5f;
+	void decreaseYmax() {
+		ymax -= 10;
 	}
 
 	void setDrawFrame(boolean b) {
