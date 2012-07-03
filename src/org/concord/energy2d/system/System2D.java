@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -703,8 +704,12 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (preferences == null)
 			preferences = Preferences.userNodeForPackage(System2D.class);
 
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		int w = (int) (screen.height * 0.75);
+		System.out.println(w);
+
 		final System2D box = new System2D();
-		box.view.setPreferredSize(new Dimension(600, 600));
+		box.view.setPreferredSize(new Dimension(w, w));
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png")).getImage());
 		MenuBar menuBar = new MenuBar(box, frame);
@@ -716,7 +721,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
-		frame.setLocation(100, 100);
+		frame.setLocation((screen.height - w) / 4, (screen.height - w) / 4);
 		frame.setTitle(BRAND_NAME);
 		frame.pack();
 		frame.setVisible(true);

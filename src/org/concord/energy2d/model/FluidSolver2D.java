@@ -211,6 +211,7 @@ abstract class FluidSolver2D {
 		return t0 / (upperBound - lowerBound);
 	}
 
+	// Boussinesq approximation: density differences are sufficiently small to be neglected, except where they appear in terms multiplied by g, the acceleration due to gravity.
 	private void applyBuoyancy(float[][] f) {
 		float g = gravity * timeStep;
 		float b = thermalBuoyancy * timeStep;
