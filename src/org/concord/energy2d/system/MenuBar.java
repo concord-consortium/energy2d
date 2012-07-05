@@ -323,6 +323,18 @@ class MenuBar extends JMenuBar {
 		menu.add(box.view.getActionMap().get("Cut"));
 		menu.add(box.view.getActionMap().get("Copy"));
 		menu.add(box.view.getActionMap().get("Paste"));
+		menu.addSeparator();
+
+		// TODO
+		mi = new JMenuItem("Select All");
+		mi.setEnabled(false);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		menu.add(mi);
 
 		// view menu
 

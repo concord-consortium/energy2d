@@ -705,8 +705,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			preferences = Preferences.userNodeForPackage(System2D.class);
 
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		int w = (int) (screen.height * 0.75);
-		System.out.println(w);
+		int w = (int) (screen.height * 0.6);
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(w, w));
@@ -721,7 +720,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
-		frame.setLocation((screen.height - w) / 4, (screen.height - w) / 4);
+		frame.setLocation((screen.height - w) / 8, (screen.height - w) / 8);
 		frame.setTitle(BRAND_NAME);
 		frame.pack();
 		frame.setVisible(true);

@@ -93,7 +93,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		bg.add(x);
 
 		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/polygon.png")));
-		x.setToolTipText("Draw an arbitray shape");
+		x.setToolTipText("Draw a polygon");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.POLYGON_MODE);

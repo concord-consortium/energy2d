@@ -937,8 +937,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				g.setColor(Color.green);
 				g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
 				int np = polygon.npoints;
-				if (np > 0) {
-					g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0], polygon.ypoints[0]);
+				if (np > 1) {
+					double dx = polygon.xpoints[0] - mouseMovedPoint.x;
+					double dy = polygon.ypoints[0] - mouseMovedPoint.y;
+					double distance = Math.hypot(dx, dy);
+					int n = (int) Math.round(distance * 0.1);
+					dx = dx / n;
+					dy = dy / n;
+					for (int i = 0; i < n + 1; i++)
+						g.fillOval((int) (mouseMovedPoint.x + dx * i), (int) (mouseMovedPoint.y + dy * i), 2, 2);
 				}
 			}
 			break;
@@ -1688,10 +1695,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				ellipse.y = mousePressedPoint.y - ellipse.height;
 			}
 			break;
-		case POLYGON_MODE:
-			if (e.getClickCount() < 2)
-				addPolygonPoint(x, y);
-			break;
 		}
 		repaint();
 		e.consume();
@@ -1718,32 +1721,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			e.consume();
 			movingShape = null;
 			mouseBeingDragged = false;
-			return;
-		}
-		if (e.getClickCount() >= 2) {
-			switch (actionMode) {
-			case POLYGON_MODE:
-				resetMousePoints();
-				int n = polygon.npoints;
-				if (n > 0) {
-					float[] px = new float[n];
-					float[] py = new float[n];
-					for (int i = 0; i < n; i++) {
-						px[i] = convertPixelToPointX(polygon.xpoints[i]);
-						py[i] = convertPixelToPointY(polygon.ypoints[i]);
-					}
-					model.addPolygonPart(px, py);
-					model.refreshPowerArray();
-					model.refreshTemperatureBoundaryArray();
-					model.refreshMaterialPropertyArrays();
-					model.setInitialTemperature();
-					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
-					polygon.reset();
-				}
-				break;
-			}
-			repaint();
-			e.consume();
 			return;
 		}
 		switch (actionMode) {
@@ -1829,7 +1806,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
 		case POLYGON_MODE:
-			mouseReleasedPoint.setLocation(x, y);
+			if (e.getClickCount() >= 2) {
+				resetMousePoints();
+				int n = polygon.npoints;
+				if (n > 0) {
+					float[] px = new float[n];
+					float[] py = new float[n];
+					for (int i = 0; i < n; i++) {
+						px[i] = convertPixelToPointX(polygon.xpoints[i]);
+						py[i] = convertPixelToPointY(polygon.ypoints[i]);
+					}
+					model.addPolygonPart(px, py);
+					model.refreshPowerArray();
+					model.refreshTemperatureBoundaryArray();
+					model.refreshMaterialPropertyArrays();
+					model.setInitialTemperature();
+					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
+					polygon.reset();
+				}
+			}
 			break;
 		case THERMOMETER_MODE:
 			addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));
