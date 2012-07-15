@@ -827,19 +827,31 @@ public class Model2D {
 
 	public float getTemperatureAt(float x, float y) {
 		int i = Math.min(t.length - 1, Math.round(x / deltaX));
+		if (i < 0)
+			i = 0;
 		int j = Math.min(t[0].length - 1, Math.round(y / deltaY));
+		if (j < 0)
+			j = 0;
 		return t[i][j];
 	}
 
 	public void setTemperatureAt(float x, float y, float temperature) {
 		int i = Math.min(t.length - 1, Math.round(x / deltaX));
+		if (i < 0)
+			return;
 		int j = Math.min(t[0].length - 1, Math.round(y / deltaY));
+		if (j < 0)
+			return;
 		t[i][j] = temperature;
 	}
 
 	public void changeTemperatureAt(float x, float y, float increment) {
 		int i = Math.min(t.length - 1, Math.round(x / deltaX));
+		if (i < 0)
+			return;
 		int j = Math.min(t[0].length - 1, Math.round(y / deltaY));
+		if (j < 0)
+			return;
 		t[i][j] += increment;
 	}
 

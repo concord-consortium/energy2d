@@ -179,6 +179,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			runNativeScript(s);
 		}
 		view.repaint();
+		System.out.println(BRAND_NAME + " initialized.");
 	}
 
 	void executeInThreadService(Runnable r) {
