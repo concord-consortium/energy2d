@@ -837,6 +837,12 @@ public class Model2D {
 		t[i][j] = temperature;
 	}
 
+	public void changeTemperatureAt(float x, float y, float increment) {
+		int i = Math.min(t.length - 1, Math.round(x / deltaX));
+		int j = Math.min(t[0].length - 1, Math.round(y / deltaY));
+		t[i][j] += increment;
+	}
+
 	float getAverageTemperatureAt(float x, float y) {
 		float temp = 0;
 		int i0 = Math.round(x / deltaX);

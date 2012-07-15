@@ -90,6 +90,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte ELLIPSE_MODE = 2;
 	public final static byte POLYGON_MODE = 3;
 	public final static byte THERMOMETER_MODE = 11;
+	public final static byte HEATING_MODE = 21;
 
 	public final static byte HEATMAP_NONE = 0;
 	public final static byte HEATMAP_TEMPERATURE = 1;
@@ -183,6 +184,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Action copyAction;
 	private Action cutAction;
 	private Action pasteAction;
+	private volatile boolean runHeatingThread;
+	private volatile boolean cooling;
+	private volatile float heatingX, heatingY;
 
 	public View2D() {
 		super();
@@ -318,6 +322,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case THERMOMETER_MODE:
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			break;
+		case HEATING_MODE:
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			// in case the engine hasn't been initialized, call the following to set the stage
+			model.refreshTemperatureBoundaryArray();
+			model.refreshMaterialPropertyArrays();
 			break;
 		}
 		repaint();
@@ -1430,6 +1440,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void processKeyPressed(KeyEvent e) {
+		if (runHeatingThread) {
+			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				cooling = true;
+			}
+		}
 		if (selectedManipulable != null) {
 			boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
 			float delta = keyDown ? 1 : 5;
@@ -1454,6 +1469,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void processKeyReleased(KeyEvent e) {
+		if (runHeatingThread) {
+			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				cooling = false;
+			}
+		}
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_DELETE:
 		case KeyEvent.VK_BACK_SPACE:
@@ -1568,6 +1588,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			if (e.getClickCount() < 2)
 				addPolygonPoint(x, y);
+			break;
+		case HEATING_MODE:
+			runHeatingThread = true;
+			heatingX = convertPixelToPointX(x);
+			heatingY = convertPixelToPointY(y);
+			new Thread(new Runnable() {
+				public void run() {
+					while (runHeatingThread) {
+						float t = model.getTemperatureAt(heatingX, heatingY);
+						if (cooling) {
+							if (t > -100)
+								model.changeTemperatureAt(heatingX, heatingY, -10);
+						} else {
+							if (t < 100)
+								model.changeTemperatureAt(heatingX, heatingY, 10);
+						}
+					}
+				}
+			}).start();
 			break;
 		}
 		repaint();
@@ -1694,6 +1733,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				ellipse.height = mousePressedPoint.y - y;
 				ellipse.y = mousePressedPoint.y - ellipse.height;
 			}
+			break;
+		case HEATING_MODE:
+			heatingX = convertPixelToPointX(x);
+			heatingY = convertPixelToPointY(y);
 			break;
 		}
 		repaint();
@@ -1825,6 +1868,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					polygon.reset();
 				}
 			}
+			break;
+		case HEATING_MODE:
+			runHeatingThread = false;
+			cooling = false;
 			break;
 		case THERMOMETER_MODE:
 			addThermometer(convertPixelToPointX(x), convertPixelToPointY(y));

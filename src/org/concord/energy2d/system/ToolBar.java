@@ -49,8 +49,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 
 		ButtonGroup bg = new ButtonGroup();
 
-		selectButton = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/select.png")));
+		selectButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/select.png")));
 		selectButton.setToolTipText("Select and move an object");
 		selectButton.setSelected(true);
 		selectButton.addItemListener(new ItemListener() {
@@ -61,8 +60,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(selectButton);
 		bg.add(selectButton);
 
-		JToggleButton x = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/rectangle.png")));
+		JToggleButton x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/rectangle.png")));
 		x.setToolTipText("Draw a rectangle");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -107,6 +105,21 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(x);
 		bg.add(x);
 
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));
+		x.setToolTipText("Click to heat, shift-click to cool");
+		x.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				box.view.setActionMode(View2D.HEATING_MODE);
+			}
+		});
+		x.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MiscUtil.setSelectedSilently(graphButton, false);
+			}
+		});
+		add(x);
+		bg.add(x);
+
 		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/thermometer.png")));
 		x.setToolTipText("Add a thermometer");
 		x.addItemListener(new ItemListener() {
@@ -123,8 +136,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(x);
 		bg.add(x);
 
-		graphButton = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/graph.png")));
+		graphButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/graph.png")));
 		graphButton.setToolTipText("Show or hide graphs");
 		graphButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -136,8 +148,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		});
 		add(graphButton);
 
-		gridButton = new JToggleButton(new ImageIcon(ToolBar.class
-				.getResource("resources/grid.png")));
+		gridButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/grid.png")));
 		gridButton.setToolTipText("Show or hide grid lines");
 		gridButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
