@@ -429,9 +429,21 @@ public class Model2D {
 		return p;
 	}
 
+	public Part addRectangularPart(float x, float y, float w, float h, float t) {
+		Part p = addRectangularPart(x, y, w, h);
+		p.setTemperature(t);
+		return p;
+	}
+
 	public Part addEllipticalPart(float x, float y, float a, float b) {
 		Part p = new Part(new Ellipse2D.Float(x - 0.5f * a, y - 0.5f * b, a, b));
 		addPart(p);
+		return p;
+	}
+
+	public Part addEllipticalPart(float x, float y, float a, float b, float t) {
+		Part p = addEllipticalPart(x, y, a, b);
+		p.setTemperature(t);
 		return p;
 	}
 
@@ -444,6 +456,12 @@ public class Model2D {
 	public Part addPolygonPart(float[] x, float[] y) {
 		Part p = new Part(new Polygon2D(x, y));
 		addPart(p);
+		return p;
+	}
+
+	public Part addPolygonPart(float[] x, float[] y, float t) {
+		Part p = addPolygonPart(x, y);
+		p.setTemperature(t);
 		return p;
 	}
 

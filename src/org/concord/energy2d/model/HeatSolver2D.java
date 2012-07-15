@@ -24,7 +24,7 @@ abstract class HeatSolver2D {
 	float[][] t0; // array that stores the previous temperature results
 	boolean[][] fluidity;
 	float deltaX, deltaY;
-	float timeStep = .1f;
+	float timeStep = 0.5f;
 	float backgroundTemperature;
 	float zHeatDiffusivity;
 

@@ -937,7 +937,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				g.setColor(Color.green);
 				g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
 				int np = polygon.npoints;
-				if (np > 1) {
+				if (np > 1) { // draw a dotted line to show what will be a complete polygon if double-clicking
 					double dx = polygon.xpoints[0] - mouseMovedPoint.x;
 					double dy = polygon.ypoints[0] - mouseMovedPoint.y;
 					double distance = Math.hypot(dx, dy);
@@ -1781,7 +1781,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case RECTANGLE_MODE:
 			if (rectangle.width * rectangle.height > 9) {
-				model.addRectangularPart(convertPixelToPointX(rectangle.x), convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width), convertPixelToLengthY(rectangle.height));
+				model.addRectangularPart(convertPixelToPointX(rectangle.x), convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width), convertPixelToLengthY(rectangle.height), model.getBackgroundTemperature() + 20);
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
@@ -1796,7 +1796,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				float ey = convertPixelToPointY((int) ellipse.y);
 				float ew = convertPixelToLengthX((int) ellipse.width);
 				float eh = convertPixelToLengthY((int) ellipse.height);
-				model.addEllipticalPart(ex + 0.5f * ew, ey + 0.5f * eh, ew, eh);
+				model.addEllipticalPart(ex + 0.5f * ew, ey + 0.5f * eh, ew, eh, model.getBackgroundTemperature() + 20);
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
@@ -1816,7 +1816,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						px[i] = convertPixelToPointX(polygon.xpoints[i]);
 						py[i] = convertPixelToPointY(polygon.ypoints[i]);
 					}
-					model.addPolygonPart(px, py);
+					model.addPolygonPart(px, py, model.getBackgroundTemperature() + 20);
 					model.refreshPowerArray();
 					model.refreshTemperatureBoundaryArray();
 					model.refreshMaterialPropertyArrays();
