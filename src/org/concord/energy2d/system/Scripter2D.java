@@ -466,6 +466,15 @@ class Scripter2D extends Scripter {
 						mode = View2D.THERMOMETER_MODE;
 					}
 					s2d.view.setActionMode(mode);
+				} else if (t[0].equalsIgnoreCase("temperature_increment")) {
+					float temperatureIncrement = 0;
+					try {
+						temperatureIncrement = Float.parseFloat(t[1]);
+					} catch (NumberFormatException e) {
+						showException(ci, e);
+						return;
+					}
+					s2d.view.setTemperatureIncrement(temperatureIncrement);
 				} else if (t[0].equalsIgnoreCase("sun_angle")) {
 					float angle = 0;
 					try {

@@ -192,6 +192,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		executeInThreadService(new Runnable() {
 			public void run() {
 				model.run();
+				view.toggleRun();
 			}
 		});
 	}
@@ -205,6 +206,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	public void stop() {
 		model.stop();
+		view.toggleRun();
 	}
 
 	public void reset() {

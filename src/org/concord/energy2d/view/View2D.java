@@ -187,6 +187,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private volatile boolean runHeatingThread;
 	private volatile boolean cooling;
 	private volatile float heatingX, heatingY;
+	private float temperatureIncrement = 10;
 
 	public View2D() {
 		super();
@@ -337,6 +338,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return actionMode;
 	}
 
+	public void setTemperatureIncrement(float temperatureIncrement) {
+		this.temperatureIncrement = temperatureIncrement;
+	}
+
+	public float getTemperatureIncrement() {
+		return temperatureIncrement;
+	}
+
 	public void clear() {
 		if (textBoxes != null)
 			textBoxes.clear();
@@ -442,6 +451,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		setTime(0);
 		if (graphRenderer != null)
 			graphRenderer.reset();
+	}
+
+	public void toggleRun() {
+		runToggle = !runToggle;
 	}
 
 	public void setTime(float time) {
@@ -1599,10 +1612,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						float t = model.getTemperatureAt(heatingX, heatingY);
 						if (cooling) {
 							if (t > -100)
-								model.changeTemperatureAt(heatingX, heatingY, -10);
+								model.changeTemperatureAt(heatingX, heatingY, -temperatureIncrement);
 						} else {
 							if (t < 100)
-								model.changeTemperatureAt(heatingX, heatingY, 10);
+								model.changeTemperatureAt(heatingX, heatingY, temperatureIncrement);
 						}
 					}
 				}
