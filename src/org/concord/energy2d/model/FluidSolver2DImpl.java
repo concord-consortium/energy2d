@@ -20,6 +20,7 @@ class FluidSolver2DImpl extends FluidSolver2D {
 
 	void diffuse(int b, float[][] f0, float[][] f) {
 
+		// Copying a two-dimensional array is very fast: it takes less than 1% compared with the time for the relaxation solver below. Considering this, I chose clarity instead of swapping the arrays.
 		MiscUtil.copy(f0, f);
 
 		float hx = timeStep * viscosity * idxsq;

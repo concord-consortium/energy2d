@@ -242,7 +242,7 @@ abstract class FluidSolver2D {
 
 	abstract void advect(int b, float[][] f0, float[][] f);
 
-	// TODO: swap the two arrays instead of copying them every time?
+	// Copying a two-dimensional array is very fast. Considering this, I chose clarity instead of swapping the arrays.
 	void solve(float[][] u, float[][] v) {
 		if (thermalBuoyancy != 0) {
 			applyBuoyancy(v);
