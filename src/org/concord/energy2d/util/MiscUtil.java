@@ -11,11 +11,13 @@ import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.lang.reflect.Array;
 
 import javax.swing.AbstractButton;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * @author Charles Xie
@@ -92,6 +94,45 @@ public final class MiscUtil {
 		if (i == -1)
 			return path;
 		return path.substring(i + 1, path.length());
+	}
+
+	/** @return the extension of a file name in lower case */
+	public static String getExtensionInLowerCase(File file) {
+		if (file == null || file.isDirectory())
+			return null;
+		String extension = getSuffix(file.getName());
+		if (extension != null)
+			return extension.toLowerCase();
+		return null;
+	}
+
+	/** @return the extension of a file name */
+	public static String getSuffix(String filename) {
+		String extension = null;
+		int index = filename.lastIndexOf('.');
+		if (index >= 1 && index < filename.length() - 1) {
+			extension = filename.substring(index + 1);
+		}
+		return extension;
+	}
+
+	/**
+	 * If the user does not input the extension specified by the file filter, automatically augment the file name with the specified extension.
+	 */
+	public static String fileNameAutoExtend(FileFilter filter, File file) {
+		if (filter == null)
+			return file.getAbsolutePath();
+		String description = filter.getDescription().toLowerCase();
+		String extension = getExtensionInLowerCase(file);
+		String filename = file.getAbsolutePath();
+		if (extension != null) {
+			if (!filter.accept(file)) {
+				filename = file.getAbsolutePath().concat(".").concat(description);
+			}
+		} else {
+			filename = file.getAbsolutePath().concat(".").concat(description);
+		}
+		return filename;
 	}
 
 	public static void setSelectedSilently(AbstractButton x, boolean b) {

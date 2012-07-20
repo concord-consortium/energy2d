@@ -687,6 +687,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		MenuBar menuBar = (MenuBar) box.owner.getJMenuBar();
 		preferences.put("Latest E2D Path", menuBar.getLatestPath("e2d"));
 		preferences.put("Latest HTM Path", menuBar.getLatestPath("htm"));
+		preferences.put("Latest PNG Path", menuBar.getLatestPath("png"));
 		String[] recentFiles = menuBar.getRecentFiles();
 		if (recentFiles != null) {
 			int n = recentFiles.length;
@@ -739,6 +740,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 		menuBar.setLatestPath(preferences.get("Latest E2D Path", null), "e2d");
 		menuBar.setLatestPath(preferences.get("Latest HTM Path", null), "htm");
+		menuBar.setLatestPath(preferences.get("Latest PNG Path", null), "png");
 		menuBar.addRecentFile(preferences.get("Recent File 0", null));
 		menuBar.addRecentFile(preferences.get("Recent File 1", null));
 		menuBar.addRecentFile(preferences.get("Recent File 2", null));

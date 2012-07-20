@@ -40,6 +40,7 @@ import javax.swing.filechooser.FileFilter;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.FileChooser;
 import org.concord.energy2d.util.MiscUtil;
+import org.concord.energy2d.util.ScreenshotSaver;
 
 /**
  * @author Charles Xie
@@ -104,6 +105,7 @@ class MenuBar extends JMenuBar {
 	private Action saveAsAction;
 	private Action saveAsAppletAction;
 	private Action exitAction;
+	private ScreenshotSaver screenshotSaver;
 	private int fileMenuItemCount;
 	private List<JComponent> recentFileMenuItems;
 
@@ -227,6 +229,10 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		fileMenu.add(mi);
+		fileMenuItemCount++;
+
+		screenshotSaver = new ScreenshotSaver(box.view, true);
+		fileMenu.add(screenshotSaver);
 		fileMenuItemCount++;
 
 		saveAsAppletAction = new AbstractAction() {
@@ -809,6 +815,8 @@ class MenuBar extends JMenuBar {
 		if (latestPath != null) {
 			if ("htm".equalsIgnoreCase(type)) {
 				htmFileChooser.setCurrentDirectory(new File(latestPath));
+			} else if ("png".equalsIgnoreCase(type)) {
+				screenshotSaver.setCurrentDirectory(new File(latestPath));
 			} else if ("e2d".equalsIgnoreCase(type)) {
 				e2dFileChooser.setCurrentDirectory(new File(latestPath));
 			}
@@ -818,6 +826,8 @@ class MenuBar extends JMenuBar {
 	String getLatestPath(String type) {
 		if ("htm".equalsIgnoreCase(type))
 			return htmFileChooser.getLatestPath();
+		if ("png".equalsIgnoreCase(type))
+			return screenshotSaver.getLatestPath();
 		return e2dFileChooser.getLatestPath();
 	}
 
