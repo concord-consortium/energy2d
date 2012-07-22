@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.concord.energy2d.event.GraphEvent;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -143,6 +144,7 @@ class ViewDialog extends JDialog {
 				JCheckBox src = (JCheckBox) e.getSource();
 				view.setGraphOn(src.isSelected());
 				view.repaint();
+				view.notifyGraphListeners(src.isSelected() ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
 			}
 		});
 		p.add(checkBox);
@@ -292,6 +294,28 @@ class ViewDialog extends JDialog {
 				int i = src.getSelectedIndex();
 				view.setColorPaletteType((byte) (i - View2D.RAINBOW));
 				view.repaint();
+			}
+		});
+		p.add(comboBox);
+
+		p.add(new JPanel());
+		count++;
+
+		label = new JLabel("Mouse reading");
+		p.add(label);
+
+		comboBox = new JComboBox();
+		comboBox.addItem("Nothing");
+		comboBox.addItem("Temperature");
+		comboBox.addItem("Thermal energy");
+		comboBox.setSelectedIndex(view.getMouseReadType());
+		comboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox src = (JComboBox) e.getSource();
+				int i = src.getSelectedIndex();
+				view.setMouseReadType((byte) i);
+				view.repaint();
+				view.notifyManipulationListeners(null, ManipulationEvent.MOUSE_READ_CHANGED);
 			}
 		});
 		p.add(comboBox);

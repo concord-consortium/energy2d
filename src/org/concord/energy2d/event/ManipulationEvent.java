@@ -28,6 +28,7 @@ public class ManipulationEvent extends EventObject {
 	public static final byte GRID = 15;
 	public static final byte GRAPH = 16;
 	public static final byte AUTO_STOP = 17;
+	public static final byte MOUSE_READ_CHANGED = 18;
 
 	private Object target;
 	private byte type = -1;

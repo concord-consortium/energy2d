@@ -95,7 +95,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte HEATMAP_NONE = 0;
 	public final static byte HEATMAP_TEMPERATURE = 1;
 	public final static byte HEATMAP_THERMAL_ENERGY = 2;
-	public final static byte MOUSE_READ_NONE = 0;
+	public final static byte MOUSE_READ_NOTHING = 0;
 	public final static byte MOUSE_READ_TEMPERATURE = 1;
 	public final static byte MOUSE_READ_THERMAL_ENERGY = 2;
 
@@ -137,7 +137,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
-	private byte mouseReadType = MOUSE_READ_NONE;
+	private byte mouseReadType = MOUSE_READ_NOTHING;
 	private byte colorPaletteType = RAINBOW;
 	private float[][] distribution;
 
@@ -435,7 +435,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		graphListeners.remove(l);
 	}
 
-	private void notifyGraphListeners(byte eventType) {
+	public void notifyGraphListeners(byte eventType) {
 		if (graphListeners.isEmpty())
 			return;
 		GraphEvent e = new GraphEvent(this);
@@ -1959,7 +1959,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
-			if (mouseReadType != MOUSE_READ_NONE)
+			if (mouseReadType != MOUSE_READ_NOTHING)
 				mouseMovedPoint.setLocation(x, y);
 			int iSpot = -1;
 			if (!showGraph && selectedManipulable instanceof Part) {

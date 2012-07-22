@@ -36,6 +36,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 
 	private JToggleButton graphButton;
 	private JToggleButton selectButton;
+	private JComboBox mouseReadComboBox;
 
 	private System2D box;
 
@@ -150,18 +151,17 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(graphButton);
 		addSeparator(new Dimension(10, 0));
 
-		JComboBox cb = new JComboBox(new String[] { "Mouse: Nothing", "Mouse: Temperature", "Mouse: Energy" });
-		cb.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
-		cb.setMaximumSize(new Dimension(150, 32));
-		cb.addItemListener(new ItemListener() {
+		mouseReadComboBox = new JComboBox(new String[] { "Mouse: Nothing", "Mouse: Temperature", "Mouse: Energy" });
+		mouseReadComboBox.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
+		mouseReadComboBox.setMaximumSize(new Dimension(150, 32));
+		mouseReadComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					JComboBox src = (JComboBox) e.getSource();
-					box.view.setMouseReadType((byte) src.getSelectedIndex());
+					box.view.setMouseReadType((byte) ((JComboBox) e.getSource()).getSelectedIndex());
 				}
 			}
 		});
-		add(cb);
+		add(mouseReadComboBox);
 
 	}
 
@@ -180,6 +180,9 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 			break;
 		case ManipulationEvent.OBJECT_ADDED:
 			selectButton.doClick();
+			break;
+		case ManipulationEvent.MOUSE_READ_CHANGED:
+			mouseReadComboBox.setSelectedIndex(box.view.getMouseReadType());
 			break;
 		}
 	}
