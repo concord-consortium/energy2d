@@ -95,6 +95,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte HEATMAP_NONE = 0;
 	public final static byte HEATMAP_TEMPERATURE = 1;
 	public final static byte HEATMAP_THERMAL_ENERGY = 2;
+	public final static byte MOUSE_READ_NONE = 0;
+	public final static byte MOUSE_READ_TEMPERATURE = 1;
+	public final static byte MOUSE_READ_THERMAL_ENERGY = 2;
 
 	public final static byte RAINBOW = 0;
 	public final static byte IRON = 1;
@@ -134,6 +137,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
+	private byte mouseReadType = MOUSE_READ_NONE;
 	private byte colorPaletteType = RAINBOW;
 	private float[][] distribution;
 
@@ -276,6 +280,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		getInputMap().put(ks, "Paste");
 		getActionMap().put("Paste", pasteAction);
 
+	}
+
+	public void setMouseReadType(byte mouseReadType) {
+		this.mouseReadType = mouseReadType;
+	}
+
+	public byte getMouseReadType() {
+		return mouseReadType;
 	}
 
 	public void setHeatMapType(byte heatMapType) {
@@ -939,6 +951,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		g.setStroke(dashed);
 		switch (actionMode) {
+		case SELECT_MODE:
+			switch (mouseReadType) {
+			case MOUSE_READ_TEMPERATURE:
+				float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				g.setColor(getContrastColor(mouseMovedPoint.x, mouseMovedPoint.y));
+				g.drawString(TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103', mouseMovedPoint.x, mouseMovedPoint.y);
+				break;
+			case MOUSE_READ_THERMAL_ENERGY:
+				pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				g.setColor(getContrastColor(mouseMovedPoint.x, mouseMovedPoint.y));
+				g.drawString(TEMPERATURE_FORMAT.format(pointValue) + " J", mouseMovedPoint.x, mouseMovedPoint.y);
+				break;
+			}
+			break;
 		case RECTANGLE_MODE:
 			g.setColor(TRANSLUCENT_GRAY);
 			g.fill(rectangle);
@@ -1752,7 +1778,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			heatingY = convertPixelToPointY(y);
 			break;
 		}
-		repaint();
+		if (!model.isRunning())
+			repaint();
 		e.consume();
 	}
 
@@ -1932,6 +1959,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
+			if (mouseReadType != MOUSE_READ_NONE)
+				mouseMovedPoint.setLocation(x, y);
 			int iSpot = -1;
 			if (!showGraph && selectedManipulable instanceof Part) {
 				for (int i = 0; i < handle.length; i++) {
@@ -1979,6 +2008,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				float rx = convertPixelToPointX(x);
 				float ry = convertPixelToPointY(y);
 				boolean contained = false;
+				// prioritize sensor selection
 				synchronized (model.getThermometers()) {
 					for (Thermometer t : model.getThermometers()) {
 						if (t.contains(rx, ry)) {
@@ -1988,22 +2018,29 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				}
 				if (!contained && !showGraph) {
+					boolean draggable = false;
 					synchronized (model.getParts()) {
 						for (Part p : model.getParts()) {
 							if (p.contains(rx, ry)) {
 								contained = true;
+								draggable = p.isDraggable();
 								break;
 							}
 						}
 					}
+					if (!draggable)
+						contained = false;
 				}
 				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
 			}
+			if (!model.isRunning())
+				repaint();
 			break;
 		case POLYGON_MODE:
 			if (!showGraph) {
 				mouseMovedPoint.setLocation(x, y);
-				repaint();
+				if (!model.isRunning())
+					repaint();
 			}
 			break;
 		}

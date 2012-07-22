@@ -631,6 +631,17 @@ public class Model2D {
 		return energy * deltaX * deltaY;
 	}
 
+	/** get the thermal energy stored in the cell at the given point. If the point is out of bound, return -1 (any impossible value to indicate error) */
+	public float getThermalEnergyAt(float x, float y) {
+		int i = Math.round(x / deltaX);
+		if (i < 0 || i >= nx)
+			return -1;
+		int j = Math.round(y / deltaY);
+		if (j < 0 || j >= ny)
+			return -1;
+		return t[i][j] * density[i][j] * specificHeat[i][j] * deltaX * deltaY;
+	}
+
 	private void init() {
 		for (int i = 0; i < nx; i++) {
 			Arrays.fill(conductivity[i], backgroundConductivity);
@@ -713,6 +724,10 @@ public class Model2D {
 
 	public void stop() {
 		running = false;
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 
 	public void reset() {

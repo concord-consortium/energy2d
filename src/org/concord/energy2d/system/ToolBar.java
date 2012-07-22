@@ -6,6 +6,7 @@
 
 package org.concord.energy2d.system;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -33,7 +35,6 @@ import org.concord.energy2d.view.View2D;
 class ToolBar extends JToolBar implements GraphListener, IOListener, ManipulationListener {
 
 	private JToggleButton graphButton;
-	private JToggleButton gridButton;
 	private JToggleButton selectButton;
 
 	private System2D box;
@@ -147,18 +148,20 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 			}
 		});
 		add(graphButton);
+		addSeparator(new Dimension(10, 0));
 
-		gridButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/grid.png")));
-		gridButton.setToolTipText("Show or hide grid lines");
-		gridButton.addItemListener(new ItemListener() {
+		JComboBox cb = new JComboBox(new String[] { "Mouse: Nothing", "Mouse: Temperature", "Mouse: Energy" });
+		cb.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
+		cb.setMaximumSize(new Dimension(150, 32));
+		cb.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				JToggleButton src = (JToggleButton) e.getSource();
-				box.view.setGridOn(src.isSelected());
-				box.view.repaint();
-				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					JComboBox src = (JComboBox) e.getSource();
+					box.view.setMouseReadType((byte) src.getSelectedIndex());
+				}
 			}
 		});
-		add(gridButton);
+		add(cb);
 
 	}
 
@@ -178,8 +181,6 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		case ManipulationEvent.OBJECT_ADDED:
 			selectButton.doClick();
 			break;
-		default:
-			MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
 		}
 	}
 
@@ -191,7 +192,6 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 					selectButton.doClick();
 					selectButton.requestFocusInWindow();
 					MiscUtil.setSelectedSilently(graphButton, box.view.isGraphOn());
-					MiscUtil.setSelectedSilently(gridButton, box.view.isGridOn());
 					graphButton.setEnabled(!box.model.getThermometers().isEmpty());
 				}
 			});
