@@ -955,13 +955,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			switch (mouseReadType) {
 			case MOUSE_READ_TEMPERATURE:
 				float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				g.setColor(getContrastColor(mouseMovedPoint.x, mouseMovedPoint.y));
-				g.drawString(TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103', mouseMovedPoint.x, mouseMovedPoint.y);
+				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
 				break;
 			case MOUSE_READ_THERMAL_ENERGY:
 				pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				g.setColor(getContrastColor(mouseMovedPoint.x, mouseMovedPoint.y));
-				g.drawString(TEMPERATURE_FORMAT.format(pointValue) + " J", mouseMovedPoint.x, mouseMovedPoint.y);
+				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
 				break;
 			}
 			break;
@@ -1014,6 +1012,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
 
+	}
+
+	private void drawMouseReadString(Graphics2D g, String s) {
+		g.setFont(sensorReadingFont);
+		FontMetrics fm = g.getFontMetrics();
+		int stringWidth = fm.stringWidth(s);
+		g.setStroke(thinStroke);
+		int x2 = mouseMovedPoint.x;
+		boolean nearRightBorder = x2 > getWidth() - 50;
+		x2 += nearRightBorder ? -30 : 20;
+		g.setColor(Color.black);
+		g.fillRoundRect(x2 - 5, mouseMovedPoint.y - 14, stringWidth + 10, 20, 8, 8);
+		g.drawLine(nearRightBorder ? x2 + stringWidth + 5 : x2 - 5, mouseMovedPoint.y - 5, mouseMovedPoint.x, mouseMovedPoint.y);
+		g.fillOval(mouseMovedPoint.x - 2, mouseMovedPoint.y - 2, 4, 4);
+		g.setColor(Color.white);
+		g.drawString(s, x2, mouseMovedPoint.y);
 	}
 
 	void setErrorMessage(String message) {
