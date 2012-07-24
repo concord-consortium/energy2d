@@ -308,6 +308,7 @@ class ViewDialog extends JDialog {
 		comboBox.addItem("Nothing");
 		comboBox.addItem("Temperature");
 		comboBox.addItem("Thermal energy");
+		comboBox.addItem("Velocity");
 		comboBox.setSelectedIndex(view.getMouseReadType());
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

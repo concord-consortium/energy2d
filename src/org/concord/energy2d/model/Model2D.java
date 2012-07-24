@@ -950,6 +950,16 @@ public class Model2D {
 		return v;
 	}
 
+	public float[] getVelocityAt(float x, float y) {
+		int i = Math.min(t.length - 1, Math.round(x / deltaX));
+		if (i < 0)
+			i = 0;
+		int j = Math.min(t[0].length - 1, Math.round(y / deltaY));
+		if (j < 0)
+			j = 0;
+		return new float[] { u[i][j], v[i][j] };
+	}
+
 	public float[][] getStreamFunction() {
 		return fluidSolver.getStreamFunction(u, v);
 	}
