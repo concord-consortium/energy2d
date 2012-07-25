@@ -475,9 +475,9 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
-		// model menu
+		// template menu
 
-		menu = new JMenu("Models");
+		menu = new JMenu("Templates");
 		add(menu);
 
 		JMenu subMenu = new JMenu("Heat and Temperature");

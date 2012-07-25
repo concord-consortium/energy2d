@@ -14,7 +14,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -22,6 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -61,13 +61,14 @@ class ViewDialog extends JDialog {
 		});
 		buttonPanel.add(button);
 
-		Box box = Box.createVerticalBox();
-		box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(box, BorderLayout.CENTER);
+		JTabbedPane tab = new JTabbedPane();
+		panel.add(tab, BorderLayout.CENTER);
+		tab.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+		JPanel p2 = new JPanel(new BorderLayout());
 		JPanel p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("General"));
-		box.add(p);
+		p2.add(p, BorderLayout.NORTH);
+		tab.add(p2, "General");
 		int count = 0;
 
 		JCheckBox checkBox = new JCheckBox("Isotherm");
@@ -224,9 +225,10 @@ class ViewDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
 
+		p2 = new JPanel(new BorderLayout());
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Visualization"));
-		box.add(p);
+		p2.add(p, BorderLayout.NORTH);
+		tab.add(p2, "Visualization");
 		count = 0;
 
 		JLabel label = new JLabel("Coloring property");
@@ -362,9 +364,10 @@ class ViewDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
+		p2 = new JPanel(new BorderLayout());
 		p = new JPanel(new SpringLayout());
-		p.setBorder(BorderFactory.createTitledBorder("Event Frequency"));
-		box.add(p);
+		p2.add(p, BorderLayout.NORTH);
+		tab.add(p2, "Event");
 		count = 0;
 
 		label = new JLabel("Measurement interval");
