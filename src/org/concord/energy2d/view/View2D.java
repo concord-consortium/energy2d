@@ -953,22 +953,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		g.setStroke(dashed);
 		switch (actionMode) {
-		case SELECT_MODE:
-			switch (mouseReadType) {
-			case MOUSE_READ_TEMPERATURE:
-				float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
-				break;
-			case MOUSE_READ_THERMAL_ENERGY:
-				pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
-				break;
-			case MOUSE_READ_VELOCITY:
-				float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
-				break;
-			}
-			break;
 		case RECTANGLE_MODE:
 			g.setColor(TRANSLUCENT_GRAY);
 			g.fill(rectangle);
@@ -1008,6 +992,23 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (frankOn) {
 			int dy = rulerRenderer != null ? 30 : 15;
 			drawFrank(g, getWidth() - 84, getHeight() - dy);
+		}
+
+		if (actionMode == SELECT_MODE) { // draw field reader last
+			switch (mouseReadType) {
+			case MOUSE_READ_TEMPERATURE:
+				float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
+				break;
+			case MOUSE_READ_THERMAL_ENERGY:
+				pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
+				break;
+			case MOUSE_READ_VELOCITY:
+				float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
+				break;
+			}
 		}
 
 		if (errorMessage != null) {
