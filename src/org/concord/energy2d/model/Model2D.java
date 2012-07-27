@@ -583,7 +583,7 @@ public class Model2D {
 				if (hasPartPower) {
 					synchronized (parts) {
 						for (Part p : parts) {
-							if (p.getPower() != 0 && p.getShape().contains(x, y)) {
+							if (p.getPower() != 0 && p.getPowerSwitch() && p.getShape().contains(x, y)) {
 								// no overlap of parts will be allowed
 								q[i][j] = p.getPower();
 								break;

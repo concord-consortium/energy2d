@@ -32,17 +32,16 @@ public class Part extends Manipulable {
 	// Stefan's constant unit J/(s*m^2*K^-4)
 	private final static float STEFAN_CONSTANT = 0.0000000567f;
 
-	/*
-	 * constant power input/output: positive = source, negative = sink, zero = off. Unit: W/m^3
-	 */
+	// constant power input/output: positive = source, negative = sink, zero = off. Unit: W/m^3
 	private float power;
+
+	// this turns the power on and off: it should not be saved in the XML, or copied to another part
+	private boolean powerSwitch = true;
 
 	// a fixed or initial temperature for this part
 	private float temperature;
 
-	/*
-	 * when this flag is true, temperature is maintained at the set value. Otherwise, it will be just the initial value that defines the heat energy this part initially possesses.
-	 */
+	// when this flag is true, temperature is maintained at the set value. Otherwise, it will be just the initial value that defines the heat energy this part initially possesses.
 	private boolean constantTemperature;
 
 	/*
@@ -54,9 +53,7 @@ public class Part extends Manipulable {
 	 */
 	private float thermalConductivity = 1f;
 
-	/*
-	 * the specific heat capacity: J/(kgK).
-	 */
+	// the specific heat capacity: J/(kgK).
 	private float specificHeat = 1300f;
 
 	// density kg/m^3. The default value is foam's.
@@ -219,6 +216,14 @@ public class Part extends Manipulable {
 
 	public float getPower() {
 		return power;
+	}
+
+	public void setPowerSwitch(boolean b) {
+		powerSwitch = b;
+	}
+
+	public boolean getPowerSwitch() {
+		return powerSwitch;
 	}
 
 	public void setThermalConductivity(float thermalConductivity) {

@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -684,6 +685,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	static void savePreferences(System2D box) {
 		if (preferences == null || box.owner == null)
 			return;
+		Rectangle bounds = box.owner.getBounds();
+		preferences.putInt("Upper-left x", bounds.x);
+		preferences.putInt("Upper-left y", bounds.y);
 		MenuBar menuBar = (MenuBar) box.owner.getJMenuBar();
 		preferences.put("Latest E2D Path", menuBar.getLatestPath("e2d"));
 		preferences.put("Latest HTM Path", menuBar.getLatestPath("htm"));
@@ -727,7 +731,9 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
-		frame.setLocation((screen.height - w) / 8, (screen.height - w) / 8);
+		int x = preferences.getInt("Upper-left x", (screen.height - w) / 8);
+		int y = preferences.getInt("Upper-left y", (screen.height - w) / 8);
+		frame.setLocation(x, y);
 		frame.setTitle(BRAND_NAME);
 		frame.pack();
 		frame.setVisible(true);
