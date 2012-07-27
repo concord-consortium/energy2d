@@ -7,29 +7,29 @@ package org.concord.energy2d.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
-import org.concord.energy2d.util.MiscUtil;
+import org.concord.energy2d.model.Thermostat;
 
 /**
  * @author Charles Xie
@@ -38,16 +38,18 @@ import org.concord.energy2d.util.MiscUtil;
 class ThermometerDialog extends JDialog {
 
 	private Window owner;
-	private JPanel thermostatPanel;
 	private ActionListener okListener;
 	private JTextField xField;
 	private JTextField yField;
 	private JTextField labelField;
-	private JTextField thermostatField;
+	private JTextField uidField;
+	private JTextField setpointField;
+	private JTextField deadbandField;
 	private JRadioButton onePointButton;
 	private JRadioButton fivePointsButton;
 	private JRadioButton ninePointsButton;
-	private JCheckBox thermostatCheckBox;
+	private JCheckBox[] powerSourceCheckBoxes;
+	private List<Part> powerSources;
 
 	ThermometerDialog(final View2D view, final Thermometer thermometer, boolean modal) {
 
@@ -64,6 +66,18 @@ class ThermometerDialog extends JDialog {
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				boolean thermostatSet = false;
+				for (int i = 0; i < powerSourceCheckBoxes.length; i++) {
+					if (powerSourceCheckBoxes[i].isSelected()) {
+						thermostatSet = true;
+						break;
+					}
+				}
+				if (thermostatSet) {
+					if (checkUidField())
+						return;
+				}
+
 				float x = parse(xField.getText());
 				if (Float.isNaN(x))
 					return;
@@ -75,6 +89,17 @@ class ThermometerDialog extends JDialog {
 				thermometer.setY(view.model.getLy() - x);
 
 				thermometer.setLabel(labelField.getText());
+				String uid = uidField.getText();
+				if (uid != null) {
+					uid = uid.trim();
+					if (!uid.equals("") && !uid.equals(thermometer.getUid())) {
+						if (view.model.isUidUsed(uid)) {
+							JOptionPane.showMessageDialog(owner, "UID: " + uid + " has been taken.", "Error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						thermometer.setUid(uid);
+					}
+				}
 
 				if (onePointButton.isSelected())
 					thermometer.setStencil(Thermometer.ONE_POINT);
@@ -83,20 +108,29 @@ class ThermometerDialog extends JDialog {
 				else if (ninePointsButton.isSelected())
 					thermometer.setStencil(Thermometer.NINE_POINT);
 
-				if (thermostatCheckBox.isSelected()) {
-					thermometer.setThermostat(true);
-					x = parse(thermostatField.getText());
-					if (Float.isNaN(x))
-						return;
-					thermometer.setThermostatTemperature(x);
-				} else {
-					thermometer.setThermostat(false);
+				float setpoint = parse(setpointField.getText());
+				if (Float.isNaN(setpoint))
+					return;
+				float deadband = parse(deadbandField.getText());
+				if (Float.isNaN(deadband))
+					return;
+				for (int i = 0; i < powerSourceCheckBoxes.length; i++) {
+					Part ps = powerSources.get(i);
+					if (powerSourceCheckBoxes[i].isSelected()) {
+						Thermostat t = view.model.addThermostat(thermometer, ps);
+						t.setSetPoint(setpoint);
+						t.setDeadband(deadband);
+					} else {
+						view.model.removeThermostat(thermometer, ps);
+					}
 				}
 
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
+
 			}
+
 		};
 
 		JButton button = new JButton("OK");
@@ -131,12 +165,17 @@ class ThermometerDialog extends JDialog {
 		yField.addActionListener(okListener);
 		p.add(yField);
 
+		p.add(new JLabel("Unique ID:"));
+		uidField = new JTextField(thermometer.getUid(), 10);
+		uidField.addActionListener(okListener);
+		p.add(uidField);
+
 		p.add(new JLabel("Label:"));
-		labelField = new JTextField(thermometer.getLabel(), 20);
+		labelField = new JTextField(thermometer.getLabel(), 10);
 		labelField.addActionListener(okListener);
 		p.add(labelField);
 
-		// thermometer calibration
+		// thermometer calibration: how small it can be
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.setBorder(BorderFactory.createTitledBorder("Sampled area (stencil)"));
@@ -167,55 +206,69 @@ class ThermometerDialog extends JDialog {
 			onePointButton.setSelected(true);
 		}
 
-		// thermostat properties
+		// thermostat properties: a thermometer can control multiple power sources
 
-		thermostatPanel = new JPanel(new SpringLayout());
-		thermostatPanel.setBorder(BorderFactory.createTitledBorder("Thermostat"));
-		box.add(thermostatPanel);
-		int count = 0;
+		Thermostat thermostat = view.model.getThermostat(thermometer);
 
-		thermostatCheckBox = new JCheckBox("Activate");
-		thermostatCheckBox.setSelected(thermometer.isThermostat());
-		thermostatCheckBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				JCheckBox src = (JCheckBox) e.getSource();
-				enableThermostatSettings(src.isSelected());
+		List<Part> parts = view.model.getParts();
+		powerSources = new ArrayList<Part>();
+		for (Part x : parts) {
+			if (x.getPower() != 0) {
+				powerSources.add(x);
 			}
-		});
-		thermostatPanel.add(thermostatCheckBox);
+		}
+		powerSourceCheckBoxes = new JCheckBox[powerSources.size()];
 
-		JLabel label = new JLabel("Target temperature: ");
-		thermostatPanel.add(label);
-		thermostatField = new JTextField(thermometer.getThermostatTemperature() + "", 10);
-		thermostatField.addActionListener(okListener);
-		thermostatPanel.add(thermostatField);
-		label = new JLabel("\u2103");
-		thermostatPanel.add(label);
-		count++;
+		JPanel thermostatPanel = new JPanel(new BorderLayout());
+		thermostatPanel.setBorder(BorderFactory.createTitledBorder("Thermostat connection"));
+		box.add(thermostatPanel);
 
-		label = new JLabel("Controlled power source:");
-		thermostatPanel.add(label);
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		thermostatPanel.add(p, BorderLayout.NORTH);
+		p.add(new JLabel("Set point: "));
+		setpointField = new JTextField(thermostat == null ? "20" : thermostat.getSetPoint() + "", 10);
+		setpointField.addActionListener(okListener);
+		p.add(setpointField);
+		p.add(new JLabel("\u2103"));
 
-		JComboBox comboBox = new JComboBox();
-		thermostatPanel.add(comboBox);
+		p.add(new JLabel("      Deadband: "));
+		deadbandField = new JTextField(thermostat == null ? "1" : thermostat.getDeadband() + "", 10);
+		deadbandField.addActionListener(okListener);
+		p.add(deadbandField);
+		p.add(new JLabel("\u2103"));
 
-		thermostatPanel.add(new JPanel());
-		thermostatPanel.add(new JPanel());
-		count++;
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		thermostatPanel.add(p, BorderLayout.CENTER);
+		p.add(new JLabel("Power sources:"));
 
-		MiscUtil.makeCompactGrid(thermostatPanel, count, 4, 2, 5, 10, 2);
-
-		enableThermostatSettings(thermometer.isThermostat());
+		p = new JPanel(new GridLayout(1 + powerSources.size() / 5, 5));
+		thermostatPanel.add(p, BorderLayout.SOUTH);
+		for (int i = 0; i < powerSources.size(); i++) {
+			Part ps = powerSources.get(i);
+			powerSourceCheckBoxes[i] = new JCheckBox(ps.getUid());
+			if (view.model.isConnected(thermometer, ps))
+				powerSourceCheckBoxes[i].setSelected(true);
+			powerSourceCheckBoxes[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					checkUidField();
+				}
+			});
+			p.add(powerSourceCheckBoxes[i]);
+		}
 
 		pack();
 		setLocationRelativeTo(view);
 
 	}
 
-	private void enableThermostatSettings(boolean b) {
-		int n = thermostatPanel.getComponentCount();
-		for (int i = 1; i < n; i++)
-			thermostatPanel.getComponent(i).setEnabled(b);
+	private boolean checkUidField() {
+		String s = uidField.getText();
+		if (s == null || s.trim().length() == 0) {
+			JOptionPane.showMessageDialog(owner, "Please provide a unique ID for this thermometer.", "Reminder", JOptionPane.WARNING_MESSAGE);
+			uidField.requestFocusInWindow();
+			return true;
+		}
+		return false;
 	}
 
 	private float parse(String s) {

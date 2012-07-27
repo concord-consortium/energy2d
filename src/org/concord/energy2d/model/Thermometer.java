@@ -26,8 +26,6 @@ public class Thermometer extends Sensor {
 	private final static int MAX = 1000;
 	private List<TimedData> data;
 	private List<MeasurementListener> listeners;
-	private boolean thermostat;
-	private float thermostatTemperature = 20;
 	private byte stencil = ONE_POINT;
 
 	public final static float RELATIVE_WIDTH = 0.025f;
@@ -48,22 +46,6 @@ public class Thermometer extends Sensor {
 
 	public Thermometer duplicate(float x, float y) {
 		return new Thermometer(x, y);
-	}
-
-	public void setThermostat(boolean b) {
-		thermostat = b;
-	}
-
-	public boolean isThermostat() {
-		return thermostat;
-	}
-
-	public void setThermostatTemperature(float t) {
-		thermostatTemperature = t;
-	}
-
-	public float getThermostatTemperature() {
-		return thermostatTemperature;
 	}
 
 	public void setStencil(byte stencil) {
@@ -145,10 +127,9 @@ public class Thermometer extends Sensor {
 		String xml = "<thermometer";
 		if (stencil != ONE_POINT)
 			xml += " stencil=\"" + stencil + "\"";
-		if (thermostat) {
-			xml += " thermostat=\"true\"";
-			xml += " thermostat_temperature=\"" + thermostatTemperature + "\"";
-		}
+		String uid = getUid();
+		if (uid != null && !uid.trim().equals(""))
+			xml += " uid=\"" + uid + "\"";
 		String label = getLabel();
 		if (label != null && !label.trim().equals(""))
 			xml += " label=\"" + label + "\"";

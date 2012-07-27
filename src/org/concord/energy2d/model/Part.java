@@ -636,7 +636,7 @@ public class Part extends Manipulable {
 
 	@Override
 	public String toString() {
-		return toXml();
+		return getUid();
 	}
 
 }

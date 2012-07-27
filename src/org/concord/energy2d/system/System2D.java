@@ -701,7 +701,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 
 		Locale.setDefault(Locale.US);
 
@@ -742,6 +742,18 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 				Action a = box.view.getActionMap().get("Quit");
 				if (a != null)
 					a.actionPerformed(null);
+			}
+
+			public void windowOpened(WindowEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						if (args != null && args.length > 1) {
+							String filePath = args[1];
+							if (filePath.toLowerCase().trim().endsWith(".e2d"))
+								box.loadFile(new File(filePath));
+						}
+					}
+				});
 			}
 		});
 		box.owner = frame;

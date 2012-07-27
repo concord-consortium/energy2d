@@ -6,6 +6,7 @@ import java.util.List;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.model.Thermostat;
 import org.concord.energy2d.view.View2D;
 
 /**
@@ -106,6 +107,16 @@ class XmlEncoder {
 			}
 		}
 		sb.append("</sensor>\n");
+
+		// controllers
+		sb.append("<controller>\n");
+		List<Thermostat> thermostats = box.model.getThermostats();
+		if (thermostats != null) {
+			for (Thermostat t : thermostats) {
+				sb.append(t.toXml() + "\n");
+			}
+		}
+		sb.append("</controller>\n");
 
 		// view properties
 

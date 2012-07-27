@@ -373,7 +373,7 @@ class XmlDecoder extends DefaultHandler {
 		} else if (qName == "thermometer") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
-				String label = null;
+				String label = null, uid = null;
 				byte stencil = Thermometer.ONE_POINT;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
@@ -384,12 +384,38 @@ class XmlDecoder extends DefaultHandler {
 						y = Float.parseFloat(attribValue);
 					} else if (attribName == "stencil") {
 						stencil = Byte.parseByte(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
 					} else if (attribName == "label") {
 						label = attribValue;
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y))
-					box.model.addThermometer(x, y, label, stencil);
+					box.model.addThermometer(x, y, uid, label, stencil);
+			}
+		} else if (qName == "thermostat") {
+			if (attrib != null) {
+				float setpoint = Float.NaN, deadband = Float.NaN;
+				String thermometerUID = null, powerSourceUID = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "set_point") {
+						setpoint = Float.parseFloat(attribValue);
+					} else if (attribName == "deadband") {
+						deadband = Float.parseFloat(attribValue);
+					} else if (attribName == "thermometer") {
+						thermometerUID = attribValue;
+					} else if (attribName == "power_source") {
+						powerSourceUID = attribValue;
+					}
+				}
+				if (!Float.isNaN(setpoint) && !Float.isNaN(deadband) && thermometerUID != null && powerSourceUID != null) {
+					Thermometer t = box.model.getThermometer(thermometerUID);
+					Part p = box.model.getPart(powerSourceUID);
+					if (t != null && p != null)
+						box.model.addThermostat(t, p);
+				}
 			}
 		} else if (qName == "text") {
 			if (attrib != null) {

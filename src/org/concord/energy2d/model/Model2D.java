@@ -12,6 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.concord.energy2d.event.ManipulationEvent;
@@ -77,6 +78,7 @@ public class Model2D {
 	private float maximumHeatCapacity = -1, minimumHeatCapacity = Float.MAX_VALUE;
 
 	private List<Thermometer> thermometers;
+	private List<Thermostat> thermostats;
 
 	private List<Part> parts;
 	private List<Photon> photons;
@@ -153,6 +155,7 @@ public class Model2D {
 
 		parts = Collections.synchronizedList(new ArrayList<Part>());
 		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
+		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 
 		visualizationListeners = new ArrayList<VisualizationListener>();
@@ -374,6 +377,53 @@ public class Model2D {
 		return getBackgroundViscosity() * backgroundDensity * backgroundSpecificHeat / backgroundConductivity;
 	}
 
+	/** only one thermostat is needed to connect a thermometer and a power source */
+	public Thermostat addThermostat(Thermometer t, Part p) {
+		Iterator<Thermostat> i = thermostats.iterator();
+		while (i.hasNext()) {
+			Thermostat x = i.next();
+			if (x.getThermometer() == t && x.getPowerSource() == p)
+				return x;
+		}
+		Thermostat x = new Thermostat(this, t, p);
+		thermostats.add(x);
+		return x;
+	}
+
+	public void removeThermostat(Thermometer t, Part p) {
+		if (thermostats.isEmpty())
+			return;
+		for (Iterator<Thermostat> i = thermostats.iterator(); i.hasNext();) {
+			Thermostat x = i.next();
+			if (x.getThermometer() == t && x.getPowerSource() == p)
+				i.remove();
+		}
+	}
+
+	public boolean isConnected(Thermometer t, Part p) {
+		Iterator<Thermostat> i = thermostats.iterator();
+		while (i.hasNext()) {
+			Thermostat x = i.next();
+			if (x.getThermometer() == t && x.getPowerSource() == p)
+				return true;
+		}
+		return false;
+	}
+
+	public Thermostat getThermostat(Object o) {
+		Iterator<Thermostat> i = thermostats.iterator();
+		while (i.hasNext()) {
+			Thermostat x = i.next();
+			if (x.getThermometer() == o || x.getPowerSource() == o)
+				return x;
+		}
+		return null;
+	}
+
+	public List<Thermostat> getThermostats() {
+		return thermostats;
+	}
+
 	public void addThermometer(Thermometer t) {
 		thermometers.add(t);
 	}
@@ -382,8 +432,9 @@ public class Model2D {
 		thermometers.add(new Thermometer(x, y));
 	}
 
-	public void addThermometer(float x, float y, String label, byte stencil) {
+	public void addThermometer(float x, float y, String uid, String label, byte stencil) {
 		Thermometer t = new Thermometer(x, y);
+		t.setUid(uid);
 		t.setLabel(label);
 		t.setStencil(stencil);
 		thermometers.add(t);
@@ -481,12 +532,19 @@ public class Model2D {
 		return null;
 	}
 
+	/** Every manipulable has a UID. To avoid confusion, two objects of different types cannot have the same UID. */
 	public boolean isUidUsed(String uid) {
-		if (uid == null)
-			throw new IllegalArgumentException("UID cannot be null.");
+		if (uid == null || uid.trim().equals(""))
+			throw new IllegalArgumentException("UID cannot be null or an empty string.");
 		synchronized (parts) {
 			for (Part p : parts) {
 				if (uid.equals(p.getUid()))
+					return true;
+			}
+		}
+		synchronized (thermometers) {
+			for (Thermometer t : thermometers) {
+				if (uid.equals(t.getUid()))
 					return true;
 			}
 		}
@@ -799,6 +857,9 @@ public class Model2D {
 		heatSolver.solve(convective, t);
 		if (indexOfStep % measurementInterval == 0) {
 			takeMeasurement();
+			for (Thermostat x : thermostats) { // thermostat need not be run every step
+				x.control();
+			}
 		}
 		if (indexOfStep % viewUpdateInterval == 0) {
 			notifyVisualizationListeners();
