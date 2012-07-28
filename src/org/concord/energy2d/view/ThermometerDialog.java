@@ -239,7 +239,7 @@ class ThermometerDialog extends JDialog {
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		thermostatPanel.add(p, BorderLayout.CENTER);
-		p.add(new JLabel("Power sources:"));
+		p.add(new JLabel(powerSources.isEmpty() ? "No power source." : "Power sources:"));
 
 		p = new JPanel(new GridLayout(1 + powerSources.size() / 5, 5));
 		thermostatPanel.add(p, BorderLayout.SOUTH);

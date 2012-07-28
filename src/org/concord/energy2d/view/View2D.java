@@ -67,6 +67,7 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.model.Thermostat;
 import org.concord.energy2d.system.Helper;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ContourMap;
@@ -129,6 +130,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
 	private VectorDistributionRenderer vectorFieldRenderer;
+	private ThermostatRenderer thermostatRenderer;
 	private boolean showIsotherm;
 	private boolean showStreamLines;
 	private boolean showVelocity;
@@ -243,6 +245,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		setColorPaletteType(colorPaletteType);
 		dialogFactory = new DialogFactory(this);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
+		thermostatRenderer = new ThermostatRenderer();
 		manipulationListeners = new ArrayList<ManipulationListener>();
 		graphListeners = new ArrayList<GraphListener>();
 	}
@@ -986,6 +989,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 			break;
+		}
+
+		if (!model.getThermostats().isEmpty()) {
+			for (Thermostat t : model.getThermostats()) {
+				thermostatRenderer.render(t, this, g);
+			}
 		}
 
 		g.setStroke(stroke);

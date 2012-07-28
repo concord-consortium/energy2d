@@ -308,6 +308,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	void saveState(Writer writer) throws IOException {
+		updateStatus("Saving...");
 		if (clickStop != null) {
 			EventQueue.invokeLater(clickStop);
 		} else {
@@ -321,10 +322,10 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			writer.close();
 		}
 		saved = true;
-		updateStatus("Saved");
 	}
 
 	public void saveState(OutputStream os) throws IOException {
+		updateStatus("Saving...");
 		if (clickStop != null) {
 			EventQueue.invokeLater(clickStop);
 		} else {
@@ -338,7 +339,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			os.close();
 		}
 		saved = true;
-		updateStatus("Saved");
 	}
 
 	private void updateStatus(final String status) {
@@ -362,7 +362,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		if (file == null)
 			return;
 		try {
-			// loadStateApp(new FileInputStream(file));
+			// loadStateApp(new FileInputStream(file)); this call doesn't work on some Mac
 			loadStateApp(new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -439,7 +439,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	int askSaveOption() {
 		if (saved || owner == null || currentModel != null || currentURL != null)
 			return JOptionPane.NO_OPTION;
-		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Energy2D", JOptionPane.YES_NO_CANCEL_OPTION);
+		return JOptionPane.showConfirmDialog(owner, "Do you want to save the changes?", "Save", JOptionPane.YES_NO_CANCEL_OPTION);
 	}
 
 	boolean askSaveBeforeLoading() {
@@ -525,7 +525,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			if (target instanceof Part)
 				model.removePart((Part) target);
 			else if (target instanceof Thermometer)
-				model.getThermometers().remove((Thermometer) target);
+				model.removeThermometer((Thermometer) target);
 			saved = false;
 			break;
 		case ManipulationEvent.RUN:

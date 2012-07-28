@@ -440,6 +440,18 @@ public class Model2D {
 		thermometers.add(t);
 	}
 
+	public void removeThermometer(Thermometer t) {
+		thermometers.remove(t);
+		if (!thermostats.isEmpty()) {
+			Iterator<Thermostat> i = thermostats.iterator();
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == t)
+					i.remove();
+			}
+		}
+	}
+
 	public List<Thermometer> getThermometers() {
 		return thermometers;
 	}
@@ -573,6 +585,14 @@ public class Model2D {
 
 	public void removePart(Part p) {
 		parts.remove(p);
+		if (!thermostats.isEmpty()) {
+			Iterator<Thermostat> i = thermostats.iterator();
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getPowerSource() == p)
+					i.remove();
+			}
+		}
 		checkPartPower();
 		checkPartRadiation();
 	}

@@ -7,7 +7,7 @@
 package org.concord.energy2d.model;
 
 /**
- * A thermostat is a component of a control system which senses the temperature of a system so that the system's temperature is maintained near a desired setpoint. The thermostat does this by switching heating or cooling devices on or off, or regulating the flow of a heat transfer fluid as needed, to maintain the correct temperature.
+ * A thermostat switches heating or cooling devices on or off to maintain the temperature at a setpoint.
  * 
  * @author Charles Xie
  * 
