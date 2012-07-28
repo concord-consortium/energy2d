@@ -37,13 +37,14 @@ class XmlEncoder {
 		if (box.model.getLy() != 10) {
 			sb.append("<model_height>" + box.model.getLy() + "</model_height>\n");
 		}
-		if (box.model.getTimeStep() != 1) {
-			sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
-		}
-		if (box.model.getMeasurementInterval() != 500) {
+		sb.append("<timestep>" + box.model.getTimeStep() + "</timestep>\n");
+		if (box.model.getMeasurementInterval() != 100) {
 			sb.append("<measurement_interval>" + box.model.getMeasurementInterval() + "</measurement_interval>\n");
 		}
-		if (box.model.getViewUpdateInterval() != 100) {
+		if (box.model.getControlInterval() != 100) {
+			sb.append("<control_interval>" + box.model.getControlInterval() + "</control_interval>\n");
+		}
+		if (box.model.getViewUpdateInterval() != 20) {
 			sb.append("<viewupdate_interval>" + box.model.getViewUpdateInterval() + "</viewupdate_interval>\n");
 		}
 		if (box.model.getStopTime() > 0) {

@@ -712,6 +712,15 @@ class Scripter2D extends Scripter {
 						return;
 					}
 					s2d.model.setMeasurementInterval(measurementInterval);
+				} else if (t[0].equalsIgnoreCase("control_interval")) {
+					int controlInterval = 0;
+					try {
+						controlInterval = Integer.parseInt(t[1]);
+					} catch (NumberFormatException e) {
+						showException(ci, e);
+						return;
+					}
+					s2d.model.setControlInterval(controlInterval);
 				} else if (t[0].equalsIgnoreCase("stoptime")) {
 					float stopTime = -1;
 					try {

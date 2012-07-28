@@ -50,7 +50,8 @@ class MenuBar extends JMenuBar {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	private FileChooser e2dFileChooser, htmFileChooser;
+	FileChooser e2dFileChooser;
+	private FileChooser htmFileChooser;
 
 	private FileFilter e2dFilter = new FileFilter() {
 

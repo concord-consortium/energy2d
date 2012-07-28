@@ -43,6 +43,8 @@ final class DialogFactory {
 			return new ViewDialog(view, modal);
 		if (o instanceof Part)
 			return new PartViewDialog(view, (Part) o, modal);
+		if (o instanceof Thermometer)
+			return new ThermometerDialog(view, (Thermometer) o, modal);
 		return null;
 	}
 

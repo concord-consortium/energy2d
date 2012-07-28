@@ -38,8 +38,9 @@ class XmlDecoder extends DefaultHandler {
 	private float modelWidth = 10;
 	private float modelHeight = 10;
 	private float timeStep = 1;
-	private int measurementInterval = 500;
-	private int viewUpdateInterval = 100;
+	private int measurementInterval = 100;
+	private int controlInterval = 100;
+	private int viewUpdateInterval = 20;
 	private float stopTime = -1;
 	private boolean sunny;
 	private float sunAngle = (float) Math.PI * 0.5f;
@@ -127,6 +128,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
 		box.model.setMeasurementInterval(measurementInterval);
+		box.model.setControlInterval(controlInterval);
 		box.model.setViewUpdateInterval(viewUpdateInterval);
 		box.model.setStopTime(stopTime);
 		box.model.setSunny(sunny);
@@ -467,6 +469,8 @@ class XmlDecoder extends DefaultHandler {
 			timeStep = Float.parseFloat(str);
 		} else if (qName == "measurement_interval") {
 			measurementInterval = Integer.parseInt(str);
+		} else if (qName == "control_interval") {
+			controlInterval = Integer.parseInt(str);
 		} else if (qName == "viewupdate_interval") {
 			viewUpdateInterval = Integer.parseInt(str);
 		} else if (qName == "stoptime") {
@@ -666,6 +670,7 @@ class XmlDecoder extends DefaultHandler {
 		modelHeight = 10;
 		timeStep = 1;
 		measurementInterval = 100;
+		controlInterval = 100;
 		viewUpdateInterval = 20;
 		stopTime = -1;
 		sunny = false;

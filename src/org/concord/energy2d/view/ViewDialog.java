@@ -231,8 +231,7 @@ class ViewDialog extends JDialog {
 		tab.add(p2, "Visualization");
 		count = 0;
 
-		JLabel label = new JLabel("Coloring property");
-		p.add(label);
+		p.add(new JLabel("Coloring property"));
 
 		JComboBox comboBox = new JComboBox();
 		comboBox.addItem("None");
@@ -282,8 +281,7 @@ class ViewDialog extends JDialog {
 		p.add(new JPanel());
 		count++;
 
-		label = new JLabel("Color palette");
-		p.add(label);
+		p.add(new JLabel("Color palette"));
 
 		comboBox = new JComboBox();
 		comboBox.addItem("Rainbow");
@@ -303,8 +301,7 @@ class ViewDialog extends JDialog {
 		p.add(new JPanel());
 		count++;
 
-		label = new JLabel("Mouse reading");
-		p.add(label);
+		p.add(new JLabel("Mouse reading"));
 
 		comboBox = new JComboBox();
 		comboBox.addItem("Nothing");
@@ -370,8 +367,7 @@ class ViewDialog extends JDialog {
 		tab.add(p2, "Event");
 		count = 0;
 
-		label = new JLabel("Measurement interval");
-		p.add(label);
+		p.add(new JLabel("Measurement interval"));
 
 		JTextField textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
 		textField.addActionListener(new ActionListener() {
@@ -384,12 +380,26 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(textField);
-		label = new JLabel("<html><i>s</html>");
-		p.add(label);
+		p.add(new JLabel("steps"));
 		count++;
 
-		label = new JLabel("View update interval");
-		p.add(label);
+		p.add(new JLabel("Control interval"));
+
+		textField = new JTextField(view.model.getControlInterval() + "", 2);
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField src = (JTextField) e.getSource();
+				float interval = parse(src.getText());
+				if (Float.isNaN(interval))
+					return;
+				view.model.setControlInterval((int) interval);
+			}
+		});
+		p.add(textField);
+		p.add(new JLabel("steps"));
+		count++;
+
+		p.add(new JLabel("View update interval"));
 
 		textField = new JTextField(view.model.getViewUpdateInterval() + "", 2);
 		textField.addActionListener(new ActionListener() {
@@ -402,12 +412,10 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(textField);
-		label = new JLabel("<html><i>s</html>");
-		p.add(label);
+		p.add(new JLabel("steps"));
 		count++;
 
-		label = new JLabel("Auto pause interval");
-		p.add(label);
+		p.add(new JLabel("Auto pause interval"));
 
 		textField = new JTextField(view.model.getStopTime() + "", 2);
 		textField.addActionListener(new ActionListener() {
@@ -420,8 +428,7 @@ class ViewDialog extends JDialog {
 			}
 		});
 		p.add(textField);
-		label = new JLabel("<html><i>s</i> [If -1 (default), never pause.]</html>");
-		p.add(label);
+		p.add(new JLabel("seconds [If -1 (default), never pause.]"));
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);

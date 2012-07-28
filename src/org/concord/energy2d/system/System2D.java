@@ -744,7 +744,14 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.view.setRulerOn(true);
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png")).getImage());
-		MenuBar menuBar = new MenuBar(box, frame);
+		final MenuBar menuBar = new MenuBar(box, frame);
+		menuBar.setLatestPath(preferences.get("Latest E2D Path", null), "e2d");
+		menuBar.setLatestPath(preferences.get("Latest HTM Path", null), "htm");
+		menuBar.setLatestPath(preferences.get("Latest PNG Path", null), "png");
+		menuBar.addRecentFile(preferences.get("Recent File 0", null));
+		menuBar.addRecentFile(preferences.get("Recent File 1", null));
+		menuBar.addRecentFile(preferences.get("Recent File 2", null));
+		menuBar.addRecentFile(preferences.get("Recent File 3", null));
 		frame.setJMenuBar(menuBar);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setContentPane(box.getContentPane());
@@ -763,7 +770,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.setLocation(x, y);
 		frame.setTitle(BRAND_NAME);
 		frame.pack();
-		frame.setVisible(true);
+		frame.setVisible(true);		
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Action a = box.view.getActionMap().get("Quit");
@@ -776,22 +783,17 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 					public void run() {
 						if (args != null && args.length > 1) {
 							String filePath = args[1];
-							if (filePath.toLowerCase().trim().endsWith(".e2d"))
+							if (filePath.toLowerCase().trim().endsWith(".e2d")) {
 								box.loadFile(new File(filePath));
+								menuBar.e2dFileChooser.rememberFile(filePath);
+							}
+
 						}
 					}
 				});
 			}
 		});
 		box.owner = frame;
-
-		menuBar.setLatestPath(preferences.get("Latest E2D Path", null), "e2d");
-		menuBar.setLatestPath(preferences.get("Latest HTM Path", null), "htm");
-		menuBar.setLatestPath(preferences.get("Latest PNG Path", null), "png");
-		menuBar.addRecentFile(preferences.get("Recent File 0", null));
-		menuBar.addRecentFile(preferences.get("Recent File 1", null));
-		menuBar.addRecentFile(preferences.get("Recent File 2", null));
-		menuBar.addRecentFile(preferences.get("Recent File 3", null));
 
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			Application app = new Application();

@@ -106,6 +106,7 @@ public class Model2D {
 	private boolean notifyReset;
 	private int viewUpdateInterval = 20;
 	private int measurementInterval = 100;
+	private int controlInterval = 100;
 
 	// optimization flags
 	private boolean hasPartPower;
@@ -878,8 +879,10 @@ public class Model2D {
 		heatSolver.solve(convective, t);
 		if (indexOfStep % measurementInterval == 0) {
 			takeMeasurement();
+		}
+		if (indexOfStep % controlInterval == 0) { // if controllers run every step, they could slow down significantly
 			boolean refresh = false;
-			for (Thermostat x : thermostats) { // if thermostats run every step, it would slow down significantly
+			for (Thermostat x : thermostats) {
 				if (x.onoff())
 					refresh = true;
 			}
@@ -906,6 +909,14 @@ public class Model2D {
 
 	public int getMeasurementInterval() {
 		return measurementInterval;
+	}
+
+	public void setControlInterval(int controlInterval) {
+		this.controlInterval = controlInterval;
+	}
+
+	public int getControlInterval() {
+		return controlInterval;
 	}
 
 	public float getTime() {
