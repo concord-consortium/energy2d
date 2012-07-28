@@ -336,6 +336,9 @@ class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), "Are you sure you want to remove all objects?", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					box.model.clear();
+					box.model.refreshMaterialPropertyArrays();
+					box.model.refreshPowerArray();
+					box.model.refreshTemperatureBoundaryArray();
 					box.view.clear();
 					box.view.repaint();
 				}
@@ -532,6 +535,14 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		mi = new JMenuItem("The Zeroth Law of Thermodynamics");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/zeroth.e2d");
+			}
+		});
+		subMenu.add(mi);
+
 		subMenu = new JMenu("Conduction");
 		menu.add(subMenu);
 
@@ -587,6 +598,14 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/parallel-circuit-analogy.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Thermal Bridge");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/thermal-bridge.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -735,6 +754,14 @@ class MenuBar extends JMenuBar {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.loadModel("models/solar-heating-convection.e2d");
+			}
+		});
+		subMenu.add(mi);
+
+		mi = new JMenuItem("Thermostat");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/thermostat.e2d");
 			}
 		});
 		subMenu.add(mi);

@@ -385,7 +385,7 @@ public class Model2D {
 			if (x.getThermometer() == t && x.getPowerSource() == p)
 				return x;
 		}
-		Thermostat x = new Thermostat(this, t, p);
+		Thermostat x = new Thermostat(t, p);
 		thermostats.add(x);
 		return x;
 	}
@@ -878,9 +878,13 @@ public class Model2D {
 		heatSolver.solve(convective, t);
 		if (indexOfStep % measurementInterval == 0) {
 			takeMeasurement();
-			for (Thermostat x : thermostats) { // thermostat need not be run every step
-				x.control();
+			boolean refresh = false;
+			for (Thermostat x : thermostats) { // if thermostats run every step, it would slow down significantly
+				if (x.onoff())
+					refresh = true;
 			}
+			if (refresh)
+				refreshPowerArray();
 		}
 		if (indexOfStep % viewUpdateInterval == 0) {
 			notifyVisualizationListeners();

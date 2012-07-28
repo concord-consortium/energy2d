@@ -12,6 +12,7 @@ package org.concord.energy2d.model;
  */
 public interface Controller {
 
-	public void control();
+	/** on/off control, return a boolean to indicate if it is on or off */
+	public boolean onoff();
 
 }

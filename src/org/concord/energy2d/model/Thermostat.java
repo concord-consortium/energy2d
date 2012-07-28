@@ -14,25 +14,23 @@ package org.concord.energy2d.model;
  */
 public class Thermostat implements Controller {
 
-	private Model2D model;
 	private Thermometer thermometer;
 	private Part powerSource;
 	private float setpoint = 20;
 	private float deadband = 1;
 
-	public Thermostat(Model2D model, Thermometer thermometer, Part powerSource) {
+	public Thermostat(Thermometer thermometer, Part powerSource) {
 		if (thermometer == null || powerSource == null)
 			throw new IllegalArgumentException("A thermostat must connect a thermometer with a power source.");
-		this.model = model;
 		this.thermometer = thermometer;
 		this.powerSource = powerSource;
 	}
 
 	/** implements a bang-bang (on-off) controller */
-	public void control() {
+	public boolean onoff() {
 		float power = powerSource.getPower();
 		if (power == 0)
-			return;
+			return false;
 		boolean refresh = false;
 		float t = thermometer.getCurrentData();
 		if (power > 0) { // if it is a heater
@@ -52,8 +50,7 @@ public class Thermostat implements Controller {
 				refresh = true;
 			}
 		}
-		if (refresh)
-			model.refreshPowerArray();
+		return refresh;
 	}
 
 	public Thermometer getThermometer() {
