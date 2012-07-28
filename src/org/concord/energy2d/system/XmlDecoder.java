@@ -15,6 +15,7 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.model.Thermostat;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.util.Texture;
@@ -413,8 +414,11 @@ class XmlDecoder extends DefaultHandler {
 				if (!Float.isNaN(setpoint) && !Float.isNaN(deadband) && thermometerUID != null && powerSourceUID != null) {
 					Thermometer t = box.model.getThermometer(thermometerUID);
 					Part p = box.model.getPart(powerSourceUID);
-					if (t != null && p != null)
-						box.model.addThermostat(t, p);
+					if (t != null && p != null) {
+						Thermostat ts = box.model.addThermostat(t, p);
+						ts.setDeadband(deadband);
+						ts.setSetPoint(setpoint);
+					}
 				}
 			}
 		} else if (qName == "text") {
