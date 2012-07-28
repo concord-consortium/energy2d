@@ -331,13 +331,14 @@ class MenuBar extends JMenuBar {
 		menu.add(box.view.getActionMap().get("Paste"));
 		menu.addSeparator();
 
-		// TODO
-		mi = new JMenuItem("Select All");
-		mi.setEnabled(false);
-		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
-		mi.setAccelerator(ks);
+		mi = new JMenuItem("Clear All");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), "Are you sure you want to remove all objects?", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					box.model.clear();
+					box.view.clear();
+					box.view.repaint();
+				}
 			}
 		});
 		menu.add(mi);

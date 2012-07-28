@@ -245,6 +245,11 @@ class ThermometerDialog extends JDialog {
 		thermostatPanel.add(p, BorderLayout.SOUTH);
 		for (int i = 0; i < powerSources.size(); i++) {
 			Part ps = powerSources.get(i);
+			String uid = ps.getUid();
+			if (uid == null) { // auto-generate a UID
+				uid = Long.toHexString(System.currentTimeMillis());
+				ps.setUid(uid);
+			}
 			powerSourceCheckBoxes[i] = new JCheckBox(ps.getUid());
 			if (view.model.isConnected(thermometer, ps))
 				powerSourceCheckBoxes[i].setSelected(true);

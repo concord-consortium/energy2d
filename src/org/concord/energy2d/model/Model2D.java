@@ -713,6 +713,7 @@ public class Model2D {
 		parts.clear();
 		photons.clear();
 		thermometers.clear();
+		thermostats.clear();
 		maximumHeatCapacity = -1;
 		minimumHeatCapacity = Float.MAX_VALUE;
 	}

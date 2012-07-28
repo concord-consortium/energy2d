@@ -40,10 +40,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -91,6 +93,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 
 	Runnable clickRun, clickStop, clickReset, clickReload;
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
+	private JLabel statusLabel;
 	private List<IOListener> ioListeners;
 	private JFrame owner;
 	private static Preferences preferences;
@@ -318,6 +321,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			writer.close();
 		}
 		saved = true;
+		updateStatus("Saved");
 	}
 
 	public void saveState(OutputStream os) throws IOException {
@@ -334,6 +338,23 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 			os.close();
 		}
 		saved = true;
+		updateStatus("Saved");
+	}
+
+	private void updateStatus(final String status) {
+		if (statusLabel != null)
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					statusLabel.setText(status);
+					Timer timer = new Timer(1000, new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							statusLabel.setText(null);
+						}
+					});
+					timer.setRepeats(false);
+					timer.start();
+				}
+			});
 	}
 
 	void loadFile(File file) {
@@ -578,6 +599,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 	}
 
 	private JPanel createButtonPanel() {
+		statusLabel = new JLabel();
 		JPanel p = new JPanel();
 		buttonRun = new JButton("Run");
 		buttonRun.setToolTipText("Run the simulation");
@@ -730,7 +752,12 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		box.addIOListener(toolBar);
 		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
-		frame.getContentPane().add(box.createButtonPanel(), BorderLayout.SOUTH);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+		bottomPanel.add(box.createButtonPanel(), BorderLayout.CENTER);
+		box.statusLabel.setPreferredSize(new Dimension(100, 24));
+		bottomPanel.add(box.statusLabel, BorderLayout.WEST);
+		frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		int x = preferences.getInt("Upper-left x", (screen.height - w) / 8);
 		int y = preferences.getInt("Upper-left y", (screen.height - w) / 8);
 		frame.setLocation(x, y);
