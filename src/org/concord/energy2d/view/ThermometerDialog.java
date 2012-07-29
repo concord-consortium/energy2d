@@ -206,7 +206,7 @@ class ThermometerDialog extends JDialog {
 			onePointButton.setSelected(true);
 		}
 
-		// thermostat properties: a thermometer can control multiple power sources
+		// thermostat properties: a thermometer can control multiple power sources, but a power source can only be controlled by a thermometer
 
 		Thermostat thermostat = view.model.getThermostat(thermometer);
 
@@ -214,7 +214,9 @@ class ThermometerDialog extends JDialog {
 		powerSources = new ArrayList<Part>();
 		for (Part x : parts) {
 			if (x.getPower() != 0) {
-				powerSources.add(x);
+				Thermostat ts = view.model.getThermostat(x);
+				if (ts == null || ts.getThermometer() == thermometer)
+					powerSources.add(x);
 			}
 		}
 		powerSourceCheckBoxes = new JCheckBox[powerSources.size()];
