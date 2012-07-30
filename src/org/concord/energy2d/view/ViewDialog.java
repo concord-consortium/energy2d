@@ -301,28 +301,6 @@ class ViewDialog extends JDialog {
 		p.add(new JPanel());
 		count++;
 
-		p.add(new JLabel("Mouse reading"));
-
-		comboBox = new JComboBox();
-		comboBox.addItem("Nothing");
-		comboBox.addItem("Temperature");
-		comboBox.addItem("Thermal energy");
-		comboBox.addItem("Velocity");
-		comboBox.setSelectedIndex(view.getMouseReadType());
-		comboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				JComboBox src = (JComboBox) e.getSource();
-				int i = src.getSelectedIndex();
-				view.setMouseReadType((byte) i);
-				view.repaint();
-				view.notifyManipulationListeners(null, ManipulationEvent.MOUSE_READ_CHANGED);
-			}
-		});
-		p.add(comboBox);
-
-		p.add(new JPanel());
-		count++;
-
 		nameLabel1 = new JLabel("Lowest temperature");
 		p.add(nameLabel1);
 
@@ -357,6 +335,28 @@ class ViewDialog extends JDialog {
 		p.add(upperTempField);
 		unitLabel2 = new JLabel("\u00B0C");
 		p.add(unitLabel2);
+		count++;
+
+		p.add(new JLabel("Mouse reading"));
+
+		comboBox = new JComboBox();
+		comboBox.addItem("Nothing");
+		comboBox.addItem("Temperature");
+		comboBox.addItem("Thermal energy");
+		comboBox.addItem("Velocity");
+		comboBox.setSelectedIndex(view.getMouseReadType());
+		comboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox src = (JComboBox) e.getSource();
+				int i = src.getSelectedIndex();
+				view.setMouseReadType((byte) i);
+				view.repaint();
+				view.notifyManipulationListeners(null, ManipulationEvent.MOUSE_READ_CHANGED);
+			}
+		});
+		p.add(comboBox);
+
+		p.add(new JPanel());
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);

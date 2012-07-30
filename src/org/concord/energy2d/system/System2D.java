@@ -108,6 +108,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		}
 
 		model = new Model2D();
+		model.addManipulationListener(this);
 		view = new View2D();
 		view.addManipulationListener(this);
 		view.setModel(model);
@@ -598,6 +599,9 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	public void manipulationOccured(ManipulationEvent e) {
 		Object target = e.getTarget();
 		switch (e.getType()) {
+		case ManipulationEvent.REPAINT:
+			view.repaint();
+			break;
 		case ManipulationEvent.PROPERTY_CHANGE:
 			saved = false;
 			break;
