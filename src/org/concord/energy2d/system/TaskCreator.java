@@ -147,7 +147,7 @@ class TaskCreator {
 			return NAME_ERROR;
 		}
 		if (task == null) {
-			if (taskManager.containsName(name))
+			if (taskManager.getTaskByUid(name) != null)
 				return NAME_EXISTS;
 			Task t = new Task((int) parse(intervalField.getText())) {
 				public void execute() {
@@ -160,7 +160,7 @@ class TaskCreator {
 			t.setSystemTask(false);
 			t.setPriority((Integer) prioritySpinner.getValue());
 			t.setLifetime(permanentCheckBox.isSelected() ? Task.PERMANENT : (int) parse(lifetimeField.getText()));
-			t.setName(name);
+			t.setUid(name);
 			t.setDescription(descriptionField.getText());
 			t.setScript(scriptArea.getText());
 			taskManager.add(t);
@@ -171,8 +171,8 @@ class TaskCreator {
 			task.setLifetime(permanentCheckBox.isSelected() ? Task.PERMANENT : (int) parse(lifetimeField.getText()));
 			task.setDescription(descriptionField.getText());
 			task.setScript(scriptArea.getText());
-			if (!task.getName().equals(name)) {
-				task.setName(name);
+			if (!task.getUid().equals(name)) {
+				task.setUid(name);
 				table.setValueAt(name, row, 2);
 			}
 		}
@@ -191,7 +191,7 @@ class TaskCreator {
 		}
 		if (l != null) {
 			dialog.setTitle("Edit a Task");
-			nameField.setText(l.getName());
+			nameField.setText(l.getUid());
 			descriptionField.setText(l.getDescription());
 			scriptArea.setText(l.getScript());
 			scriptArea.setCaretPosition(0);

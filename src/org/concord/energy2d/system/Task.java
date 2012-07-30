@@ -1,6 +1,8 @@
 package org.concord.energy2d.system;
 
 /**
+ * A task contains system/user-defined code/script that runs within the system's main thread with a given frequency and period.
+ * 
  * @author Charles Xie
  */
 
@@ -10,41 +12,26 @@ public abstract class Task {
 
 	private int lifetime = PERMANENT;
 	private int interval = 10;
-	private int minInterval = 1;
-	private int maxInterval = 5000;
-	private int minLifetime = 100;
-	private int maxLifetime = 1000;
-	private String name = "Unknown";
+	private String uid;
 	private String description;
 	private boolean enabled = true;
 	private boolean completed;
 	private boolean systemTask = true;
 	private String script;
-	private int priority = Thread.NORM_PRIORITY;
+	private int priority = 1; // 5 = highest priority; 1 = lowest priority
 
 	public Task() {
-		name += "@" + Long.toHexString(System.currentTimeMillis());
+		uid = Long.toHexString(System.currentTimeMillis());
 	}
 
-	/**
-	 * @param i
-	 *            interval for executing this task
-	 */
-	public Task(int i) {
+	public Task(int interval) {
 		this();
-		setInterval(i);
+		setInterval(interval);
 	}
 
-	/**
-	 * @param i
-	 *            interval for executing this task
-	 * @param j
-	 *            total steps for executing this task
-	 */
-	public Task(int i, int j) {
-		this();
-		setInterval(i);
-		setLifetime(j);
+	public Task(int interval, int lifetime) {
+		this(interval);
+		setLifetime(lifetime);
 	}
 
 	public abstract void execute();
@@ -73,16 +60,6 @@ public abstract class Task {
 		return script;
 	}
 
-	public boolean equals(Object o) {
-		if (!(o instanceof Task))
-			return false;
-		return ((Task) o).getName().equals(getName());
-	}
-
-	public int hashCode() {
-		return getName().hashCode();
-	}
-
 	public void setCompleted(boolean b) {
 		completed = b;
 	}
@@ -91,80 +68,58 @@ public abstract class Task {
 		return completed;
 	}
 
-	public void setPriority(int i) {
-		priority = i;
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	public int getPriority() {
 		return priority;
 	}
 
-	public void setLifetime(int i) {
-		lifetime = i;
+	public void setLifetime(int lifetime) {
+		this.lifetime = lifetime;
 	}
 
 	public int getLifetime() {
 		return lifetime;
 	}
 
-	public int getMinLifetime() {
-		return minLifetime;
-	}
-
-	public void setMinLifetime(int i) {
-		minLifetime = i;
-	}
-
-	public int getMaxLifetime() {
-		return maxLifetime;
-	}
-
-	public void setMaxLifetime(int i) {
-		maxLifetime = i;
+	public void setInterval(int interval) {
+		this.interval = interval;
 	}
 
 	public int getInterval() {
 		return interval;
 	}
 
-	public void setInterval(int i) {
-		interval = i;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public int getMinInterval() {
-		return minInterval;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setMinInterval(int i) {
-		minInterval = i;
-	}
-
-	public int getMaxInterval() {
-		return maxInterval;
-	}
-
-	public void setMaxInterval(int i) {
-		maxInterval = i;
-	}
-
-	public void setName(String s) {
-		name = s;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setDescription(String s) {
-		description = s;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
+	public boolean equals(Object o) {
+		if (!(o instanceof Task))
+			return false;
+		return ((Task) o).getUid().equals(uid);
+	}
+
+	public int hashCode() {
+		return uid.hashCode();
+	}
+
 	public String toString() {
-		return getName() + ":" + getPriority();
+		return uid;
 	}
 
 }

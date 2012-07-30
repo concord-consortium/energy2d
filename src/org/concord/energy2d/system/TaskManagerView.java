@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -43,40 +42,33 @@ import javax.swing.table.DefaultTableModel;
 
 class TaskManagerView {
 
-	/** the task pool */
-	protected List<Task> taskPool;
-
 	private JTable table;
 	private Vector<Vector<Object>> rowData;
 	private JTextArea note;
 	private TaskCreator taskCreator;
 	private JButton removeTaskButton, editTaskButton;
-	private Runnable initTaskAction;
-	private int editableCol = 4;
+	private final int editableCol = 3;
+	private final int uidCol = 1;
 	private TaskManager taskManager;
 
 	TaskManagerView(TaskManager taskManager) {
-		rowData = new Vector<Vector<Object>>();
 		this.taskManager = taskManager;
+		rowData = new Vector<Vector<Object>>();
 	}
 
-	void setInitTaskAction(Runnable r) {
-		initTaskAction = r;
-	}
-
-	/* create a dialog window showing the subtasks */
+	/* show the tasks in a window */
 	void show(Window owner) {
 		createTasks(owner).setVisible(true);
 	}
 
-	/* create a dialog window showing the subtasks with the specified task selected to edit. */
-	void show(Window owner, String s) {
+	/* show the tasks in a window with the specified task selected to edit */
+	void show(Window owner, String uid) {
 		JDialog dialog = createTasks(owner);
 		int n = table.getRowCount();
-		String name;
+		String s;
 		for (int i = 0; i < n; i++) {
-			name = (String) table.getValueAt(i, 2);
-			if (name != null && name.equals(s)) {
+			s = (String) table.getValueAt(i, uidCol);
+			if (s != null && s.equals(uid)) {
 				table.setRowSelectionInterval(i, i);
 				table.setEditingColumn(editableCol);
 				table.setEditingRow(i);
@@ -89,9 +81,8 @@ class TaskManagerView {
 		if (task == null)
 			return;
 		Vector<Object> v = new Vector<Object>();
-		v.add(task.getLifetime() == Task.PERMANENT ? "P" : "Q");
 		v.add(task.isEnabled());
-		v.add(task.getName());
+		v.add(task.getUid());
 		v.add(Integer.toString(task.getPriority()));
 		v.add(Integer.toString(task.getInterval()));
 		v.add(task.getLifetime() == Task.PERMANENT ? "Permanent" : Integer.toString(task.getLifetime()));
@@ -106,7 +97,7 @@ class TaskManagerView {
 		if (task == null)
 			return;
 		for (Vector<Object> v : rowData) {
-			if (v.elementAt(2).equals(task.getName())) {
+			if (v.elementAt(uidCol).equals(task.getUid())) {
 				rowData.remove(v);
 				task.setCompleted(false);
 				if (table != null)
@@ -127,8 +118,7 @@ class TaskManagerView {
 		dialog.setContentPane(panel);
 
 		Vector<String> columnNames = new Vector<String>();
-		columnNames.add("");
-		columnNames.add("Run");
+		columnNames.add("Enable");
 		columnNames.add("Task");
 		columnNames.add("Priority");
 		columnNames.add("Interval");
@@ -155,14 +145,14 @@ class TaskManagerView {
 						}
 					}
 				}
-				if (j != editableCol && j != 1 && e.getClickCount() >= 2) {
+				if (j != editableCol && j != 0 && e.getClickCount() >= 2) {
 					editTaskButton.doClick();
 				}
 			}
 		});
 
 		rowData.clear();
-		for (Task t : taskPool) {
+		for (Task t : taskManager.taskPool) {
 			insertRow(t);
 		}
 
@@ -172,29 +162,29 @@ class TaskManagerView {
 			}
 
 			public boolean isCellEditable(int row, int col) {
-				Task t = taskManager.getTaskByName((String) table.getValueAt(row, 2));
-				if (t.isSystemTask() && col == 1)
+				Task t = taskManager.getTaskByUid((String) table.getValueAt(row, uidCol));
+				if (t.isSystemTask() && col == 0)
 					return false;
-				return col == editableCol || col == 1;
+				return col == editableCol || col == 0;
 			}
 		};
 		table.setModel(tm);
 		tm.addTableModelListener(new TableModelListener() {
 			public void tableChanged(TableModelEvent e) {
-				DefaultTableModel t = (DefaultTableModel) e.getSource();
+				DefaultTableModel src = (DefaultTableModel) e.getSource();
 				int col = e.getColumn();
 				if (col == editableCol) {
 					int row = e.getFirstRow();
-					Task l = taskManager.getTaskByName((String) t.getValueAt(row, 2));
-					String s = (String) t.getValueAt(row, col);
+					Task t = taskManager.getTaskByUid((String) src.getValueAt(row, uidCol));
+					String s = (String) src.getValueAt(row, col);
 					if (s != null)
-						l.setInterval(Integer.parseInt(s));
-				} else if (col == 1) {
+						t.setInterval(Integer.parseInt(s));
+				} else if (col == 0) {
 					int row = e.getFirstRow();
-					Task l = taskManager.getTaskByName((String) t.getValueAt(row, 2));
-					Boolean b = (Boolean) t.getValueAt(row, col);
+					Task t = taskManager.getTaskByUid((String) src.getValueAt(row, uidCol));
+					Boolean b = (Boolean) src.getValueAt(row, col);
 					if (b != null)
-						l.setEnabled(b.booleanValue());
+						t.setEnabled(b.booleanValue());
 				}
 			}
 		});
@@ -207,18 +197,17 @@ class TaskManagerView {
 				ListSelectionModel sm = (ListSelectionModel) e.getSource();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Task l = taskManager.getTaskByName((String) table.getValueAt(row, 2));
-					note.setText(l.getDescription());
-					boolean b = !l.isSystemTask();
+					Task t = taskManager.getTaskByUid((String) table.getValueAt(row, uidCol));
+					note.setText(t.getDescription());
+					boolean b = !t.isSystemTask();
 					removeTaskButton.setEnabled(b);
 					editTaskButton.setEnabled(b);
 				}
 			}
 		});
 
-		table.getColumnModel().getColumn(0).setMaxWidth(24);
-		table.getColumnModel().getColumn(1).setMaxWidth(36);
-		table.getColumnModel().getColumn(2).setMinWidth(200);
+		table.getColumnModel().getColumn(0).setMaxWidth(36);
+		table.getColumnModel().getColumn(uidCol).setMinWidth(200);
 		table.setShowGrid(false);
 		table.setRowHeight(24);
 		table.setRowMargin(2);
@@ -254,18 +243,7 @@ class TaskManagerView {
 		p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		p.add(p1, BorderLayout.SOUTH);
 
-		JButton button;
-
-		button = new JButton("Initialization Task");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (initTaskAction != null)
-					initTaskAction.run();
-			}
-		});
-		p1.add(button);
-
-		button = new JButton("Add Task");
+		JButton button = new JButton("Add Task");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (taskCreator == null)
@@ -282,7 +260,7 @@ class TaskManagerView {
 				ListSelectionModel sm = table.getSelectionModel();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Task t = taskManager.getTaskByName((String) table.getValueAt(row, 2));
+					Task t = taskManager.getTaskByUid((String) table.getValueAt(row, uidCol));
 					if (t != null) {
 						taskManager.remove(t);
 						taskManager.processPendingRequests();
@@ -299,20 +277,17 @@ class TaskManagerView {
 				ListSelectionModel sm = table.getSelectionModel();
 				if (!sm.isSelectionEmpty()) {
 					int row = sm.getMinSelectionIndex();
-					Task l = taskManager.getTaskByName((String) table.getValueAt(row, 2));
-					if (l != null) {
-						if (l.isSystemTask())
-							return;
+					Task t = taskManager.getTaskByUid((String) table.getValueAt(row, uidCol));
+					if (t != null && !t.isSystemTask()) {
 						if (taskCreator == null)
 							taskCreator = new TaskCreator(taskManager, owner);
-						taskCreator.show(table, l, row);
-						note.setText(l.getDescription());
-						table.setValueAt(l.getLifetime() == Task.PERMANENT ? "P" : "Q", row, 0);
-						table.setValueAt(l.isEnabled(), row, 1);
-						table.setValueAt(l.getName(), row, 2);
-						table.setValueAt(l.getPriority() + "", row, 3);
-						table.setValueAt(l.getInterval() + "", row, 4);
-						table.setValueAt(l.getLifetime() == Task.PERMANENT ? "Permanent" : l.getLifetime() + "", row, 5);
+						taskCreator.show(table, t, row);
+						note.setText(t.getDescription());
+						table.setValueAt(t.isEnabled(), row, 0);
+						table.setValueAt(t.getUid(), row, 1);
+						table.setValueAt(Integer.toString(t.getPriority()), row, 2);
+						table.setValueAt(Integer.toString(t.getInterval()), row, 3);
+						table.setValueAt(t.getLifetime() == Task.PERMANENT ? "Permanent" : Integer.toString(t.getLifetime()), row, 4);
 						table.repaint();
 					}
 				}
