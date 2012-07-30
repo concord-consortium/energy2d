@@ -78,7 +78,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	Model2D model;
 	View2D view;
-	Task repaint, measure, control;
+	Task repaint, measure, control, autopause;
 	private Scripter2D scripter;
 	private ExecutorService threadService;
 	private TaskManager taskManager;
@@ -108,7 +108,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		}
 
 		model = new Model2D();
-		model.addManipulationListener(this);
 		view = new View2D();
 		view.addManipulationListener(this);
 		view.setModel(model);
@@ -187,6 +186,25 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		control.setUid("CONTROL");
 		control.setDescription("Invoke the controllers.");
 		taskManager.add(control);
+
+		autopause = new Task(-1) {
+			@Override
+			public void execute() {
+				stop();
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						if (clickStop != null)
+							clickStop.run();
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "This simulation was designed to automatically stopped here.");
+					}
+				});
+			}
+		};
+		autopause.setEnabled(false);
+		autopause.setSystemTask(false);
+		autopause.setUid("PAUSE");
+		autopause.setDescription("Automatically pause the simulation.");
+		taskManager.add(autopause);
 
 		taskManager.processPendingRequests();
 
@@ -620,18 +638,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			} else {
 				reload();
 			}
-			break;
-		case ManipulationEvent.AUTO_STOP:
-			if (clickStop != null) {
-				EventQueue.invokeLater(clickStop);
-			} else {
-				stop();
-			}
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "This simulation was designed to automatically stopped here.");
-				}
-			});
 			break;
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());

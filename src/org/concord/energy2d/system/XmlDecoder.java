@@ -130,7 +130,8 @@ class XmlDecoder extends DefaultHandler {
 		box.measure.setInterval(measurementInterval);
 		box.control.setInterval(controlInterval);
 		box.repaint.setInterval(viewUpdateInterval);
-		box.model.setStopTime(stopTime);
+		box.autopause.setInterval(stopTime > 0 ? Math.round(stopTime / timeStep) : -1);
+		box.autopause.setEnabled(box.autopause.getInterval() > 0);
 		box.model.setSunny(sunny);
 		box.model.setSunAngle(sunAngle);
 		box.model.setSolarPowerDensity(solarPowerDensity);

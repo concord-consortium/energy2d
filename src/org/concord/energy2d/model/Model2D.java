@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.concord.energy2d.event.ManipulationEvent;
-import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 
@@ -34,7 +32,6 @@ public class Model2D {
 	public final static byte BUOYANCY_AVERAGE_COLUMN = 1;
 
 	private int indexOfStep;
-	private float stopTime = -1;
 
 	private float backgroundConductivity = 10 * Constants.AIR_THERMAL_CONDUCTIVITY;
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
@@ -111,7 +108,6 @@ public class Model2D {
 	private boolean convective = true;
 
 	private List<PropertyChangeListener> propertyChangeListeners;
-	private List<ManipulationListener> manipulationListeners;
 	private Runnable tasks;
 
 	public Model2D() {
@@ -155,7 +151,6 @@ public class Model2D {
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
-		manipulationListeners = new ArrayList<ManipulationListener>();
 
 	}
 
@@ -169,14 +164,6 @@ public class Model2D {
 
 	public void setTasks(Runnable r) {
 		tasks = r;
-	}
-
-	public void setStopTime(float stopTime) {
-		this.stopTime = stopTime;
-	}
-
-	public float getStopTime() {
-		return stopTime;
 	}
 
 	public void setConvective(boolean convective) {
@@ -856,14 +843,6 @@ public class Model2D {
 	}
 
 	private void nextStep() {
-		if (stopTime > 0) {
-			if (indexOfStep > 0) {
-				if (indexOfStep % Math.round(stopTime / getTimeStep()) == 0) {
-					stop();
-					notifyManipulationListeners(ManipulationEvent.AUTO_STOP);
-				}
-			}
-		}
 		if (radiative) {
 			if (indexOfStep % photonEmissionInterval == 0) {
 				refreshPowerArray();
@@ -1142,24 +1121,6 @@ public class Model2D {
 		PropertyChangeEvent e = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
 		for (PropertyChangeListener x : propertyChangeListeners)
 			x.propertyChange(e);
-	}
-
-	public void addManipulationListener(ManipulationListener listener) {
-		if (!manipulationListeners.contains(listener))
-			manipulationListeners.add(listener);
-	}
-
-	public void removeManipulationListener(ManipulationListener listener) {
-		if (listener != null)
-			manipulationListeners.remove(listener);
-	}
-
-	private void notifyManipulationListeners(byte type) {
-		if (manipulationListeners.isEmpty())
-			return;
-		ManipulationEvent e = new ManipulationEvent(this, type);
-		for (ManipulationListener x : manipulationListeners)
-			x.manipulationOccured(e);
 	}
 
 }

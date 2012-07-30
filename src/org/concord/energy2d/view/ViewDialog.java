@@ -361,30 +361,6 @@ class ViewDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
-		p2 = new JPanel(new BorderLayout());
-		p = new JPanel(new SpringLayout());
-		p2.add(p, BorderLayout.NORTH);
-		tab.add(p2, "Event");
-		count = 0;
-
-		p.add(new JLabel("Auto pause interval"));
-
-		JTextField textField = new JTextField(view.model.getStopTime() + "", 2);
-		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float interval = parse(src.getText());
-				if (Float.isNaN(interval))
-					return;
-				view.model.setStopTime(interval);
-			}
-		});
-		p.add(textField);
-		p.add(new JLabel("seconds [If -1 (default), never pause.]"));
-		count++;
-
-		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
-
 		pack();
 		setLocationRelativeTo(view);
 

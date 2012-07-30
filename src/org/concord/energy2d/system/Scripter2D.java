@@ -729,7 +729,8 @@ class Scripter2D extends Scripter {
 						showException(ci, e);
 						return;
 					}
-					s2d.model.setStopTime(stopTime);
+					s2d.autopause.setInterval(stopTime > 0 ? Math.round(stopTime / s2d.model.getTimeStep()) : -1);
+					s2d.autopause.setEnabled(s2d.autopause.getInterval() > 0);
 				} else if (t[0].equalsIgnoreCase("width")) {
 					float width = 0;
 					try {

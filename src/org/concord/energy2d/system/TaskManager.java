@@ -114,7 +114,7 @@ public abstract class TaskManager {
 		processPendingRequests();
 		try { // it probably won't hurt much not to synchronize this iterator
 			for (Task task : taskPool) {
-				if (task.isEnabled()) {
+				if (task.isEnabled() && task.getInterval() > 0) {
 					if (task.isCompleted()) {
 						remove(task);
 					}

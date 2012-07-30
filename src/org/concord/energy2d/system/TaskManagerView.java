@@ -206,7 +206,7 @@ class TaskManagerView {
 			}
 		});
 
-		table.getColumnModel().getColumn(0).setMaxWidth(36);
+		table.getColumnModel().getColumn(0).setMaxWidth(50);
 		table.getColumnModel().getColumn(uidCol).setMinWidth(200);
 		table.setShowGrid(false);
 		table.setRowHeight(24);

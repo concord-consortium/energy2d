@@ -47,8 +47,10 @@ class XmlEncoder {
 		if (box.repaint.getInterval() != 20) {
 			sb.append("<viewupdate_interval>" + box.repaint.getInterval() + "</viewupdate_interval>\n");
 		}
-		if (box.model.getStopTime() > 0) {
-			sb.append("<stoptime>" + box.model.getStopTime() + "</stoptime>");
+		if (box.autopause.isEnabled() && box.autopause.getInterval() > 0) {
+			sb.append("<stoptime>" + box.autopause.getInterval() * box.model.getTimeStep() + "</stoptime>");
+		} else {
+			sb.append("<stoptime>-1</stoptime>");
 		}
 
 		if (box.model.isSunny()) {
