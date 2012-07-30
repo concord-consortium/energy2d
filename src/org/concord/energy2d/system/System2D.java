@@ -188,6 +188,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		control.setDescription("Invoke the controllers.");
 		taskManager.add(control);
 
+		taskManager.processPendingRequests();
+
 	}
 
 	public View2D getView() {
@@ -225,6 +227,17 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		a.putValue(Action.ACCELERATOR_KEY, ks);
 		view.getInputMap().put(ks, "Property");
 		view.getActionMap().put("Property", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				taskManager.show(owner);
+			}
+		};
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0, true);
+		a.putValue(Action.NAME, "Task_Manager");
+		a.putValue(Action.ACCELERATOR_KEY, ks);
+		view.getInputMap().put(ks, "Task_Manager");
+		view.getActionMap().put("Task_Manager", a);
 
 	}
 

@@ -268,6 +268,17 @@ class MenuBar extends JMenuBar {
 		fileMenu.add(mi);
 		fileMenuItemCount++;
 
+		final Action taskAction = box.view.getActionMap().get("Task_Manager");
+		mi = new JMenuItem("Task Manager...");
+		mi.setAccelerator((KeyStroke) taskAction.getValue(Action.ACCELERATOR_KEY));
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				taskAction.actionPerformed(e);
+			}
+		});
+		fileMenu.add(mi);
+		fileMenuItemCount++;
+
 		fileMenu.addSeparator();
 		fileMenuItemCount++;
 
