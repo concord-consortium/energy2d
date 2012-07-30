@@ -229,7 +229,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				Helper.showScriptDialog(System2D.this);
 			}
 		};
-		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, true);
+		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true);
 		a.putValue(Action.NAME, "Script");
 		a.putValue(Action.ACCELERATOR_KEY, ks);
 		view.getInputMap().put(ks, "Script");
@@ -251,7 +251,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				taskManager.show(owner);
 			}
 		};
-		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0, true);
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true);
 		a.putValue(Action.NAME, "Task_Manager");
 		a.putValue(Action.ACCELERATOR_KEY, ks);
 		view.getInputMap().put(ks, "Task_Manager");
@@ -870,6 +870,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			Application app = new Application();
 			app.setEnabledPreferencesMenu(true);
 			app.addApplicationListener(new ApplicationAdapter() {
+
+				@Override
 				public void handleQuit(ApplicationEvent e) {
 					Action a = box.view.getActionMap().get("Quit");
 					if (a != null)
@@ -877,6 +879,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					// e.setHandled(true); //DO NOT CALL THIS!!!
 				}
 
+				@Override
 				public void handlePreferences(ApplicationEvent e) {
 					e.setHandled(true);
 					EventQueue.invokeLater(new Runnable() {
@@ -885,13 +888,27 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					});
 				}
 
+				@Override
+				public void handleOpenFile(final ApplicationEvent event) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							String filePath = event.getFilename();
+							if (filePath.toLowerCase().trim().endsWith(".e2d")) {
+								box.loadFile(new File(filePath));
+								menuBar.e2dFileChooser.rememberFile(filePath);
+							}
+						}
+					});
+				}
+
+				@Override
 				public void handleAbout(ApplicationEvent e) {
 					Helper.showAbout(frame);
 					e.setHandled(true);
 				}
+
 			});
 		}
 
 	}
-
 }

@@ -279,8 +279,10 @@ class MenuBar extends JMenuBar {
 		fileMenu.add(mi);
 		fileMenuItemCount++;
 
-		fileMenu.addSeparator();
-		fileMenuItemCount++;
+		if (!IS_MAC) {
+			fileMenu.addSeparator();
+			fileMenuItemCount++;
+		}
 
 		exitAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -314,14 +316,16 @@ class MenuBar extends JMenuBar {
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Quit");
 		box.view.getActionMap().put("Quit", exitAction);
-		mi = new JMenuItem("Exit");
-		mi.setAccelerator(ks);
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				exitAction.actionPerformed(e);
-			}
-		});
-		fileMenu.add(mi);
+		if (!IS_MAC) {
+			mi = new JMenuItem("Exit");
+			mi.setAccelerator(ks);
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					exitAction.actionPerformed(e);
+				}
+			});
+			fileMenu.add(mi);
+		}
 
 		// edit menu
 
