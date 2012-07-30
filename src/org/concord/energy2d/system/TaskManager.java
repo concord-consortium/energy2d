@@ -110,7 +110,7 @@ public abstract class TaskManager {
 	}
 
 	/** execute the tasks in the pool (the order has been sorted according to the priorities). */
-	protected void execute() {
+	public void execute() {
 		processPendingRequests();
 		try { // it probably won't hurt much not to synchronize this iterator
 			for (Task task : taskPool) {

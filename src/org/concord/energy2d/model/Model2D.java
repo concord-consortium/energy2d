@@ -17,8 +17,6 @@ import java.util.List;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
-import org.concord.energy2d.event.VisualizationEvent;
-import org.concord.energy2d.event.VisualizationListener;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 
@@ -104,9 +102,6 @@ public class Model2D {
 
 	private boolean running;
 	private boolean notifyReset;
-	private int viewUpdateInterval = 20;
-	private int measurementInterval = 100;
-	private int controlInterval = 100;
 
 	// optimization flags
 	private boolean hasPartPower;
@@ -115,9 +110,9 @@ public class Model2D {
 	// condition flags
 	private boolean convective = true;
 
-	private List<VisualizationListener> visualizationListeners;
 	private List<PropertyChangeListener> propertyChangeListeners;
 	private List<ManipulationListener> manipulationListeners;
+	private Runnable tasks;
 
 	public Model2D() {
 
@@ -159,7 +154,6 @@ public class Model2D {
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 
-		visualizationListeners = new ArrayList<VisualizationListener>();
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
 		manipulationListeners = new ArrayList<ManipulationListener>();
 
@@ -171,6 +165,10 @@ public class Model2D {
 
 	public int getNy() {
 		return ny;
+	}
+
+	public void setTasks(Runnable r) {
+		tasks = r;
 	}
 
 	public void setStopTime(float stopTime) {
@@ -791,12 +789,14 @@ public class Model2D {
 		refreshPowerArray();
 		if (!running) {
 			running = true;
-			while (running)
+			while (running) {
 				nextStep();
+				if (tasks != null)
+					tasks.run();
+			}
 			if (notifyReset) {
 				indexOfStep = 0;
 				reallyReset();
-				notifyVisualizationListeners();
 				notifyReset = false;
 			}
 		}
@@ -877,50 +877,15 @@ public class Model2D {
 			fluidSolver.solve(u, v);
 		}
 		heatSolver.solve(convective, t);
-		if (indexOfStep % measurementInterval == 0) {
-			takeMeasurement();
-		}
-		if (indexOfStep % controlInterval == 0) { // if controllers run every step, they could slow down significantly
-			boolean refresh = false;
-			for (Thermostat x : thermostats) {
-				if (x.onoff())
-					refresh = true;
-			}
-			if (refresh)
-				refreshPowerArray();
-		}
-		if (indexOfStep % viewUpdateInterval == 0) {
-			notifyVisualizationListeners();
-		}
 		indexOfStep++;
-	}
-
-	public void setViewUpdateInterval(int viewUpdateInterval) {
-		this.viewUpdateInterval = viewUpdateInterval;
-	}
-
-	public int getViewUpdateInterval() {
-		return viewUpdateInterval;
-	}
-
-	public void setMeasurementInterval(int measurementInterval) {
-		this.measurementInterval = measurementInterval;
-	}
-
-	public int getMeasurementInterval() {
-		return measurementInterval;
-	}
-
-	public void setControlInterval(int controlInterval) {
-		this.controlInterval = controlInterval;
-	}
-
-	public int getControlInterval() {
-		return controlInterval;
 	}
 
 	public float getTime() {
 		return indexOfStep * heatSolver.getTimeStep();
+	}
+
+	public int getIndexOfStep() {
+		return indexOfStep;
 	}
 
 	public void setTimeStep(float timeStep) {
@@ -1073,7 +1038,7 @@ public class Model2D {
 		return conductivity;
 	}
 
-	private void takeMeasurement() {
+	public void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
 			int ix, iy;
 			synchronized (thermometers) {
@@ -1150,6 +1115,17 @@ public class Model2D {
 		}
 	}
 
+	// if controllers run every step, they could slow down significantly
+	public void control() {
+		boolean refresh = false;
+		for (Thermostat x : thermostats) {
+			if (x.onoff())
+				refresh = true;
+		}
+		if (refresh)
+			refreshPowerArray();
+	}
+
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (!propertyChangeListeners.contains(listener))
 			propertyChangeListeners.add(listener);
@@ -1166,24 +1142,6 @@ public class Model2D {
 		PropertyChangeEvent e = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
 		for (PropertyChangeListener x : propertyChangeListeners)
 			x.propertyChange(e);
-	}
-
-	public void addVisualizationListener(VisualizationListener listener) {
-		if (!visualizationListeners.contains(listener))
-			visualizationListeners.add(listener);
-	}
-
-	public void removeVisualizationListener(VisualizationListener listener) {
-		if (listener != null)
-			visualizationListeners.remove(listener);
-	}
-
-	private void notifyVisualizationListeners() {
-		if (visualizationListeners.isEmpty())
-			return;
-		VisualizationEvent e = new VisualizationEvent(this);
-		for (VisualizationListener x : visualizationListeners)
-			x.visualizationRequested(e);
 	}
 
 	public void addManipulationListener(ManipulationListener listener) {

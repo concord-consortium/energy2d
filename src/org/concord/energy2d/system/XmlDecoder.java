@@ -127,9 +127,9 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setLy(modelHeight);
 		box.view.setArea(0, modelWidth, 0, modelHeight);
 		box.model.setTimeStep(timeStep);
-		box.model.setMeasurementInterval(measurementInterval);
-		box.model.setControlInterval(controlInterval);
-		box.model.setViewUpdateInterval(viewUpdateInterval);
+		box.measure.setInterval(measurementInterval);
+		box.control.setInterval(controlInterval);
+		box.repaint.setInterval(viewUpdateInterval);
 		box.model.setStopTime(stopTime);
 		box.model.setSunny(sunny);
 		box.model.setSunAngle(sunAngle);

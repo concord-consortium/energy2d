@@ -702,7 +702,7 @@ class Scripter2D extends Scripter {
 						showException(ci, e);
 						return;
 					}
-					s2d.model.setViewUpdateInterval(viewUpdateInterval);
+					s2d.repaint.setInterval(viewUpdateInterval);
 				} else if (t[0].equalsIgnoreCase("measurement_interval")) {
 					int measurementInterval = 0;
 					try {
@@ -711,7 +711,7 @@ class Scripter2D extends Scripter {
 						showException(ci, e);
 						return;
 					}
-					s2d.model.setMeasurementInterval(measurementInterval);
+					s2d.measure.setInterval(measurementInterval);
 				} else if (t[0].equalsIgnoreCase("control_interval")) {
 					int controlInterval = 0;
 					try {
@@ -720,7 +720,7 @@ class Scripter2D extends Scripter {
 						showException(ci, e);
 						return;
 					}
-					s2d.model.setControlInterval(controlInterval);
+					s2d.control.setInterval(controlInterval);
 				} else if (t[0].equalsIgnoreCase("stoptime")) {
 					float stopTime = -1;
 					try {

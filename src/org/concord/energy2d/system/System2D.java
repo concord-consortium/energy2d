@@ -55,8 +55,6 @@ import org.concord.energy2d.event.IOEvent;
 import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
-import org.concord.energy2d.event.VisualizationEvent;
-import org.concord.energy2d.event.VisualizationListener;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -74,14 +72,16 @@ import com.apple.eawt.ApplicationEvent;
  * @author Charles Xie
  * 
  */
-public class System2D extends JApplet implements MwService, VisualizationListener, ManipulationListener {
+public class System2D extends JApplet implements MwService, ManipulationListener {
 
 	final static String BRAND_NAME = "Energy2D V0.5";
 
 	Model2D model;
 	View2D view;
+	Task repaint, measure, control;
 	private Scripter2D scripter;
 	private ExecutorService threadService;
+	private TaskManager taskManager;
 
 	private SAXParser saxParser;
 	private DefaultHandler saxHandler;
@@ -108,7 +108,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 
 		model = new Model2D();
-		model.addVisualizationListener(this);
 		model.addManipulationListener(this);
 		view = new View2D();
 		view.addManipulationListener(this);
@@ -130,6 +129,64 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		}
 
 		createActions();
+
+		taskManager = new TaskManager() {
+
+			@Override
+			public void runScript(String script) {
+				runNativeScript(script);
+			}
+
+			@Override
+			public void notifyChange() {
+			}
+
+			@Override
+			public int getIndexOfStep() {
+				return model.getIndexOfStep();
+			}
+		};
+		model.setTasks(new Runnable() {
+			public void run() {
+				taskManager.execute();
+			}
+		});
+		createTasks();
+
+	}
+
+	private void createTasks() {
+
+		repaint = new Task(20) {
+			@Override
+			public void execute() {
+				view.repaint();
+				view.setTime(model.getTime());
+			}
+		};
+		repaint.setUid("REPAINT");
+		repaint.setDescription("Refresh the view.");
+		taskManager.add(repaint);
+
+		measure = new Task(100) {
+			@Override
+			public void execute() {
+				model.takeMeasurement();
+			}
+		};
+		measure.setUid("MEASURE");
+		measure.setDescription("Take the measurements.");
+		taskManager.add(measure);
+
+		control = new Task(100) {
+			@Override
+			public void execute() {
+				model.control();
+			}
+		};
+		control.setUid("CONTROL");
+		control.setDescription("Invoke the controllers.");
+		taskManager.add(control);
 
 	}
 
@@ -507,11 +564,6 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		threadService = service;
 	}
 
-	public void visualizationRequested(VisualizationEvent e) {
-		view.repaint();
-		view.setTime(model.getTime());
-	}
-
 	public void manipulationOccured(ManipulationEvent e) {
 		Object target = e.getTarget();
 		switch (e.getType()) {
@@ -770,7 +822,7 @@ public class System2D extends JApplet implements MwService, VisualizationListene
 		frame.setLocation(x, y);
 		frame.setTitle(BRAND_NAME);
 		frame.pack();
-		frame.setVisible(true);		
+		frame.setVisible(true);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				Action a = box.view.getActionMap().get("Quit");

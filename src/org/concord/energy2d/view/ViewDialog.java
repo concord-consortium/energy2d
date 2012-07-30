@@ -367,57 +367,9 @@ class ViewDialog extends JDialog {
 		tab.add(p2, "Event");
 		count = 0;
 
-		p.add(new JLabel("Measurement interval"));
-
-		JTextField textField = new JTextField(view.model.getMeasurementInterval() + "", 2);
-		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float interval = parse(src.getText());
-				if (Float.isNaN(interval))
-					return;
-				view.model.setMeasurementInterval((int) interval);
-			}
-		});
-		p.add(textField);
-		p.add(new JLabel("steps"));
-		count++;
-
-		p.add(new JLabel("Control interval"));
-
-		textField = new JTextField(view.model.getControlInterval() + "", 2);
-		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float interval = parse(src.getText());
-				if (Float.isNaN(interval))
-					return;
-				view.model.setControlInterval((int) interval);
-			}
-		});
-		p.add(textField);
-		p.add(new JLabel("steps"));
-		count++;
-
-		p.add(new JLabel("View update interval"));
-
-		textField = new JTextField(view.model.getViewUpdateInterval() + "", 2);
-		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JTextField src = (JTextField) e.getSource();
-				float interval = parse(src.getText());
-				if (Float.isNaN(interval))
-					return;
-				view.model.setViewUpdateInterval((int) interval);
-			}
-		});
-		p.add(textField);
-		p.add(new JLabel("steps"));
-		count++;
-
 		p.add(new JLabel("Auto pause interval"));
 
-		textField = new JTextField(view.model.getStopTime() + "", 2);
+		JTextField textField = new JTextField(view.model.getStopTime() + "", 2);
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextField src = (JTextField) e.getSource();
