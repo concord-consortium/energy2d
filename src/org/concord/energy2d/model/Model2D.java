@@ -590,6 +590,7 @@ public class Model2D {
 		return maximumHeatCapacity;
 	}
 
+	/** the part on the top sets the properties of a cell */
 	public void refreshMaterialPropertyArrays() {
 		Part p = null;
 		int count = parts.size();
@@ -610,7 +611,7 @@ public class Model2D {
 					ListIterator<Part> li = parts.listIterator(count);
 					while (li.hasPrevious()) {
 						p = li.previous();
-						if (p.getShape().contains(x, y)) { // the part on the top sets the properties of this cell
+						if (p.getShape().contains(x, y)) {
 							conductivity[i][j] = p.getThermalConductivity();
 							specificHeat[i][j] = p.getSpecificHeat();
 							density[i][j] = p.getDensity();
@@ -639,24 +640,24 @@ public class Model2D {
 	public void refreshPowerArray() {
 		checkPartPower();
 		float x, y;
-		Part p = null;
-		int count = parts.size();
+		int count;
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
 				q[i][j] = 0;
-				if (hasPartPower) { // the part on the top sets the power of this cell
+				if (hasPartPower) {
+					count = 0;
 					synchronized (parts) {
-						ListIterator<Part> li = parts.listIterator(count);
-						while (li.hasPrevious()) {
-							p = li.previous();
+						for (Part p : parts) {
 							if (p.getPower() != 0 && p.getPowerSwitch() && p.getShape().contains(x, y)) {
-								q[i][j] = p.getPower();
-								break;
+								q[i][j] += p.getPower();
+								count++;
 							}
 						}
 					}
+					if (count > 0)
+						q[i][j] /= count;
 				}
 			}
 		}
@@ -664,22 +665,25 @@ public class Model2D {
 
 	public void refreshTemperatureBoundaryArray() {
 		float x, y;
-		Part p = null;
-		int count = parts.size();
+		int count;
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
-				tb[i][j] = Float.NaN;
-				synchronized (parts) { // the part on the top sets the properties of this cell
-					ListIterator<Part> li = parts.listIterator(count);
-					while (li.hasPrevious()) {
-						p = li.previous();
+				tb[i][j] = 0;
+				count = 0;
+				synchronized (parts) {
+					for (Part p : parts) {
 						if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
-							tb[i][j] = p.getTemperature();
-							break;
+							tb[i][j] += p.getTemperature();
+							count++;
 						}
 					}
+				}
+				if (count > 0) {
+					tb[i][j] /= count;
+				} else {
+					tb[i][j] = Float.NaN;
 				}
 			}
 		}
@@ -751,27 +755,26 @@ public class Model2D {
 			}
 		} else {
 			float x, y;
-			boolean found = false;
-			Part p = null;
-			int count = parts.size();
+			int count;
 			for (int i = 0; i < nx; i++) {
 				x = i * deltaX;
 				for (int j = 0; j < ny; j++) {
 					y = j * deltaY;
-					found = false;
+					count = 0;
+					t[i][j] = 0;
 					synchronized (parts) {
-						ListIterator<Part> li = parts.listIterator(count);
-						while (li.hasPrevious()) {
-							p = li.previous();
-							if (p.getShape().contains(x, y)) { // the one on the top sets the temperature of this cell
-								t[i][j] = p.getTemperature();
-								found = true;
-								break;
+						for (Part p : parts) { // a cell gets the average temperature from the overlapping parts
+							if (p.getShape().contains(x, y)) {
+								count++;
+								t[i][j] += p.getTemperature();
 							}
 						}
 					}
-					if (!found)
+					if (count > 0) {
+						t[i][j] /= count;
+					} else {
 						t[i][j] = backgroundTemperature;
+					}
 				}
 			}
 		}
@@ -821,6 +824,8 @@ public class Model2D {
 	private void reallyReset() {
 		setInitialTemperature();
 		setInitialVelocity();
+		for (Part p : parts)
+			p.setPowerSwitch(true);
 		photons.clear();
 		heatSolver.reset();
 		fluidSolver.reset();
