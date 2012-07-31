@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
@@ -23,7 +24,9 @@ import org.concord.energy2d.math.Ring2D;
 /**
  * Units:
  * 
- * Temperature: centigrade; Length: meter; Time: second; Thermal diffusivity: m^2/s; Power: centigrade/second
+ * Temperature: centigrade; Length: meter; Time: second; Thermal diffusivity: m^2/s; Power: centigrade/second.
+ * 
+ * Using a 1D array and then a convenience function I(i, j) =i + j x ny to find t(i, j) is about 12% faster than using a 2D array directly (Java 6). Hence, using 1D array for 2D functions doesn't result in significant performance improvements.
  * 
  * @author Charles Xie
  * 
@@ -39,10 +42,9 @@ public class Model2D {
 	private float backgroundSpecificHeat = Constants.AIR_SPECIFIC_HEAT;
 	private float backgroundDensity = Constants.AIR_DENSITY;
 	private float backgroundTemperature;
+	private float maximumHeatCapacity = -1;
 
-	/*
-	 * temperature array. On Java 6, using a 1D array and then a convenience function I(i, j) =i + j x ny to find t(i, j) is about 12% faster than using a 2D array directly. Hence, using 1D array for 2D functions doesn't result in significant performance improvements (the JRE probably have already optimized this for us).
-	 */
+	// temperature array
 	private float[][] t;
 
 	// velocity x-component array (m/s)
@@ -72,11 +74,8 @@ public class Model2D {
 	// fluid cell array
 	private boolean[][] fluidity;
 
-	private float maximumHeatCapacity = -1, minimumHeatCapacity = Float.MAX_VALUE;
-
 	private List<Thermometer> thermometers;
 	private List<Thermostat> thermostats;
-
 	private List<Part> parts;
 	private List<Photon> photons;
 
@@ -591,14 +590,12 @@ public class Model2D {
 		return maximumHeatCapacity;
 	}
 
-	public float getMinimumHeatCapacity() {
-		return minimumHeatCapacity;
-	}
-
 	public void refreshMaterialPropertyArrays() {
+		Part p = null;
+		int count = parts.size();
 		float x, y, windSpeed;
 		boolean initial = indexOfStep == 0;
-		maximumHeatCapacity = minimumHeatCapacity = backgroundDensity * backgroundSpecificHeat;
+		maximumHeatCapacity = backgroundDensity * backgroundSpecificHeat;
 		float heatCapacity = 0;
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
@@ -610,9 +607,10 @@ public class Model2D {
 				fluidity[i][j] = true;
 				uWind[i][j] = vWind[i][j] = 0;
 				synchronized (parts) {
-					for (Part p : parts) {
-						if (p.getShape().contains(x, y)) {
-							// no overlap of parts will be allowed
+					ListIterator<Part> li = parts.listIterator(count);
+					while (li.hasPrevious()) {
+						p = li.previous();
+						if (p.getShape().contains(x, y)) { // the part on the top sets the properties of this cell
 							conductivity[i][j] = p.getThermalConductivity();
 							specificHeat[i][j] = p.getSpecificHeat();
 							density[i][j] = p.getDensity();
@@ -630,8 +628,6 @@ public class Model2D {
 				heatCapacity = specificHeat[i][j] * density[i][j];
 				if (maximumHeatCapacity < heatCapacity)
 					maximumHeatCapacity = heatCapacity;
-				if (minimumHeatCapacity > heatCapacity)
-					minimumHeatCapacity = heatCapacity;
 			}
 		}
 		if (initial) {
@@ -643,16 +639,19 @@ public class Model2D {
 	public void refreshPowerArray() {
 		checkPartPower();
 		float x, y;
+		Part p = null;
+		int count = parts.size();
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
 				q[i][j] = 0;
-				if (hasPartPower) {
+				if (hasPartPower) { // the part on the top sets the power of this cell
 					synchronized (parts) {
-						for (Part p : parts) {
+						ListIterator<Part> li = parts.listIterator(count);
+						while (li.hasPrevious()) {
+							p = li.previous();
 							if (p.getPower() != 0 && p.getPowerSwitch() && p.getShape().contains(x, y)) {
-								// no overlap of parts will be allowed
 								q[i][j] = p.getPower();
 								break;
 							}
@@ -665,13 +664,17 @@ public class Model2D {
 
 	public void refreshTemperatureBoundaryArray() {
 		float x, y;
+		Part p = null;
+		int count = parts.size();
 		for (int i = 0; i < nx; i++) {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
 				tb[i][j] = Float.NaN;
-				synchronized (parts) {
-					for (Part p : parts) {
+				synchronized (parts) { // the part on the top sets the properties of this cell
+					ListIterator<Part> li = parts.listIterator(count);
+					while (li.hasPrevious()) {
+						p = li.previous();
 						if (p.getConstantTemperature() && p.getShape().contains(x, y)) {
 							tb[i][j] = p.getTemperature();
 							break;
@@ -690,8 +693,7 @@ public class Model2D {
 			x = i * deltaX;
 			for (int j = 0; j < ny; j++) {
 				y = j * deltaY;
-				if (p.getShape().contains(x, y)) {
-					// no overlap of parts will be allowed
+				if (p.getShape().contains(x, y)) { // no overlap of parts will be allowed
 					energy += t[i][j] * density[i][j] * specificHeat[i][j];
 				}
 			}
@@ -725,7 +727,6 @@ public class Model2D {
 		thermometers.clear();
 		thermostats.clear();
 		maximumHeatCapacity = -1;
-		minimumHeatCapacity = Float.MAX_VALUE;
 	}
 
 	private void setInitialVelocity() {
@@ -742,7 +743,7 @@ public class Model2D {
 	}
 
 	public void setInitialTemperature() {
-		if (parts == null) {
+		if (parts == null || parts.isEmpty()) {
 			for (int i = 0; i < nx; i++) {
 				for (int j = 0; j < ny; j++) {
 					t[i][j] = backgroundTemperature;
@@ -751,15 +752,18 @@ public class Model2D {
 		} else {
 			float x, y;
 			boolean found = false;
+			Part p = null;
+			int count = parts.size();
 			for (int i = 0; i < nx; i++) {
 				x = i * deltaX;
 				for (int j = 0; j < ny; j++) {
 					y = j * deltaY;
 					found = false;
 					synchronized (parts) {
-						for (Part p : parts) {
-							if (p.getShape().contains(x, y)) {
-								// no overlap of parts will be allowed
+						ListIterator<Part> li = parts.listIterator(count);
+						while (li.hasPrevious()) {
+							p = li.previous();
+							if (p.getShape().contains(x, y)) { // the one on the top sets the temperature of this cell
 								t[i][j] = p.getTemperature();
 								found = true;
 								break;
@@ -789,6 +793,7 @@ public class Model2D {
 				indexOfStep = 0;
 				reallyReset();
 				notifyReset = false;
+				// call view.repaint() to get rid of the residual pixels that are still calculated in nextStep()
 				notifyManipulationListeners(ManipulationEvent.REPAINT);
 			}
 		}
@@ -857,9 +862,8 @@ public class Model2D {
 			}
 			raySolver.solve(this);
 		}
-		if (convective) {
+		if (convective)
 			fluidSolver.solve(u, v);
-		}
 		heatSolver.solve(convective, t);
 		indexOfStep++;
 	}
