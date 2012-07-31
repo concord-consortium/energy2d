@@ -837,6 +837,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		this.xmax = xmax;
 		this.ymin = ymin;
 		this.ymax = ymax;
+		if (rulerRenderer != null)
+			rulerRenderer.setSize(xmin, xmax, ymin, ymax);
 	}
 
 	private Graphics2D createGraphics2D() {
