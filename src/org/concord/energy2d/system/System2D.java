@@ -74,7 +74,7 @@ import com.apple.eawt.ApplicationEvent;
  */
 public class System2D extends JApplet implements MwService, ManipulationListener {
 
-	final static String BRAND_NAME = "Energy2D V0.5";
+	final static String BRAND_NAME = "Energy2D V1.0";
 
 	Model2D model;
 	View2D view;
@@ -861,7 +861,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					Action a = box.view.getActionMap().get("Quit");
 					if (a != null)
 						a.actionPerformed(null);
-					// e.setHandled(true); //DO NOT CALL THIS!!!
 				}
 
 				@Override
@@ -869,6 +868,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					e.setHandled(true);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
+							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "No preference window yet.");
 						}
 					});
 				}
