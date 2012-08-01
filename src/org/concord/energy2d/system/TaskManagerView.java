@@ -100,8 +100,12 @@ class TaskManagerView {
 			if (v.elementAt(uidCol).equals(task.getUid())) {
 				rowData.remove(v);
 				task.setCompleted(false);
-				if (table != null)
+				if (table != null) {
+					table.clearSelection();
 					table.repaint();
+					editTaskButton.setEnabled(false);
+					removeTaskButton.setEnabled(false);
+				}
 				break;
 			}
 		}

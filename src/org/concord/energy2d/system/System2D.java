@@ -79,7 +79,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	Model2D model;
 	View2D view;
 	TaskManager taskManager;
-	Task repaint, measure, control, autopause;
+	Task repaint, measure, control;
 	private Scripter2D scripter;
 	private ExecutorService threadService;
 
@@ -187,25 +187,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		control.setUid("CONTROL");
 		control.setDescription("Invoke the controllers.");
 		taskManager.add(control);
-
-		autopause = new Task(-1) {
-			@Override
-			public void execute() {
-				stop();
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						if (clickStop != null)
-							clickStop.run();
-						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "This simulation was designed to automatically stopped here.");
-					}
-				});
-			}
-		};
-		autopause.setEnabled(false);
-		autopause.setSystemTask(false);
-		autopause.setUid("PAUSE");
-		autopause.setDescription("Automatically pause the simulation.");
-		taskManager.add(autopause);
 
 		taskManager.processPendingRequests();
 

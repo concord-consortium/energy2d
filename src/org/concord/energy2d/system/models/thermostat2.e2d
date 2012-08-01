@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
 <model>
-<timestep>200.0</timestep>
-<measurement_interval>100</measurement_interval>
-<viewupdate_interval>20</viewupdate_interval>
+<timestep>100.0</timestep>
 <sun_angle>2.792527</sun_angle>
 <solar_power_density>100000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
@@ -20,7 +18,7 @@
 <mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
-<part><rectangle x="4.75" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.08</thermal_conductivity>
+<part><rectangle x="5.75" y="7.5" width="0.5" height="0.5"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -29,12 +27,10 @@
 <emissivity>0.0</emissivity>
 <temperature>10.0</temperature>
 <constant_temperature>false</constant_temperature>
-<power>20.0</power>
-<uid>HEATER</uid>
-<label>Heater</label>
-<draggable>false</draggable>
+<power>5.0</power>
+<uid>HEATER1</uid>
 </part>
-<part><rectangle x="1.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="1.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -49,7 +45,6 @@
 <texture_width>12</texture_width>
 <texture_height>12</texture_height>
 </texture>
-<label>D</label>
 <draggable>false</draggable>
 </part>
 <part><rectangle x="1.0" y="4.0" width="0.5" height="1.0"/><thermal_conductivity>0.05</thermal_conductivity>
@@ -67,11 +62,10 @@
 <texture_width>12</texture_width>
 <texture_height>12</texture_height>
 </texture>
-<label>E</label>
 <draggable>false</draggable>
 </part>
 <part><polygon count="5" vertices="0.5, 4.0, 0.5, 3.5, 5.0, 1.0, 9.5, 3.5, 9.5, 4.0"/>
-<thermal_conductivity>0.0010</thermal_conductivity>
+<thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -89,7 +83,7 @@
 <label>Roof</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -107,7 +101,7 @@
 <label>Ground</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="8.5" y="4.0" width="0.5" height="1.6"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="8.5" y="4.0" width="0.5" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -122,7 +116,6 @@
 <texture_width>12</texture_width>
 <texture_height>12</texture_height>
 </texture>
-<label>A</label>
 </part>
 <part><rectangle x="1.1750001" y="5.0" width="0.05" height="2.0"/><thermal_conductivity>0.01</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -137,25 +130,43 @@
 <label>Window</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="8.5" y="5.95" width="0.5" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="3.75" y="7.5" width="0.5" height="0.5"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
-<temperature>0.0</temperature>
+<temperature>10.0</temperature>
 <constant_temperature>false</constant_temperature>
-<texture><texture_fg>-1000000</texture_fg>
-<texture_bg>-7f7f80</texture_bg>
-<texture_style>12</texture_style>
-<texture_width>12</texture_width>
-<texture_height>12</texture_height>
-</texture>
-<label>C</label>
-<draggable>false</draggable>
+<power>5.0</power>
+<uid>HEATER2</uid>
 </part>
-<part><rectangle x="8.5" y="5.5833335" width="0.5" height="0.366667"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.3" y="7.5" width="0.5" height="0.5"/><thermal_conductivity>0.08</thermal_conductivity>
+<specific_heat>1300.0</specific_heat>
+<density>25.0</density>
+<transmission>0.0</transmission>
+<reflection>0.0</reflection>
+<absorption>1.0</absorption>
+<emissivity>0.0</emissivity>
+<temperature>10.0</temperature>
+<constant_temperature>false</constant_temperature>
+<power>5.0</power>
+<uid>HEATER3</uid>
+</part>
+<part><rectangle x="7.25" y="7.5" width="0.5" height="0.5"/><thermal_conductivity>0.08</thermal_conductivity>
+<specific_heat>1300.0</specific_heat>
+<density>25.0</density>
+<transmission>0.0</transmission>
+<reflection>0.0</reflection>
+<absorption>1.0</absorption>
+<emissivity>0.0</emissivity>
+<temperature>10.0</temperature>
+<constant_temperature>false</constant_temperature>
+<power>5.0</power>
+<uid>HEATER4</uid>
+</part>
+<part><rectangle x="3.1314821" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -170,21 +181,41 @@
 <texture_width>4</texture_width>
 <texture_height>4</texture_height>
 </texture>
-<label>B</label>
+</part>
+<part><rectangle x="6.674691" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<specific_heat>1300.0</specific_heat>
+<density>25.0</density>
+<transmission>0.0</transmission>
+<reflection>0.0</reflection>
+<absorption>1.0</absorption>
+<emissivity>0.0</emissivity>
+<temperature>0.0</temperature>
+<constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>8</texture_style>
+<texture_width>4</texture_width>
+<texture_height>4</texture_height>
+</texture>
 </part>
 </structure>
 </model>
 <sensor>
-<thermometer uid="T2" label="Thermostat" x="8.013029" y="5.781759"/>
+<thermometer uid="T2" label="T2" x="5.0" y="6.0"/>
+<thermometer uid="T1" label="T1" x="1.6141976" y="6.0"/>
+<thermometer uid="T3" label="T3" x="8.231482" y="6.0"/>
 </sensor>
 <controller>
-<thermostat set_point="20.0" deadband="1.0" thermometer="T2" power_source="HEATER"/>
+<thermostat set_point="20.0" deadband="1.0" thermometer="T2" power_source="HEATER1"/>
+<thermostat set_point="20.0" deadband="1.0" thermometer="T2" power_source="HEATER2"/>
+<thermostat set_point="20.0" deadband="1.0" thermometer="T1" power_source="HEATER3"/>
+<thermostat set_point="20.0" deadband="1.0" thermometer="T3" power_source="HEATER4"/>
 </controller>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
-<maximum_temperature>60.0</maximum_temperature>
+<maximum_temperature>50.0</maximum_temperature>
 <graph_xlabel>Time</graph_xlabel><clock>false</clock>
 </view>
 </state>

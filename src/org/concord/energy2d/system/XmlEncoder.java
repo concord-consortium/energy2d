@@ -47,11 +47,6 @@ class XmlEncoder {
 		if (box.repaint.getInterval() != 20) {
 			sb.append("<viewupdate_interval>" + box.repaint.getInterval() + "</viewupdate_interval>\n");
 		}
-		if (box.autopause.isEnabled() && box.autopause.getInterval() > 0) {
-			sb.append("<stoptime>" + box.autopause.getInterval() * box.model.getTimeStep() + "</stoptime>");
-		} else {
-			sb.append("<stoptime>-1</stoptime>");
-		}
 
 		List<Task> tasks = box.taskManager.getCustomTasks();
 		if (tasks != null && !tasks.isEmpty()) {

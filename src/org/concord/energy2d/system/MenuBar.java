@@ -774,10 +774,10 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Thermostat");
+		mi = new JMenuItem("Thermostats");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				box.loadModel("models/thermostat.e2d");
+				box.loadModel("models/thermostat2.e2d");
 			}
 		});
 		subMenu.add(mi);

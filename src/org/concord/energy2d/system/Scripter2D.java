@@ -21,9 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
-import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 import org.concord.energy2d.event.ScriptEvent;
 import org.concord.energy2d.event.ScriptListener;
@@ -112,12 +111,6 @@ class Scripter2D extends Scripter {
 		} else {
 			notifyScriptListener(new ScriptEvent(s2d, status, description));
 		}
-	}
-
-	private void showMessageDialog(String message) {
-		JEditorPane h = new JEditorPane("text/html", message);
-		h.setEditable(false);
-		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(s2d), new JScrollPane(h));
 	}
 
 	public void executeScript(String script) {
@@ -226,7 +219,7 @@ class Scripter2D extends Scripter {
 			final String s = new XmlCharacterDecoder().decode(ci.substring(matcher.end()).trim());
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					showMessageDialog(s);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(s2d.view), new JLabel(s));
 				}
 			});
 			return;
