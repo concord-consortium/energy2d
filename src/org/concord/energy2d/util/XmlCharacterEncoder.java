@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import static org.concord.energy2d.util.EscapeCharacters.*;
 
 /**
- * replace illegal characters in the text by entity references.
+ * replace illegal characters in the text by entity references and preserve the link breaks.
  * 
  * @author Charles Xie
  * 
@@ -22,6 +22,7 @@ public class XmlCharacterEncoder {
 	private final static char AMPERSAND = '&';
 	private final static char APOSTROPHE = '\'';
 	private final static char QUOTATION = '"';
+	private final static char LINE_BREAK = '\n';
 
 	private LinkedHashMap<Integer, Character> store;
 
@@ -51,6 +52,8 @@ public class XmlCharacterEncoder {
 			case QUOTATION:
 				store.put(i, QUOTATION);
 				break;
+			case LINE_BREAK:
+				store.put(i, LINE_BREAK);
 			}
 		}
 
@@ -61,34 +64,40 @@ public class XmlCharacterEncoder {
 				Character character = store.get(index);
 				switch (character.charValue()) {
 				case LESS_THAN:
-					del = index.intValue() + cumu;
+					del = index + cumu;
 					sb.deleteCharAt(del);
 					sb.insert(del, LESS_THAN_ER);
-					cumu += 3;
+					cumu += LESS_THAN_ER.length() - 1;
 					break;
 				case GREATER_THAN:
-					del = index.intValue() + cumu;
+					del = index + cumu;
 					sb.deleteCharAt(del);
 					sb.insert(del, GREATER_THAN_ER);
-					cumu += 3;
+					cumu += GREATER_THAN_ER.length() - 1;
 					break;
 				case AMPERSAND:
-					del = index.intValue() + cumu;
+					del = index + cumu;
 					sb.deleteCharAt(del);
 					sb.insert(del, AMPERSAND_ER);
-					cumu += 4;
+					cumu += AMPERSAND_ER.length() - 1;
 					break;
 				case APOSTROPHE:
-					del = index.intValue() + cumu;
+					del = index + cumu;
 					sb.deleteCharAt(del);
 					sb.insert(del, APOSTROPHE_ER);
-					cumu += 5;
+					cumu += APOSTROPHE_ER.length() - 1;
 					break;
 				case QUOTATION:
-					del = index.intValue() + cumu;
+					del = index + cumu;
 					sb.deleteCharAt(del);
 					sb.insert(del, QUOTATION_ER);
-					cumu += 5;
+					cumu += QUOTATION_ER.length() - 1;
+					break;
+				case LINE_BREAK:
+					del = index + cumu;
+					sb.deleteCharAt(del);
+					sb.insert(del, LINE_BREAK_ER);
+					cumu += LINE_BREAK_ER.length() - 1;
 					break;
 				}
 			}

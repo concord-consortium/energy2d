@@ -27,5 +27,6 @@ class EscapeCharacters {
 	final static String AMPERSAND_ER = "&amp;";
 	final static String APOSTROPHE_ER = "&apos;";
 	final static String QUOTATION_ER = "&quot;";
+	final static String LINE_BREAK_ER = "-linebreak-";
 
 }

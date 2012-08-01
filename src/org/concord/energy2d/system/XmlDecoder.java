@@ -174,10 +174,8 @@ class XmlDecoder extends DefaultHandler {
 		if (graphYLabel != null)
 			box.view.setGraphYLabel(graphXLabel);
 
-		// since we don't know the width and height of the model
-		// until now, we have to fix the locations and the sizes of
-		// the thermometers, since they are relative to the size
-		// of the model.
+		// since we don't know the width and height of the model until now, we have to fix the locations and the sizes of
+		// the thermometers, since they are relative to the size of the model.
 		List<Thermometer> thermometers = box.model.getThermometers();
 		if (thermometers != null) {
 			synchronized (thermometers) {

@@ -51,8 +51,9 @@ class XmlEncoder {
 		List<Task> tasks = box.taskManager.getCustomTasks();
 		if (tasks != null && !tasks.isEmpty()) {
 			sb.append("<tasks>\n");
-			for (Task t : tasks)
+			for (Task t : tasks) {
 				sb.append(t.toXml() + "\n");
+			}
 			sb.append("</tasks>\n");
 		}
 

@@ -29,7 +29,7 @@ public abstract class TaskManager {
 	/** send the script to the system it manages for execution. */
 	public abstract void runScript(String script);
 
-	/** notify the system it manages that the task pool has changed. */
+	/** notify the system it manages that the tasks have changed. */
 	public abstract void notifyChange();
 
 	private void createView() {

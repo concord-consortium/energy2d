@@ -175,7 +175,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			}
 		};
 		measure.setUid("MEASURE");
-		measure.setDescription("Take the measurements.");
+		measure.setDescription("Take the measurements from the sensors.");
 		taskManager.add(measure);
 
 		control = new Task(100) {
@@ -185,7 +185,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			}
 		};
 		control.setUid("CONTROL");
-		control.setDescription("Invoke the controllers.");
+		control.setDescription("Invoke the controllers (e.g., thermostats).");
 		taskManager.add(control);
 
 		taskManager.processPendingRequests();
