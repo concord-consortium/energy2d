@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /* 
@@ -39,12 +40,13 @@ public abstract class TaskManager {
 	/** remove all custom tasks */
 	public void clearCustomTasks() {
 		synchronized (taskPool) {
-			for (Task t : taskPool) {
+			Iterator<Task> i = taskPool.iterator();
+			while (i.hasNext()) {
+				Task t = i.next();
 				if (!t.isSystemTask())
-					remove(t);
+					i.remove();
 			}
 		}
-		processPendingRequests();
 	}
 
 	/** get all customer tasks */

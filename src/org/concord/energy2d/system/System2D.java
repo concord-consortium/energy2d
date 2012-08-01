@@ -78,10 +78,10 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	Model2D model;
 	View2D view;
+	TaskManager taskManager;
 	Task repaint, measure, control, autopause;
 	private Scripter2D scripter;
 	private ExecutorService threadService;
-	private TaskManager taskManager;
 
 	private SAXParser saxParser;
 	private DefaultHandler saxHandler;

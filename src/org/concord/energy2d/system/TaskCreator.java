@@ -82,11 +82,11 @@ class TaskCreator {
 		topPanel.add(p2, BorderLayout.SOUTH);
 
 		p2.add(new JLabel("Priority: "));
-		prioritySpinner = new JSpinner(new SpinnerNumberModel(Thread.NORM_PRIORITY, 1, 5, 1));
+		prioritySpinner = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
 		p2.add(prioritySpinner);
 
 		p2.add(new JLabel("Interval: "));
-		intervalField = new JTextField();
+		intervalField = new JTextField(10);
 		p2.add(intervalField);
 
 		permanentCheckBox = new JCheckBox("Permanent");
@@ -219,7 +219,7 @@ class TaskCreator {
 			uidField.setText("Untitled");
 			descriptionField.setText(null);
 			scriptArea.setText(null);
-			prioritySpinner.setValue(Thread.NORM_PRIORITY);
+			prioritySpinner.setValue(1);
 			lifetimeField.setText(Integer.toString(Task.PERMANENT));
 			intervalField.setText(Integer.toString(10));
 			permanentCheckBox.setSelected(true);

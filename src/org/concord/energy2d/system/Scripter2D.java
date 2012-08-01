@@ -21,6 +21,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import org.concord.energy2d.event.ScriptEvent;
 import org.concord.energy2d.event.ScriptListener;
@@ -35,6 +38,7 @@ import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.Scripter;
+import org.concord.energy2d.util.XmlCharacterDecoder;
 import org.concord.energy2d.view.Picture;
 import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
@@ -45,6 +49,7 @@ import org.concord.energy2d.view.View2D;
  */
 class Scripter2D extends Scripter {
 
+	private final static Pattern MESSAGE = compile("(^(?i)message\\b){1}");
 	private final static Pattern RUNSTEPS = compile("(^(?i)runsteps\\b){1}");
 	private final static Pattern PART = compile("(^(?i)part\\b){1}");
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
@@ -107,6 +112,12 @@ class Scripter2D extends Scripter {
 		} else {
 			notifyScriptListener(new ScriptEvent(s2d, status, description));
 		}
+	}
+
+	private void showMessageDialog(String message) {
+		JEditorPane h = new JEditorPane("text/html", message);
+		h.setEditable(false);
+		JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(s2d), new JScrollPane(h));
 	}
 
 	public void executeScript(String script) {
@@ -207,6 +218,17 @@ class Scripter2D extends Scripter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			return;
+		}
+
+		matcher = MESSAGE.matcher(ci);
+		if (matcher.find()) {
+			final String s = new XmlCharacterDecoder().decode(ci.substring(matcher.end()).trim());
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					showMessageDialog(s);
+				}
+			});
 			return;
 		}
 
@@ -721,16 +743,6 @@ class Scripter2D extends Scripter {
 						return;
 					}
 					s2d.control.setInterval(controlInterval);
-				} else if (t[0].equalsIgnoreCase("stoptime")) {
-					float stopTime = -1;
-					try {
-						stopTime = Float.parseFloat(t[1]);
-					} catch (NumberFormatException e) {
-						showException(ci, e);
-						return;
-					}
-					s2d.autopause.setInterval(stopTime > 0 ? Math.round(stopTime / s2d.model.getTimeStep()) : -1);
-					s2d.autopause.setEnabled(s2d.autopause.getInterval() > 0);
 				} else if (t[0].equalsIgnoreCase("width")) {
 					float width = 0;
 					try {

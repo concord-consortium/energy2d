@@ -53,6 +53,14 @@ class XmlEncoder {
 			sb.append("<stoptime>-1</stoptime>");
 		}
 
+		List<Task> tasks = box.taskManager.getCustomTasks();
+		if (tasks != null && !tasks.isEmpty()) {
+			sb.append("<tasks>\n");
+			for (Task t : tasks)
+				sb.append(t.toXml() + "\n");
+			sb.append("</tasks>\n");
+		}
+
 		if (box.model.isSunny()) {
 			sb.append("<sunny>true</sunny>");
 		}

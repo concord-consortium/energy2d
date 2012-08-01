@@ -1,5 +1,7 @@
 package org.concord.energy2d.system;
 
+import org.concord.energy2d.util.XmlCharacterEncoder;
+
 /**
  * A task contains system/user-defined code/script that runs within the system's main thread with a given frequency and period.
  * 
@@ -32,6 +34,11 @@ public abstract class Task {
 	public Task(int interval, int lifetime) {
 		this(interval);
 		setLifetime(lifetime);
+	}
+
+	public Task(String uid, int interval, int lifetime) {
+		this(interval, lifetime);
+		setUid(uid);
 	}
 
 	public abstract void execute();
@@ -120,6 +127,23 @@ public abstract class Task {
 
 	public String toString() {
 		return uid;
+	}
+
+	public String toXml() {
+		String xml = "<task";
+		xml += " uid=\"" + uid + "\"";
+		if (!enabled)
+			xml += " enabled=\"" + enabled + "\"";
+		if (lifetime != PERMANENT)
+			xml += " lifetime=\"" + lifetime + "\"";
+		if (priority != 1)
+			xml += " priority=\"" + priority + "\"";
+		if (script != null)
+			xml += " script=\"" + new XmlCharacterEncoder().encode(script) + "\"";
+		if (description != null)
+			xml += " description=\"" + new XmlCharacterEncoder().encode(description) + "\"";
+		xml += " interval=\"" + interval + "\"/>";
+		return xml;
 	}
 
 }

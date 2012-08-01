@@ -19,6 +19,7 @@ import org.concord.energy2d.model.Thermostat;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.util.Texture;
+import org.concord.energy2d.util.XmlCharacterDecoder;
 import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
 import org.xml.sax.Attributes;
@@ -41,7 +42,7 @@ class XmlDecoder extends DefaultHandler {
 	private int measurementInterval = 100;
 	private int controlInterval = 100;
 	private int viewUpdateInterval = 20;
-	private float stopTime = -1;
+	private float stopTime = -1; // backward compatibility
 	private boolean sunny;
 	private float sunAngle = (float) Math.PI * 0.5f;
 	private float solarPowerDensity = 2000;
@@ -110,6 +111,7 @@ class XmlDecoder extends DefaultHandler {
 	}
 
 	public void startDocument() {
+		box.taskManager.clearCustomTasks();
 		// reset for elements added later before XML was saved
 		MassBoundary b = box.model.getMassBoundary();
 		if (b instanceof SimpleMassBoundary) {
@@ -132,6 +134,10 @@ class XmlDecoder extends DefaultHandler {
 		box.repaint.setInterval(viewUpdateInterval);
 		box.autopause.setInterval(stopTime > 0 ? Math.round(stopTime / timeStep) : -1);
 		box.autopause.setEnabled(box.autopause.getInterval() > 0);
+		if (stopTime > 0) {
+			box.taskManager.add(box.autopause);
+			box.taskManager.processPendingRequests();
+		}
 		box.model.setSunny(sunny);
 		box.model.setSunAngle(sunAngle);
 		box.model.setSolarPowerDensity(solarPowerDensity);
@@ -206,7 +212,46 @@ class XmlDecoder extends DefaultHandler {
 
 		String attribName, attribValue;
 
-		if (qName == "rectangle") {
+		if (qName == "task") {
+			if (attrib != null) {
+				boolean enabled = true;
+				int interval = -1, lifetime = Task.PERMANENT, priority = 1;
+				String uid = null, description = null, script = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "interval") {
+						interval = Integer.parseInt(attribValue);
+					} else if (attribName == "lifetime") {
+						lifetime = Integer.parseInt(attribValue);
+					} else if (attribName == "priority") {
+						priority = Integer.parseInt(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "description") {
+						description = attribValue;
+					} else if (attribName == "script") {
+						script = attribValue;
+					} else if (attribName == "enabled") {
+						enabled = Boolean.parseBoolean(attribValue);
+					}
+				}
+				Task t = new Task(uid, interval, lifetime) {
+					@Override
+					public void execute() {
+						if (getScript() != null)
+							box.taskManager.runScript(getScript());
+					}
+				};
+				t.setSystemTask(false);
+				t.setEnabled(enabled);
+				t.setScript(new XmlCharacterDecoder().decode(script));
+				t.setDescription(new XmlCharacterDecoder().decode(description));
+				t.setPriority(priority);
+				box.taskManager.add(t);
+				box.taskManager.processPendingRequests();
+			}
+		} else if (qName == "rectangle") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
