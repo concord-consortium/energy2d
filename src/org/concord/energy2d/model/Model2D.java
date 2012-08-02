@@ -225,6 +225,15 @@ public class Model2D {
 		return sunny;
 	}
 
+	/** synchronize the sun's angle with the clock, assuming sunrise at 6:00 and sunset at 18:00. */
+	public void moveSun() {
+		float hour = getTime() / 3600f;
+		int i = (int) hour;
+		hour += (i % 24) - i;
+		raySolver.setSunAngle((hour - 6) / 12f * (float) Math.PI);
+		refreshPowerArray();
+	}
+
 	public void setSunAngle(float sunAngle) {
 		if (Math.abs(sunAngle - raySolver.getSunAngle()) < 0.001f)
 			return;

@@ -48,6 +48,7 @@ import org.concord.energy2d.view.View2D;
  */
 class Scripter2D extends Scripter {
 
+	private final static Pattern MOVE_SUN = compile("(^(?i)movesun\\b){1}");
 	private final static Pattern MESSAGE = compile("(^(?i)message\\b){1}");
 	private final static Pattern RUNSTEPS = compile("(^(?i)runsteps\\b){1}");
 	private final static Pattern PART = compile("(^(?i)part\\b){1}");
@@ -180,6 +181,12 @@ class Scripter2D extends Scripter {
 			} else {
 				s2d.stop();
 			}
+			return;
+		}
+
+		matcher = MOVE_SUN.matcher(ci);
+		if (matcher.find()) {
+			s2d.model.moveSun();
 			return;
 		}
 

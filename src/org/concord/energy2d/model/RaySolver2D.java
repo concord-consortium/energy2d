@@ -145,7 +145,7 @@ class RaySolver2D {
 	}
 
 	void sunShine(List<Photon> photons, List<Part> parts) {
-		if (sunAngle < 0)
+		if (sunAngle < 0 || sunAngle > Math.PI)
 			return;
 		float s = (float) Math.abs(Math.sin(sunAngle));
 		float c = (float) Math.abs(Math.cos(sunAngle));

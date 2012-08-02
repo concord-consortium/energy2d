@@ -443,17 +443,6 @@ class ModelDialog extends JDialog {
 		tabbedPane.add(pp, "Radiation");
 		count = 0;
 
-		solarPowerLabel = new JLabel("Solar power density");
-		solarPowerLabel.setEnabled(model.isSunny());
-		p.add(solarPowerLabel);
-		solarPowerField = new JTextField(FORMAT.format(model.getSolarPowerDensity()), 16);
-		solarPowerField.setEnabled(model.isSunny());
-		solarPowerField.addActionListener(okListener);
-		p.add(solarPowerField);
-		label = new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>)");
-		p.add(label);
-		count++;
-
 		rayNumberLabel = new JLabel("Ray number");
 		rayNumberLabel.setEnabled(model.isSunny());
 		p.add(rayNumberLabel);
@@ -487,10 +476,26 @@ class ModelDialog extends JDialog {
 		p.add(label);
 		count++;
 
-		sunAngleLabel = new JLabel("Sun angle");
+		solarPowerLabel = new JLabel("Solar power density");
+		solarPowerLabel.setEnabled(model.isSunny());
+		p.add(solarPowerLabel);
+		solarPowerField = new JTextField(FORMAT.format(model.getSolarPowerDensity()), 16);
+		solarPowerField.setEnabled(model.isSunny());
+		solarPowerField.addActionListener(okListener);
+		p.add(solarPowerField);
+		label = new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>)");
+		p.add(label);
+		count++;
+
+		sunAngleLabel = new JLabel("<html>Sun angle<br>(Dawn to dusk)</html>");
 		sunAngleLabel.setEnabled(model.isSunny());
 		p.add(sunAngleLabel);
-		sunAngleSlider = new JSlider(0, 180, (int) Math.toDegrees(model.getSunAngle()));
+		int angle = (int) Math.toDegrees(model.getSunAngle());
+		if (angle < 0)
+			angle = 0;
+		else if (angle > 180)
+			angle = 180;
+		sunAngleSlider = new JSlider(0, 180, angle);
 		sunAngleSlider.setEnabled(model.isSunny());
 		sunAngleSlider.setPaintTicks(true);
 		sunAngleSlider.setMajorTickSpacing(45);

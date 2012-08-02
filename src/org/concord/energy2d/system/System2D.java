@@ -861,29 +861,27 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					Action a = box.view.getActionMap().get("Quit");
 					if (a != null)
 						a.actionPerformed(null);
+					e.setHandled(true);
 				}
 
 				@Override
 				public void handlePreferences(ApplicationEvent e) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "No preference window yet.");
 					e.setHandled(true);
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "No preference window yet.");
-						}
-					});
 				}
 
 				@Override
-				public void handleOpenFile(final ApplicationEvent event) {
+				public void handleOpenFile(final ApplicationEvent e) {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							String filePath = event.getFilename();
+							String filePath = e.getFilename();
 							if (filePath.toLowerCase().trim().endsWith(".e2d")) {
 								box.loadFile(new File(filePath));
 								menuBar.e2dFileChooser.rememberFile(filePath);
 							}
 						}
 					});
+					e.setHandled(true);
 				}
 
 				@Override
