@@ -186,7 +186,23 @@ class Scripter2D extends Scripter {
 
 		matcher = MOVE_SUN.matcher(ci);
 		if (matcher.find()) {
-			s2d.model.moveSun();
+			String s = ci.substring(matcher.end()).trim();
+			if (s == null || s.equals("")) {
+				s2d.model.moveSun(6, 18);
+			} else {
+				String[] s2 = s.split(REGEX_WHITESPACE);
+				if (s2.length == 2) {
+					float sunrise = Float.valueOf(s2[0]);
+					float sunset = Float.valueOf(s2[1]);
+					if (sunrise > 0 && sunrise < 24 && sunset > 0 && sunset < 24) {
+						s2d.model.moveSun(sunrise, sunset);
+					} else {
+						showError(ci, "Sunrise and sunset times must be 0-24.");
+					}
+				} else {
+					showError(ci, "Expect two parameters for dawn and dusk time.");
+				}
+			}
 			return;
 		}
 

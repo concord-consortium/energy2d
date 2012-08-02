@@ -139,18 +139,22 @@ class GraphRenderer {
 		yShrinkButton.setBounds(x + w - 116, y, 20, 20);
 	}
 
-	boolean buttonContains(byte button, int x0, int y0) {
+	boolean windowContains(int rx, int ry) {
+		return rx > x && rx < x + w && ry > y && ry < y + h;
+	}
+
+	boolean buttonContains(byte button, int rx, int ry) {
 		switch (button) {
 		case CLOSE_BUTTON:
-			return closeButton.contains(x0, y0);
+			return closeButton.contains(rx, ry);
 		case X_EXPAND_BUTTON:
-			return xExpandButton.contains(x0, y0);
+			return xExpandButton.contains(rx, ry);
 		case X_SHRINK_BUTTON:
-			return xShrinkButton.contains(x0, y0);
+			return xShrinkButton.contains(rx, ry);
 		case Y_EXPAND_BUTTON:
-			return yExpandButton.contains(x0, y0);
+			return yExpandButton.contains(rx, ry);
 		case Y_SHRINK_BUTTON:
-			return yShrinkButton.contains(x0, y0);
+			return yShrinkButton.contains(rx, ry);
 		default:
 			return false;
 		}

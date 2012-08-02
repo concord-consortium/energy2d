@@ -1846,7 +1846,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			e.consume();
 			movingShape = null;
 			mouseBeingDragged = false;
-			return;
+			if (graphRenderer.windowContains(x, y))
+				return;
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
