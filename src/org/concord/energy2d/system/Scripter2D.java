@@ -704,7 +704,7 @@ class Scripter2D extends Scripter {
 						showError(ci, "heat map type not supported");
 				} else if (t[0].equalsIgnoreCase("mouse_read")) {
 					if ("NOTHING".equalsIgnoreCase(t[1]))
-						s2d.view.setMouseReadType(View2D.MOUSE_READ_NOTHING);
+						s2d.view.setMouseReadType(View2D.MOUSE_READ_DEFAULT);
 					else if ("TEMPERATURE".equalsIgnoreCase(t[1]))
 						s2d.view.setMouseReadType(View2D.MOUSE_READ_TEMPERATURE);
 					else if ("THERMAL_ENERGY".equalsIgnoreCase(t[1]))

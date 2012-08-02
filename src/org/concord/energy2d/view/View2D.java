@@ -96,7 +96,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte HEATMAP_NONE = 0;
 	public final static byte HEATMAP_TEMPERATURE = 1;
 	public final static byte HEATMAP_THERMAL_ENERGY = 2;
-	public final static byte MOUSE_READ_NOTHING = 0;
+	public final static byte MOUSE_READ_DEFAULT = 0;
 	public final static byte MOUSE_READ_TEMPERATURE = 1;
 	public final static byte MOUSE_READ_THERMAL_ENERGY = 2;
 	public final static byte MOUSE_READ_VELOCITY = 3;
@@ -141,7 +141,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
-	private byte mouseReadType = MOUSE_READ_NOTHING;
+	private byte mouseReadType = MOUSE_READ_DEFAULT;
 	private byte colorPaletteType = RAINBOW;
 	private float[][] distribution;
 
@@ -1028,6 +1028,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			case MOUSE_READ_VELOCITY:
 				float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
 				drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
+				break;
+			case MOUSE_READ_DEFAULT:
+				if (showGraph) {
+					String dataInfo = getGraphDataAt(mouseMovedPoint.x, mouseMovedPoint.y);
+					if (dataInfo != null)
+						drawMouseReadString(g, dataInfo);
+				}
 				break;
 			}
 		}
@@ -1982,9 +1989,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return t;
 	}
 
+	private String getGraphDataAt(int x, int y) {
+		synchronized (model.getThermometers()) {
+			for (Thermometer t : model.getThermometers()) {
+				float[] data = graphRenderer.getData(t.getData(), x, y);
+				if (data != null) {
+					String s = "(" + TEMPERATURE_FORMAT.format(data[0] / 60) + " min, " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+					if (t.getLabel() == null)
+						return s;
+					return t.getLabel() + ": " + s;
+				}
+			}
+		}
+		return null;
+	}
+
 	private void processMouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+		mouseMovedPoint.setLocation(x, y);
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -2002,8 +2025,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
-			if (mouseReadType != MOUSE_READ_NOTHING)
-				mouseMovedPoint.setLocation(x, y);
 			int iSpot = -1;
 			if (!showGraph && selectedManipulable instanceof Part) {
 				for (int i = 0; i < handle.length; i++) {

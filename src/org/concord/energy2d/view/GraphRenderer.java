@@ -311,4 +311,24 @@ class GraphRenderer {
 
 	}
 
+	float[] getData(List<TimedData> data, int rx, int ry) {
+		if (!data.isEmpty()) {
+			float t, v;
+			int dx = 0, dy = 0;
+			float scaleX = w / xmax;
+			float scaleY = h / (ymax - ymin);
+			synchronized (data) {
+				for (TimedData d : data) {
+					t = d.getTime();
+					v = d.getValue();
+					dx = (int) (x + t * scaleX) - rx;
+					dy = (int) (y + h - (v - ymin) * scaleY) - ry;
+					if (dx * dx + dy * dy < 100)
+						return new float[] { t, v };
+				}
+			}
+		}
+		return null;
+	}
+
 }

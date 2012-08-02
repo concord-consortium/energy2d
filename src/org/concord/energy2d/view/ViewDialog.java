@@ -340,7 +340,7 @@ class ViewDialog extends JDialog {
 		p.add(new JLabel("Mouse reading"));
 
 		comboBox = new JComboBox();
-		comboBox.addItem("Nothing");
+		comboBox.addItem("Default");
 		comboBox.addItem("Temperature");
 		comboBox.addItem("Thermal energy");
 		comboBox.addItem("Velocity");
