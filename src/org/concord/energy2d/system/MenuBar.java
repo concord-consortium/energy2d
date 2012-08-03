@@ -140,6 +140,9 @@ class MenuBar extends JMenuBar {
 							final File rf = new File(recentFiles[i]);
 							x.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
+									box.stop();
+									if (!box.askSaveBeforeLoading())
+										return;
 									box.loadFile(rf);
 									e2dFileChooser.rememberFile(rf.getPath());
 								}

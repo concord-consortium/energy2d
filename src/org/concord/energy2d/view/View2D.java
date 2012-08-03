@@ -751,7 +751,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		}
-		notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+		notifyManipulationListeners(copiedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
 	}
 
@@ -1401,8 +1401,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		setSelectedManipulable(null);
 		float rx = convertPixelToPointX(x);
 		float ry = convertPixelToPointY(y);
-		if (!model.getThermometers().isEmpty()) {
-			// always prefer to select a thermometer
+		if (!model.getThermometers().isEmpty()) { // always prefer to select a thermometer
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
 					if (t.contains(rx, ry)) {
@@ -1840,6 +1839,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
+				notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				graphRenderer.doubleXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {

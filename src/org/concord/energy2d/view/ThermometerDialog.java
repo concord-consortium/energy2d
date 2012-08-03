@@ -11,6 +11,8 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,14 @@ class ThermometerDialog extends JDialog {
 		super(JOptionPane.getFrameForComponent(view), "Thermometer (#" + view.model.getThermometers().indexOf(thermometer) + ") Options", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				view.notifyManipulationListeners(thermometer, ManipulationEvent.PROPERTY_CHANGE);
+				view.repaint();
+				dispose();
+			}
+		});
 
 		JPanel panel = new JPanel(new BorderLayout());
 		setContentPane(panel);

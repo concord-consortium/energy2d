@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -49,6 +51,14 @@ class PartViewDialog extends JDialog {
 
 		super(JOptionPane.getFrameForComponent(view), "Part (#" + view.model.getParts().indexOf(part) + ") View Options", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
+				view.repaint();
+				dispose();
+			}
+		});
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

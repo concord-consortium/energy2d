@@ -139,6 +139,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 			@Override
 			public void notifyChange() {
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 
 			@Override
@@ -586,6 +587,9 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		case ManipulationEvent.PROPERTY_CHANGE:
 			saved = false;
 			break;
+		case ManipulationEvent.TRANSLATE:
+			saved = false;
+			break;
 		case ManipulationEvent.OBJECT_ADDED:
 			saved = false;
 			break;
@@ -696,6 +700,9 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		buttonReload.setToolTipText("Reload the initial configurations");
 		buttonReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				stop();
+				if (!askSaveBeforeLoading())
+					return;
 				reload();
 				buttonRun.setEnabled(true);
 				buttonStop.setEnabled(false);

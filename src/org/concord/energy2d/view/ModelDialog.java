@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 
@@ -242,6 +244,14 @@ class ModelDialog extends JDialog {
 
 			}
 		};
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+				view.repaint();
+				dispose();
+			}
+		});
 
 		JPanel panel = new JPanel(new BorderLayout());
 		setContentPane(panel);

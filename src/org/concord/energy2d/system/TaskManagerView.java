@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -64,6 +66,11 @@ class TaskManagerView {
 	/* show the tasks in a window with the specified task selected to edit */
 	void show(Window owner, String uid) {
 		JDialog dialog = createTasks(owner);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				taskManager.notifyChange();
+			}
+		});
 		int n = table.getRowCount();
 		String s;
 		for (int i = 0; i < n; i++) {
@@ -302,6 +309,7 @@ class TaskManagerView {
 		button = new JButton("Close");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				taskManager.notifyChange();
 				dialog.dispose();
 			}
 		});

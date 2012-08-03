@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.RectangularShape;
 import java.text.DecimalFormat;
 
@@ -68,6 +70,14 @@ class PartModelDialog extends JDialog {
 		super(JOptionPane.getFrameForComponent(view), "Part (#" + view.model.getParts().indexOf(part) + ") Properties", modal);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
+				view.repaint();
+				dispose();
+			}
+		});
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
