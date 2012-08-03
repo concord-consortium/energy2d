@@ -145,7 +145,7 @@ class PartModelDialog extends JDialog {
 				Shape shape = part.getShape();
 				if (shape instanceof RectangularShape) {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
-						view.resizeManipulableTo(part, xcenter - 0.5f * width, ycenter - 0.5f * height, width, height);
+						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height);
 					}
 				}
 
@@ -208,7 +208,7 @@ class PartModelDialog extends JDialog {
 
 		label = new JLabel("Center y");
 		p.add(label);
-		yField = new JTextField(FORMAT.format(part.getCenter().y));
+		yField = new JTextField(FORMAT.format(view.model.getLy() - part.getCenter().y));
 		yField.addActionListener(okListener);
 		p.add(yField);
 		label = new JLabel("<html><i>m");
