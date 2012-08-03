@@ -22,9 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,47 +39,15 @@ import javax.swing.border.EmptyBorder;
 
 public class TextureChooser extends JTabbedPane {
 
-	private static ResourceBundle bundle;
-	private static boolean isUSLocale;
-
 	private TexturePanel[] pp;
 	private FillPattern fillPattern;
 	private ColorComboBox bgComboBox;
 	private ColorComboBox fgComboBox;
 
 	public TextureChooser() {
-
 		super();
-
-		if (bundle == null) {
-			isUSLocale = Locale.getDefault().equals(Locale.US);
-			try {
-				bundle = ResourceBundle.getBundle("org.concord.energy2d.util.resources.TextureChooser", Locale.getDefault());
-			} catch (MissingResourceException e) {
-			}
-		}
-
 		setPreferredSize(new Dimension(300, 300));
-
-		String s = getInternationalText("Texture");
-		addTab(s == null ? "Texture" : s, createTexturePanel());
-
-	}
-
-	private static String getInternationalText(String name) {
-		if (bundle == null)
-			return null;
-		if (name == null)
-			return null;
-		if (isUSLocale)
-			return null;
-		String s = null;
-		try {
-			s = bundle.getString(name);
-		} catch (MissingResourceException e) {
-			s = null;
-		}
-		return s;
+		addTab("Texture", createTexturePanel());
 	}
 
 	public void setSelectedForegroundColor(Color c) {
@@ -137,9 +102,6 @@ public class TextureChooser extends JTabbedPane {
 		final TextureChooser chooser1 = chooser;
 
 		JButton button = new JButton("OK");
-		String s = getInternationalText("OK");
-		if (s != null)
-			button.setText(s);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switch (chooser1.getSelectedIndex()) {
@@ -160,9 +122,6 @@ public class TextureChooser extends JTabbedPane {
 		panel.add(button, c);
 
 		button = new JButton("Cancel");
-		s = getInternationalText("Cancel");
-		if (s != null)
-			button.setText(s);
 		if (cancelListener != null) {
 			button.addActionListener(cancelListener);
 		} else {
@@ -255,12 +214,11 @@ public class TextureChooser extends JTabbedPane {
 		JPanel p3 = new JPanel(new BorderLayout());
 		p4.add(p3);
 
-		String s = getInternationalText("ForegroundColor");
-		JLabel label = new JLabel((s != null ? s : "Foreground Color") + " :");
+		JLabel label = new JLabel("Foreground Color:");
 		p3.add(label, BorderLayout.NORTH);
 		fgComboBox = new ColorComboBox(this);
 		fgComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
-		fgComboBox.setToolTipText(s != null ? s : "Foreground color");
+		fgComboBox.setToolTipText("Foreground color");
 		fgComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final ColorComboBox cb = (ColorComboBox) e.getSource();
@@ -284,12 +242,11 @@ public class TextureChooser extends JTabbedPane {
 		p3 = new JPanel(new BorderLayout());
 		p4.add(p3);
 
-		s = getInternationalText("BackgroundColor");
-		label = new JLabel((s != null ? s : "Background Color") + " :");
+		label = new JLabel("Background Color:");
 		p3.add(label, BorderLayout.NORTH);
 		bgComboBox = new ColorComboBox(this);
 		bgComboBox.setRenderer(new ComboBoxRenderer.ColorCell());
-		bgComboBox.setToolTipText(s != null ? s : "Background color");
+		bgComboBox.setToolTipText("Background color");
 		bgComboBox.setSelectedIndex(ColorRectangle.COLORS.length);
 		bgComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

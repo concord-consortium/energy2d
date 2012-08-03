@@ -91,8 +91,7 @@ public class ColorArrayPane extends JComponent implements MouseListener, MouseMo
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		d.getContentPane().add(p, BorderLayout.SOUTH);
 
-		String s = ColorMenu.getInternationalText("MoreColors");
-		JButton b = new JButton(s != null ? s : "More");
+		JButton b = new JButton("More");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JColorChooser.createDialog(d, "More Colors", true, colorChooser, a, null).setVisible(true);
@@ -100,8 +99,7 @@ public class ColorArrayPane extends JComponent implements MouseListener, MouseMo
 		});
 		p.add(b);
 
-		s = ColorMenu.getInternationalText("Close");
-		b = new JButton(s != null ? s : "Close");
+		b = new JButton("Close");
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				d.dispose();

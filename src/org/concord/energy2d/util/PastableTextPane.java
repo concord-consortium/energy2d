@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
 
-
 /**
  * @author Charles Xie
  * 

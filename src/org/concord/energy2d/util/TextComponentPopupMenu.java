@@ -39,32 +39,26 @@ public class TextComponentPopupMenu extends JPopupMenu {
 		for (Action act : text.getActions())
 			actions.put(act.getValue(Action.NAME), act);
 
+		boolean isMac = System.getProperty("os.name").startsWith("Mac");
+
 		miCopy = new JMenuItem(actions.get(DefaultEditorKit.copyAction));
 		miCopy.setText("Copy");
-		miCopy.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(
-				KeyEvent.VK_C, KeyEvent.CTRL_MASK));
+		miCopy.setAccelerator(isMac ? KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
 		add(miCopy);
 
 		miCut = new JMenuItem(actions.get(DefaultEditorKit.cutAction));
 		miCut.setText("Cut");
-		miCut.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_X, KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(
-				KeyEvent.VK_X, KeyEvent.CTRL_MASK));
+		miCut.setAccelerator(isMac ? KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
 		add(miCut);
 
 		miPaste = new JMenuItem(actions.get(DefaultEditorKit.pasteAction));
 		miPaste.setText("Paste");
-		miPaste.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_V, KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(
-				KeyEvent.VK_V, KeyEvent.CTRL_MASK));
+		miPaste.setAccelerator(isMac ? KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		add(miPaste);
 
 		miSelectAll = new JMenuItem(actions.get(DefaultEditorKit.selectAllAction));
 		miSelectAll.setText("Select All");
-		miSelectAll.setAccelerator(System.getProperty("os.name").startsWith("Mac") ? KeyStroke
-				.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_MASK) : KeyStroke.getKeyStroke(
-				KeyEvent.VK_A, KeyEvent.CTRL_MASK));
+		miSelectAll.setAccelerator(isMac ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK));
 		add(miSelectAll);
 
 	}
@@ -83,8 +77,7 @@ public class TextComponentPopupMenu extends JPopupMenu {
 
 	/** set a customized action for pasting */
 	public void setPasteAction(ActionListener listener) {
-		// somehow removing action listener also removes text and icon so we
-		// must save them and restore later
+		// somehow removing action listener also removes text and icon so we must save them and restore later
 		String text = miPaste.getText();
 		Icon icon = miPaste.getIcon();
 		ActionListener[] al = miPaste.getActionListeners();

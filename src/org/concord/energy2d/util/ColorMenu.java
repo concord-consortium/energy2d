@@ -10,9 +10,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,8 +27,6 @@ import javax.swing.JOptionPane;
 public class ColorMenu extends JMenu {
 
 	public final static String FILLING = "Filling";
-	private static ResourceBundle bundle;
-	private static boolean isUSLocale;
 
 	protected JColorChooser colorChooser;
 	protected TextureChooser textureChooser;
@@ -47,20 +42,11 @@ public class ColorMenu extends JMenu {
 
 		super(name);
 
-		if (bundle == null) {
-			isUSLocale = Locale.getDefault().equals(Locale.US);
-			try {
-				bundle = ResourceBundle.getBundle("org.concord.energy2d.util.resources.ColorMenu", Locale.getDefault());
-			} catch (MissingResourceException e) {
-			}
-		}
-
 		this.parent = parent;
 		colorChooser = color;
 		textureChooser = texture;
 
-		String s = getInternationalText("NoFill");
-		noFillMenuItem = new JCheckBoxMenuItem(s != null ? s : "No Fill", !filled);
+		noFillMenuItem = new JCheckBoxMenuItem("No Fill", !filled);
 		add(noFillMenuItem);
 		addSeparator();
 
@@ -74,36 +60,17 @@ public class ColorMenu extends JMenu {
 		add(cap);
 		addSeparator();
 
-		s = getInternationalText("MoreColors");
-		moreColorMenuItem = new JMenuItem((s != null ? s : "More Colors") + "...");
+		moreColorMenuItem = new JMenuItem("More Colors...");
 		add(moreColorMenuItem);
 
-		s = getInternationalText("HexColor");
-		hexColorMenuItem = new JMenuItem((s != null ? s : "Hex Color") + "...");
+		hexColorMenuItem = new JMenuItem("Hex Color...");
 		add(hexColorMenuItem);
 
 		if (textureChooser != null) {
-			s = getInternationalText("Texture");
-			textureMenuItem = new JMenuItem((s != null ? s : "Texture") + "...");
+			textureMenuItem = new JMenuItem("Texture...");
 			add(textureMenuItem);
 		}
 
-	}
-
-	static String getInternationalText(String name) {
-		if (bundle == null)
-			return null;
-		if (name == null)
-			return null;
-		if (isUSLocale)
-			return null;
-		String s = null;
-		try {
-			s = bundle.getString(name);
-		} catch (MissingResourceException e) {
-			s = null;
-		}
-		return s;
 	}
 
 	public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
@@ -140,9 +107,6 @@ public class ColorMenu extends JMenu {
 
 	public void setNoFillAction(Action a) {
 		noFillMenuItem.setAction(a);
-		String s = getInternationalText("NoFill");
-		if (s != null)
-			noFillMenuItem.setText(s);
 	}
 
 	public void addColorArrayListener(ActionListener a) {
@@ -179,8 +143,7 @@ public class ColorMenu extends JMenu {
 	public void addMoreColorListener(final ActionListener a) {
 		moreColorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String s = getInternationalText("MoreColors");
-				JColorChooser.createDialog(parent, s != null ? s : "Background Color", true, colorChooser, a, null).setVisible(true);
+				JColorChooser.createDialog(parent, "Background Color", true, colorChooser, a, null).setVisible(true);
 			}
 		});
 	}
@@ -192,21 +155,16 @@ public class ColorMenu extends JMenu {
 	public void setMoreColorAction(final ActionListener a) {
 		moreColorMenuItem.setAction(new AbstractAction("More Colors") {
 			public void actionPerformed(ActionEvent e) {
-				String s = getInternationalText("MoreColors");
-				JColorChooser.createDialog(parent, s != null ? s : "Background Color", true, colorChooser, a, null).setVisible(true);
+				JColorChooser.createDialog(parent, "Background Color", true, colorChooser, a, null).setVisible(true);
 			}
 		});
-		String s = getInternationalText("MoreColors");
-		if (s != null)
-			moreColorMenuItem.setText(s);
 	}
 
 	public void addTextureListeners(final ActionListener ok, final ActionListener cancel) {
 		if (textureMenuItem != null)
 			textureMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String s = getInternationalText("Texture");
-					TextureChooser.createDialog(parent, s != null ? s : "Texture", true, textureChooser, ok, cancel).setVisible(true);
+					TextureChooser.createDialog(parent, "Texture", true, textureChooser, ok, cancel).setVisible(true);
 				}
 			});
 	}
@@ -214,13 +172,9 @@ public class ColorMenu extends JMenu {
 	public void setTextureActions(final ActionListener ok, final ActionListener cancel) {
 		textureMenuItem.setAction(new AbstractAction("Texture") {
 			public void actionPerformed(ActionEvent e) {
-				String s = getInternationalText("Texture");
-				TextureChooser.createDialog(parent, s != null ? s : "Texture", true, textureChooser, ok, cancel).setVisible(true);
+				TextureChooser.createDialog(parent, "Texture", true, textureChooser, ok, cancel).setVisible(true);
 			}
 		});
-		String s = getInternationalText("Texture");
-		if (s != null)
-			textureMenuItem.setText(s);
 	}
 
 	public void setColor(Color c) {

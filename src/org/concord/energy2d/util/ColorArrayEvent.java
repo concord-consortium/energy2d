@@ -14,7 +14,7 @@ import java.util.EventObject;
  * 
  */
 
-public class ColorArrayEvent extends EventObject {
+class ColorArrayEvent extends EventObject {
 
 	private Color selectedColor;
 

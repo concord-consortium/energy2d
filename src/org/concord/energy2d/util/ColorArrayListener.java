@@ -11,7 +11,7 @@ package org.concord.energy2d.util;
  * 
  */
 
-public interface ColorArrayListener {
+interface ColorArrayListener {
 
 	public void colorSelected(ColorArrayEvent e);
 
