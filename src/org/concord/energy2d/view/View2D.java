@@ -1168,6 +1168,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
 							g.fillOval(x, y, w, h);
+						} else {
+							drawStatus(g, p, x + w / 2, y + h / 2);
 						}
 					} else if (fillPattern instanceof Texture) {
 						setPaint(g, (Texture) fillPattern, p.isFilled());
@@ -1207,6 +1209,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
 							g.fillRect(x, y, w, h);
+						} else {
+							drawStatus(g, p, x + w / 2, y + h / 2);
 						}
 					} else if (fp instanceof Texture) {
 						setPaint(g, (Texture) fp, p.isFilled());
@@ -1246,6 +1250,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
 							g.fill(area);
+						} else {
+							Rectangle bounds = area.getBounds();
+							drawStatus(g, p, (int) bounds.getCenterX(), (int) bounds.getCenterY());
 						}
 					} else if (fillPattern instanceof Texture) {
 						setPaint(g, (Texture) fillPattern, p.isFilled());
@@ -1278,6 +1285,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (p.isFilled()) {
 							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
 							g.fill(multigon);
+						} else {
+							drawStatus(g, p, cx / multigon.npoints, cy / multigon.npoints);
 						}
 					} else if (fp instanceof Texture) {
 						setPaint(g, (Texture) fp, p.isFilled());
@@ -1304,6 +1313,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		g.setStroke(oldStroke);
+	}
+
+	private void drawStatus(Graphics2D g, Part p, int x, int y) {
+		if (p.getPower() != 0) {
+			String onoff = p.getPowerSwitch() ? "On" : "Off";
+			g.setColor(getContrastColor(x, y));
+			g.setFont(smallFont);
+			FontMetrics fm = g.getFontMetrics();
+			g.drawString(onoff, x - fm.stringWidth(onoff) / 2, y - 5);
+		}
 	}
 
 	private void drawTextBoxes(Graphics2D g) {

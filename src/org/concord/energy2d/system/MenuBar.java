@@ -729,6 +729,14 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
+		mi = new JMenuItem("Thermostats");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.loadModel("models/thermostat2.e2d");
+			}
+		});
+		subMenu.add(mi);
+
 		mi = new JMenuItem("Infiltration");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -777,10 +785,10 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Thermostats");
+		mi = new JMenuItem("Solar Heating: Thermostat");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				box.loadModel("models/thermostat2.e2d");
+				box.loadModel("models/thermostat1.e2d");
 			}
 		});
 		subMenu.add(mi);
@@ -815,10 +823,10 @@ class MenuBar extends JMenuBar {
 		});
 		subMenu.add(mi);
 
-		mi = new JMenuItem("Projection Effect");
+		mi = new JMenuItem("Solar Cycles");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				box.loadModel("models/projection-effect.e2d");
+				box.loadModel("models/solar-cycles-shadow.e2d");
 			}
 		});
 		subMenu.add(mi);
