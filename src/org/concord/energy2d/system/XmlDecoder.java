@@ -464,7 +464,7 @@ class XmlDecoder extends DefaultHandler {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN;
 				int size = 14, style = Font.PLAIN;
-				String str = null, name = null;
+				String str = null, face = null, uid = null;
 				Color color = null;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
@@ -473,21 +473,26 @@ class XmlDecoder extends DefaultHandler {
 						x = Float.parseFloat(attribValue);
 					} else if (attribName == "y") {
 						y = Float.parseFloat(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
 					} else if (attribName == "string") {
 						str = attribValue;
 					} else if (attribName == "size") {
 						size = Integer.parseInt(attribValue);
-					} else if (attribName == "name") {
-						name = attribValue;
+					} else if (attribName == "name") { // TODO: backward compatibility, to remove by 2013
+						face = attribValue;
+					} else if (attribName == "face") {
+						face = attribValue;
 					} else if (attribName == "color") {
 						color = new Color(Integer.parseInt(attribValue, 16));
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y)) {
 					TextBox t = box.view.addText(str, x, y);
+					t.setUid(uid);
 					t.setSize(size);
 					t.setStyle(style);
-					t.setName(name);
+					t.setFace(face);
 					t.setColor(color);
 					box.view.repaint();
 				}

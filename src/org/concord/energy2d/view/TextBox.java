@@ -14,8 +14,9 @@ import java.awt.Font;
  */
 public class TextBox {
 
+	private String uid;
 	private String str;
-	private String name = "Arial";
+	private String face = "Arial";
 	private int style = Font.PLAIN;
 	private int size = 14;
 	private Color color = Color.white;
@@ -24,6 +25,14 @@ public class TextBox {
 	public TextBox(String str, float x, float y) {
 		setString(str);
 		setLocation(x, y);
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUid() {
+		return uid;
 	}
 
 	public void setX(float x) {
@@ -55,12 +64,12 @@ public class TextBox {
 		return str;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFace(String face) {
+		this.face = face;
 	}
 
-	public String getName() {
-		return name;
+	public String getFace() {
+		return face;
 	}
 
 	public void setStyle(int style) {
@@ -89,8 +98,10 @@ public class TextBox {
 
 	public String toXml() {
 		String xml = "<text";
+		if (uid != null)
+			xml += " uid=\"" + uid + "\"";
 		xml += " string=\"" + str + "\"";
-		xml += " name=\"" + name + "\"";
+		xml += " face=\"" + face + "\"";
 		xml += " size=\"" + size + "\"";
 		xml += " style=\"" + style + "\"";
 		xml += " color=\"" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";

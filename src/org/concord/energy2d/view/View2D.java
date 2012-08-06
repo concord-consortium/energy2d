@@ -393,6 +393,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return textBoxes.get(i);
 	}
 
+	public TextBox getTextBoxByUid(String uid) {
+		if (textBoxes == null || uid == null)
+			return null;
+		for (TextBox t : textBoxes) {
+			if (uid.equals(t.getUid()))
+				return t;
+		}
+		return null;
+	}
+
 	public void addPicture(ImageIcon image, int x, int y) {
 		if (pictures == null)
 			pictures = new ArrayList<Picture>();
@@ -1332,10 +1342,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Color oldColor = g.getColor();
 		String s = null;
 		for (TextBox x : textBoxes) {
-			g.setFont(new Font(x.getName(), x.getStyle(), x.getSize()));
+			g.setFont(new Font(x.getFace(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
 			s = x.getString();
 			s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
+			s = s.replaceAll("%thermal_energy", "" + Math.round(model.getThermalEnergy()));
 			g.drawString(s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
 		}
 		g.setFont(oldFont);

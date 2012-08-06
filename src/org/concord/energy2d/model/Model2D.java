@@ -698,8 +698,21 @@ public class Model2D {
 		}
 	}
 
+	/** get the total thermal energy of the system */
+	public float getThermalEnergy() {
+		float energy = 0;
+		for (int i = 1; i < nx - 1; i++) { // excluding the border cells to ensure the conservation of energy
+			for (int j = 1; j < ny - 1; j++) {
+				energy += t[i][j] * density[i][j] * specificHeat[i][j];
+			}
+		}
+		return energy * deltaX * deltaY;
+	}
+
 	/** get the total thermal energy stored in this part */
 	public float getThermalEnergy(Part p) {
+		if (p == null)
+			return 0;
 		float x, y;
 		float energy = 0;
 		for (int i = 0; i < nx; i++) {

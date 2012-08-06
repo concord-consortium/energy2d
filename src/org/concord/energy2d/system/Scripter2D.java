@@ -55,6 +55,7 @@ class Scripter2D extends Scripter {
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern TASK_FIELD = compile("^%?((?i)task){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern SENSOR_FIELD = compile("^%?((?i)sensor){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
@@ -323,7 +324,7 @@ class Scripter2D extends Scripter {
 			if (s.equalsIgnoreCase("all")) {
 				s2d.clear();
 			} else {
-
+				// TODO
 			}
 			return;
 		}
@@ -861,6 +862,20 @@ class Scripter2D extends Scripter {
 						});
 					}
 				} else {
+					// task field
+					matcher = TASK_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0)
+							return;
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setTaskField(s1, s2, s3);
+						return;
+					}
 					// part field
 					matcher = PART_FIELD.matcher(s);
 					if (matcher.find()) {
@@ -1180,26 +1195,50 @@ class Scripter2D extends Scripter {
 		}
 	}
 
+	private void setTaskField(String str1, String str2, String str3) {
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		String s = str1.substring(lb + 1, rb).trim();
+		Task task = s2d.taskManager.getTaskByUid(s);
+		if (task == null) {
+			showError(str1, "Task " + s + " not found");
+			return;
+		}
+		s = str2.toLowerCase().intern();
+		if (s == "enabled") {
+			task.setEnabled("true".equalsIgnoreCase(str3));
+			return;
+		} else if (s == "interval") {
+			int z = 0;
+			try {
+				z = Integer.parseInt(str3);
+			} catch (Exception e) {
+				showException(str3, e);
+				return;
+			}
+			if (z > 0)
+				task.setInterval(z);
+			return;
+		}
+	}
+
 	private void setTextField(String str1, String str2, String str3) {
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
-		float z = 0;
+		String s = str1.substring(lb + 1, rb);
+		float z = Float.NaN;
 		try {
-			z = Float.parseFloat(str1.substring(lb + 1, rb));
+			z = Float.parseFloat(s);
 		} catch (Exception e) {
 			showException(str1, e);
 			return;
 		}
-		int i = (int) Math.round(z);
-		if (i < 0 || i >= s2d.view.getTextBoxCount()) {
-			return;
-		}
-		final TextBox text = s2d.view.getTextBox(i);
+		final TextBox text = z != Float.NaN ? s2d.view.getTextBox(Math.round(z)) : s2d.view.getTextBoxByUid(s);
 		if (text == null)
 			return;
-		String s = str2.toLowerCase().intern();
+		s = str2.toLowerCase().intern();
 		if (s == "name") {
-			text.setName(str3);
+			text.setFace(str3);
 		} else if (s == "text") {
 			text.setString(str3);
 			s2d.view.repaint();
