@@ -1095,7 +1095,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (thermometers.isEmpty())
 			return;
 		g.setStroke(thinStroke);
-		Symbol s = Symbol.get(Symbol.THERMOMETER);
+		Symbol.Thermometer s = (Symbol.Thermometer) Symbol.get(Symbol.THERMOMETER);
 		float w = Thermometer.RELATIVE_WIDTH * model.getLx();
 		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
 		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
@@ -1118,17 +1118,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
 					x = (int) (rx * getWidth() - lx * 0.5f);
 					y = (int) (ry * getHeight() - ly * 0.5f);
+					s.setValue(Math.round((t.getCurrentData() - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 4)));
 					s.paintIcon(this, g, x, y);
 					ix = Math.round(nx * rx);
 					iy = Math.round(ny * ry);
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
-						g.setColor(getContrastColor(x, y));
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
-						if (t.getLabel() != null) {
-							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 10);
-						}
+						if (t.getLabel() != null)
+							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12);
 					}
 				}
 			}
@@ -1136,8 +1135,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private static void centerString(String s, Graphics2D g, int x, int y) {
-		int stringWidth = g.getFontMetrics().stringWidth(s);
-		g.drawString(s, x - stringWidth / 2, y);
+		FontMetrics fm = g.getFontMetrics();
+		int stringWidth = fm.stringWidth(s);
+		g.setColor(Color.gray);
+		int x2 = x - stringWidth / 2;
+		g.fillRoundRect(x2 - 5, y - fm.getAscent(), stringWidth + 10, fm.getHeight(), 8, 8);
+		g.setColor(Color.white);
+		g.drawString(s, x2, y);
 	}
 
 	private Color getPartColor(Part p, Color proposedColor) {

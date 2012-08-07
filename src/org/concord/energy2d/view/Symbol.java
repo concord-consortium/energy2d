@@ -5,9 +5,12 @@
 
 package org.concord.energy2d.view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 
 import javax.swing.Icon;
 
@@ -72,22 +75,32 @@ abstract class Symbol implements Icon {
 			return instance;
 		}
 
+		private int value;
+		private Stroke stroke1 = new BasicStroke(1);
+
 		public Thermometer() {
 		}
 
+		public void setValue(int value) {
+			this.value = value;
+		}
+
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(Color.white);
-			g.fillRect(x, y, w - 1, h - 1);
-			g.setColor(Color.red);
-			g.drawLine(x + w / 2 - 1, y + h / 2, x + w / 2 - 1, y + h - 1);
-			g.drawLine(x + w / 2, y + h / 2, x + w / 2, y + h - 1);
-			g.drawLine(x + w / 2 + 1, y + h / 2, x + w / 2 + 1, y + h - 1);
-			g.setColor(Color.black);
-			g.drawRect(x, y, w - 1, h - 1);
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(Color.white);
+			g2.fillRect(x, y, w - 1, h - 1);
+			if (value != 0) {
+				g2.setColor(Color.red);
+				g2.setStroke(new BasicStroke(getIconWidth() / 3));
+				g2.drawLine(x + w / 2, y + h - 1 - value, x + w / 2, y + h - 1);
+			}
+			g2.setColor(Color.black);
+			g2.setStroke(stroke1);
+			g2.drawRect(x, y, w - 1, h - 1);
 			int n = h / 2;
 			for (int i = 1; i < n; i++) {
-				g.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
-				g.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
+				g2.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
+				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
 			}
 		}
 
