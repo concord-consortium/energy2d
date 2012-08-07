@@ -91,8 +91,9 @@ abstract class Symbol implements Icon {
 			g2.fillRect(x, y, w - 1, h - 1);
 			if (value != 0) {
 				g2.setColor(Color.red);
-				g2.setStroke(new BasicStroke(getIconWidth() / 3));
-				g2.drawLine(x + w / 2, y + h - 2 - value, x + w / 2, y + h - 2);
+				BasicStroke bs = new BasicStroke(getIconWidth() / 3);
+				g2.setStroke(bs);
+				g2.drawLine(x + w / 2, (int) (y + h - bs.getLineWidth() - value), x + w / 2, (int) (y + h - bs.getLineWidth()));
 			}
 			g2.setColor(Color.black);
 			g2.setStroke(stroke1);

@@ -1126,7 +1126,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
 						if (t.getLabel() != null)
 							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12);
-						s.setValue(Math.round((temp - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 4)));
+						s.setValue(Math.round((temp - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 10)));
 					}
 					s.paintIcon(this, g, x, y);
 				}
