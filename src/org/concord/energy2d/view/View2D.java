@@ -1118,8 +1118,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
 					x = (int) (rx * getWidth() - lx * 0.5f);
 					y = (int) (ry * getHeight() - ly * 0.5f);
-					s.setValue(Math.round((t.getCurrentData() - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 4)));
-					s.paintIcon(this, g, x, y);
 					ix = Math.round(nx * rx);
 					iy = Math.round(ny * ry);
 					temp = model.getTemperature()[ix][iy];
@@ -1128,7 +1126,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
 						if (t.getLabel() != null)
 							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12);
+						s.setValue(Math.round((temp - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 4)));
 					}
+					s.paintIcon(this, g, x, y);
 				}
 			}
 		}

@@ -92,7 +92,7 @@ abstract class Symbol implements Icon {
 			if (value != 0) {
 				g2.setColor(Color.red);
 				g2.setStroke(new BasicStroke(getIconWidth() / 3));
-				g2.drawLine(x + w / 2, y + h - 1 - value, x + w / 2, y + h - 1);
+				g2.drawLine(x + w / 2, y + h - 2 - value, x + w / 2, y + h - 2);
 			}
 			g2.setColor(Color.black);
 			g2.setStroke(stroke1);
