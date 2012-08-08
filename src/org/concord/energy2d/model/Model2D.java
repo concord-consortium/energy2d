@@ -35,6 +35,8 @@ public class Model2D {
 
 	public final static byte BUOYANCY_AVERAGE_ALL = 0;
 	public final static byte BUOYANCY_AVERAGE_COLUMN = 1;
+	public final static byte GRAVITY_UNIFORM = 0;
+	public final static byte GRAVITY_CENTRIC = 1;
 
 	private int indexOfStep;
 
@@ -186,6 +188,14 @@ public class Model2D {
 
 	public float getZHeatDiffusivity() {
 		return heatSolver.zHeatDiffusivity;
+	}
+
+	public void setGravityType(byte gravityType) {
+		fluidSolver.setGravityType(gravityType);
+	}
+
+	public byte getGravityType() {
+		return fluidSolver.getGravityType();
 	}
 
 	public void setThermalBuoyancy(float thermalBuoyancy) {

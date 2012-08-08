@@ -23,6 +23,7 @@ abstract class FluidSolver2D {
 	private float thermalBuoyancy = 0.00025f;
 	private float gravity = 0;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_ALL;
+	private byte gravityType = Model2D.GRAVITY_UNIFORM;
 
 	float viscosity = 10 * Constants.AIR_VISCOSITY;
 
@@ -74,6 +75,14 @@ abstract class FluidSolver2D {
 
 	MassBoundary getBoundary() {
 		return boundary;
+	}
+
+	void setGravityType(byte gravityType) {
+		this.gravityType = gravityType;
+	}
+
+	byte getGravityType() {
+		return gravityType;
 	}
 
 	void setBuoyancyApproximation(byte buoyancyApproximation) {
@@ -238,6 +247,29 @@ abstract class FluidSolver2D {
 		}
 	}
 
+	// for simulating mantle convection of planets
+	private void applySphericalBuoyancy(float[][] u, float[][] v) {
+		float g = gravity * timeStep;
+		float b = thermalBuoyancy * timeStep;
+		float t0 = MathUtil.getAverage(t);
+		float dx = 0, dy = 0, dr = 0;
+		float cx = nx / 2, cy = ny / 2;
+		for (int i = 1; i < nx1; i++) {
+			for (int j = 1; j < ny1; j++) {
+				if (fluidity[i][j]) {
+					dx = (i - cx) * deltaX;
+					dy = (j - cy) * deltaY;
+					dr = (float) (1.0 / Math.hypot(dx, dy));
+					dx *= dr;
+					dy *= dr;
+					dr = (g - b) * t[i][j] + b * t0;
+					u[i][j] -= dr * dx;
+					v[i][j] -= dr * dy;
+				}
+			}
+		}
+	}
+
 	abstract void diffuse(int b, float[][] f0, float[][] f);
 
 	abstract void advect(int b, float[][] f0, float[][] f);
@@ -245,7 +277,14 @@ abstract class FluidSolver2D {
 	// Copying a two-dimensional array is very fast. Considering this, I chose clarity instead of swapping the arrays.
 	void solve(float[][] u, float[][] v) {
 		if (thermalBuoyancy != 0) {
-			applyBuoyancy(v);
+			switch (gravityType) {
+			case Model2D.GRAVITY_UNIFORM:
+				applyBuoyancy(v);
+				break;
+			case Model2D.GRAVITY_CENTRIC:
+				applySphericalBuoyancy(u, v);
+				break;
+			}
 		}
 		setObstacleVelocity(u, v);
 		if (viscosity > 0) { // viscid

@@ -96,6 +96,8 @@ class ModelDialog extends JDialog {
 	private JCheckBox convectiveCheckBox;
 	private JLabel buoyancyApproximationLabel;
 	private JComboBox buoyancyApproximationComboBox;
+	private JLabel gravityTypeLabel;
+	private JComboBox gravityTypeComboBox;
 	private JTextField zDiffusivityField;
 	private Window owner;
 	private ActionListener okListener;
@@ -230,6 +232,7 @@ class ModelDialog extends JDialog {
 				model.setSunny(sunnyCheckBox.isSelected());
 				model.setConvective(convectiveCheckBox.isSelected());
 				model.setBuoyancyApproximation((byte) buoyancyApproximationComboBox.getSelectedIndex());
+				model.setGravityType((byte) gravityTypeComboBox.getSelectedIndex());
 
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
@@ -292,6 +295,8 @@ class ModelDialog extends JDialog {
 				buoyancyField.setEnabled(b);
 				buoyancyApproximationLabel.setEnabled(b);
 				buoyancyApproximationComboBox.setEnabled(b);
+				gravityTypeLabel.setEnabled(b);
+				gravityTypeComboBox.setEnabled(b);
 			}
 		});
 		p.add(convectiveCheckBox);
@@ -441,6 +446,17 @@ class ModelDialog extends JDialog {
 		buoyancyApproximationComboBox.setEnabled(model.isConvective());
 		buoyancyApproximationComboBox.setSelectedIndex(model.getBuoyancyApproximation());
 		p.add(buoyancyApproximationComboBox);
+		label = new JLabel();
+		p.add(label);
+		count++;
+
+		gravityTypeLabel = new JLabel("Gravity type");
+		gravityTypeLabel.setEnabled(model.isConvective());
+		p.add(gravityTypeLabel);
+		gravityTypeComboBox = new JComboBox(new String[] { "Uniform", "Centric" });
+		gravityTypeComboBox.setEnabled(model.isConvective());
+		gravityTypeComboBox.setSelectedIndex(model.getGravityType());
+		p.add(gravityTypeComboBox);
 		label = new JLabel();
 		p.add(label);
 		count++;

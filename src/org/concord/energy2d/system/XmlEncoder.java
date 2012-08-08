@@ -4,6 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import org.concord.energy2d.model.Constants;
+import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
@@ -85,6 +86,9 @@ class XmlEncoder {
 		}
 		if (box.model.getBackgroundViscosity() != Constants.AIR_VISCOSITY) {
 			sb.append("<background_viscosity>" + box.model.getBackgroundViscosity() + "</background_viscosity>\n");
+		}
+		if (box.model.getGravityType() != Model2D.GRAVITY_UNIFORM) {
+			sb.append("<gravity_type>" + box.model.getGravityType() + "</gravity_type>\n");
 		}
 		sb.append("<thermal_buoyancy>" + box.model.getThermalBuoyancy() + "</thermal_buoyancy>\n");
 		sb.append("<buoyancy_approximation>" + box.model.getBuoyancyApproximation() + "</buoyancy_approximation>\n");

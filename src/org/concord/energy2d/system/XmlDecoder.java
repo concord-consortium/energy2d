@@ -57,6 +57,7 @@ class XmlDecoder extends DefaultHandler {
 	private float backgroundTemperature;
 	private float thermalBuoyancy;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+	private byte gravityType = Model2D.GRAVITY_UNIFORM;
 
 	// view properties
 	private boolean ruler;
@@ -146,6 +147,7 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setBackgroundViscosity(backgroundViscosity);
 		box.model.setThermalBuoyancy(thermalBuoyancy);
 		box.model.setBuoyancyApproximation(buoyancyApproximation);
+		box.model.setGravityType(gravityType);
 
 		box.view.setRulerOn(ruler);
 		box.view.setGridOn(grid);
@@ -545,6 +547,8 @@ class XmlDecoder extends DefaultHandler {
 			thermalBuoyancy = Float.parseFloat(str);
 		} else if (qName == "buoyancy_approximation") {
 			buoyancyApproximation = Byte.parseByte(str);
+		} else if (qName == "gravity_type") {
+			gravityType = Byte.parseByte(str);
 		} else if (qName == "minimum_temperature") {
 			minimumTemperature = Float.parseFloat(str);
 		} else if (qName == "maximum_temperature") {
@@ -727,6 +731,7 @@ class XmlDecoder extends DefaultHandler {
 		backgroundTemperature = 0;
 		thermalBuoyancy = 0;
 		buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
+		gravityType = Model2D.GRAVITY_UNIFORM;
 
 		// view properties
 		ruler = false;

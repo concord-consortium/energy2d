@@ -1123,9 +1123,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
-						centerString(str, g, x + s.getIconWidth() / 2, y - 5);
+						centerString(str, g, x + s.getIconWidth() / 2, y - 5, true);
 						if (t.getLabel() != null)
-							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12);
+							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12, false);
 						s.setValue(Math.round((temp - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 10)));
 					}
 					s.paintIcon(this, g, x, y);
@@ -1134,12 +1134,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private static void centerString(String s, Graphics2D g, int x, int y) {
+	private static void centerString(String s, Graphics2D g, int x, int y, boolean box) {
 		FontMetrics fm = g.getFontMetrics();
 		int stringWidth = fm.stringWidth(s);
-		g.setColor(Color.gray);
 		int x2 = x - stringWidth / 2;
-		g.fillRoundRect(x2 - 5, y - fm.getAscent(), stringWidth + 10, fm.getHeight(), 8, 8);
+		if (box) {
+			g.setColor(Color.gray);
+			g.fillRoundRect(x2 - 5, y - fm.getAscent(), stringWidth + 10, fm.getHeight(), 8, 8);
+		}
 		g.setColor(Color.white);
 		g.drawString(s, x2, y);
 	}
