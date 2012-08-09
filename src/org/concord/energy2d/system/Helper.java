@@ -33,6 +33,19 @@ public class Helper {
 		}
 	}
 
+	public final static void openBrowser(String url) {
+		String os = System.getProperty("os.name");
+		try {
+			if (os.startsWith("Windows")) {
+				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+			} else if (os.startsWith("Mac OS")) {
+				Runtime.getRuntime().exec(new String[] { "open", url });
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public final static void showKeyboardShortcuts(Frame frame) {
 		String s = "<html><h2>Keyboard Shortcuts</h2><hr>";
 		s += "<br><font face=Courier>'R'</font> &mdash; Run or pause the simulation.";

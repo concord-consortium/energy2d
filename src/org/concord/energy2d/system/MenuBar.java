@@ -612,7 +612,26 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
+		if (!System.getProperty("os.name").startsWith("Linux")) {
+			mi = new JMenuItem("Online Manual...");
+			mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, true));
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Helper.openBrowser("http://energy.concord.org/energy2d/manual/index.html");
+				}
+			});
+			menu.add(mi);
+			mi = new JMenuItem("Contact Us...");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Helper.openBrowser("http://energy.concord.org/energy2d/contact.html");
+				}
+			});
+			menu.add(mi);
+		}
+
 		if (!System.getProperty("os.name").startsWith("Mac")) {
+			menu.addSeparator();
 			mi = new JMenuItem("About...");
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
