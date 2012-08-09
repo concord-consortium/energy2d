@@ -107,11 +107,12 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));
-		x.setToolTipText("Click to heat, shift-click to cool");
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/thermometer.png")));
+		x.setToolTipText("Add a thermometer");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				box.view.setActionMode(View2D.HEATING_MODE);
+				box.view.setActionMode(View2D.THERMOMETER_MODE);
+				graphButton.setEnabled(true);
 			}
 		});
 		x.addActionListener(new ActionListener() {
@@ -122,12 +123,11 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/thermometer.png")));
-		x.setToolTipText("Add a thermometer");
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));
+		x.setToolTipText("Click to heat, shift-click to cool");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				box.view.setActionMode(View2D.THERMOMETER_MODE);
-				graphButton.setEnabled(true);
+				box.view.setActionMode(View2D.HEATING_MODE);
 			}
 		});
 		x.addActionListener(new ActionListener() {

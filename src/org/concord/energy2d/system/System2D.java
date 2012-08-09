@@ -799,7 +799,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			preferences = Preferences.userNodeForPackage(System2D.class);
 
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		int w = (int) (screen.height * 0.6);
+		int w = (int) (screen.height * 0.7);
 
 		final System2D box = new System2D();
 		box.view.setPreferredSize(new Dimension(w, w));
