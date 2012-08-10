@@ -54,7 +54,7 @@ class TextBoxPanel extends JPanel {
 
 	private final static String[] FONT_FAMILY_NAMES = new String[] { "Arial", "Arial Black", "Book Antiqua", "Comic Sans MS", "Courier New", "Default", "Dialog", "DialogInput", "Monospaced", "SansSerif", "Serif", "Times New Roman", "Verdana" };
 	private final static Integer[] FONT_SIZE = new Integer[] { 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 48 };
-	private final static DecimalFormat FORMAT = new DecimalFormat("####.######");
+	private final static DecimalFormat FORMAT = new DecimalFormat("####.####");
 
 	private View2D view;
 	private TextBox textBox;
@@ -62,6 +62,7 @@ class TextBoxPanel extends JPanel {
 	private static Point offset;
 	private boolean cancelled;
 
+	private JTextField uidField;
 	private JCheckBox borderCheckBox;
 	private JCheckBox draggableCheckBox;
 	private JTextField xField, yField;
@@ -100,7 +101,12 @@ class TextBoxPanel extends JPanel {
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 		p.add(p2, BorderLayout.NORTH);
 
-		JLabel label = new JLabel("X:");
+		JLabel label = new JLabel("Unique ID:");
+		p2.add(label);
+		uidField = new JTextField(textBox.getUid(), 8);
+		p2.add(uidField);
+
+		label = new JLabel("X:");
 		p2.add(label);
 		xField = new JTextField(FORMAT.format(t.getX()), 10);
 		xField.addActionListener(new ActionListener() {
@@ -165,6 +171,9 @@ class TextBoxPanel extends JPanel {
 		italicButton.addActionListener(styleListener);
 		p2.add(italicButton);
 
+		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+		p.add(p2, BorderLayout.CENTER);
+
 		borderCheckBox = new JCheckBox("Border");
 		borderCheckBox.setSelected(textBox.hasBorder());
 		borderCheckBox.addItemListener(new ItemListener() {
@@ -184,9 +193,6 @@ class TextBoxPanel extends JPanel {
 			}
 		});
 		p2.add(draggableCheckBox);
-
-		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-		p.add(p2, BorderLayout.CENTER);
 
 		p2.add(new JLabel("Font face:"));
 		fontNameComboBox = createFontNameComboBox();
@@ -246,6 +252,12 @@ class TextBoxPanel extends JPanel {
 		JButton button = new JButton("OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String uid = uidField.getText();
+				if (uid != null && !uid.trim().equals("")) {
+					textBox.setUid(uid.trim());
+				} else {
+					textBox.setUid(null);
+				}
 				textBox.setLabel(textArea.getText());
 				float x = parse(xField.getText());
 				if (Float.isNaN(x))

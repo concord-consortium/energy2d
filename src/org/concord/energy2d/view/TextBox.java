@@ -37,7 +37,8 @@ public class TextBox extends Manipulable {
 
 	@Override
 	public Manipulable duplicate(float x, float y) {
-		TextBox t = new TextBox((Rectangle2D.Float) getShape());
+		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+		TextBox t = new TextBox(new Rectangle2D.Float(r.x, r.y, r.width, r.height));
 		t.set(this);
 		t.x = x;
 		t.y = y;

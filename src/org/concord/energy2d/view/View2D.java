@@ -785,7 +785,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof TextBox) {
-			addTextBox((TextBox) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)));
+			addTextBox((TextBox) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), model.getLy() - convertPixelToPointY(mouseReleasedPoint.y)));
 		}
 		notifyManipulationListeners(copiedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
@@ -1411,12 +1411,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				w = stringWidth;
 		}
 		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
-		r.x = x - 5;
+		r.x = x - 8;
 		r.y = y - 2;
-		r.width = w + 10;
+		r.width = w + 16;
 		r.height = h + 10;
-		if (t.hasBorder())
+		if (t.hasBorder()) {
+			g.setStroke(moderateStroke);
 			g.drawRoundRect((int) r.x, (int) r.y, (int) r.width, (int) r.height, 10, 10);
+		}
 		if (t.isSelected()) {
 			g.setStroke(dashed);
 			g.drawRoundRect((int) (r.x - 5), (int) (r.y - 5), (int) (r.width + 10), (int) (r.height + 10), 15, 15);
@@ -1603,7 +1605,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			r.x = x - r.width / 2;
 			r.y = y - r.height / 2;
 			if (m instanceof TextBox) {
-				((TextBox) m).setX(r.x + convertPixelToPointX(5));
+				((TextBox) m).setX(r.x + convertPixelToPointX(8));
 				((TextBox) m).setY(model.getLy() - r.y - convertPixelToPointY(2));
 			}
 		} else if (s instanceof Ellipse2D.Float) {
@@ -2304,8 +2306,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
 			}
 		} else if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof TextBox) {
-			TextBox t = (TextBox) selectedManipulable;
-			Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
+			Rectangle2D.Float r = (Rectangle2D.Float) selectedManipulable.getShape();
 			int a = convertPointToPixelX(r.x);
 			int b = convertPointToPixelY(r.y);
 			int c = convertLengthToPixelX(r.width);
