@@ -490,7 +490,7 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y)) {
-					TextBox t = box.view.addText(str, x, y);
+					TextBox t = box.view.addText(new XmlCharacterDecoder().decode(str), x, y);
 					t.setUid(uid);
 					t.setSize(size);
 					t.setStyle(style);

@@ -8,23 +8,36 @@ package org.concord.energy2d.view;
 import java.awt.Color;
 import java.awt.Font;
 
+import org.concord.energy2d.util.XmlCharacterEncoder;
+
 /**
  * @author Charles Xie
  * 
  */
 public class TextBox {
 
+	private float x, y;
 	private String uid;
 	private String str;
 	private String face = "Arial";
 	private int style = Font.PLAIN;
 	private int size = 14;
 	private Color color = Color.white;
-	private float x, y;
+
+	public TextBox() {
+	}
 
 	public TextBox(String str, float x, float y) {
 		setString(str);
 		setLocation(x, y);
+	}
+
+	public void set(TextBox t) {
+		str = t.str;
+		face = t.face;
+		style = t.style;
+		size = t.size;
+		color = t.color;
 	}
 
 	public void setUid(String uid) {
@@ -88,6 +101,16 @@ public class TextBox {
 		return size;
 	}
 
+	public void setFont(Font font) {
+		face = font.getFamily();
+		style = font.getStyle();
+		size = font.getSize();
+	}
+
+	public Font getFont() {
+		return new Font(face, style, size);
+	}
+
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -100,7 +123,7 @@ public class TextBox {
 		String xml = "<text";
 		if (uid != null)
 			xml += " uid=\"" + uid + "\"";
-		xml += " string=\"" + str + "\"";
+		xml += " string=\"" + new XmlCharacterEncoder().encode(str) + "\"";
 		xml += " face=\"" + face + "\"";
 		xml += " size=\"" + size + "\"";
 		xml += " style=\"" + style + "\"";

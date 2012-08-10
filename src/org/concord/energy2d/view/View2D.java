@@ -370,6 +370,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			pictures.clear();
 	}
 
+	public void addTextBox(TextBox t) {
+		if (textBoxes == null)
+			textBoxes = new ArrayList<TextBox>();
+		textBoxes.add(t);
+		repaint();
+	}
+
+	public void removeTextBox(TextBox t) {
+		if (textBoxes == null)
+			return;
+		textBoxes.remove(t);
+		repaint();
+	}
+
 	public TextBox addText(String text, float x, float y) {
 		if (textBoxes == null)
 			textBoxes = new ArrayList<TextBox>();
@@ -544,6 +558,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	/** relative to the width and height of the view */
 	public Rectangle2D.Float getColorPaletteRectangle() {
 		return colorPalette.getRect();
+	}
+
+	public Color getTemperatureColor(float value) {
+		return new Color(temperatureRenderer.getColor(value));
 	}
 
 	public void setGraphOn(boolean b) {
@@ -857,6 +875,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Graphics2D g;
 		if (bimg == null || bimg.getWidth() != w || bimg.getHeight() != h) {
 			bimg = (BufferedImage) createImage(w, h);
+			// The following code doesn't seem to make any difference compared with the above line
+			// GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			// GraphicsDevice gd = ge.getDefaultScreenDevice();
+			// GraphicsConfiguration gc = gd.getDefaultConfiguration();
+			// bimg = gc.createCompatibleImage(w, h, Transparency.OPAQUE);
 		}
 		g = bimg.createGraphics();
 		g.setBackground(getBackground());
@@ -1351,12 +1374,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setFont(new Font(x.getFace(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
 			s = x.getString();
-			s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
-			s = s.replaceAll("%thermal_energy", "" + Math.round(model.getThermalEnergy()));
-			g.drawString(s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
+			if (s != null) {
+				s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
+				s = s.replaceAll("%thermal_energy", "" + Math.round(model.getThermalEnergy()));
+				drawStringWithLineBreaks(g, s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
+			}
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
+	}
+
+	private static void drawStringWithLineBreaks(Graphics g, String text, int x, int y) {
+		for (String line : text.split("\n"))
+			g.drawString(line, x, y += g.getFontMetrics().getHeight());
 	}
 
 	private void drawPictures(Graphics2D g) {
