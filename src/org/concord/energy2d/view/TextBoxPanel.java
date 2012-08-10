@@ -13,15 +13,17 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 
 import javax.swing.AbstractAction;
@@ -61,6 +63,7 @@ class TextBoxPanel extends JPanel {
 	private boolean cancelled;
 
 	private JCheckBox borderCheckBox;
+	private JCheckBox draggableCheckBox;
 	private JTextField xField, yField;
 	private JComboBox fontNameComboBox, fontSizeComboBox;
 	private ColorComboBox fontColorComboBox;
@@ -109,6 +112,15 @@ class TextBoxPanel extends JPanel {
 				view.repaint();
 			}
 		});
+		xField.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				float x = parse(xField.getText());
+				if (Float.isNaN(x))
+					return;
+				textBox.setX(x);
+				view.repaint();
+			}
+		});
 		p2.add(xField);
 
 		label = new JLabel("Y:");
@@ -116,6 +128,15 @@ class TextBoxPanel extends JPanel {
 		yField = new JTextField(FORMAT.format(t.getY()), 10);
 		yField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				float y = parse(yField.getText());
+				if (Float.isNaN(y))
+					return;
+				textBox.setY(y);
+				view.repaint();
+			}
+		});
+		yField.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
 				float y = parse(yField.getText());
 				if (Float.isNaN(y))
 					return;
@@ -153,6 +174,16 @@ class TextBoxPanel extends JPanel {
 			}
 		});
 		p2.add(borderCheckBox);
+
+		draggableCheckBox = new JCheckBox("Draggable");
+		draggableCheckBox.setSelected(textBox.isDraggable());
+		draggableCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textBox.setDraggable(e.getStateChange() == ItemEvent.SELECTED);
+				view.repaint();
+			}
+		});
+		p2.add(draggableCheckBox);
 
 		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 		p.add(p2, BorderLayout.CENTER);
@@ -216,10 +247,19 @@ class TextBoxPanel extends JPanel {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textBox.setLabel(textArea.getText());
+				float x = parse(xField.getText());
+				if (Float.isNaN(x))
+					return;
+				textBox.setX(x);
+				float y = parse(yField.getText());
+				if (Float.isNaN(y))
+					return;
+				textBox.setY(y);
 				if (dialog != null) {
 					offset = dialog.getLocationOnScreen();
 					dialog.dispose();
 				}
+				view.repaint();
 				view.notifyManipulationListeners(textBox, ManipulationEvent.OBJECT_ADDED);
 			}
 		});
@@ -258,7 +298,7 @@ class TextBoxPanel extends JPanel {
 
 	void storeSettings() {
 		if (copy == null)
-			copy = new TextBox(new Rectangle());
+			copy = new TextBox(new Rectangle2D.Float());
 		copy.set(textBox);
 	}
 

@@ -289,14 +289,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		Action a = new AbstractAction() {
 			public void actionPerformed(ActionEvent arg0) {
-				TextBox t = new TextBox(new Rectangle());
+				TextBox t = new TextBox(new Rectangle2D.Float());
 				t.setX(model.getLx() * 0.1f);
 				t.setY(model.getLy() * 0.9f);
 				addTextBox(t);
 				new TextBoxPanel(t, View2D.this).createDialog(true).setVisible(true);
 			}
 		};
-		a.putValue(Action.NAME, "Insert Text Box");
+		a.putValue(Action.NAME, "Text Box");
 		getActionMap().put("Insert Text Box", a);
 
 	}
@@ -394,7 +394,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public TextBox addText(String text, float x, float y) {
-		TextBox t = new TextBox(new Rectangle(), text, x, y);
+		TextBox t = new TextBox(new Rectangle2D.Float(), text, x, y);
 		addTextBox(t);
 		return t;
 	}
@@ -784,6 +784,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			model.setInitialTemperature();
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
+		} else if (copiedManipulable instanceof TextBox) {
+			addTextBox((TextBox) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)));
 		}
 		notifyManipulationListeners(copiedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
@@ -942,6 +944,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g.setColor(Color.yellow);
 				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+			} else if (selectedManipulable instanceof TextBox) {
 			} else {
 				for (Rectangle r : handle) {
 					if (r.x != 0 || r.y != 0) {
@@ -1385,14 +1388,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (s != null) {
 				s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
 				s = s.replaceAll("%thermal_energy", "" + Math.round(model.getThermalEnergy()));
-				drawStringWithLineBreaks(g, s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()), x);
+				drawStringWithLineBreaks(g, s, x);
 			}
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
 	}
 
-	private static void drawStringWithLineBreaks(Graphics2D g, String text, int x, int y, TextBox t) {
+	private void drawStringWithLineBreaks(Graphics2D g, String text, TextBox t) {
+		int x = convertPointToPixelX(t.getX());
+		int y = getHeight() - convertPointToPixelY(t.getY());
 		FontMetrics fm = g.getFontMetrics();
 		int stringHeight = fm.getHeight();
 		int stringWidth = 0;
@@ -1405,17 +1410,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (stringWidth > w)
 				w = stringWidth;
 		}
-		Rectangle r = (Rectangle) t.getShape();
+		Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
 		r.x = x - 5;
 		r.y = y - 2;
 		r.width = w + 10;
 		r.height = h + 10;
 		if (t.hasBorder())
-			g.drawRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+			g.drawRoundRect((int) r.x, (int) r.y, (int) r.width, (int) r.height, 10, 10);
 		if (t.isSelected()) {
 			g.setStroke(dashed);
-			g.drawRoundRect(r.x - 5, r.y - 5, r.width + 10, r.height + 10, 15, 15);
+			g.drawRoundRect((int) (r.x - 5), (int) (r.y - 5), (int) (r.width + 10), (int) (r.height + 10), 15, 15);
 		}
+		r.x = convertPixelToPointX((int) r.x);
+		r.y = convertPixelToPointX((int) r.y);
+		r.width = convertPixelToPointX((int) r.width);
+		r.height = convertPixelToPointX((int) r.height);
 	}
 
 	private void drawPictures(Graphics2D g) {
@@ -1509,7 +1518,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (!textBoxes.isEmpty()) {
 			synchronized (textBoxes) {
 				for (TextBox t : textBoxes) {
-					if (t.contains(x, y)) {
+					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
 					}
@@ -1566,6 +1575,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					r.y = ymin + dy - r.height / 2;
 				else if (r.y + r.height / 2 > ymax - dy)
 					r.y = ymax - dy - r.height / 2;
+			} else if (m instanceof TextBox) {
+				TextBox t = (TextBox) m;
+				t.setX(t.getX() + dx);
+				t.setY(t.getY() - dy);
 			}
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float r = (Ellipse2D.Float) s;
@@ -1589,6 +1602,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			Rectangle2D.Float r = (Rectangle2D.Float) s;
 			r.x = x - r.width / 2;
 			r.y = y - r.height / 2;
+			if (m instanceof TextBox) {
+				((TextBox) m).setX(r.x + convertPixelToPointX(5));
+				((TextBox) m).setY(model.getLy() - r.y - convertPixelToPointY(2));
+			}
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float r = (Ellipse2D.Float) s;
 			r.x = x - r.width / 2;
@@ -1637,7 +1654,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				cooling = true;
 			}
 		}
-		if (selectedManipulable != null) {
+		if (selectedManipulable != null && selectedManipulable.isDraggable()) {
 			boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
 			float delta = keyDown ? 1 : 5;
 			switch (e.getKeyCode()) {
@@ -2286,8 +2303,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
 			}
-		} else if (selectedManipulable instanceof Thermometer) {
-			Thermometer t = (Thermometer) selectedManipulable;
+		} else if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof TextBox) {
+			TextBox t = (TextBox) selectedManipulable;
 			Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
 			int a = convertPointToPixelX(r.x);
 			int b = convertPointToPixelY(r.y);

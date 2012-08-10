@@ -347,6 +347,12 @@ class MenuBar extends JMenuBar {
 		});
 		add(menu);
 
+		JMenu subMenu = new JMenu("Insert");
+		menu.add(subMenu);
+		menu.addSeparator();
+
+		subMenu.add(box.view.getActionMap().get("Insert Text Box"));
+
 		menu.add(box.view.getActionMap().get("Cut"));
 		menu.add(box.view.getActionMap().get("Copy"));
 		menu.add(box.view.getActionMap().get("Paste"));
@@ -366,8 +372,6 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(mi);
-
-		menu.add(box.view.getActionMap().get("Insert Text Box"));
 
 		// view menu
 
@@ -507,7 +511,7 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Templates");
 		add(menu);
 
-		JMenu subMenu = new JMenu("Heat and Temperature");
+		subMenu = new JMenu("Heat and Temperature");
 		menu.add(subMenu);
 
 		LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();

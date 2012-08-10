@@ -7,7 +7,7 @@ package org.concord.energy2d.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.util.XmlCharacterEncoder;
@@ -25,11 +25,11 @@ public class TextBox extends Manipulable {
 	private boolean border;
 	private Color color = Color.white;
 
-	public TextBox(Rectangle rect) {
+	public TextBox(Rectangle2D.Float rect) {
 		super(rect);
 	}
 
-	public TextBox(Rectangle rect, String text, float x, float y) {
+	public TextBox(Rectangle2D.Float rect, String text, float x, float y) {
 		this(rect);
 		setLabel(text);
 		setLocation(x, y);
@@ -37,7 +37,7 @@ public class TextBox extends Manipulable {
 
 	@Override
 	public Manipulable duplicate(float x, float y) {
-		TextBox t = new TextBox((Rectangle) getShape());
+		TextBox t = new TextBox((Rectangle2D.Float) getShape());
 		t.set(this);
 		t.x = x;
 		t.y = y;
