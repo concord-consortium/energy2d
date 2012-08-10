@@ -7,45 +7,50 @@ package org.concord.energy2d.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
 
+import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.util.XmlCharacterEncoder;
 
 /**
  * @author Charles Xie
  * 
  */
-public class TextBox {
+public class TextBox extends Manipulable {
 
 	private float x, y;
-	private String uid;
-	private String str;
 	private String face = "Arial";
 	private int style = Font.PLAIN;
 	private int size = 14;
+	private boolean border;
 	private Color color = Color.white;
 
-	public TextBox() {
+	public TextBox(Rectangle rect) {
+		super(rect);
 	}
 
-	public TextBox(String str, float x, float y) {
-		setString(str);
+	public TextBox(Rectangle rect, String text, float x, float y) {
+		this(rect);
+		setLabel(text);
 		setLocation(x, y);
 	}
 
+	@Override
+	public Manipulable duplicate(float x, float y) {
+		TextBox t = new TextBox((Rectangle) getShape());
+		t.set(this);
+		t.x = x;
+		t.y = y;
+		return t;
+	}
+
 	public void set(TextBox t) {
-		str = t.str;
+		setLabel(t.getLabel());
 		face = t.face;
 		style = t.style;
 		size = t.size;
 		color = t.color;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-	public String getUid() {
-		return uid;
+		border = t.border;
 	}
 
 	public void setX(float x) {
@@ -67,14 +72,6 @@ public class TextBox {
 	public void setLocation(float x, float y) {
 		setX(x);
 		setY(y);
-	}
-
-	public void setString(String str) {
-		this.str = str;
-	}
-
-	public String getString() {
-		return str;
 	}
 
 	public void setFace(String face) {
@@ -119,15 +116,29 @@ public class TextBox {
 		return color;
 	}
 
+	public void setBorder(boolean b) {
+		border = b;
+	}
+
+	public boolean hasBorder() {
+		return border;
+	}
+
 	public String toXml() {
 		String xml = "<text";
-		if (uid != null)
-			xml += " uid=\"" + uid + "\"";
-		xml += " string=\"" + new XmlCharacterEncoder().encode(str) + "\"";
+		if (getUid() != null)
+			xml += " uid=\"" + getUid() + "\"";
+		xml += " string=\"" + new XmlCharacterEncoder().encode(getLabel()) + "\"";
 		xml += " face=\"" + face + "\"";
 		xml += " size=\"" + size + "\"";
 		xml += " style=\"" + style + "\"";
 		xml += " color=\"" + Integer.toHexString(0x00ffffff & getColor().getRGB()) + "\"";
+		if (border)
+			xml += " border=\"true\"";
+		if (!isVisible())
+			xml += " visible=\"false\"";
+		if (!isDraggable())
+			xml += " draggable=\"false\"";
 		xml += " x=\"" + getX() + "\"";
 		xml += " y=\"" + getY() + "\"/>\n";
 		return xml;

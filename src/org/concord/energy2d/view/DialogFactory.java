@@ -35,6 +35,8 @@ final class DialogFactory {
 			return new PartModelDialog(view, (Part) o, modal);
 		if (o instanceof Thermometer)
 			return new ThermometerDialog(view, (Thermometer) o, modal);
+		if (o instanceof TextBox)
+			return new TextBoxPanel((TextBox) o, view).createDialog(modal);
 		return null;
 	}
 
@@ -45,6 +47,8 @@ final class DialogFactory {
 			return new PartViewDialog(view, (Part) o, modal);
 		if (o instanceof Thermometer)
 			return new ThermometerDialog(view, (Thermometer) o, modal);
+		if (o instanceof TextBox)
+			return new TextBoxPanel((TextBox) o, view).createDialog(modal);
 		return null;
 	}
 

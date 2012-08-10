@@ -4,7 +4,7 @@
  *
  */
 
-package org.concord.energy2d.system;
+package org.concord.energy2d.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,28 +13,35 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Point;
-import java.awt.SystemColor;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.ColorComboBox;
 import org.concord.energy2d.util.ColorRectangle;
 import org.concord.energy2d.util.ComboBoxRenderer;
-import org.concord.energy2d.view.TextBox;
-import org.concord.energy2d.view.View2D;
 
 /**
  * @author Charles Xie
@@ -45,6 +52,7 @@ class TextBoxPanel extends JPanel {
 
 	private final static String[] FONT_FAMILY_NAMES = new String[] { "Arial", "Arial Black", "Book Antiqua", "Comic Sans MS", "Courier New", "Default", "Dialog", "DialogInput", "Monospaced", "SansSerif", "Serif", "Times New Roman", "Verdana" };
 	private final static Integer[] FONT_SIZE = new Integer[] { 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 36, 48 };
+	private final static DecimalFormat FORMAT = new DecimalFormat("####.######");
 
 	private View2D view;
 	private TextBox textBox;
@@ -52,6 +60,8 @@ class TextBoxPanel extends JPanel {
 	private static Point offset;
 	private boolean cancelled;
 
+	private JCheckBox borderCheckBox;
+	private JTextField xField, yField;
 	private JComboBox fontNameComboBox, fontSizeComboBox;
 	private ColorComboBox fontColorComboBox;
 	private JToggleButton boldButton, italicButton;
@@ -68,12 +78,12 @@ class TextBoxPanel extends JPanel {
 		view = v;
 		storeSettings();
 
-		textArea = new JTextArea(textBox.getString(), 5, 10);
+		textArea = new JTextArea(textBox.getLabel(), 5, 10);
 		textArea.setForeground(textBox.getColor());
 		textArea.setFont(textBox.getFont());
 		textArea.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				textBox.setString(textArea.getText());
+				textBox.setLabel(textArea.getText());
 				view.repaint();
 			}
 		});
@@ -87,11 +97,65 @@ class TextBoxPanel extends JPanel {
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 		p.add(p2, BorderLayout.NORTH);
 
-		JLabel label = new JLabel("Location: (" + textBox.getX() + ", " + textBox.getY() + ") ");
-		label.setBackground(SystemColor.controlLtHighlight);
-		label.setOpaque(true);
-		label.setBorder(BorderFactory.createLineBorder(SystemColor.controlDkShadow));
+		JLabel label = new JLabel("X:");
 		p2.add(label);
+		xField = new JTextField(FORMAT.format(t.getX()), 10);
+		xField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				float x = parse(xField.getText());
+				if (Float.isNaN(x))
+					return;
+				textBox.setX(x);
+				view.repaint();
+			}
+		});
+		p2.add(xField);
+
+		label = new JLabel("Y:");
+		p2.add(label);
+		yField = new JTextField(FORMAT.format(t.getY()), 10);
+		yField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				float y = parse(yField.getText());
+				if (Float.isNaN(y))
+					return;
+				textBox.setY(y);
+				view.repaint();
+			}
+		});
+		p2.add(yField);
+
+		ActionListener styleListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int style = (boldButton.isSelected() ? Font.BOLD : Font.PLAIN) | (italicButton.isSelected() ? Font.ITALIC : Font.PLAIN);
+				textBox.setStyle(style);
+				textArea.setFont(textBox.getFont());
+				view.repaint();
+			}
+		};
+
+		boldButton = new JToggleButton("<html><b>B</b></html>");
+		boldButton.setSelected((textBox.getFont().getStyle() & Font.BOLD) == Font.BOLD);
+		boldButton.addActionListener(styleListener);
+		p2.add(boldButton);
+
+		italicButton = new JToggleButton("<html><b><i>I</i></b></html>");
+		italicButton.setSelected((textBox.getFont().getStyle() & Font.ITALIC) == Font.ITALIC);
+		italicButton.addActionListener(styleListener);
+		p2.add(italicButton);
+
+		borderCheckBox = new JCheckBox("Border");
+		borderCheckBox.setSelected(textBox.hasBorder());
+		borderCheckBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textBox.setBorder(e.getStateChange() == ItemEvent.SELECTED);
+				view.repaint();
+			}
+		});
+		p2.add(borderCheckBox);
+
+		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+		p.add(p2, BorderLayout.CENTER);
 
 		p2.add(new JLabel("Font face:"));
 		fontNameComboBox = createFontNameComboBox();
@@ -141,29 +205,7 @@ class TextBoxPanel extends JPanel {
 		});
 		p2.add(fontColorComboBox);
 
-		ActionListener styleListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int style = (boldButton.isSelected() ? Font.BOLD : Font.PLAIN) | (italicButton.isSelected() ? Font.ITALIC : Font.PLAIN);
-				textBox.setStyle(style);
-				textArea.setFont(textBox.getFont());
-				view.repaint();
-			}
-		};
-
-		boldButton = new JToggleButton("<html><b>B</b></html>");
-		boldButton.setSelected((textBox.getFont().getStyle() & Font.BOLD) == Font.BOLD);
-		boldButton.setPreferredSize(new Dimension(40, fontSizeComboBox.getPreferredSize().height));
-		boldButton.addActionListener(styleListener);
-		p2.add(boldButton);
-
-		italicButton = new JToggleButton("<html><b><i>I</i></b></html>");
-		italicButton.setSelected((textBox.getFont().getStyle() & Font.ITALIC) == Font.ITALIC);
-		italicButton.setPreferredSize(boldButton.getPreferredSize());
-		italicButton.addActionListener(styleListener);
-		p2.add(italicButton);
-
-		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-		p.add(p2, BorderLayout.CENTER);
+		// bottom panel
 
 		p = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		add(p, BorderLayout.SOUTH);
@@ -173,11 +215,12 @@ class TextBoxPanel extends JPanel {
 		JButton button = new JButton("OK");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textBox.setString(textArea.getText());
+				textBox.setLabel(textArea.getText());
 				if (dialog != null) {
 					offset = dialog.getLocationOnScreen();
 					dialog.dispose();
 				}
+				view.notifyManipulationListeners(textBox, ManipulationEvent.OBJECT_ADDED);
 			}
 		});
 		p.add(button);
@@ -215,7 +258,7 @@ class TextBoxPanel extends JPanel {
 
 	void storeSettings() {
 		if (copy == null)
-			copy = new TextBox();
+			copy = new TextBox(new Rectangle());
 		copy.set(textBox);
 	}
 
@@ -225,10 +268,31 @@ class TextBoxPanel extends JPanel {
 		textBox.set(copy);
 	}
 
-	void windowActivated(Color c) {
+	void handleWindowActivation(Color c) {
 		textArea.setBackground(c);
 		textArea.selectAll();
 		textArea.requestFocusInWindow();
+	}
+
+	JDialog createDialog(boolean modal) {
+		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(view), "Text Box Properties", modal);
+		dialog.setContentPane(this);
+		setDialog(dialog);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				dialog.dispose();
+			}
+
+			public void windowActivated(WindowEvent e) {
+				handleWindowActivation(view.getTemperatureColor(view.getBackgroundTemperature()));
+			}
+		});
+		if (TextBoxPanel.getOffset() == null)
+			dialog.setLocationRelativeTo(view);
+		else
+			dialog.setLocation(TextBoxPanel.getOffset());
+		dialog.pack();
+		return dialog;
 	}
 
 	private static JComboBox createFontNameComboBox() {
@@ -243,7 +307,7 @@ class TextBoxPanel extends JPanel {
 				max = n;
 		}
 		int w = max + 50;
-		int h = fm.getHeight() + 4;
+		int h = fm.getHeight() + 8;
 		c.setPreferredSize(new Dimension(w, h));
 		c.setEditable(false);
 		c.setRequestFocusEnabled(false);
@@ -255,11 +319,21 @@ class TextBoxPanel extends JPanel {
 		c.setToolTipText("Font size");
 		FontMetrics fm = c.getFontMetrics(c.getFont());
 		int w = fm.stringWidth(FONT_SIZE[FONT_SIZE.length - 1].toString()) + 40;
-		int h = fm.getHeight() + 4;
+		int h = fm.getHeight() + 8;
 		c.setPreferredSize(new Dimension(w, h));
 		c.setEditable(false);
 		c.setRequestFocusEnabled(false);
 		return c;
+	}
+
+	private float parse(String s) {
+		float x = Float.NaN;
+		try {
+			x = Float.parseFloat(s);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return x;
 	}
 
 }

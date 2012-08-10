@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +27,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -46,7 +43,6 @@ import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.util.FileChooser;
 import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.util.ScreenshotSaver;
-import org.concord.energy2d.view.TextBox;
 
 /**
  * @author Charles Xie
@@ -371,39 +367,7 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
-		mi = new JMenuItem("Insert Text Box");
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(box.view), "Text Box Properties", true);
-				TextBox t = new TextBox();
-				t.setX(box.model.getLx() * 0.1f);
-				t.setY(box.model.getLy() * 0.9f);
-				box.view.addTextBox(t);
-				final TextBoxPanel p = new TextBoxPanel(t, box.view);
-				p.setDialog(dialog);
-				dialog.setContentPane(p);
-				dialog.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent e) {
-						dialog.getContentPane().removeAll();
-						dialog.dispose();
-					}
-
-					public void windowActivated(WindowEvent e) {
-						p.windowActivated(box.view.getTemperatureColor(box.view.getMinimumTemperature()));
-					}
-				});
-				if (TextBoxPanel.getOffset() == null)
-					dialog.setLocationRelativeTo(box.view);
-				else
-					dialog.setLocation(TextBoxPanel.getOffset());
-				dialog.pack();
-				dialog.setVisible(true);
-				if (p.isCancelled()) {
-					box.view.removeTextBox(t);
-				}
-			}
-		});
-		menu.add(mi);
+		menu.add(box.view.getActionMap().get("Insert Text Box"));
 
 		// view menu
 

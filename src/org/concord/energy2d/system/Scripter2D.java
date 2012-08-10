@@ -1240,7 +1240,7 @@ class Scripter2D extends Scripter {
 		if (s == "name") {
 			text.setFace(str3);
 		} else if (s == "text") {
-			text.setString(str3);
+			text.setLabel(str3);
 			s2d.view.repaint();
 		} else {
 			if (str3.startsWith("#")) {

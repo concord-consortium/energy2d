@@ -468,6 +468,7 @@ class XmlDecoder extends DefaultHandler {
 				int size = 14, style = Font.PLAIN;
 				String str = null, face = null, uid = null;
 				Color color = null;
+				boolean border = false;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -481,12 +482,16 @@ class XmlDecoder extends DefaultHandler {
 						str = attribValue;
 					} else if (attribName == "size") {
 						size = Integer.parseInt(attribValue);
+					} else if (attribName == "style") {
+						style = Integer.parseInt(attribValue);
 					} else if (attribName == "name") { // TODO: backward compatibility, to remove by 2013
 						face = attribValue;
 					} else if (attribName == "face") {
 						face = attribValue;
 					} else if (attribName == "color") {
 						color = new Color(Integer.parseInt(attribValue, 16));
+					} else if (attribName == "border") {
+						border = Boolean.parseBoolean(attribValue);
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y)) {
@@ -496,6 +501,7 @@ class XmlDecoder extends DefaultHandler {
 					t.setStyle(style);
 					t.setFace(face);
 					t.setColor(color);
+					t.setBorder(border);
 					box.view.repaint();
 				}
 			}

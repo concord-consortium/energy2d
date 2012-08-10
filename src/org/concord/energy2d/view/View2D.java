@@ -41,6 +41,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -240,6 +241,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				processComponentResized(e);
 			}
 		});
+		textBoxes = Collections.synchronizedList(new ArrayList<TextBox>());
 		createActions();
 		createPopupMenu();
 		setColorPaletteType(colorPaletteType);
@@ -284,6 +286,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		pasteAction.putValue(Action.ACCELERATOR_KEY, ks);
 		getInputMap().put(ks, "Paste");
 		getActionMap().put("Paste", pasteAction);
+
+		Action a = new AbstractAction() {
+			public void actionPerformed(ActionEvent arg0) {
+				TextBox t = new TextBox(new Rectangle());
+				t.setX(model.getLx() * 0.1f);
+				t.setY(model.getLy() * 0.9f);
+				addTextBox(t);
+				new TextBoxPanel(t, View2D.this).createDialog(true).setVisible(true);
+			}
+		};
+		a.putValue(Action.NAME, "Insert Text Box");
+		getActionMap().put("Insert Text Box", a);
 
 	}
 
@@ -364,51 +378,39 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void clear() {
-		if (textBoxes != null)
-			textBoxes.clear();
+		textBoxes.clear();
 		if (pictures != null)
 			pictures.clear();
 	}
 
 	public void addTextBox(TextBox t) {
-		if (textBoxes == null)
-			textBoxes = new ArrayList<TextBox>();
 		textBoxes.add(t);
 		repaint();
 	}
 
 	public void removeTextBox(TextBox t) {
-		if (textBoxes == null)
-			return;
 		textBoxes.remove(t);
 		repaint();
 	}
 
 	public TextBox addText(String text, float x, float y) {
-		if (textBoxes == null)
-			textBoxes = new ArrayList<TextBox>();
-		TextBox t = new TextBox(text, x, y);
-		textBoxes.add(t);
-		repaint();
+		TextBox t = new TextBox(new Rectangle(), text, x, y);
+		addTextBox(t);
 		return t;
 	}
 
 	public int getTextBoxCount() {
-		if (textBoxes == null)
-			return 0;
 		return textBoxes.size();
 	}
 
 	public TextBox getTextBox(int i) {
-		if (textBoxes == null)
-			return null;
 		if (i < 0 || i >= textBoxes.size())
 			return null;
 		return textBoxes.get(i);
 	}
 
 	public TextBox getTextBoxByUid(String uid) {
-		if (textBoxes == null || uid == null)
+		if (uid == null)
 			return null;
 		for (TextBox t : textBoxes) {
 			if (uid.equals(t.getUid()))
@@ -750,6 +752,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public float getMaximumTemperature() {
 		return temperatureRenderer.getMaximum();
+	}
+
+	public float getBackgroundTemperature() {
+		return model.getBackgroundTemperature();
 	}
 
 	public JPopupMenu getPopupMenu() {
@@ -1365,28 +1371,51 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void drawTextBoxes(Graphics2D g) {
-		if (textBoxes == null || textBoxes.isEmpty())
+		if (textBoxes.isEmpty())
 			return;
 		Font oldFont = g.getFont();
 		Color oldColor = g.getColor();
 		String s = null;
 		for (TextBox x : textBoxes) {
+			if (!x.isVisible())
+				continue;
 			g.setFont(new Font(x.getFace(), x.getStyle(), x.getSize()));
 			g.setColor(x.getColor());
-			s = x.getString();
+			s = x.getLabel();
 			if (s != null) {
 				s = s.replaceAll("%Prandtl", formatter.format(model.getPrandtlNumber()));
 				s = s.replaceAll("%thermal_energy", "" + Math.round(model.getThermalEnergy()));
-				drawStringWithLineBreaks(g, s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()));
+				drawStringWithLineBreaks(g, s, convertPointToPixelX(x.getX()), getHeight() - convertPointToPixelY(x.getY()), x);
 			}
 		}
 		g.setFont(oldFont);
 		g.setColor(oldColor);
 	}
 
-	private static void drawStringWithLineBreaks(Graphics g, String text, int x, int y) {
-		for (String line : text.split("\n"))
-			g.drawString(line, x, y += g.getFontMetrics().getHeight());
+	private static void drawStringWithLineBreaks(Graphics2D g, String text, int x, int y, TextBox t) {
+		FontMetrics fm = g.getFontMetrics();
+		int stringHeight = fm.getHeight();
+		int stringWidth = 0;
+		int w = 0;
+		int h = 0;
+		for (String line : text.split("\n")) {
+			h += stringHeight;
+			g.drawString(line, x, y + h);
+			stringWidth = fm.stringWidth(line);
+			if (stringWidth > w)
+				w = stringWidth;
+		}
+		Rectangle r = (Rectangle) t.getShape();
+		r.x = x - 5;
+		r.y = y - 2;
+		r.width = w + 10;
+		r.height = h + 10;
+		if (t.hasBorder())
+			g.drawRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+		if (t.isSelected()) {
+			g.setStroke(dashed);
+			g.drawRoundRect(r.x - 5, r.y - 5, r.width + 10, r.height + 10, 15, 15);
+		}
 	}
 
 	private void drawPictures(Graphics2D g) {
@@ -1477,10 +1506,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		synchronized (model.getParts()) {
-			int n = model.getParts().size();
-			if (n > 0) { // later-added has higher priority
-				for (int i = n - 1; i >= 0; i--) {
+		if (!textBoxes.isEmpty()) {
+			synchronized (textBoxes) {
+				for (TextBox t : textBoxes) {
+					if (t.contains(x, y)) {
+						setSelectedManipulable(t);
+						return;
+					}
+				}
+			}
+		}
+		int n = model.getParts().size();
+		if (n > 0) {
+			synchronized (model.getParts()) {
+				for (int i = n - 1; i >= 0; i--) { // later-added has higher priority
 					Part p = model.getPart(i);
 					if (p.contains(rx, ry)) {
 						setSelectedManipulable(p);
