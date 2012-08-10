@@ -420,6 +420,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					Timer timer = new Timer(1000, new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							statusLabel.setText(null);
+							if (buttonReload != null)
+								buttonReload.setEnabled(true);
 						}
 					});
 					timer.setRepeats(false);

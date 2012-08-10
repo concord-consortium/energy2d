@@ -293,7 +293,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				t.setX(model.getLx() * 0.1f);
 				t.setY(model.getLy() * 0.9f);
 				addTextBox(t);
-				new TextBoxPanel(t, View2D.this).createDialog(true).setVisible(true);
+				TextBoxPanel tbp = new TextBoxPanel(t, View2D.this);
+				tbp.createDialog(true).setVisible(true);
+				if (tbp.isCancelled() || t.getLabel() == null || t.getLabel().trim().equals(""))
+					removeTextBox(t);
 			}
 		};
 		a.putValue(Action.NAME, "Text Box");
