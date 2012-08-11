@@ -58,5 +58,6 @@
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>
+<graph_xlabel>Time</graph_xlabel><text string="These two materials differ only in specific heat (they have-linebreak-identical density)." face="Arial" size="14" style="0" color="ffffff" x="0.26256612" y="0.82539684"/>
 </view>
 </state>

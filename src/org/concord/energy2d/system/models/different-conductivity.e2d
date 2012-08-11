@@ -81,7 +81,8 @@
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>
 <heat_flux_arrow>true</heat_flux_arrow>
-<text string="Less conductive" name="Arial" size="12" style="0" color="ffffff" x="0.45" y="0.45"/>
-<text string="More conductive" name="Arial" size="12" style="0" color="ffffff" x="0.45" y="0.15"/>
+<graph_xlabel>Time</graph_xlabel><text string="Less conductive" face="Arial" size="12" style="2" color="ffffff" x="0.45" y="0.4831"/>
+<text string="More conductive" face="Arial" size="12" style="2" color="ffffff" x="0.45" y="0.1831"/>
+<text string="After press the Run button, turn on the graph -linebreak-to keep track of the temperature data from -linebreak-the four sensors." face="Arial" size="14" style="0" color="ffffff" x="0.2929894" y="0.85780424"/>
 </view>
 </state>

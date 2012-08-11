@@ -81,12 +81,14 @@
 </model>
 <sensor>
 </sensor>
+<controller>
+</controller>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<text string="Vortex street forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="9.0"/>
-<text string="Vortex street not forming" name="Arial" size="14" style="0" color="ffffff" x="1.0" y="1.0"/>
+<graph_xlabel>Time</graph_xlabel><text string="Vortex street forming" face="Arial" size="14" style="0" color="ffffff" x="0.49603182" y="9.808201"/>
+<text string="Vortex street not forming" face="Arial" size="14" style="0" color="ffffff" x="0.49603182" y="0.45634928"/>
 </view>
 </state>

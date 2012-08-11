@@ -203,5 +203,6 @@
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>30.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel></view>
+<graph_xlabel>Time</graph_xlabel><text string="Solar cycles and duty cycles" face="Arial" size="14" style="0" color="ffffff" x="0.2976" y="9.709"/>
+</view>
 </state>

@@ -141,5 +141,6 @@
 <maximum_temperature>100.0</maximum_temperature>
 <heat_flux_line>true</heat_flux_line>
 <graph_xlabel>Time</graph_xlabel><clock>false</clock>
+<text string="Parallel conductors" face="Arial" size="14" style="0" color="ffffff" x="0.0046957675" y="0.09490741"/>
 </view>
 </state>

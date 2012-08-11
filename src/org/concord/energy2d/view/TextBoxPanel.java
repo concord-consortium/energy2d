@@ -322,6 +322,7 @@ class TextBoxPanel extends JPanel {
 
 	void handleWindowActivation(Color c) {
 		textArea.setBackground(c);
+		textArea.setCaretColor(new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue()));
 		textArea.selectAll();
 		textArea.requestFocusInWindow();
 	}

@@ -2,15 +2,13 @@
 <state>
 <model>
 <timestep>100.0</timestep>
-<measurement_interval>100</measurement_interval>
-<viewupdate_interval>20</viewupdate_interval>
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>2000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>20</photon_emission_interval>
 <z_heat_diffusivity>0.0</z_heat_diffusivity><convective>false</convective>
-<background_conductivity>0.001</background_conductivity>
+<background_conductivity>0.0010</background_conductivity>
 <background_viscosity>1.568E-4</background_viscosity>
 <thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
@@ -19,7 +17,7 @@
 <mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
-<part><rectangle x="0.0" y="0.0" width="3.0" height="10.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.0" y="0.0" width="3.0" height="10.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>1.0</density>
 <transmission>0.0</transmission>
@@ -130,12 +128,15 @@
 <sensor>
 <thermometer x="7.962963" y="5.3703704"/>
 </sensor>
+<controller>
+</controller>
 <view>
 <grid_size>10</grid_size>
 <isotherm>true</isotherm>
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>20.0</maximum_temperature>
-<clock>false</clock>
+<graph_xlabel>Time</graph_xlabel><clock>false</clock>
+<text string="A thermal bridge" face="Arial" size="16" style="1" color="0" x="0.3240741" y="9.649471"/>
 </view>
 </state>

@@ -58,6 +58,7 @@ import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
 import org.concord.modeler.MwService;
 import org.xml.sax.InputSource;
@@ -600,6 +601,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				model.removePart((Part) target);
 			else if (target instanceof Thermometer)
 				model.removeThermometer((Thermometer) target);
+			else if (target instanceof TextBox)
+				view.removeTextBox((TextBox) target);
 			saved = false;
 			break;
 		case ManipulationEvent.RUN:

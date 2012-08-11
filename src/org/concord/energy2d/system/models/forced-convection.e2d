@@ -109,8 +109,8 @@
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="No fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="0.5"/>
-<text string="Fan" name="Arial" size="12" style="0" color="ffffff" x="0.5" y="5.75"/>
-<text string="This model automatically stops at 0.4 hour." name="Arial" size="14" style="0" color="ffffff" x="2.0" y="0.5"/>
+<graph_xlabel>Time</graph_xlabel><text string="No fan" face="Arial" size="12" style="0" color="ffffff" border="true" draggable="false" x="0.5" y="0.5"/>
+<text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" draggable="false" x="0.5" y="5.75"/>
+<text string="This model automatically stops at 0.4 hour." face="Arial" size="14" style="0" color="ffffff" x="1.4285712" y="0.535715"/>
 </view>
 </state>

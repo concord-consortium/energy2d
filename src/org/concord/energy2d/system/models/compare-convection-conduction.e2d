@@ -2,14 +2,13 @@
 <state>
 <model>
 <timestep>0.25</timestep>
-<measurement_interval>100</measurement_interval>
 <viewupdate_interval>10</viewupdate_interval>
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>2000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>20</photon_emission_interval>
-<background_conductivity>1.0</background_conductivity>
+<z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>1.0</background_conductivity>
 <background_density>1.0</background_density>
 <background_specific_heat>1000.0</background_specific_heat>
 <background_viscosity>2.0E-4</background_viscosity>
@@ -17,6 +16,7 @@
 <buoyancy_approximation>0</buoyancy_approximation>
 <boundary>
 <flux_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
+<mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
 <part><rectangle x="0.0" y="0.0" width="10.0" height="2.0"/><thermal_conductivity>1.0</thermal_conductivity>
@@ -141,12 +141,15 @@
 <thermometer label="T1" x="2.2" y="1.75"/>
 <thermometer label="T2" x="7.75" y="1.8000002"/>
 </sensor>
+<controller>
+</controller>
 <view>
 <grid_size>10</grid_size>
 <ruler>true</ruler>
-<rainbow>true</rainbow>
-<rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
+<color_palette_type>0</color_palette_type>
+<color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Air" name="Arial" size="14" style="0" color="ffffff" x="2.0" y="5.5"/>
+<graph_xlabel>Time</graph_xlabel><text string="Air" face="Arial" size="14" style="1" color="ffffff" x="2.2024" y="5.7606"/>
+<text string="Can you tell the difference between heat transfer-linebreak-through air and solid (convection vs. conduction)?" face="Arial" size="14" style="0" color="ffffff" x="0.6018519" y="1.3888882"/>
 </view>
 </state>

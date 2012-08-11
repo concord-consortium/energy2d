@@ -30,7 +30,7 @@
 <power>5.0</power>
 <uid>HEATER1</uid>
 </part>
-<part><rectangle x="1.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="1.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -65,7 +65,7 @@
 <draggable>false</draggable>
 </part>
 <part><polygon count="5" vertices="0.5, 4.0, 0.5, 3.5, 5.0, 1.0, 9.5, 3.5, 9.5, 4.0"/>
-<thermal_conductivity>0.001</thermal_conductivity>
+<thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -83,7 +83,7 @@
 <label>Roof</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -101,7 +101,7 @@
 <label>Ground</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="8.5" y="4.0" width="0.5" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="8.5" y="4.0" width="0.5" height="4.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -166,7 +166,7 @@
 <power>5.0</power>
 <uid>HEATER4</uid>
 </part>
-<part><rectangle x="3.1314821" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="3.1314821" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -182,7 +182,7 @@
 <texture_height>4</texture_height>
 </texture>
 </part>
-<part><rectangle x="6.674691" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="6.674691" y="4.0" width="0.2" height="4.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -217,5 +217,6 @@
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
 <graph_xlabel>Time</graph_xlabel><clock>false</clock>
+<text string="Thermostats" face="Arial" size="14" style="0" color="ffffff" x="0.39021164" y="9.649471"/>
 </view>
 </state>

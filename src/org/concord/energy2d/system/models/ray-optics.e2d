@@ -2,18 +2,17 @@
 <state>
 <model>
 <timestep>10.0</timestep>
-<measurement_interval>100</measurement_interval>
-<viewupdate_interval>20</viewupdate_interval>
 <sunny>true</sunny><sun_angle>1.5707964</sun_angle>
 <solar_power_density>100000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.0010</solar_ray_speed>
 <photon_emission_interval>25</photon_emission_interval>
-<convective>false</convective>
+<z_heat_diffusivity>0.0</z_heat_diffusivity><convective>false</convective>
 <thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
 <temperature_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
+<mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
 <part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
@@ -63,10 +62,14 @@
 <sensor>
 <thermometer x="5.0" y="7.0"/>
 </sensor>
+<controller>
+</controller>
 <view>
+<grid_size>10</grid_size>
 <ruler>true</ruler>
-<rainbow_x>0.0</rainbow_x><rainbow_y>0.0</rainbow_y><rainbow_w>0.0</rainbow_w><rainbow_h>0.0</rainbow_h><minimum_temperature>0.0</minimum_temperature>
+<color_palette_type>0</color_palette_type>
+<color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<text string="Press 'Q' or 'W' to change the sun angle" name="Arial" size="14" style="1" color="ffffff" x="0.5" y="9.5"/>
+<graph_xlabel>Time</graph_xlabel><text string="Press &apos;Q&apos; or &apos;W&apos; to change the sun angle" face="Arial" size="14" style="0" color="ffffff" x="0.5489" y="9.7421"/>
 </view>
 </state>

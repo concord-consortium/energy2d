@@ -2,7 +2,6 @@
 <state>
 <model>
 <timestep>0.5</timestep>
-<measurement_interval>100</measurement_interval>
 <viewupdate_interval>10</viewupdate_interval>
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>2000.0</solar_power_density>
@@ -31,7 +30,7 @@
 <filled>false</filled>
 <label>V=2</label>
 </part>
-<part><rectangle x="0.05000019" y="2.4000003" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.05000019" y="2.4000003" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -41,7 +40,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 </part>
-<part><rectangle x="0.05000019" y="4.7000003" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.05000019" y="4.7000003" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -64,7 +63,7 @@
 <filled>false</filled>
 <label>V=1</label>
 </part>
-<part><rectangle x="0.05000019" y="-0.049999997" width="9.9" height="0.3"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.05000019" y="-0.049999997" width="9.9" height="0.3"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -74,7 +73,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 </part>
-<part><rectangle x="0.07495928" y="7.1000004" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.07495928" y="7.1000004" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -130,7 +129,7 @@
 <constant_temperature>true</constant_temperature>
 <label>%temperature</label>
 </part>
-<part><rectangle x="0.016638935" y="9.483334" width="9.9001665" height="0.48333332"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.016638935" y="9.483334" width="9.9001665" height="0.48333332"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -172,12 +171,14 @@
 <thermometer label="T3" x="8.8" y="6.0"/>
 <thermometer label="T4" x="8.8" y="8.4"/>
 </sensor>
+<controller>
+</controller>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>
-<ruler>true</ruler>
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
+<graph_xlabel>Time</graph_xlabel><text string="Stronger wind is more likely to cause turbulent flow." face="Arial" size="14" style="0" color="ffffff" x="2.777778" y="0.45634925"/>
 </view>
 </state>
