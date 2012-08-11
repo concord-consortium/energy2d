@@ -795,6 +795,13 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 		Locale.setDefault(Locale.US);
 
+		boolean launchedByJWS = false;
+
+		// detect if the app is launched via webstart just checking its class loader: SystemClassLoader or JnlpClassLoader.
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		if (!cl.equals(ClassLoader.getSystemClassLoader()))
+			launchedByJWS = true;
+
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND_NAME);
@@ -905,5 +912,9 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			});
 		}
 
+		if (!launchedByJWS)
+			UpdateManager.showUpdateReminder(box);
+
 	}
+
 }
