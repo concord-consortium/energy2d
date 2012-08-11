@@ -596,6 +596,17 @@ class MenuBar extends JMenuBar {
 		templates.put("Mantle Convection", "models/mantle.e2d");
 		createMenu(box, subMenu, templates);
 
+		menu.addSeparator();
+		if (!System.getProperty("os.name").startsWith("Linux")) {
+			mi = new JMenuItem("More...");
+			mi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Helper.openBrowser("http://energy.concord.org/energy2d/models.html");
+				}
+			});
+			menu.add(mi);
+		}
+
 		// help menu
 
 		menu = new JMenu("Help");
