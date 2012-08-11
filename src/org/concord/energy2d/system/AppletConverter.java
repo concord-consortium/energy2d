@@ -53,7 +53,7 @@ class AppletConverter {
 		s += LINE_SEPARATOR;
 
 		s += "    <p><font color=\"red\">If nothing shows up below, try the following: ";
-		s += "<ol><li>Download <a href=\"http://energy.concord.org/energy2d/energy2d.jar\">energy2d.jar</a> ";
+		s += "<ol><li>Download <a href=\"http://energy.concord.org/energy2d/energy2d-applet.jar\">energy2d-applet.jar</a> ";
 		s += "and <a href=\"http://energy.concord.org/energy2d/library.js\">library.js</a> ";
 		s += "to where this HTML file is located; ";
 		s += "<li>Make sure " + s2d.getCurrentFile() + " is copied or moved to where this HTML file is located; ";
@@ -64,7 +64,7 @@ class AppletConverter {
 		s += "    <center>";
 		s += LINE_SEPARATOR;
 
-		s += "      <applet id=\"applet1\" code=\"org.concord.energy2d.system.System2D\" archive=\"energy2d.jar\" width=\"500\" height=\"500\">";
+		s += "      <applet id=\"applet1\" code=\"org.concord.energy2d.system.System2D\" archive=\"energy2d-applet.jar\" width=\"500\" height=\"500\">";
 		s += LINE_SEPARATOR;
 		s += "        <param name=\"script\" value=\"load " + MiscUtil.getFileName(s2d.getCurrentFile().toString()) + "\"/>";
 		s += LINE_SEPARATOR;
