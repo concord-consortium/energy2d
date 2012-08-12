@@ -47,7 +47,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -63,6 +63,7 @@ import org.concord.energy2d.event.GraphListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
@@ -148,6 +149,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
+	private static Stroke thickStroke = new BasicStroke(5);
 	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 2 }, 0);
 	private final static Color TRANSLUCENT_GRAY = new Color(128, 128, 128, 128);
 	private float xmin, xmax, ymin, ymax;
@@ -177,6 +179,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
+	private Icon moon, sun;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -301,6 +304,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		};
 		a.putValue(Action.NAME, "Text Box");
 		getActionMap().put("Insert Text Box", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.05f;
+				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.025f;
+				float w = model.getLx() * 0.2f;
+				float h = model.getLx() * 0.1f;
+				addCloud(x, y, w, h, 0);
+				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Cloud");
+		getActionMap().put("Insert Cloud", a);
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -432,7 +449,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return null;
 	}
 
-	public void addPicture(ImageIcon image, int x, int y) {
+	public void addPicture(Icon image, int x, int y) {
 		if (pictures == null)
 			pictures = new ArrayList<Picture>();
 		pictures.add(new Picture(image, x, y));
@@ -450,6 +467,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (i < 0 || i >= pictures.size())
 			return null;
 		return pictures.get(i);
+	}
+
+	private void addCloud(float x, float y, float w, float h, float speed) {
+		Cloud c = new Cloud(new Rectangle2D.Float(x, y, w, h));
+		c.setSpeed(speed);
+		model.addCloud(c);
 	}
 
 	public void addManipulationListener(ManipulationListener l) {
@@ -1000,6 +1023,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPhotons(g);
 		drawTextBoxes(g);
 		drawPictures(g);
+		drawClouds(g);
+		showSunOrMoon(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
 			if (model.getTime() > graphRenderer.getXmax())
@@ -1102,6 +1127,58 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
 
+	}
+
+	private void showSunOrMoon(Graphics g) {
+		if (model.isSunny()) {
+			if (model.getSunAngle() <= 0 || model.getSunAngle() > Math.PI) {
+				if (moon == null)
+					moon = new Moon() {
+						public int getIconWidth() {
+							return 16;
+						}
+
+						public int getIconHeight() {
+							return 16;
+						}
+					};
+				moon.paintIcon(this, g, getWidth() - moon.getIconWidth() * 2, moon.getIconHeight() + 10);
+			} else {
+				if (sun == null)
+					sun = new Sun() {
+						public int getIconWidth() {
+							return 16;
+						}
+
+						public int getIconHeight() {
+							return 16;
+						}
+					};
+				sun.paintIcon(this, g, getWidth() - sun.getIconWidth() * 2, sun.getIconHeight() + 10);
+			}
+		}
+	}
+
+	private void drawClouds(Graphics2D g) {
+		if (model.getClouds().isEmpty())
+			return;
+		g.setStroke(thickStroke);
+		float x, y, w, h, max;
+		for (Cloud c : model.getClouds()) {
+			x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
+			y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
+			w = convertLengthToPixelX(c.getBoundingBox().width);
+			h = convertLengthToPixelY(c.getBoundingBox().height);
+			max = Math.max(w, h);
+			Area a = new Area(new Ellipse2D.Float(x, y + h / 2, max / 2, max / 2));
+			a.add(new Area(new Ellipse2D.Float(x + w / 3, y + h / 3, max / 2, max / 2)));
+			a.add(new Area(new Ellipse2D.Float(x + 2 * w / 3, y + 2 * h / 3, max / 3, max / 3)));
+			a.intersect(new Area(new Rectangle2D.Float(x, y, w, h)));
+			g.setColor(Color.white);
+			g.fill(a);
+			g.setColor(Color.gray);
+			g.draw(a);
+		}
 	}
 
 	private void drawMouseReadString(Graphics2D g, String s) {

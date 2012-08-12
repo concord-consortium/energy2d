@@ -3,6 +3,7 @@ package org.concord.energy2d.system;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
@@ -98,16 +99,24 @@ class XmlEncoder {
 		sb.append(box.model.getMassBoundary().toXml());
 		sb.append("</boundary>\n");
 
+		sb.append("<structure>\n");
 		List<Part> parts = box.model.getParts();
 		if (!parts.isEmpty()) {
-			sb.append("<structure>\n");
 			for (Part p : parts) {
 				sb.append(p.toXml());
 			}
-			sb.append("</structure>\n");
 		}
+		sb.append("</structure>\n");
 
-		sb.append("</model>\n");
+		// environment
+		sb.append("<environment>\n");
+		List<Cloud> clouds = box.model.getClouds();
+		if (clouds != null) {
+			for (Cloud c : clouds) {
+				sb.append(c.toXml() + "\n");
+			}
+		}
+		sb.append("</environment>\n");
 
 		// sensors
 		sb.append("<sensor>\n");
@@ -128,6 +137,8 @@ class XmlEncoder {
 			}
 		}
 		sb.append("</controller>\n");
+
+		sb.append("</model>\n");
 
 		// view properties
 

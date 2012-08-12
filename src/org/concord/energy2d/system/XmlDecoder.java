@@ -6,6 +6,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import org.concord.energy2d.model.Boundary;
+import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.DirichletThermalBoundary;
 import org.concord.energy2d.model.MassBoundary;
@@ -460,6 +461,40 @@ class XmlDecoder extends DefaultHandler {
 						ts.setDeadband(deadband);
 						ts.setSetPoint(setpoint);
 					}
+				}
+			}
+		} else if (qName == "cloud") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
+				float speed = 0;
+				String label = null, uid = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "width") {
+						w = Float.parseFloat(attribValue);
+					} else if (attribName == "height") {
+						h = Float.parseFloat(attribValue);
+					} else if (attribName == "speed") {
+						speed = Float.parseFloat(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "label") {
+						label = attribValue;
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h)) {
+					Cloud c = new Cloud(new Rectangle2D.Float(0, 0, w, h));
+					c.setX(x);
+					c.setY(y);
+					c.setSpeed(speed);
+					c.setUid(uid);
+					c.setLabel(label);
+					box.model.addCloud(c);
 				}
 			}
 		} else if (qName == "text") {

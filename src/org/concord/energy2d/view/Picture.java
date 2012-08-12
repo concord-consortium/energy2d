@@ -5,7 +5,7 @@
 
 package org.concord.energy2d.view;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 
 /**
  * @author Charles Xie
@@ -13,10 +13,10 @@ import javax.swing.ImageIcon;
  */
 public class Picture {
 
-	private ImageIcon image;
+	private Icon image;
 	private float x, y;
 
-	public Picture(ImageIcon image, float x, float y) {
+	public Picture(Icon image, float x, float y) {
 		setImage(image);
 		setLocation(x, y);
 	}
@@ -42,11 +42,11 @@ public class Picture {
 		setY(y);
 	}
 
-	public void setImage(ImageIcon image) {
+	public void setImage(Icon image) {
 		this.image = image;
 	}
 
-	public ImageIcon getImage() {
+	public Icon getImage() {
 		return image;
 	}
 

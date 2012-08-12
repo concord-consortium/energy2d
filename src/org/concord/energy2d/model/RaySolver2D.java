@@ -23,9 +23,7 @@ class RaySolver2D {
 	private float solarPowerDensity = 2000;
 	private float rayPower = solarPowerDensity;
 
-	/*
-	 * the speed of the particle that carries light energy. Note that this is NOT the speed of light. This is just an artificial parameter.
-	 */
+	// the speed of the particle that carries light energy. Note that this is NOT the speed of light. This is just an artificial parameter.
 	private float raySpeed = .1f;
 
 	RaySolver2D(float lx, float ly) {
@@ -92,9 +90,7 @@ class RaySolver2D {
 			return;
 		Photon p;
 		float timeStep = model.getTimeStep();
-		// Since a photon is emitted at a given interval, its energy
-		// has to be divided evenly for internal power generation at
-		// each second. The following factor takes this into account.
+		// Since a photon is emitted at a given interval, its energy has to be divided evenly for internal power generation at each second. The following factor takes this into account.
 		float factor = 1.0f / (timeStep * model.getPhotonEmissionInterval());
 		float idx = 1.0f / deltaX;
 		float idy = 1.0f / deltaY;

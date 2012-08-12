@@ -80,6 +80,7 @@ public class Model2D {
 	private List<Thermostat> thermostats;
 	private List<Part> parts;
 	private List<Photon> photons;
+	private List<Cloud> clouds;
 
 	private RaySolver2D raySolver;
 	private FluidSolver2D fluidSolver;
@@ -153,6 +154,7 @@ public class Model2D {
 		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
+		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
 
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -301,6 +303,19 @@ public class Model2D {
 
 	public List<Photon> getPhotons() {
 		return photons;
+	}
+
+	public void addCloud(Cloud c) {
+		if (c != null)
+			clouds.add(c);
+	}
+
+	public void removeCloud(Cloud c) {
+		clouds.remove(c);
+	}
+
+	public List<Cloud> getClouds() {
+		return clouds;
 	}
 
 	private void setGridCellSize() {
@@ -762,6 +777,7 @@ public class Model2D {
 		photons.clear();
 		thermometers.clear();
 		thermostats.clear();
+		clouds.clear();
 		maximumHeatCapacity = -1;
 	}
 
@@ -902,6 +918,10 @@ public class Model2D {
 		if (convective)
 			fluidSolver.solve(u, v);
 		heatSolver.solve(convective, t);
+		if (!clouds.isEmpty()) {
+			for (Cloud c : clouds)
+				c.move(heatSolver.getTimeStep(), lx);
+		}
 		indexOfStep++;
 	}
 
