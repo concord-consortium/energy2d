@@ -21,6 +21,7 @@ public class ManipulationEvent extends EventObject {
 	public static final byte SUN_ANGLE_INCREASE = 5;
 	public static final byte SUN_ANGLE_DECREASE = 6;
 	public static final byte OBJECT_ADDED = 7;
+	public static final byte SENSOR_ADDED = 8;
 	public static final byte RUN = 11;
 	public static final byte STOP = 12;
 	public static final byte RESET = 13;

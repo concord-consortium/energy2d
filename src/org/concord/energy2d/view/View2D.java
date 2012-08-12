@@ -305,6 +305,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				addThermometer(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f);
+				notifyManipulationListeners(null, ManipulationEvent.SENSOR_ADDED);
 				repaint();
 			}
 		};

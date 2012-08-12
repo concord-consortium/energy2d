@@ -181,6 +181,9 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		case ManipulationEvent.OBJECT_ADDED:
 			selectButton.doClick();
 			break;
+		case ManipulationEvent.SENSOR_ADDED:
+			graphButton.setEnabled(true);
+			break;
 		case ManipulationEvent.MOUSE_READ_CHANGED:
 			mouseReadComboBox.setSelectedIndex(box.view.getMouseReadType());
 			break;
