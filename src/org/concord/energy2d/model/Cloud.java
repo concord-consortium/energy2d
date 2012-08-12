@@ -12,6 +12,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 /**
+ * Clouds are expensive to calculate. So we uses additional variables (x, y) for setting locations and avoiding recalculation of shapes.
+ * 
  * @author Charles Xie
  * 
  */
@@ -30,6 +32,7 @@ public class Cloud extends Manipulable {
 		setShape(getShape(boundingBox));
 	}
 
+	// the size and shape of a cloud are determined by its bounding box
 	public static Area getShape(Rectangle2D.Float r) {
 		float max = Math.max(r.width, r.height);
 		Area a = new Area(new Ellipse2D.Float(r.x, r.y + r.height / 2, max / 2, max / 2));

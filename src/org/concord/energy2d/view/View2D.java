@@ -971,6 +971,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		}
 		drawParts(g);
+		drawClouds(g);
+		drawTextBoxes(g);
+		drawPictures(g);
 		if (isotherms != null) {
 			g.setStroke(thinStroke);
 			isotherms.render(g, getSize(), model.getTemperature());
@@ -1033,12 +1036,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
 		if (showHeatFluxArrows)
 			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g);
-		drawThermometers(g);
 		drawPhotons(g);
-		drawTextBoxes(g);
-		drawPictures(g);
-		drawClouds(g);
 		showSunOrMoon(g);
+		drawThermometers(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
 			if (model.getTime() > graphRenderer.getXmax())
