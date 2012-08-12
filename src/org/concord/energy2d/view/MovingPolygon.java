@@ -21,8 +21,8 @@ class MovingPolygon implements MovingShape {
 		this.polygon = polygon;
 	}
 
-	public Shape[] getShapes() {
-		return new Shape[] { polygon };
+	public Shape getShape() {
+		return polygon;
 	}
 
 	public void render(Graphics2D g) {

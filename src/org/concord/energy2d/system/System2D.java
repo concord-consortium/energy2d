@@ -55,6 +55,7 @@ import org.concord.energy2d.event.IOEvent;
 import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
+import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -608,6 +609,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				model.removeThermometer((Thermometer) target);
 			else if (target instanceof TextBox)
 				view.removeTextBox((TextBox) target);
+			else if (target instanceof Cloud)
+				view.removeCloud((Cloud) target);
 			saved = false;
 			break;
 		case ManipulationEvent.RUN:

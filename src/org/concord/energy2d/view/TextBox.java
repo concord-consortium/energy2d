@@ -70,6 +70,11 @@ public class TextBox extends Manipulable {
 		return y;
 	}
 
+	public void translateBy(float dx, float dy) {
+		x += dx;
+		y += dy;
+	}
+
 	public void setLocation(float x, float y) {
 		setX(x);
 		setY(y);

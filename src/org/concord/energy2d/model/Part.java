@@ -635,7 +635,7 @@ public class Part extends Manipulable {
 
 	@Override
 	public String toString() {
-		return getUid();
+		return getUid() == null ? super.toString() : getUid();
 	}
 
 }

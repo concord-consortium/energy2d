@@ -27,16 +27,16 @@ public class Cloud extends Manipulable {
 		if (!(bb instanceof Rectangle2D.Float))
 			throw new IllegalArgumentException("Shape must be a Rectangle2D.Float");
 		boundingBox = (Rectangle2D.Float) bb;
-		float x2 = boundingBox.x;
-		float y2 = boundingBox.y;
-		float w2 = boundingBox.width;
-		float h2 = boundingBox.height;
-		float max = Math.max(w2, h2);
-		Area a = new Area(new Ellipse2D.Float(x2, y2 + h2 / 2, max / 2, max / 2));
-		a.add(new Area(new Ellipse2D.Float(x2 + w2 / 3, y2 + h2 / 3, max / 2, max / 2)));
-		a.add(new Area(new Ellipse2D.Float(x2 + 2 * w2 / 3, y2 + 2 * h2 / 3, max / 3, max / 3)));
-		a.intersect(new Area(boundingBox));
-		setShape(a);
+		setShape(getShape(boundingBox));
+	}
+
+	public static Area getShape(Rectangle2D.Float r) {
+		float max = Math.max(r.width, r.height);
+		Area a = new Area(new Ellipse2D.Float(r.x, r.y + r.height / 2, max / 2, max / 2));
+		a.add(new Area(new Ellipse2D.Float(r.x + r.width / 3, r.y + r.height / 3, max / 2, max / 2)));
+		a.add(new Area(new Ellipse2D.Float(r.x + 2 * r.width / 3, r.y + 2 * r.height / 3, max / 3, max / 3)));
+		a.intersect(new Area(r));
+		return a;
 	}
 
 	public void move(float timeStep, float lx) {
@@ -48,6 +48,16 @@ public class Cloud extends Manipulable {
 			x -= lx + 2 * boundingBox.width;
 		else if (x < -boundingBox.width)
 			x += lx + 2 * boundingBox.width;
+	}
+
+	public void translateBy(float dx, float dy) {
+		x += dx;
+		y += dy;
+	}
+
+	public void setLocation(float x, float y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -85,7 +95,12 @@ public class Cloud extends Manipulable {
 
 	@Override
 	public Manipulable duplicate(float x, float y) {
-		return null;
+		Cloud c = new Cloud(new Rectangle2D.Float(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height));
+		c.speed = speed;
+		c.setLabel(getLabel());
+		c.setX(x - boundingBox.width / 2);
+		c.setY(y - boundingBox.height / 2);
+		return c;
 	}
 
 	public String toXml() {

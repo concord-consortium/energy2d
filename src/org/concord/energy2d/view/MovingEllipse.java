@@ -21,8 +21,8 @@ class MovingEllipse implements MovingShape {
 		this.ellipse = ellipse;
 	}
 
-	public Shape[] getShapes() {
-		return new Shape[] { ellipse };
+	public Shape getShape() {
+		return ellipse;
 	}
 
 	public void render(Graphics2D g) {

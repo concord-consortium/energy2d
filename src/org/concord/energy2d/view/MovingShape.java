@@ -14,7 +14,7 @@ import java.awt.Shape;
  */
 public interface MovingShape {
 
-	public Shape[] getShapes();
+	public Shape getShape();
 
 	public void render(Graphics2D g);
 

@@ -6,6 +6,7 @@
 
 package org.concord.energy2d.system;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +34,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.event.PopupMenuEvent;
@@ -352,6 +354,23 @@ class MenuBar extends JMenuBar {
 			}
 
 			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				Object src = e.getSource();
+				if (src instanceof JPopupMenu) {
+					JPopupMenu m = (JPopupMenu) src;
+					int n = m.getComponentCount();
+					Component c;
+					for (int i = 0; i < n; i++) {
+						c = m.getComponent(i);
+						if (c instanceof JMenuItem) {
+							JMenuItem mi = (JMenuItem) c;
+							if (mi.getText().equals("Cut") || mi.getText().equals("Copy")) {
+								mi.setEnabled(box.view.getSelectedManipulable() != null);
+							} else if (mi.getText().equals("Paste")) {
+								mi.setEnabled(box.view.getBufferedManipulable() != null);
+							}
+						}
+					}
+				}
 			}
 		});
 		add(menu);

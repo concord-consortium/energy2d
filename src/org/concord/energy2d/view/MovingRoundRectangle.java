@@ -21,8 +21,8 @@ class MovingRoundRectangle implements MovingShape {
 		this.roundRectangle = roundRectangle;
 	}
 
-	public Shape[] getShapes() {
-		return new Shape[] { roundRectangle };
+	public Shape getShape() {
+		return roundRectangle;
 	}
 
 	public void render(Graphics2D g) {
