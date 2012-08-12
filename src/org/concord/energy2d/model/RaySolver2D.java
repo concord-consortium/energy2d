@@ -97,7 +97,7 @@ class RaySolver2D {
 		int i, j;
 		int nx = q.length - 1;
 		int ny = q[0].length - 1;
-		boolean remove;
+		boolean remove = false;
 		synchronized (photons) {
 			for (Iterator<Photon> it = photons.iterator(); it.hasNext();) {
 				p = it.next();
@@ -124,9 +124,19 @@ class RaySolver2D {
 							}
 						}
 					}
-					if (remove)
-						it.remove();
 				}
+				if (!model.getClouds().isEmpty()) { // the rule is that light is absorbed by clouds
+					synchronized (model.getClouds()) {
+						for (Cloud c : model.getClouds()) {
+							if (c.contains(p.getX(), p.getY())) {
+								remove = true;
+								break;
+							}
+						}
+					}
+				}
+				if (remove)
+					it.remove();
 			}
 		}
 		applyBoundary(photons);

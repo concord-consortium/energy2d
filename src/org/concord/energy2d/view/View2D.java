@@ -1164,20 +1164,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		g.setStroke(thickStroke);
 		float x, y, w, h, max;
-		for (Cloud c : model.getClouds()) {
-			x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
-			y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
-			w = convertLengthToPixelX(c.getBoundingBox().width);
-			h = convertLengthToPixelY(c.getBoundingBox().height);
-			max = Math.max(w, h);
-			Area a = new Area(new Ellipse2D.Float(x, y + h / 2, max / 2, max / 2));
-			a.add(new Area(new Ellipse2D.Float(x + w / 3, y + h / 3, max / 2, max / 2)));
-			a.add(new Area(new Ellipse2D.Float(x + 2 * w / 3, y + 2 * h / 3, max / 3, max / 3)));
-			a.intersect(new Area(new Rectangle2D.Float(x, y, w, h)));
-			g.setColor(Color.white);
-			g.fill(a);
-			g.setColor(Color.gray);
-			g.draw(a);
+		synchronized (model.getClouds()) {
+			for (Cloud c : model.getClouds()) {
+				x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
+				y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
+				w = convertLengthToPixelX(c.getBoundingBox().width);
+				h = convertLengthToPixelY(c.getBoundingBox().height);
+				max = Math.max(w, h);
+				Area a = new Area(new Ellipse2D.Float(x, y + h / 2, max / 2, max / 2));
+				a.add(new Area(new Ellipse2D.Float(x + w / 3, y + h / 3, max / 2, max / 2)));
+				a.add(new Area(new Ellipse2D.Float(x + 2 * w / 3, y + 2 * h / 3, max / 3, max / 3)));
+				a.intersect(new Area(new Rectangle2D.Float(x, y, w, h)));
+				g.setColor(Color.white);
+				g.fill(a);
+				g.setColor(Color.gray);
+				g.draw(a);
+			}
 		}
 	}
 

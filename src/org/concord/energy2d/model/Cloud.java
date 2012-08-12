@@ -50,6 +50,11 @@ public class Cloud extends Manipulable {
 			x += lx + 2 * boundingBox.width;
 	}
 
+	@Override
+	public boolean contains(float rx, float ry) {
+		return getShape().contains(rx - x, ry - y);
+	}
+
 	public void setX(float x) {
 		this.x = x;
 	}
