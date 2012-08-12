@@ -1237,11 +1237,16 @@ class Scripter2D extends Scripter {
 		if (text == null)
 			return;
 		s = str2.toLowerCase().intern();
-		if (s == "name") {
+		if (s == "face") {
 			text.setFace(str3);
 		} else if (s == "text") {
 			text.setLabel(str3);
-			s2d.view.repaint();
+		} else if (s == "border") {
+			text.setBorder("true".equalsIgnoreCase(str3));
+		} else if (s == "visible") {
+			text.setVisible("true".equalsIgnoreCase(str3));
+		} else if (s == "draggable") {
+			text.setDraggable("true".equalsIgnoreCase(str3));
 		} else {
 			if (str3.startsWith("#")) {
 				try {
@@ -1267,7 +1272,10 @@ class Scripter2D extends Scripter {
 			}
 			if (s == "color") {
 				text.setColor(new Color((int) z));
-				s2d.view.repaint();
+			} else if (s == "size") {
+				text.setSize((int) z);
+			} else if (s == "style") {
+				text.setStyle((int) z);
 			} else if (s == "x") {
 				final float z2 = z;
 				final Runnable r = new Runnable() {
@@ -1276,11 +1284,11 @@ class Scripter2D extends Scripter {
 						s2d.view.repaint();
 					}
 				};
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						EventQueue.invokeLater(r);
-					}
-				});
+				EventQueue.invokeLater(new Runnable() { // need to wait until the view is shown on the screen to set the actual location
+							public void run() {
+								EventQueue.invokeLater(r);
+							}
+						});
 			} else if (s == "y") {
 				final float z2 = z;
 				final Runnable r = new Runnable() {
@@ -1296,6 +1304,7 @@ class Scripter2D extends Scripter {
 				});
 			}
 		}
+		s2d.view.repaint();
 	}
 
 	private void setImageField(String str1, String str2, String str3) {

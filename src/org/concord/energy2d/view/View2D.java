@@ -288,10 +288,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		getActionMap().put("Paste", pasteAction);
 
 		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				TextBox t = new TextBox(new Rectangle2D.Float());
-				t.setX(model.getLx() * 0.1f);
-				t.setY(model.getLy() * 0.9f);
+				t.setX(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.1f);
+				t.setY(mouseReleasedPoint.y > 0 ? model.getLy() - convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.9f);
 				addTextBox(t);
 				TextBoxPanel tbp = new TextBoxPanel(t, View2D.this);
 				tbp.createDialog(true).setVisible(true);
@@ -301,6 +301,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		};
 		a.putValue(Action.NAME, "Text Box");
 		getActionMap().put("Insert Text Box", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				addThermometer(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Thermometer");
+		getActionMap().put("Insert Thermometer", a);
 
 	}
 

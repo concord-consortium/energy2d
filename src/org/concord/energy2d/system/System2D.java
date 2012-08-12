@@ -690,7 +690,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		});
 		p.add(buttonStop);
 		buttonReset = new JButton("Reset");
-		buttonReset.setToolTipText("Reset the simulation");
+		buttonReset.setToolTipText("Reset the simulation to time zero");
 		buttonReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				reset();
