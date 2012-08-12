@@ -149,7 +149,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private static Stroke thinStroke = new BasicStroke(1);
 	private static Stroke moderateStroke = new BasicStroke(2);
-	private static Stroke thickStroke = new BasicStroke(5);
+	private static Stroke thickStroke = new BasicStroke(4);
 	private static Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 2 }, 0);
 	private final static Color TRANSLUCENT_GRAY = new Color(128, 128, 128, 128);
 	private float xmin, xmax, ymin, ymax;
@@ -1164,6 +1164,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		g.setStroke(thickStroke);
 		float x, y, w, h, max;
+		Color color = model.isSunny() && model.getSunAngle() > 0 && model.getSunAngle() < Math.PI ? Color.white : Color.lightGray;
 		synchronized (model.getClouds()) {
 			for (Cloud c : model.getClouds()) {
 				x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
@@ -1175,7 +1176,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				a.add(new Area(new Ellipse2D.Float(x + w / 3, y + h / 3, max / 2, max / 2)));
 				a.add(new Area(new Ellipse2D.Float(x + 2 * w / 3, y + 2 * h / 3, max / 3, max / 3)));
 				a.intersect(new Area(new Rectangle2D.Float(x, y, w, h)));
-				g.setColor(Color.white);
+				g.setColor(color);
 				g.fill(a);
 				g.setColor(Color.gray);
 				g.draw(a);

@@ -30,7 +30,7 @@ final class UpdateManager {
 		if (new File(s).lastModified() >= checkTimeStamp(HOME + "energy2d.jar"))
 			return;
 		String msg = "An update is available. Do you want to download the update now?";
-		if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box), msg, "Update Notice", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), msg, "Update Notice", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			Helper.openBrowser(HOME + "download.html");
 			System.exit(0);
 		}
