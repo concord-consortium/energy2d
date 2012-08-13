@@ -12,15 +12,15 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Clouds are expensive to calculate. So we uses additional variables (x, y) for setting locations and avoiding recalculation of shapes.
+ * Clouds (three circles intersected within a rectangle) are expensive to calculate. So we use additional variables (x, y) for setting locations and avoiding recalculation of shapes when moving them.
  * 
  * @author Charles Xie
  * 
  */
 public class Cloud extends Manipulable {
 
-	private float x;
-	private float y;
+	private float x; // the x coordinate of the upper-left corner
+	private float y; // the y coordinate of the upper-left corner
 	private float speed; // clouds only move in the horizontal direction
 	private Rectangle2D.Float boundingBox;
 
@@ -32,7 +32,7 @@ public class Cloud extends Manipulable {
 		setShape(getShape(boundingBox));
 	}
 
-	// the size and shape of a cloud are determined by its bounding box
+	// the size and shape of a cloud are determined by its bounding box that cuts three circles
 	public static Area getShape(Rectangle2D.Float r) {
 		float max = Math.max(r.width, r.height);
 		Area a = new Area(new Ellipse2D.Float(r.x, r.y + r.height / 2, max / 2, max / 2));
@@ -47,10 +47,10 @@ public class Cloud extends Manipulable {
 			return;
 		x += speed * timeStep;
 		// apply periodic boundary condition
-		if (x > lx + boundingBox.width)
-			x -= lx + 2 * boundingBox.width;
+		if (x > lx)
+			x -= lx + boundingBox.width;
 		else if (x < -boundingBox.width)
-			x += lx + 2 * boundingBox.width;
+			x += lx + boundingBox.width;
 	}
 
 	public void translateBy(float dx, float dy) {
@@ -101,7 +101,7 @@ public class Cloud extends Manipulable {
 		Cloud c = new Cloud(new Rectangle2D.Float(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height));
 		c.speed = speed;
 		c.setLabel(getLabel());
-		c.setX(x - boundingBox.width / 2);
+		c.setX(x - boundingBox.width / 2); // offset to the center, since this method is called to paste.
 		c.setY(y - boundingBox.height / 2);
 		return c;
 	}

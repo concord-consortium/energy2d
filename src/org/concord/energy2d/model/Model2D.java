@@ -919,8 +919,10 @@ public class Model2D {
 			fluidSolver.solve(u, v);
 		heatSolver.solve(convective, t);
 		if (!clouds.isEmpty()) {
-			for (Cloud c : clouds)
-				c.move(heatSolver.getTimeStep(), lx);
+			synchronized (clouds) {
+				for (Cloud c : clouds)
+					c.move(heatSolver.getTimeStep(), lx);
+			}
 		}
 		indexOfStep++;
 	}

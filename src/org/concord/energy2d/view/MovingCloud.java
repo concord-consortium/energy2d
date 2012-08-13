@@ -14,6 +14,8 @@ import java.awt.geom.Rectangle2D;
 import org.concord.energy2d.model.Cloud;
 
 /**
+ * Similar to the Cloud class, this class uses a location point to avoid recalculating the area.
+ * 
  * @author Charles Xie
  * 
  */
