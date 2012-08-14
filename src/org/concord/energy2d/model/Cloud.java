@@ -33,10 +33,12 @@ public class Cloud extends Manipulable {
 
 	// the size and shape of a cloud are determined by its bounding box that cuts three circles
 	public static Area getShape(Rectangle2D.Float r) {
+		// the positions and sizes of the circles must ensure that r is the bounding box
 		float max = Math.max(r.width, r.height);
-		Area a = new Area(new Ellipse2D.Float(r.x, r.y + r.height / 2, max / 2, max / 2));
+		Area a = new Area(new Ellipse2D.Float(r.x + r.width / 6, r.y, max / 2, max / 2));
+		a.add(new Area(new Ellipse2D.Float(r.x, r.y + r.height / 2, max / 3, max / 3)));
 		a.add(new Area(new Ellipse2D.Float(r.x + r.width / 3, r.y + r.height / 3, max / 2, max / 2)));
-		a.add(new Area(new Ellipse2D.Float(r.x + 2 * r.width / 3, r.y + 2 * r.height / 3, max / 3, max / 3)));
+		a.add(new Area(new Ellipse2D.Float(r.x + 2 * r.width / 3, r.y + 2 * r.height / 3, r.width / 3, r.width / 3)));
 		a.intersect(new Area(r));
 		return a;
 	}

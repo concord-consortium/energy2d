@@ -2032,7 +2032,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
 							mc.setLocation(xc, yc);
 						} else {
-							double a = r.getX(), b = r.getY(), c = r.getWidth(), d = r.getHeight();
+							double a = r.getX() + mc.getX(), b = r.getY() + mc.getY(), c = r.getWidth(), d = r.getHeight();
 							switch (selectedSpot) {
 							case LOWER_LEFT:
 							case LOWER_RIGHT:
@@ -2054,10 +2054,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								c = Math.abs(x - anchorPoint.x);
 								break;
 							}
-							Point p = mc.getLocation();
-							mc = new MovingCloud(new Rectangle2D.Float((float) a, (float) b, (float) c, (float) d));
-							mc.setLocation(p.x, p.y);
-							movingShape = mc;
+							movingShape = new MovingCloud(new Rectangle2D.Float((float) a, (float) b, (float) c, (float) d));
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
@@ -2495,14 +2492,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				setAnchorPointForRectangularShape(selectedSpot, a, b, c, d);
 			movingShape = new MovingRoundRectangle(new RoundRectangle2D.Float(a, b, c, d, 0, 0));
 		} else if (selectedManipulable instanceof Cloud) {
-			Cloud c = (Cloud) selectedManipulable;
+			Cloud cloud = (Cloud) selectedManipulable;
 			Rectangle2D.Float r = new Rectangle2D.Float();
-			r.x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
-			r.y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
-			r.width = convertLengthToPixelX(c.getBoundingBox().width);
-			r.height = convertLengthToPixelY(c.getBoundingBox().height);
+			int a = convertPointToPixelX(cloud.getBoundingBox().x);
+			int b = convertPointToPixelY(cloud.getBoundingBox().y);
+			int c = convertPointToPixelX(cloud.getX());
+			int d = convertPointToPixelY(cloud.getY());
+			r.x = a;
+			r.y = b;
+			r.width = convertLengthToPixelX(cloud.getBoundingBox().width);
+			r.height = convertLengthToPixelY(cloud.getBoundingBox().height);
 			if (anchor)
-				setAnchorPointForRectangularShape(selectedSpot, r.x, r.y, r.width, r.height);
+				setAnchorPointForRectangularShape(selectedSpot, r.x + c, r.y + d, r.width, r.height);
 			movingShape = new MovingCloud(r);
 		}
 	}

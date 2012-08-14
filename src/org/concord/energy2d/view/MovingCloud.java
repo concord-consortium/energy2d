@@ -52,6 +52,7 @@ class MovingCloud implements MovingShape {
 	public void render(Graphics2D g) {
 		g.translate(location.x, location.y);
 		g.draw(area);
+		g.draw(area.getBounds2D());
 		g.translate(-location.x, -location.y);
 	}
 
