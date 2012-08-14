@@ -996,9 +996,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g.setColor(Color.yellow);
 				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
-			} else if (selectedManipulable instanceof TextBox) {
-			} else if (selectedManipulable instanceof Cloud) {
+			} else if (selectedManipulable instanceof TextBox) { // textboxes are not resizable
 			} else {
+				g.setStroke(thinStroke);
 				for (Rectangle r : handle) {
 					if (r.x != 0 || r.y != 0) {
 						g.setColor(Color.yellow);
@@ -1745,7 +1745,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 	}
 
-	void resizeManipulableTo(Manipulable m, float x, float y, float w, float h) {
+	// (x0, y0) is the coordinate of the upper-left corner of an Area (if shape is an Area)
+	void resizeManipulableTo(Manipulable m, float x, float y, float w, float h, float x0, float y0) {
 		Shape s = m.getShape();
 		if (s instanceof Rectangle2D.Float) {
 			Rectangle2D.Float r = (Rectangle2D.Float) s;
@@ -1754,6 +1755,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			Ellipse2D.Float r = (Ellipse2D.Float) s;
 			r.setFrame(x, y, w, h);
 		} else if (s instanceof Area) {
+			if (m instanceof Cloud) {
+				Cloud c = (Cloud) m;
+				c.setBoundingBox(new Rectangle2D.Float(x, y, w, h));
+				c.setX(x0);
+				c.setY(y0);
+			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.RESIZE);
 	}
@@ -2017,12 +2024,42 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				} else if (shape instanceof Area) {
-					if (movingShape instanceof MovingCloud) {
+					if (selectedManipulable instanceof Cloud && movingShape instanceof MovingCloud) {
 						MovingCloud mc = (MovingCloud) movingShape;
 						Rectangle r = mc.getShape().getBounds();
-						int xc = (int) (x - pressedPointRelative.x - r.getCenterX());
-						int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
-						mc.setLocation(xc, yc);
+						if (selectedSpot == -1) {
+							int xc = (int) (x - pressedPointRelative.x - r.getCenterX());
+							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
+							mc.setLocation(xc, yc);
+						} else {
+							double a = r.getX(), b = r.getY(), c = r.getWidth(), d = r.getHeight();
+							switch (selectedSpot) {
+							case LOWER_LEFT:
+							case LOWER_RIGHT:
+							case UPPER_LEFT:
+							case UPPER_RIGHT:
+								a = Math.min(x, anchorPoint.x);
+								b = Math.min(y, anchorPoint.y);
+								c = Math.abs(x - anchorPoint.x);
+								d = Math.abs(y - anchorPoint.y);
+								break;
+							case TOP:
+							case BOTTOM:
+								b = Math.min(y, anchorPoint.y);
+								d = Math.abs(y - anchorPoint.y);
+								break;
+							case LEFT:
+							case RIGHT:
+								a = Math.min(x, anchorPoint.x);
+								c = Math.abs(x - anchorPoint.x);
+								break;
+							}
+							Point p = mc.getLocation();
+							mc = new MovingCloud(new Rectangle2D.Float((float) a, (float) b, (float) c, (float) d));
+							mc.setLocation(p.x, p.y);
+							movingShape = mc;
+							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+						}
 					}
 				} else {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
@@ -2099,8 +2136,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (actionMode) {
 		case SELECT_MODE:
 			if (MiscUtil.isRightClick(e)) {
-				selectManipulable(x, y);
-				repaint();
 				createPopupMenu();
 				popupMenu.show(this, x, y);
 				return;
@@ -2121,7 +2156,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								float y2 = convertPixelToPointY((int) r.getY());
 								float w2 = convertPixelToLengthX((int) r.getWidth());
 								float h2 = convertPixelToLengthY((int) r.getHeight());
-								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2);
+								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, 0, 0);
 								setSelectedManipulable(selectedManipulable);
 							}
 						}
@@ -2145,16 +2180,27 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							}
 						}
 					} else if (shape instanceof Area) {
-						float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-						float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-						translateManipulableTo(selectedManipulable, x2, y2);
-						setSelectedManipulable(selectedManipulable);
+						if (selectedSpot == -1) {
+							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+							translateManipulableTo(selectedManipulable, x2, y2);
+							setSelectedManipulable(selectedManipulable);
+						} else {
+							if (selectedManipulable instanceof Cloud && movingShape instanceof MovingCloud) {
+								Rectangle2D r = shape.getBounds2D();
+								float x2 = convertPixelToPointX((int) r.getX());
+								float y2 = convertPixelToPointY((int) r.getY());
+								float w2 = convertPixelToLengthX((int) r.getWidth());
+								float h2 = convertPixelToLengthY((int) r.getHeight());
+								Point p = ((MovingCloud) movingShape).getLocation();
+								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
+								setSelectedManipulable(selectedManipulable);
+							}
+						}
 					}
 				} else {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
-			} else {
-				selectManipulable(x, y);
 			}
 			break;
 		case RECTANGLE_MODE:
@@ -2271,7 +2317,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (actionMode) {
 		case SELECT_MODE:
 			int iSpot = -1;
-			if (!showGraph && selectedManipulable instanceof Part) {
+			if (!showGraph && (selectedManipulable instanceof Part) || (selectedManipulable instanceof Cloud)) {
 				for (int i = 0; i < handle.length; i++) {
 					if (handle[i].x < -10 || handle[i].y < -10)
 						continue;
@@ -2281,7 +2327,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				}
 				if (iSpot >= 0) {
-					if (selectedManipulable.getShape() instanceof RectangularShape) {
+					if (selectedManipulable.getShape() instanceof RectangularShape || selectedManipulable.getShape() instanceof Area) {
 						switch (iSpot) {
 						case UPPER_LEFT:
 							setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
@@ -2339,6 +2385,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					if (!draggable)
 						contained = false;
+					if (!contained) {
+						synchronized (model.getClouds()) {
+							for (Cloud c : model.getClouds()) {
+								if (c.contains(rx, ry)) {
+									contained = true;
+									draggable = c.isDraggable();
+									break;
+								}
+							}
+						}
+						if (!draggable)
+							contained = false;
+					}
 				}
 				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
 			}
@@ -2442,6 +2501,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			r.y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
 			r.width = convertLengthToPixelX(c.getBoundingBox().width);
 			r.height = convertLengthToPixelY(c.getBoundingBox().height);
+			if (anchor)
+				setAnchorPointForRectangularShape(selectedSpot, r.x, r.y, r.width, r.height);
 			movingShape = new MovingCloud(r);
 		}
 	}

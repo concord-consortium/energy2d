@@ -28,8 +28,7 @@ public class Cloud extends Manipulable {
 		super(bb);
 		if (!(bb instanceof Rectangle2D.Float))
 			throw new IllegalArgumentException("Shape must be a Rectangle2D.Float");
-		boundingBox = (Rectangle2D.Float) bb;
-		setShape(getShape(boundingBox));
+		setBoundingBox((Rectangle2D.Float) bb);
 	}
 
 	// the size and shape of a cloud are determined by its bounding box that cuts three circles
@@ -82,6 +81,11 @@ public class Cloud extends Manipulable {
 
 	public float getY() {
 		return y;
+	}
+
+	public void setBoundingBox(Rectangle2D.Float bb) {
+		boundingBox = bb;
+		setShape(getShape(boundingBox));
 	}
 
 	public Rectangle2D.Float getBoundingBox() {

@@ -155,7 +155,7 @@ class PartModelDialog extends JDialog {
 				Shape shape = part.getShape();
 				if (shape instanceof RectangularShape) {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
-						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height);
+						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height, 0, 0);
 					}
 				}
 

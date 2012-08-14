@@ -33,6 +33,10 @@ class MovingCloud implements MovingShape {
 		location.setLocation(x, y);
 	}
 
+	public Point getLocation() {
+		return location;
+	}
+
 	public int getX() {
 		return location.x;
 	}
