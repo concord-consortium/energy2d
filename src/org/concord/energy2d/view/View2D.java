@@ -473,7 +473,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public Cloud addCloud(float x, float y, float w, float h, float speed) {
-		Cloud c = new Cloud(new Rectangle2D.Float(x, y, w, h));
+		Cloud c = new Cloud(new Rectangle2D.Float(0, 0, w, h));
+		c.setX(x);
+		c.setY(y);
 		c.setSpeed(speed);
 		model.addCloud(c);
 		return c;
@@ -1181,10 +1183,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Color color = model.isSunny() && model.getSunAngle() > 0 && model.getSunAngle() < Math.PI ? Color.white : Color.lightGray;
 		synchronized (model.getClouds()) {
 			for (Cloud c : model.getClouds()) {
-				r.x = convertPointToPixelX(c.getBoundingBox().x + c.getX());
-				r.y = convertPointToPixelY(c.getBoundingBox().y + c.getY());
-				r.width = convertLengthToPixelX(c.getBoundingBox().width);
-				r.height = convertLengthToPixelY(c.getBoundingBox().height);
+				r.x = convertPointToPixelX(c.getX());
+				r.y = convertPointToPixelY(c.getY());
+				r.width = convertLengthToPixelX(c.getWidth());
+				r.height = convertLengthToPixelY(c.getHeight());
 				Area a = Cloud.getShape(r);
 				g.setColor(color);
 				g.fill(a);
@@ -1757,9 +1759,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud) {
 				Cloud c = (Cloud) m;
-				c.setBoundingBox(new Rectangle2D.Float(x, y, w, h));
-				c.setX(x0);
-				c.setY(y0);
+				c.setDimension(w, h);
+				c.setX(x0 + x);
+				c.setY(y0 + y);
 			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.RESIZE);
@@ -2192,7 +2194,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								Point p = ((MovingCloud) movingShape).getLocation();
 								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
 								setSelectedManipulable(selectedManipulable);
-								notifyManipulationListeners(selectedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 							}
 						}
 					}
@@ -2495,18 +2496,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (selectedManipulable instanceof Cloud) {
 			Cloud cloud = (Cloud) selectedManipulable;
 			Rectangle2D.Float r = new Rectangle2D.Float();
-			int a = convertPointToPixelX(cloud.getBoundingBox().x);
-			int b = convertPointToPixelY(cloud.getBoundingBox().y);
-			int c = convertPointToPixelX(cloud.getX());
-			int d = convertPointToPixelY(cloud.getY());
-			r.x = a;
-			r.y = b;
-			r.width = convertLengthToPixelX(cloud.getBoundingBox().width);
-			r.height = convertLengthToPixelY(cloud.getBoundingBox().height);
+			int x = convertPointToPixelX(cloud.getX());
+			int y = convertPointToPixelY(cloud.getY());
+			r.width = convertLengthToPixelX(cloud.getWidth());
+			r.height = convertLengthToPixelY(cloud.getHeight());
 			if (anchor)
-				setAnchorPointForRectangularShape(selectedSpot, r.x + c, r.y + d, r.width, r.height);
+				setAnchorPointForRectangularShape(selectedSpot, x, y, r.width, r.height);
 			movingShape = new MovingCloud(r);
-			((MovingCloud) movingShape).setLocation(c, d);
+			((MovingCloud) movingShape).setLocation(x, y);
 		}
 	}
 

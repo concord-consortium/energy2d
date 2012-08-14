@@ -596,6 +596,9 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		case ManipulationEvent.TRANSLATE:
 			saved = false;
 			break;
+		case ManipulationEvent.RESIZE:
+			saved = false;
+			break;
 		case ManipulationEvent.OBJECT_ADDED:
 			saved = false;
 			break;

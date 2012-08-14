@@ -24,11 +24,13 @@ public class Cloud extends Manipulable {
 	private float speed; // clouds only move in the horizontal direction
 	private Rectangle2D.Float boundingBox;
 
+	/** Construct a cloud based on the specified bounding box, which must start from (0, 0). If not, the (x, y) will be ignored. */
 	public Cloud(Shape bb) {
 		super(bb);
 		if (!(bb instanceof Rectangle2D.Float))
 			throw new IllegalArgumentException("Shape must be a Rectangle2D.Float");
-		setBoundingBox((Rectangle2D.Float) bb);
+		Rectangle2D.Float r = (Rectangle2D.Float) bb;
+		setDimension(r.width, r.height);
 	}
 
 	// the size and shape of a cloud are determined by its bounding box that cuts three circles
@@ -85,13 +87,17 @@ public class Cloud extends Manipulable {
 		return y;
 	}
 
-	public void setBoundingBox(Rectangle2D.Float bb) {
-		boundingBox = bb;
+	public void setDimension(float w, float h) {
+		boundingBox = new Rectangle2D.Float(0, 0, w, h);
 		setShape(getShape(boundingBox));
 	}
 
-	public Rectangle2D.Float getBoundingBox() {
-		return boundingBox;
+	public float getWidth() {
+		return boundingBox.width;
+	}
+
+	public float getHeight() {
+		return boundingBox.height;
 	}
 
 	public void setSpeed(float speed) {
@@ -104,7 +110,7 @@ public class Cloud extends Manipulable {
 
 	@Override
 	public Manipulable duplicate(float x, float y) {
-		Cloud c = new Cloud(new Rectangle2D.Float(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height));
+		Cloud c = new Cloud(new Rectangle2D.Float(0, 0, boundingBox.width, boundingBox.height));
 		c.speed = speed;
 		c.setLabel(getLabel());
 		c.setX(x - boundingBox.width / 2); // offset to the center, since this method is called to paste.

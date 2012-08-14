@@ -163,6 +163,28 @@ class MenuBar extends JMenuBar {
 		});
 		add(fileMenu);
 
+		JMenuItem mi = new JMenuItem("New");
+		mi.setToolTipText("Create a new simulation");
+		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK);
+		mi.setAccelerator(ks);
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				box.model.clear();
+				box.model.refreshMaterialPropertyArrays();
+				box.model.refreshPowerArray();
+				box.model.refreshTemperatureBoundaryArray();
+				box.view.clear();
+				XmlDecoder x = new XmlDecoder(box);
+				x.startDocument();
+				x.endDocument();
+				box.view.setGridOn(true);
+				box.view.setRulerOn(true);
+				box.view.repaint();
+			}
+		});
+		fileMenu.add(mi);
+		fileMenuItemCount++;
+
 		openAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				box.stop();
@@ -186,10 +208,10 @@ class MenuBar extends JMenuBar {
 				e2dFileChooser.resetChoosableFileFilters();
 			}
 		};
-		KeyStroke ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Open");
 		box.view.getActionMap().put("Open", openAction);
-		JMenuItem mi = new JMenuItem("Open...");
+		mi = new JMenuItem("Open...");
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
