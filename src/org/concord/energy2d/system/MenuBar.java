@@ -661,6 +661,7 @@ class MenuBar extends JMenuBar {
 
 		templates.put("Ray Optics", "models/ray-optics.e2d");
 		templates.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
+		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
 		templates.put("Mantle Convection", "models/mantle.e2d");
 		createMenu(box, subMenu, templates);
 
