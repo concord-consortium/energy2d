@@ -2192,6 +2192,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								Point p = ((MovingCloud) movingShape).getLocation();
 								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
 								setSelectedManipulable(selectedManipulable);
+								notifyManipulationListeners(selectedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 							}
 						}
 					}
@@ -2505,6 +2506,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (anchor)
 				setAnchorPointForRectangularShape(selectedSpot, r.x + c, r.y + d, r.width, r.height);
 			movingShape = new MovingCloud(r);
+			((MovingCloud) movingShape).setLocation(c, d);
 		}
 	}
 
