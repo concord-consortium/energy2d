@@ -271,10 +271,10 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void run() {
+		view.toggleRun();
 		executeInThreadService(new Runnable() {
 			public void run() {
 				model.run();
-				view.toggleRun();
 			}
 		});
 	}
@@ -353,7 +353,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				if (buttonStop != null)
-					buttonStop.doClick();
+					callAction(buttonStop);
 			}
 		});
 	}
@@ -380,7 +380,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				if (buttonStop != null)
-					buttonStop.doClick();
+					callAction(buttonStop);
 			}
 		});
 	}
@@ -730,25 +730,34 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		p.add(buttonReload);
 		clickRun = new Runnable() {
 			public void run() {
-				buttonRun.doClick();
+				callAction(buttonRun);
 			}
 		};
 		clickStop = new Runnable() {
 			public void run() {
-				buttonStop.doClick();
+				callAction(buttonStop);
 			}
 		};
 		clickReset = new Runnable() {
 			public void run() {
-				buttonReset.doClick();
+				callAction(buttonReset);
 			}
 		};
 		clickReload = new Runnable() {
 			public void run() {
-				buttonReload.doClick();
+				callAction(buttonReload);
 			}
 		};
 		return p;
+	}
+
+	// JButton.doClick() does not do anything if a button is disabled.
+	private static void callAction(JButton button) {
+		ActionListener[] a = button.getActionListeners();
+		if (a == null || a.length == 0)
+			return;
+		for (ActionListener x : a)
+			x.actionPerformed(null);
 	}
 
 	void addIOListener(IOListener l) {
