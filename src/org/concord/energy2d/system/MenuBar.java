@@ -141,6 +141,7 @@ class MenuBar extends JMenuBar {
 					if (n > 0) {
 						for (int i = 0; i < n; i++) {
 							JMenuItem x = new JMenuItem((i + 1) + "  " + MiscUtil.getFileName(recentFiles[i]));
+							x.setToolTipText(recentFiles[i]);
 							final File rf = new File(recentFiles[i]);
 							x.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
@@ -208,11 +209,13 @@ class MenuBar extends JMenuBar {
 				e2dFileChooser.resetChoosableFileFilters();
 			}
 		};
+		openAction.putValue(Action.SHORT_DESCRIPTION, "Open a simulation");
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Open");
 		box.view.getActionMap().put("Open", openAction);
 		mi = new JMenuItem("Open...");
 		mi.setAccelerator(ks);
+		mi.setToolTipText((String) openAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openAction.actionPerformed(e);
@@ -230,11 +233,13 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		};
+		saveAction.putValue(Action.SHORT_DESCRIPTION, "Save a simulation");
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Save");
 		box.view.getActionMap().put("Save", saveAction);
 		mi = new JMenuItem("Save");
 		mi.setAccelerator(ks);
+		mi.setToolTipText((String) saveAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveAction.actionPerformed(e);
@@ -248,11 +253,13 @@ class MenuBar extends JMenuBar {
 				saveAs(box, frame);
 			}
 		};
+		saveAsAction.putValue(Action.SHORT_DESCRIPTION, "Save a simulation as");
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "SaveAs");
 		box.view.getActionMap().put("SaveAs", saveAsAction);
 		mi = new JMenuItem("Save As...");
 		mi.setAccelerator(ks);
+		mi.setToolTipText((String) saveAsAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveAsAction.actionPerformed(e);
@@ -274,7 +281,9 @@ class MenuBar extends JMenuBar {
 				saveAsApplet(box, frame);
 			}
 		};
+		saveAsAppletAction.putValue(Action.SHORT_DESCRIPTION, "Export this simulation as an applet");
 		mi = new JMenuItem("Save As Applet...");
+		mi.setToolTipText((String) saveAsAppletAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveAsAppletAction.actionPerformed(e);
@@ -289,6 +298,7 @@ class MenuBar extends JMenuBar {
 		final Action propertyAction = box.view.getActionMap().get("Property");
 		mi = new JMenuItem("Properties...");
 		mi.setAccelerator((KeyStroke) propertyAction.getValue(Action.ACCELERATOR_KEY));
+		mi.setToolTipText((String) propertyAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				propertyAction.actionPerformed(e);
@@ -300,6 +310,7 @@ class MenuBar extends JMenuBar {
 		final Action taskAction = box.view.getActionMap().get("Task_Manager");
 		mi = new JMenuItem("Task Manager...");
 		mi.setAccelerator((KeyStroke) taskAction.getValue(Action.ACCELERATOR_KEY));
+		mi.setToolTipText((String) taskAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				taskAction.actionPerformed(e);
@@ -342,12 +353,14 @@ class MenuBar extends JMenuBar {
 				}
 			}
 		};
+		exitAction.putValue(Action.SHORT_DESCRIPTION, "Close " + System2D.BRAND_NAME);
 		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK);
 		box.view.getInputMap().put(ks, "Quit");
 		box.view.getActionMap().put("Quit", exitAction);
 		if (!IS_MAC) {
 			mi = new JMenuItem("Exit");
 			mi.setAccelerator(ks);
+			mi.setToolTipText((String) exitAction.getValue(Action.SHORT_DESCRIPTION));
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					exitAction.actionPerformed(e);
@@ -403,6 +416,7 @@ class MenuBar extends JMenuBar {
 		menu.addSeparator();
 
 		mi = new JMenuItem("Clear All");
+		mi.setToolTipText("Remove all the elements");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), "Are you sure you want to remove all objects?", "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -459,6 +473,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miSeeThrough.setToolTipText("Check if you wish to make all parts transparent to see heat flows inside them");
 		menu.add(miSeeThrough);
 
 		miIsotherm.addItemListener(new ItemListener() {
@@ -469,6 +484,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miIsotherm.setToolTipText("Check if you wish to show isotherm lines");
 		menu.add(miIsotherm);
 
 		miHeatFluxLine.addItemListener(new ItemListener() {
@@ -479,6 +495,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miHeatFluxLine.setToolTipText("Check if you wish to show heat flux lines");
 		menu.add(miHeatFluxLine);
 
 		miHeatFluxArrow.addItemListener(new ItemListener() {
@@ -489,6 +506,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miHeatFluxArrow.setToolTipText("Check if you wish to show heat flux arrows");
 		menu.add(miHeatFluxArrow);
 
 		miVelocity.addItemListener(new ItemListener() {
@@ -499,6 +517,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miVelocity.setToolTipText("Check if you wish to show velocity vectors");
 		menu.add(miVelocity);
 
 		miStreamline.addItemListener(new ItemListener() {
@@ -509,6 +528,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miStreamline.setToolTipText("Check if you wish to show streamlines");
 		menu.add(miStreamline);
 
 		miColorPalette.addItemListener(new ItemListener() {
@@ -519,6 +539,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miColorPalette.setToolTipText("Check if you wish to show the Color Palette");
 		menu.add(miColorPalette);
 
 		miRuler.addItemListener(new ItemListener() {
@@ -529,6 +550,7 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miRuler.setToolTipText("Check if you wish to show the Ruler");
 		menu.add(miRuler);
 
 		miGrid.addItemListener(new ItemListener() {
@@ -539,10 +561,12 @@ class MenuBar extends JMenuBar {
 				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 			}
 		});
+		miGrid.setToolTipText("Check if you wish to show grid lines");
 		menu.add(miGrid);
 		menu.addSeparator();
 
 		mi = new JMenuItem("More...");
+		mi.setToolTipText("Open the View Options");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				box.view.createDialog(box.view, false);
@@ -643,6 +667,7 @@ class MenuBar extends JMenuBar {
 		menu.addSeparator();
 		if (!System.getProperty("os.name").startsWith("Linux")) {
 			mi = new JMenuItem("More...");
+			mi.setToolTipText("Open the Online Model Repository");
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Helper.openBrowser("http://energy.concord.org/energy2d/models.html");
@@ -659,6 +684,7 @@ class MenuBar extends JMenuBar {
 		final Action scriptAction = box.view.getActionMap().get("Script");
 		mi = new JMenuItem("Script Console...");
 		mi.setAccelerator((KeyStroke) scriptAction.getValue(Action.ACCELERATOR_KEY));
+		mi.setToolTipText((String) scriptAction.getValue(Action.SHORT_DESCRIPTION));
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scriptAction.actionPerformed(e);
@@ -667,6 +693,7 @@ class MenuBar extends JMenuBar {
 		menu.add(mi);
 
 		mi = new JMenuItem("Keyboard Shortcuts...");
+		mi.setToolTipText("See what keyboard shortcuts are supported");
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Helper.showKeyboardShortcuts(frame);
@@ -677,6 +704,7 @@ class MenuBar extends JMenuBar {
 		if (!System.getProperty("os.name").startsWith("Linux")) {
 			mi = new JMenuItem("Online Manual...");
 			mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, true));
+			mi.setToolTipText("Open the Online Manual");
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Helper.openBrowser("http://energy.concord.org/energy2d/manual/index.html");
@@ -684,6 +712,7 @@ class MenuBar extends JMenuBar {
 			});
 			menu.add(mi);
 			mi = new JMenuItem("Contact Us...");
+			mi.setToolTipText("Contact us");
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Helper.openBrowser("http://energy.concord.org/energy2d/contact.html");
@@ -695,6 +724,7 @@ class MenuBar extends JMenuBar {
 		if (!System.getProperty("os.name").startsWith("Mac")) {
 			menu.addSeparator();
 			mi = new JMenuItem("About...");
+			mi.setToolTipText("About " + System2D.BRAND_NAME);
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Helper.showAbout(frame);

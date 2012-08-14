@@ -306,6 +306,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		};
 		a.putValue(Action.NAME, "Text Box");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a text box where the mouse last clicked");
 		getActionMap().put("Insert Text Box", a);
 
 		a = new AbstractAction() {
@@ -320,6 +321,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		};
 		a.putValue(Action.NAME, "Cloud");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a cloud where the mouse last clicked");
 		getActionMap().put("Insert Cloud", a);
 
 		a = new AbstractAction() {
@@ -330,6 +332,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		};
 		a.putValue(Action.NAME, "Thermometer");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a thermometer where the mouse last clicked");
 		getActionMap().put("Insert Thermometer", a);
 
 	}

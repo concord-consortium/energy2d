@@ -219,6 +219,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true);
 		a.putValue(Action.NAME, "Script");
 		a.putValue(Action.ACCELERATOR_KEY, ks);
+		a.putValue(Action.SHORT_DESCRIPTION, "Open the Script Console");
 		view.getInputMap().put(ks, "Script");
 		view.getActionMap().put("Script", a);
 
@@ -230,6 +231,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_MASK);
 		a.putValue(Action.NAME, "Property");
 		a.putValue(Action.ACCELERATOR_KEY, ks);
+		a.putValue(Action.SHORT_DESCRIPTION, "Open the Properties Editor");
 		view.getInputMap().put(ks, "Property");
 		view.getActionMap().put("Property", a);
 
@@ -241,6 +243,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true);
 		a.putValue(Action.NAME, "Task_Manager");
 		a.putValue(Action.ACCELERATOR_KEY, ks);
+		a.putValue(Action.SHORT_DESCRIPTION, "Open the Task Manager");
 		view.getInputMap().put(ks, "Task_Manager");
 		view.getActionMap().put("Task_Manager", a);
 
