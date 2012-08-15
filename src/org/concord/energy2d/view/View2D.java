@@ -179,7 +179,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
-	private Icon moon, sun;
+	private Symbol moon, sun;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -1152,27 +1152,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (model.isSunny()) {
 			if (model.getSunAngle() <= 0 || model.getSunAngle() > Math.PI) {
 				if (moon == null)
-					moon = new Moon() {
-						public int getIconWidth() {
-							return 16;
-						}
-
-						public int getIconHeight() {
-							return 16;
-						}
-					};
+					moon = Symbol.get("Moon");
 				moon.paintIcon(this, g, getWidth() - moon.getIconWidth() * 2, moon.getIconHeight() + 10);
 			} else {
 				if (sun == null)
-					sun = new Sun() {
-						public int getIconWidth() {
-							return 16;
-						}
-
-						public int getIconHeight() {
-							return 16;
-						}
-					};
+					sun = Symbol.get("Sun");
 				sun.paintIcon(this, g, getWidth() - sun.getIconWidth() * 2, sun.getIconHeight() + 10);
 			}
 		}
@@ -1238,7 +1222,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (thermometers.isEmpty())
 			return;
 		g.setStroke(thinStroke);
-		Symbol.Thermometer s = (Symbol.Thermometer) Symbol.get(Symbol.THERMOMETER);
+		Symbol.Thermometer s = (Symbol.Thermometer) Symbol.get("Thermometer");
 		float w = Thermometer.RELATIVE_WIDTH * model.getLx();
 		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
 		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
@@ -1553,6 +1537,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		int x, y;
 		g.setColor(lightColor);
+		g.setStroke(thinStroke);
 		double r;
 		synchronized (model.getPhotons()) {
 			for (Photon p : model.getPhotons()) {
