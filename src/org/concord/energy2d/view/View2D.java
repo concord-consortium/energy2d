@@ -542,8 +542,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		runToggle = false;
 		setSelectedManipulable(null);
 		setTime(0);
-		if (graphRenderer != null)
-			graphRenderer.reset();
+		if (graphRenderer != null) {
+			graphRenderer.setYmin(getMinimumTemperature());
+			graphRenderer.setYmax(getMaximumTemperature());
+		}
 	}
 
 	public void toggleRun() {
@@ -789,6 +791,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setMinimumTemperature(float min) {
 		temperatureRenderer.setMinimum(min);
 		thermalEnergyRenderer.setMinimum(min);
+		graphRenderer.setYmin(min);
 	}
 
 	public float getMinimumTemperature() {
@@ -798,6 +801,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setMaximumTemperature(float max) {
 		temperatureRenderer.setMaximum(max);
 		thermalEnergyRenderer.setMaximum(max);
+		graphRenderer.setYmax(max);
 	}
 
 	public float getMaximumTemperature() {

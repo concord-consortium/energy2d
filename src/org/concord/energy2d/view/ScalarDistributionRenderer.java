@@ -21,7 +21,7 @@ class ScalarDistributionRenderer {
 	private BufferedImage image;
 	private int[] pixels;
 	private int w, h;
-	private float min = 0, max = 40;
+	private float min = 0, max = 50;
 	private float scale;
 	private short[][] rgbScale;
 	private boolean smooth = true;

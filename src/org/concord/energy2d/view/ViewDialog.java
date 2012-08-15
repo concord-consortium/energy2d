@@ -49,19 +49,14 @@ class ViewDialog extends JDialog {
 
 		ActionListener okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Object src = e.getSource();
-				if (src == lowerTempField || src instanceof JButton) {
-					float x = parse(lowerTempField.getText());
-					if (Float.isNaN(x))
-						return;
-					view.setMinimumTemperature(x);
-				}
-				if (src == upperTempField || src instanceof JButton) {
-					float x = parse(upperTempField.getText());
-					if (Float.isNaN(x))
-						return;
-					view.setMaximumTemperature(x);
-				}
+				float x = parse(lowerTempField.getText());
+				if (Float.isNaN(x))
+					return;
+				view.setMinimumTemperature(x);
+				x = parse(upperTempField.getText());
+				if (Float.isNaN(x))
+					return;
+				view.setMaximumTemperature(x);
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();

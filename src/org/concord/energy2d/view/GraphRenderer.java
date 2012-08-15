@@ -42,7 +42,7 @@ class GraphRenderer {
 	private int x, y, w, h;
 	private float xmax = 360000; // 100 hours
 	private float ymin = 0;
-	private float ymax = 25;
+	private float ymax = 50;
 	private boolean drawFrame = true;
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
@@ -56,11 +56,6 @@ class GraphRenderer {
 		yExpandButton = new Rectangle();
 		yShrinkButton = new Rectangle();
 		setFrame(x, y, w, h);
-	}
-
-	void reset() {
-		ymin = 0;
-		ymax = 25;
 	}
 
 	void setLabelX(String xLabel) {
