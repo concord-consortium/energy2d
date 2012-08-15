@@ -44,7 +44,7 @@ class AppletConverter {
 		s += LINE_SEPARATOR;
 		s += "    <title>" + System2D.BRAND_NAME + "</title>";
 		s += LINE_SEPARATOR;
-		s += "    <script type=\"text/javascript\" src=\"library.js\"></script>";
+		s += "    <script type=\"text/javascript\" src=\"energy2d.js\"></script>";
 		s += LINE_SEPARATOR;
 		s += "  </head>";
 		s += LINE_SEPARATOR;
@@ -54,7 +54,7 @@ class AppletConverter {
 
 		s += "    <p><font color=\"red\">If nothing shows up below, try the following: ";
 		s += "<ol><li>Download <a href=\"http://energy.concord.org/energy2d/energy2d-applet.jar\">energy2d-applet.jar</a> ";
-		s += "and <a href=\"http://energy.concord.org/energy2d/library.js\">library.js</a> ";
+		s += "and <a href=\"http://energy.concord.org/energy2d/energy2d.js\">energy2d.js</a> ";
 		s += "to where this HTML file is located; ";
 		s += "<li>Make sure " + s2d.getCurrentFile() + " is copied or moved to where this HTML file is located; ";
 		s += "<li><b>Restart the browser</b> and reload this page.";

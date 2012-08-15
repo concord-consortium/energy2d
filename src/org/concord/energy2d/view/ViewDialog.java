@@ -47,6 +47,27 @@ class ViewDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
+		ActionListener okListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Object src = e.getSource();
+				if (src == lowerTempField || src instanceof JButton) {
+					float x = parse(lowerTempField.getText());
+					if (Float.isNaN(x))
+						return;
+					view.setMinimumTemperature(x);
+				}
+				if (src == upperTempField || src instanceof JButton) {
+					float x = parse(upperTempField.getText());
+					if (Float.isNaN(x))
+						return;
+					view.setMaximumTemperature(x);
+				}
+				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+				view.repaint();
+				dispose();
+			}
+		};
+
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
@@ -61,14 +82,8 @@ class ViewDialog extends JDialog {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panel.add(buttonPanel, BorderLayout.SOUTH);
 
-		JButton button = new JButton("Close");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
-				view.repaint();
-				dispose();
-			}
-		});
+		JButton button = new JButton("OK");
+		button.addActionListener(okListener);
 		buttonPanel.add(button);
 
 		JTabbedPane tab = new JTabbedPane();
@@ -315,15 +330,7 @@ class ViewDialog extends JDialog {
 		p.add(nameLabel1);
 
 		lowerTempField = new JTextField(view.getMinimumTemperature() + "", 8);
-		lowerTempField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				float x = parse(lowerTempField.getText());
-				if (Float.isNaN(x))
-					return;
-				view.setMinimumTemperature(x);
-				view.repaint();
-			}
-		});
+		lowerTempField.addActionListener(okListener);
 		p.add(lowerTempField);
 		unitLabel1 = new JLabel("\u00B0C");
 		p.add(unitLabel1);
@@ -333,15 +340,7 @@ class ViewDialog extends JDialog {
 		p.add(nameLabel2);
 
 		upperTempField = new JTextField(view.getMaximumTemperature() + "", 8);
-		upperTempField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				float x = parse(upperTempField.getText());
-				if (Float.isNaN(x))
-					return;
-				view.setMaximumTemperature(x);
-				view.repaint();
-			}
-		});
+		upperTempField.addActionListener(okListener);
 		p.add(upperTempField);
 		unitLabel2 = new JLabel("\u00B0C");
 		p.add(unitLabel2);

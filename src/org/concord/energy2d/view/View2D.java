@@ -1182,6 +1182,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				if (model.isRunning() && c.getSpeed() != 0 && c == selectedManipulable) {
 					HandleSetter.setRects(this, selectedManipulable, handle);
 				}
+				if (c.getLabel() != null) {
+					g.setFont(labelFont);
+					g.setColor(getContrastColor((int) r.getCenterX(), (int) r.getCenterY()));
+					String label = c.getLabel();
+					FontMetrics fm = g.getFontMetrics();
+					g.drawString(label, (int) r.getCenterX() - fm.stringWidth(label) / 2, (int) r.getCenterY() + fm.getHeight());
+				}
 			}
 		}
 	}

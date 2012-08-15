@@ -64,7 +64,7 @@ class CloudDialog extends JDialog {
 				view.notifyManipulationListeners(cloud, ManipulationEvent.PROPERTY_CHANGE);
 				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
-				CloudDialog.this.dispose();
+				dispose();
 			}
 		};
 
@@ -81,7 +81,7 @@ class CloudDialog extends JDialog {
 		button = new JButton("Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CloudDialog.this.dispose();
+				dispose();
 			}
 		});
 		buttonPanel.add(button);
