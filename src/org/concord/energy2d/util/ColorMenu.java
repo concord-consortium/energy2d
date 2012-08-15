@@ -38,17 +38,26 @@ public class ColorMenu extends JMenu {
 	private JMenuItem textureMenuItem;
 	private ColorArrayPane cap;
 
-	public ColorMenu(Component parent, String name, boolean filled, JColorChooser color, TextureChooser texture) {
-
+	public ColorMenu(Component parent, String name, JColorChooser color, TextureChooser texture) {
 		super(name);
-
 		this.parent = parent;
 		colorChooser = color;
 		textureChooser = texture;
+		init();
+	}
 
+	public ColorMenu(Component parent, String name, boolean filled, JColorChooser color, TextureChooser texture) {
+		super(name);
+		this.parent = parent;
+		colorChooser = color;
+		textureChooser = texture;
 		noFillMenuItem = new JCheckBoxMenuItem("No Fill", !filled);
 		add(noFillMenuItem);
 		addSeparator();
+		init();
+	}
+
+	private void init() {
 
 		cap = new ColorArrayPane();
 		cap.addColorArrayListener(new ColorArrayListener() {
@@ -98,15 +107,18 @@ public class ColorMenu extends JMenu {
 	}
 
 	public void addNoFillListener(ActionListener a) {
-		noFillMenuItem.addActionListener(a);
+		if (noFillMenuItem != null)
+			noFillMenuItem.addActionListener(a);
 	}
 
 	public void removeNoFillListener(ActionListener a) {
-		noFillMenuItem.removeActionListener(a);
+		if (noFillMenuItem != null)
+			noFillMenuItem.removeActionListener(a);
 	}
 
 	public void setNoFillAction(Action a) {
-		noFillMenuItem.setAction(a);
+		if (noFillMenuItem != null)
+			noFillMenuItem.setAction(a);
 	}
 
 	public void addColorArrayListener(ActionListener a) {
@@ -135,7 +147,7 @@ public class ColorMenu extends JMenu {
 		try {
 			c = MiscUtil.convertToColor(hex);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(ColorMenu.this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(parent, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return c;
 	}

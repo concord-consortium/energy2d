@@ -6,6 +6,7 @@
 
 package org.concord.energy2d.model;
 
+import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -22,6 +23,7 @@ public class Cloud extends Manipulable {
 	private float x; // the x coordinate of the upper-left corner
 	private float y; // the y coordinate of the upper-left corner
 	private float speed; // clouds only move in the horizontal direction
+	private Color color = Color.white;
 	private Rectangle2D.Float boundingBox;
 
 	/** Construct a cloud based on the specified bounding box, which must start from (0, 0). If not, the (x, y) will be ignored. */
@@ -43,6 +45,14 @@ public class Cloud extends Manipulable {
 		a.add(new Area(new Ellipse2D.Float(r.x + 2 * r.width / 3, r.y + 2 * r.height / 3, r.width / 3, r.width / 3)));
 		a.intersect(new Area(r));
 		return a;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 	public void move(float timeStep, float lx) {
@@ -126,6 +136,8 @@ public class Cloud extends Manipulable {
 		String label = getLabel();
 		if (label != null && !label.trim().equals(""))
 			xml += " label=\"" + label + "\"";
+		if (!Color.white.equals(color))
+			xml += " color=\"" + Integer.toHexString(0x00ffffff & color.getRGB()) + "\"";
 		xml += " x=\"" + x + "\"";
 		xml += " y=\"" + y + "\"";
 		xml += " width=\"" + boundingBox.width + "\"";

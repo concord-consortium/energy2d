@@ -42,12 +42,20 @@ public class BackgroundComboBox extends JComponent implements FocusListener, Pro
 	private ColorMenu colorMenu;
 
 	public BackgroundComboBox(Component parent, boolean filled, JColorChooser colorChooser, TextureChooser textureChooser) {
+		this(parent, new ColorMenu(parent, "Background", filled, colorChooser, textureChooser));
+	}
+
+	public BackgroundComboBox(Component parent, JColorChooser colorChooser, TextureChooser textureChooser) {
+		this(parent, new ColorMenu(parent, "Background", colorChooser, textureChooser));
+	}
+
+	private BackgroundComboBox(Component parent, final ColorMenu colorMenu) {
 
 		setLayout(new BorderLayout());
 		setBorder(new BasicBorders.ButtonBorder(Color.lightGray, Color.white, Color.black, Color.gray));
 
-		colorMenu = new ColorMenu(parent, "Background", filled, colorChooser, textureChooser);
 		colorMenu.addPropertyChangeListener(this);
+		this.colorMenu = colorMenu;
 
 		selectionPanel = new SelectionPanel();
 		selectionPanel.setPreferredSize(new Dimension(80, 18));

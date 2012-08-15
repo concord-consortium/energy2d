@@ -31,16 +31,6 @@ import static org.concord.energy2d.view.View2D.UPPER_RIGHT;
  */
 class HandleSetter {
 
-	static void reset(Rectangle[] handle) {
-		for (int i = 0; i < handle.length; i++) {
-			if (handle[i] == null) {
-				handle[i] = new Rectangle(0, 0, 6, 6);
-			} else {
-				handle[i].setRect(0, 0, 6, 6);
-			}
-		}
-	}
-
 	static void setRects(View2D view, Manipulable m, Rectangle[] handle) {
 
 		int h = handle[0].width / 2;

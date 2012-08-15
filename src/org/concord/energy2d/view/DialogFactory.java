@@ -7,6 +7,7 @@ package org.concord.energy2d.view;
 
 import javax.swing.JDialog;
 
+import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -33,6 +34,8 @@ final class DialogFactory {
 			return new ModelDialog(view, (Model2D) o, modal);
 		if (o instanceof Part)
 			return new PartModelDialog(view, (Part) o, modal);
+		if (o instanceof Cloud)
+			return new CloudDialog(view, (Cloud) o, modal);
 		if (o instanceof Thermometer)
 			return new ThermometerDialog(view, (Thermometer) o, modal);
 		if (o instanceof TextBox)
@@ -45,6 +48,8 @@ final class DialogFactory {
 			return new ViewDialog(view, modal);
 		if (o instanceof Part)
 			return new PartViewDialog(view, (Part) o, modal);
+		if (o instanceof Cloud)
+			return new CloudDialog(view, (Cloud) o, modal);
 		if (o instanceof Thermometer)
 			return new ThermometerDialog(view, (Thermometer) o, modal);
 		if (o instanceof TextBox)

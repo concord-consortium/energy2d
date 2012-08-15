@@ -468,6 +468,7 @@ class XmlDecoder extends DefaultHandler {
 				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
 				float speed = 0;
 				String label = null, uid = null;
+				Color color = Color.white;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);
@@ -485,6 +486,8 @@ class XmlDecoder extends DefaultHandler {
 						uid = attribValue;
 					} else if (attribName == "label") {
 						label = attribValue;
+					} else if (attribName == "color") {
+						color = new Color(Integer.parseInt(attribValue, 16));
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h)) {
@@ -494,6 +497,7 @@ class XmlDecoder extends DefaultHandler {
 					c.setSpeed(speed);
 					c.setUid(uid);
 					c.setLabel(label);
+					c.setColor(color);
 					box.model.addCloud(c);
 				}
 			}

@@ -1183,7 +1183,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		g.setStroke(thickStroke);
 		Rectangle2D.Float r = new Rectangle2D.Float();
-		Color color = model.isSunny() && model.getSunAngle() > 0 && model.getSunAngle() < Math.PI ? Color.white : Color.lightGray;
+		boolean daytime = model.isSunny() && model.getSunAngle() > 0 && model.getSunAngle() < Math.PI;
 		synchronized (model.getClouds()) {
 			for (Cloud c : model.getClouds()) {
 				r.x = convertPointToPixelX(c.getX());
@@ -1191,10 +1191,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				r.width = convertLengthToPixelX(c.getWidth());
 				r.height = convertLengthToPixelY(c.getHeight());
 				Area a = Cloud.getShape(r);
-				g.setColor(color);
+				g.setColor(daytime ? c.getColor() : c.getColor().darker());
 				g.fill(a);
 				g.setColor(selectedManipulable == c ? Color.yellow : Color.gray);
 				g.draw(a);
+				if (model.isRunning() && c.getSpeed() != 0 && c == selectedManipulable) {
+					HandleSetter.setRects(this, selectedManipulable, handle);
+				}
 			}
 		}
 	}
