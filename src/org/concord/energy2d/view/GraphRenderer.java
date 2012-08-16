@@ -283,7 +283,7 @@ class GraphRenderer {
 			float scaleX = w / xmax;
 			float scaleY = h / (ymax - ymin);
 			synchronized (data) {
-				for (int i = m; i < n - m; i += m) {
+				for (int i = m; i <= n - m; i += m) {
 					x1 = (int) (x + t1 * scaleX);
 					y1 = (int) (y + h - (v1 - ymin) * scaleY);
 					if (x1 > x + w)
