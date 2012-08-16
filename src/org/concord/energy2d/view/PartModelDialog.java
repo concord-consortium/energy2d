@@ -55,7 +55,7 @@ class PartModelDialog extends JDialog {
 	private JTextField absorptionField;
 	private JTextField reflectionField;
 	private JTextField transmissionField;
-	private JTextField emissionField;
+	private JTextField emissivityField;
 	private JTextField xField, yField, wField, hField;
 	private JTextField uidField;
 	private JTextField labelField;
@@ -91,9 +91,32 @@ class PartModelDialog extends JDialog {
 				float transmission = parse(transmissionField.getText());
 				if (Float.isNaN(transmission))
 					return;
-				float emission = parse(emissionField.getText());
-				if (Float.isNaN(emission))
+				float emissivity = parse(emissivityField.getText());
+				if (Float.isNaN(emissivity))
 					return;
+
+				if (absorption < 0 || absorption > 1) {
+					JOptionPane.showMessageDialog(owner, "Absorption coefficient must be within [0, 1].", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (reflection < 0 || reflection > 1) {
+					JOptionPane.showMessageDialog(owner, "Reflection coefficient must be within [0, 1].", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (transmission < 0 || transmission > 1) {
+					JOptionPane.showMessageDialog(owner, "Transmission coefficient must be within [0, 1].", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (emissivity < 0 || emissivity > 1) {
+					JOptionPane.showMessageDialog(owner, "Emissivity must be within [0, 1].", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				float sum = absorption + reflection + transmission;
+				if (Math.abs(sum - 1) > 0.01) {
+					JOptionPane.showMessageDialog(owner, "The sum of absorption, reflection, and transmission must be exactly one.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 				float conductivity = parse(thermalConductivityField.getText());
 				if (Float.isNaN(conductivity))
 					return;
@@ -167,7 +190,7 @@ class PartModelDialog extends JDialog {
 				part.setAbsorption(absorption);
 				part.setReflection(reflection);
 				part.setTransmission(transmission);
-				part.setEmissivity(emission);
+				part.setEmissivity(emissivity);
 				part.setLabel(labelField.getText());
 				part.setUid(uid);
 
@@ -404,14 +427,18 @@ class PartModelDialog extends JDialog {
 		transmissionField.addActionListener(okListener);
 		p.add(transmissionField);
 
-		label = new JLabel("Emission");
+		label = new JLabel("Emissivity");
 		p.add(label);
-		emissionField = new JTextField(FORMAT.format(part.getEmissivity()), 16);
-		emissionField.addActionListener(okListener);
-		p.add(emissionField);
+		emissivityField = new JTextField(FORMAT.format(part.getEmissivity()), 16);
+		emissivityField.addActionListener(okListener);
+		p.add(emissivityField);
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pp.add(p, BorderLayout.CENTER);
+		p.add(new JLabel("<html><br><hr align=left width=100>1) All the above coefficients must be within [0, 1].<br>2) The sum of the absorption, reflection, and transmission coefficients must be exactly one.</html>"));
 
 		Box miscBox = Box.createVerticalBox();
 		pp = new JPanel(new BorderLayout());
@@ -428,6 +455,10 @@ class PartModelDialog extends JDialog {
 		labelField = new JTextField(part.getLabel(), 20);
 		labelField.addActionListener(okListener);
 		p.add(labelField);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		miscBox.add(p);
+		p.add(new JLabel("<html><br><hr align=left width=100>1) Set a unique ID if you need to find this part in scripts.<br>2) The label will be shown on top of this part in the view.</html>"));
 
 		pack();
 		setLocationRelativeTo(view);

@@ -31,7 +31,7 @@ class HeatSolver2DImpl extends HeatSolver2D {
 		float rij, sij, axij, bxij, ayij, byij;
 		float invTimeStep = 1f / timeStep;
 
-		boolean solveZ = zHeatDiffusivity > 0;
+		boolean solveZ = zHeatDiffusivity != 0;
 
 		for (int k = 0; k < relaxationSteps; k++) {
 			for (int i = 1; i < nx1; i++) {

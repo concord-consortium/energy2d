@@ -278,6 +278,8 @@ class ModelDialog extends JDialog {
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
+		// general properties pane
+
 		JPanel p = new JPanel(new SpringLayout());
 		JPanel pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
@@ -349,7 +351,7 @@ class ModelDialog extends JDialog {
 		p.add(label);
 		count++;
 
-		label = new JLabel("Z heat diffusivity");
+		label = new JLabel("Z heat diffusivity *");
 		p.add(label);
 		zDiffusivityField = new JTextField(FORMAT.format(model.getZHeatDiffusivity()), 8);
 		zDiffusivityField.addActionListener(okListener);
@@ -375,10 +377,16 @@ class ModelDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);
 
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pp.add(p, BorderLayout.CENTER);
+		p.add(new JLabel("<html><br><hr align=left width=100>* The Z heat diffusivity permits heat exchange in the direction perpendicular to the screen.<br>If it is positive, the system will settle at the background temperature set for the medium.</html>"));
+
+		// fluid properties pane
+
 		p = new JPanel(new SpringLayout());
 		pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
-		tabbedPane.add(pp, "Fluid");
+		tabbedPane.add(pp, "Medium");
 		count = 0;
 
 		label = new JLabel("Background temperature");
