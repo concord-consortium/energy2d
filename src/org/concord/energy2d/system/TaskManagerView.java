@@ -63,27 +63,6 @@ class TaskManagerView {
 		createTasks(owner).setVisible(true);
 	}
 
-	/* show the tasks in a window with the specified task selected to edit */
-	void show(Window owner, String uid) {
-		JDialog dialog = createTasks(owner);
-		dialog.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				taskManager.notifyChange();
-			}
-		});
-		int n = table.getRowCount();
-		String s;
-		for (int i = 0; i < n; i++) {
-			s = (String) table.getValueAt(i, uidCol);
-			if (s != null && s.equals(uid)) {
-				table.setRowSelectionInterval(i, i);
-				table.setEditingColumn(editableCol);
-				table.setEditingRow(i);
-			}
-		}
-		dialog.setVisible(true);
-	}
-
 	void insertRow(Task task) {
 		if (task == null)
 			return;
@@ -122,6 +101,12 @@ class TaskManagerView {
 
 		final JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(owner), "Task Manager", false);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				taskManager.notifyChange();
+				dialog.dispose();
+			}
+		});
 
 		JPanel panel = new JPanel(new BorderLayout(0, 10));
 		panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
