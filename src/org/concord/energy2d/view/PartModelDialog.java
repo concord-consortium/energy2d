@@ -175,7 +175,7 @@ class PartModelDialog extends JDialog {
 				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
 
-				PartModelDialog.this.dispose();
+				dispose();
 
 			}
 		};
@@ -193,7 +193,7 @@ class PartModelDialog extends JDialog {
 		button = new JButton("Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PartModelDialog.this.dispose();
+				dispose();
 			}
 		});
 		buttonPanel.add(button);
@@ -213,7 +213,7 @@ class PartModelDialog extends JDialog {
 		xField = new JTextField(FORMAT.format(part.getCenter().x));
 		xField.addActionListener(okListener);
 		p.add(xField);
-		label = new JLabel("<html><i>m");
+		label = new JLabel("<html><i>m</i></html>");
 		p.add(label);
 
 		label = new JLabel("Center y");
@@ -221,7 +221,7 @@ class PartModelDialog extends JDialog {
 		yField = new JTextField(FORMAT.format(view.model.getLy() - part.getCenter().y));
 		yField.addActionListener(okListener);
 		p.add(yField);
-		label = new JLabel("<html><i>m");
+		label = new JLabel("<html><i>m</i></html>");
 		p.add(label);
 		count++;
 
@@ -232,7 +232,7 @@ class PartModelDialog extends JDialog {
 			wField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getWidth()));
 			wField.addActionListener(okListener);
 			p.add(wField);
-			label = new JLabel("<html><i>m");
+			label = new JLabel("<html><i>m</i></html>");
 			p.add(label);
 
 			label = new JLabel("Height");
@@ -240,7 +240,7 @@ class PartModelDialog extends JDialog {
 			hField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getHeight()));
 			hField.addActionListener(okListener);
 			p.add(hField);
-			label = new JLabel("<html><i>m");
+			label = new JLabel("<html><i>m</i></html>");
 			p.add(label);
 			count++;
 
@@ -312,7 +312,7 @@ class PartModelDialog extends JDialog {
 		temperatureField = new JTextField(FORMAT.format(part.getTemperature()), 16);
 		temperatureField.addActionListener(okListener);
 		p.add(temperatureField);
-		label = new JLabel("<html><i>\u2103");
+		label = new JLabel("<html><i>\u2103</i></html>");
 		p.add(label);
 		count++;
 
@@ -321,7 +321,7 @@ class PartModelDialog extends JDialog {
 		windSpeedField = new JTextField(FORMAT.format(part.getWindSpeed()), 8);
 		windSpeedField.addActionListener(okListener);
 		p.add(windSpeedField);
-		label = new JLabel("<html><i>m/s");
+		label = new JLabel("<html><i>m/s</i></html>");
 		p.add(label);
 		count++;
 
@@ -355,7 +355,7 @@ class PartModelDialog extends JDialog {
 		thermalConductivityField = new JTextField(FORMAT.format(part.getThermalConductivity()), 8);
 		thermalConductivityField.addActionListener(okListener);
 		p.add(thermalConductivityField);
-		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
+		label = new JLabel("<html><i>W/(m\u00b7\u2103)</i></html>");
 		p.add(label);
 		count++;
 
@@ -364,7 +364,7 @@ class PartModelDialog extends JDialog {
 		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
 		specificHeatField.addActionListener(okListener);
 		p.add(specificHeatField);
-		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
+		label = new JLabel("<html><i>J/(kg\u00b7\u2103)</i></html>");
 		p.add(label);
 		count++;
 

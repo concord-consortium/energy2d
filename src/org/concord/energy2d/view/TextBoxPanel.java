@@ -15,8 +15,6 @@ import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -82,6 +80,32 @@ class TextBoxPanel extends JPanel {
 		view = v;
 		storeSettings();
 
+		ActionListener okListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String uid = uidField.getText();
+				if (uid != null && !uid.trim().equals("")) {
+					textBox.setUid(uid.trim());
+				} else {
+					textBox.setUid(null);
+				}
+				textBox.setLabel(textArea.getText());
+				float x = parse(xField.getText());
+				if (Float.isNaN(x))
+					return;
+				textBox.setX(x);
+				float y = parse(yField.getText());
+				if (Float.isNaN(y))
+					return;
+				textBox.setY(y);
+				if (dialog != null) {
+					offset = dialog.getLocationOnScreen();
+					dialog.dispose();
+				}
+				view.repaint();
+				view.notifyManipulationListeners(textBox, ManipulationEvent.OBJECT_ADDED);
+			}
+		};
+
 		textArea = new JTextArea(textBox.getLabel(), 5, 10);
 		textArea.setForeground(textBox.getColor());
 		textArea.setFont(textBox.getFont());
@@ -104,52 +128,19 @@ class TextBoxPanel extends JPanel {
 		JLabel label = new JLabel("Unique ID:");
 		p2.add(label);
 		uidField = new JTextField(textBox.getUid(), 8);
+		uidField.addActionListener(okListener);
 		p2.add(uidField);
 
 		label = new JLabel("X:");
 		p2.add(label);
 		xField = new JTextField(FORMAT.format(t.getX()), 10);
-		xField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				float x = parse(xField.getText());
-				if (Float.isNaN(x))
-					return;
-				textBox.setX(x);
-				view.repaint();
-			}
-		});
-		xField.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				float x = parse(xField.getText());
-				if (Float.isNaN(x))
-					return;
-				textBox.setX(x);
-				view.repaint();
-			}
-		});
+		xField.addActionListener(okListener);
 		p2.add(xField);
 
 		label = new JLabel("Y:");
 		p2.add(label);
 		yField = new JTextField(FORMAT.format(t.getY()), 10);
-		yField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				float y = parse(yField.getText());
-				if (Float.isNaN(y))
-					return;
-				textBox.setY(y);
-				view.repaint();
-			}
-		});
-		yField.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				float y = parse(yField.getText());
-				if (Float.isNaN(y))
-					return;
-				textBox.setY(y);
-				view.repaint();
-			}
-		});
+		yField.addActionListener(okListener);
 		p2.add(yField);
 
 		ActionListener styleListener = new ActionListener() {
@@ -250,31 +241,7 @@ class TextBoxPanel extends JPanel {
 		p.add(new JLabel("Note: HTML is not supported."));
 
 		JButton button = new JButton("OK");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String uid = uidField.getText();
-				if (uid != null && !uid.trim().equals("")) {
-					textBox.setUid(uid.trim());
-				} else {
-					textBox.setUid(null);
-				}
-				textBox.setLabel(textArea.getText());
-				float x = parse(xField.getText());
-				if (Float.isNaN(x))
-					return;
-				textBox.setX(x);
-				float y = parse(yField.getText());
-				if (Float.isNaN(y))
-					return;
-				textBox.setY(y);
-				if (dialog != null) {
-					offset = dialog.getLocationOnScreen();
-					dialog.dispose();
-				}
-				view.repaint();
-				view.notifyManipulationListeners(textBox, ManipulationEvent.OBJECT_ADDED);
-			}
-		});
+		button.addActionListener(okListener);
 		p.add(button);
 
 		button = new JButton("Cancel");

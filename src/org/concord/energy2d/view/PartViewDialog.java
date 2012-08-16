@@ -62,16 +62,12 @@ class PartViewDialog extends JDialog {
 
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				part.setDraggable(draggableCheckBox.isSelected());
 				part.setVisible(visibleCheckBox.isSelected());
-
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
-
-				PartViewDialog.this.dispose();
-
+				dispose();
 			}
 		};
 
@@ -88,7 +84,7 @@ class PartViewDialog extends JDialog {
 		button = new JButton("Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PartViewDialog.this.dispose();
+				dispose();
 			}
 		});
 		buttonPanel.add(button);

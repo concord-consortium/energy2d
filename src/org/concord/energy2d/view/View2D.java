@@ -313,9 +313,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.05f;
 				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.025f;
-				float w = model.getLx() * 0.2f;
-				float h = model.getLx() * 0.1f;
-				setSelectedManipulable(addCloud(x, y, w, h, 0));
+				setSelectedManipulable(addCloud(x, y, model.getLx() * 0.3f, model.getLx() * 0.1f, 0));
 				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
 				repaint();
 			}
@@ -1894,12 +1892,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					return;
 				}
 			}
-			selectManipulable(x, y);
-			if (selectedManipulable != null) {
-				Point2D.Float center = selectedManipulable.getCenter();
-				pressedPointRelative.x = x - convertPointToPixelX(center.x);
-				pressedPointRelative.y = y - convertPointToPixelY(center.y);
-				setMovingShape(false);
+			if (!MiscUtil.isRightClick(e)) {
+				selectManipulable(x, y);
+				if (selectedManipulable != null) {
+					Point2D.Float center = selectedManipulable.getCenter();
+					pressedPointRelative.x = x - convertPointToPixelX(center.x);
+					pressedPointRelative.y = y - convertPointToPixelY(center.y);
+					setMovingShape(false);
+				}
 			}
 			break;
 		case RECTANGLE_MODE:
@@ -2136,70 +2136,73 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (actionMode) {
 		case SELECT_MODE:
 			if (MiscUtil.isRightClick(e)) {
+				selectManipulable(x, y);
 				createPopupMenu();
 				popupMenu.show(this, x, y);
+				repaint();
 				return;
-			}
-			if (movingShape != null && mouseBeingDragged && selectedManipulable != null) {
-				if (selectedManipulable.isDraggable()) {
-					Shape shape = movingShape.getShape();
-					if (shape instanceof RectangularShape) {
-						if (selectedSpot == -1) {
-							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-							translateManipulableTo(selectedManipulable, x2, y2);
-							setSelectedManipulable(selectedManipulable);
-						} else {
-							if (selectedManipulable instanceof Part) {
-								RectangularShape r = (RectangularShape) shape;
-								float x2 = convertPixelToPointX((int) r.getX());
-								float y2 = convertPixelToPointY((int) r.getY());
-								float w2 = convertPixelToLengthX((int) r.getWidth());
-								float h2 = convertPixelToLengthY((int) r.getHeight());
-								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, 0, 0);
+			} else {
+				if (movingShape != null && mouseBeingDragged && selectedManipulable != null) {
+					if (selectedManipulable.isDraggable()) {
+						Shape shape = movingShape.getShape();
+						if (shape instanceof RectangularShape) {
+							if (selectedSpot == -1) {
+								float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+								float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+								translateManipulableTo(selectedManipulable, x2, y2);
 								setSelectedManipulable(selectedManipulable);
-							}
-						}
-					} else if (shape instanceof Polygon) {
-						if (selectedSpot == -1) {
-							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-							translateManipulableTo(selectedManipulable, x2, y2);
-							setSelectedManipulable(selectedManipulable);
-						} else {
-							Shape s = selectedManipulable.getShape();
-							if (s instanceof Polygon2D) {
-								Polygon2D p = (Polygon2D) s;
-								Polygon p0 = (Polygon) shape;
-								int n = p0.npoints;
-								for (int i = 0; i < n; i++) {
-									p.setVertex(i, convertPixelToPointX(p0.xpoints[i]), convertPixelToPointY(p0.ypoints[i]));
+							} else {
+								if (selectedManipulable instanceof Part) {
+									RectangularShape r = (RectangularShape) shape;
+									float x2 = convertPixelToPointX((int) r.getX());
+									float y2 = convertPixelToPointY((int) r.getY());
+									float w2 = convertPixelToLengthX((int) r.getWidth());
+									float h2 = convertPixelToLengthY((int) r.getHeight());
+									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, 0, 0);
+									setSelectedManipulable(selectedManipulable);
 								}
+							}
+						} else if (shape instanceof Polygon) {
+							if (selectedSpot == -1) {
+								float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+								float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+								translateManipulableTo(selectedManipulable, x2, y2);
 								setSelectedManipulable(selectedManipulable);
-								notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
+							} else {
+								Shape s = selectedManipulable.getShape();
+								if (s instanceof Polygon2D) {
+									Polygon2D p = (Polygon2D) s;
+									Polygon p0 = (Polygon) shape;
+									int n = p0.npoints;
+									for (int i = 0; i < n; i++) {
+										p.setVertex(i, convertPixelToPointX(p0.xpoints[i]), convertPixelToPointY(p0.ypoints[i]));
+									}
+									setSelectedManipulable(selectedManipulable);
+									notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
+								}
+							}
+						} else if (shape instanceof Area) {
+							if (selectedSpot == -1) {
+								float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+								float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+								translateManipulableTo(selectedManipulable, x2, y2);
+								setSelectedManipulable(selectedManipulable);
+							} else {
+								if (selectedManipulable instanceof Cloud && movingShape instanceof MovingCloud) {
+									Rectangle2D r = shape.getBounds2D();
+									float x2 = convertPixelToPointX((int) r.getX());
+									float y2 = convertPixelToPointY((int) r.getY());
+									float w2 = convertPixelToLengthX((int) r.getWidth());
+									float h2 = convertPixelToLengthY((int) r.getHeight());
+									Point p = ((MovingCloud) movingShape).getLocation();
+									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
+									setSelectedManipulable(selectedManipulable);
+								}
 							}
 						}
-					} else if (shape instanceof Area) {
-						if (selectedSpot == -1) {
-							float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
-							float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
-							translateManipulableTo(selectedManipulable, x2, y2);
-							setSelectedManipulable(selectedManipulable);
-						} else {
-							if (selectedManipulable instanceof Cloud && movingShape instanceof MovingCloud) {
-								Rectangle2D r = shape.getBounds2D();
-								float x2 = convertPixelToPointX((int) r.getX());
-								float y2 = convertPixelToPointY((int) r.getY());
-								float w2 = convertPixelToLengthX((int) r.getWidth());
-								float h2 = convertPixelToLengthY((int) r.getHeight());
-								Point p = ((MovingCloud) movingShape).getLocation();
-								resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
-								setSelectedManipulable(selectedManipulable);
-							}
-						}
+					} else {
+						showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 					}
-				} else {
-					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
 			}
 			break;

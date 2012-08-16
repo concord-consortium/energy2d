@@ -241,7 +241,7 @@ class ModelDialog extends JDialog {
 				view.repaint();
 
 				if (!(e.getSource() instanceof JComboBox))
-					ModelDialog.this.dispose();
+					dispose();
 
 				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 
@@ -269,7 +269,7 @@ class ModelDialog extends JDialog {
 		button = new JButton("Cancel");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ModelDialog.this.dispose();
+				dispose();
 			}
 		});
 		buttonPanel.add(button);
@@ -328,7 +328,7 @@ class ModelDialog extends JDialog {
 		wField = new JTextField(FORMAT.format(model.getLx()), 8);
 		wField.addActionListener(okListener);
 		p.add(wField);
-		label = new JLabel("<html><i>m");
+		label = new JLabel("<html><i>m</i></html>");
 		p.add(label);
 		count++;
 
@@ -337,7 +337,7 @@ class ModelDialog extends JDialog {
 		steplengthField = new JTextField(FORMAT.format(model.getTimeStep()), 8);
 		steplengthField.addActionListener(okListener);
 		p.add(steplengthField);
-		label = new JLabel("<html><i>s");
+		label = new JLabel("<html><i>s</i></html>");
 		p.add(label);
 
 		label = new JLabel("Height");
@@ -345,7 +345,7 @@ class ModelDialog extends JDialog {
 		hField = new JTextField(FORMAT.format(model.getLy()), 8);
 		hField.addActionListener(okListener);
 		p.add(hField);
-		label = new JLabel("<html><i>m");
+		label = new JLabel("<html><i>m</i></html>");
 		p.add(label);
 		count++;
 
@@ -386,7 +386,7 @@ class ModelDialog extends JDialog {
 		bgTemperatureField = new JTextField(FORMAT.format(model.getBackgroundTemperature()), 16);
 		bgTemperatureField.addActionListener(okListener);
 		p.add(bgTemperatureField);
-		label = new JLabel("<html><i>\u2103");
+		label = new JLabel("<html><i>\u2103</i></html>");
 		p.add(label);
 		count++;
 
@@ -395,7 +395,7 @@ class ModelDialog extends JDialog {
 		conductivityField = new JTextField(FORMAT.format(model.getBackgroundConductivity()), 16);
 		conductivityField.addActionListener(okListener);
 		p.add(conductivityField);
-		label = new JLabel("<html><i>W/(m\u00b7\u2103)");
+		label = new JLabel("<html><i>W/(m\u00b7\u2103)</i></html>");
 		p.add(label);
 		count++;
 
@@ -404,7 +404,7 @@ class ModelDialog extends JDialog {
 		capacityField = new JTextField(FORMAT.format(model.getBackgroundSpecificHeat()), 16);
 		capacityField.addActionListener(okListener);
 		p.add(capacityField);
-		label = new JLabel("<html><i>J/(kg\u00b7\u2103)");
+		label = new JLabel("<html><i>J/(kg\u00b7\u2103)</i></html>");
 		p.add(label);
 		count++;
 
@@ -487,7 +487,7 @@ class ModelDialog extends JDialog {
 		raySpeedField.setEnabled(model.isSunny());
 		raySpeedField.addActionListener(okListener);
 		p.add(raySpeedField);
-		label = new JLabel("<html><i>m/s");
+		label = new JLabel("<html><i>m/s</i></html>");
 		p.add(label);
 		count++;
 
@@ -725,10 +725,10 @@ class ModelDialog extends JDialog {
 			rightThermalBoundaryLabel.setText("Right boundary temperature");
 			upperThermalBoundaryLabel.setText("Upper boundary temperature");
 			lowerThermalBoundaryLabel.setText("Lower boundary temperature");
-			leftThermalBoundaryLabel2.setText("<html><i>\u2103  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			rightThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			upperThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-			lowerThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			leftThermalBoundaryLabel2.setText("<html><i>\u2103  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></html>");
+			rightThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></html>");
+			upperThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></html>");
+			lowerThermalBoundaryLabel2.setText("<html><i>\u2103 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></html>");
 		} else if (heatBoundary instanceof NeumannThermalBoundary) {
 			enableBoundaryFieldsAndLabels(true);
 			NeumannThermalBoundary b = (NeumannThermalBoundary) heatBoundary;
@@ -740,10 +740,10 @@ class ModelDialog extends JDialog {
 			rightThermalBoundaryLabel.setText("Right boundary heat flux");
 			upperThermalBoundaryLabel.setText("Upper boundary heat flux");
 			lowerThermalBoundaryLabel.setText("Lower boundary heat flux");
-			leftThermalBoundaryLabel2.setText("<html><i>\u2103/m");
-			rightThermalBoundaryLabel2.setText("<html><i>\u2103/m");
-			upperThermalBoundaryLabel2.setText("<html><i>\u2103/m");
-			lowerThermalBoundaryLabel2.setText("<html><i>\u2103/m");
+			leftThermalBoundaryLabel2.setText("<html><i>\u2103/m</i></html>");
+			rightThermalBoundaryLabel2.setText("<html><i>\u2103/m</i></html>");
+			upperThermalBoundaryLabel2.setText("<html><i>\u2103/m</i></html>");
+			lowerThermalBoundaryLabel2.setText("<html><i>\u2103/m</i></html>");
 		} else {
 			enableBoundaryFieldsAndLabels(false);
 		}
