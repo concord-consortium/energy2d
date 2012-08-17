@@ -10,9 +10,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Stroke;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
 
@@ -21,7 +23,7 @@ import javax.swing.Icon;
  * 
  */
 
-abstract class Symbol implements Icon {
+public abstract class Symbol implements Icon {
 
 	int w = 8, h = 8;
 	Color color = Color.white;
@@ -71,6 +73,17 @@ abstract class Symbol implements Icon {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public Image createImage(Component c) {
+		BufferedImage image = new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = image.createGraphics();
+		try {
+			paintIcon(c, g, 0, 0);
+			return image;
+		} finally {
+			g.dispose();
+		}
 	}
 
 	public final static Symbol get(String s) {

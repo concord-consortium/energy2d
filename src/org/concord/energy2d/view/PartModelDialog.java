@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -56,7 +57,7 @@ class PartModelDialog extends JDialog {
 	private JTextField reflectionField;
 	private JTextField transmissionField;
 	private JTextField emissivityField;
-	private JTextField xField, yField, wField, hField;
+	private JTextField xField, yField, wField, hField, angleField;
 	private JTextField uidField;
 	private JTextField labelField;
 	private JRadioButton notHeatSourceRadioButton;
@@ -150,6 +151,12 @@ class PartModelDialog extends JDialog {
 					if (Float.isNaN(height))
 						return;
 				}
+				float degree = Float.NaN;
+				if (angleField != null) {
+					degree = parse(angleField.getText());
+					if (Float.isNaN(degree))
+						return;
+				}
 				String uid = uidField.getText();
 				if (uid != null) {
 					uid = uid.trim();
@@ -179,6 +186,10 @@ class PartModelDialog extends JDialog {
 				if (shape instanceof RectangularShape) {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
 						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height, 0, 0);
+					}
+				} else if (shape instanceof Polygon2D) {
+					if (!Float.isNaN(degree)) {
+						((Polygon2D) part.getShape()).rotateBy(degree);
 					}
 				}
 
@@ -267,6 +278,18 @@ class PartModelDialog extends JDialog {
 			p.add(label);
 			count++;
 
+		} else if (part.getShape() instanceof Polygon2D) {
+			label = new JLabel("Rotate");
+			p.add(label);
+			angleField = new JTextField("0");
+			angleField.addActionListener(okListener);
+			p.add(angleField);
+			label = new JLabel("<html>&deg;</html>");
+			p.add(label);
+			p.add(new JLabel());
+			p.add(new JLabel());
+			p.add(new JLabel());
+			count++;
 		}
 
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);

@@ -27,8 +27,7 @@ public class Polygon2D implements Shape {
 	/** the coordinates of the vertices of this polygon. */
 	public Polygon2D(float[] x, float[] y) {
 		if (x.length != y.length)
-			throw new IllegalArgumentException(
-					"the number of x coodinates must be equal to that of the y coordinates.");
+			throw new IllegalArgumentException("the number of x coodinates must be equal to that of the y coordinates.");
 		if (x.length < 3)
 			throw new IllegalArgumentException("the number of vertices must be no less than 3.");
 		vertex = new Point2D.Float[x.length];
@@ -82,6 +81,23 @@ public class Polygon2D implements Shape {
 		}
 	}
 
+	public void rotateBy(float degree) {
+		Rectangle2D r = path.getBounds2D();
+		double cx = r.getCenterX();
+		double cy = r.getCenterY();
+		double a = Math.toRadians(degree);
+		double sin = Math.sin(a);
+		double cos = Math.cos(a);
+		double dx = 0;
+		double dy = 0;
+		for (int i = 0; i < vertex.length; i++) {
+			dx = vertex[i].x - cx;
+			dy = vertex[i].y - cy;
+			vertex[i].x = (float) (dx * cos - dy * sin + cx);
+			vertex[i].y = (float) (dx * sin + dy * cos + cy);
+		}
+	}
+
 	public boolean contains(Point2D p) {
 		return contains(p.getX(), p.getY());
 	}
@@ -94,6 +110,11 @@ public class Polygon2D implements Shape {
 	public boolean contains(double x, double y) {
 		updatePath();
 		return path.contains(x, y);
+	}
+
+	public Point2D.Float getBoundCenter() {
+		Rectangle2D r = path.getBounds2D();
+		return new Point2D.Float((float) r.getCenterX(), (float) r.getCenterY());
 	}
 
 	public Point2D.Float getCenter() {
