@@ -327,6 +327,15 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		return view;
 	}
 
+	private void setSaved(boolean b) {
+		saved = b;
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				setFrameTitle();
+			}
+		});
+	}
+
 	void saveApplet(File file) {
 		new AppletConverter(this).write(file);
 	}
@@ -339,7 +348,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	private void loadState(Reader reader) throws IOException {
-		saved = true;
+		setSaved(true);
 		stop();
 		if (reader == null)
 			return;
@@ -366,7 +375,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void loadState(InputStream is) throws IOException {
-		saved = true;
+		setSaved(true);
 		stop();
 		if (is == null)
 			return;
@@ -399,7 +408,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		} finally {
 			writer.close();
 		}
-		saved = true;
+		setSaved(true);
 	}
 
 	public void saveState(OutputStream os) throws IOException {
@@ -416,7 +425,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		} finally {
 			os.close();
 		}
-		saved = true;
+		setSaved(true);
 	}
 
 	private void updateStatus(final String status) {
@@ -570,7 +579,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		if (scripter == null)
 			scripter = new Scripter2D(this);
 		scripter.executeScript(script);
-		saved = false;
+		setSaved(false);
 		return null;
 	}
 
@@ -594,19 +603,19 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			view.repaint();
 			break;
 		case ManipulationEvent.PROPERTY_CHANGE:
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.TRANSLATE:
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.RESIZE:
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.OBJECT_ADDED:
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.SENSOR_ADDED:
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.DELETE:
 			if (target instanceof Part)
@@ -617,7 +626,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				view.removeTextBox((TextBox) target);
 			else if (target instanceof Cloud)
 				view.removeCloud((Cloud) target);
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.RUN:
 			if (clickRun != null) {
@@ -650,19 +659,19 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		case ManipulationEvent.SUN_SHINE:
 			model.setSunny(!model.isSunny());
 			model.refreshPowerArray();
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.SUN_ANGLE_INCREASE:
 			float a = model.getSunAngle() + (float) Math.PI / 18;
 			model.setSunAngle(Math.min(a, (float) Math.PI));
 			model.refreshPowerArray();
-			saved = false;
+			setSaved(false);
 			break;
 		case ManipulationEvent.SUN_ANGLE_DECREASE:
 			a = model.getSunAngle() - (float) Math.PI / 18;
 			model.setSunAngle(Math.max(a, 0));
 			model.refreshPowerArray();
-			saved = false;
+			setSaved(false);
 			break;
 		}
 		if (target instanceof Part) {
@@ -672,7 +681,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			model.refreshTemperatureBoundaryArray();
 			if (p.getEmissivity() > 0)
 				model.getPhotons().clear();
-			saved = false;
+			setSaved(false);
 		}
 		view.repaint();
 	}
@@ -785,7 +794,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		if (owner == null)
 			return;
 		if (currentFile != null) {
-			owner.setTitle(BRAND_NAME + ": " + currentFile);
+			owner.setTitle(BRAND_NAME + ": " + currentFile + (saved ? "" : " *"));
 		} else if (currentModel != null) {
 			owner.setTitle(BRAND_NAME + ": " + currentModel);
 		} else if (currentURL != null) {
