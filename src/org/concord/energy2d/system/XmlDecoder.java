@@ -17,6 +17,7 @@ import org.concord.energy2d.model.NeumannThermalBoundary;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
+import org.concord.energy2d.model.Tree;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.Scripter;
 import org.concord.energy2d.util.Texture;
@@ -499,6 +500,44 @@ class XmlDecoder extends DefaultHandler {
 					c.setLabel(label);
 					c.setColor(color);
 					box.model.addCloud(c);
+				}
+			}
+		} else if (qName == "tree") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
+				byte type = Tree.REGULAR;
+				String label = null, uid = null;
+				Color color = Color.white;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "width") {
+						w = Float.parseFloat(attribValue);
+					} else if (attribName == "height") {
+						h = Float.parseFloat(attribValue);
+					} else if (attribName == "type") {
+						type = Byte.parseByte(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "label") {
+						label = attribValue;
+					} else if (attribName == "color") {
+						color = new Color(Integer.parseInt(attribValue, 16));
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h)) {
+					Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h));
+					t.setX(x);
+					t.setY(y);
+					t.setType(type);
+					t.setUid(uid);
+					t.setLabel(label);
+					t.setColor(color);
+					box.model.addTree(t);
 				}
 			}
 		} else if (qName == "text") {

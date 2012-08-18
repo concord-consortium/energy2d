@@ -81,6 +81,7 @@ public class Model2D {
 	private List<Part> parts;
 	private List<Photon> photons;
 	private List<Cloud> clouds;
+	private List<Tree> trees;
 
 	private RaySolver2D raySolver;
 	private FluidSolver2D fluidSolver;
@@ -155,6 +156,7 @@ public class Model2D {
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
+		trees = Collections.synchronizedList(new ArrayList<Tree>());
 
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -318,6 +320,19 @@ public class Model2D {
 		return clouds;
 	}
 
+	public void addTree(Tree t) {
+		if (t != null)
+			trees.add(t);
+	}
+
+	public void removeTree(Tree t) {
+		trees.remove(t);
+	}
+
+	public List<Tree> getTrees() {
+		return trees;
+	}
+
 	private void setGridCellSize() {
 		heatSolver.setGridCellSize(deltaX, deltaY);
 		fluidSolver.setGridCellSize(deltaX, deltaY);
@@ -347,15 +362,14 @@ public class Model2D {
 	}
 
 	public void translateAllBy(float dx, float dy) {
-		for (Thermometer t : thermometers) {
+		for (Thermometer t : thermometers)
 			t.translateBy(dx, dy);
-		}
-		for (Cloud c : clouds) {
+		for (Cloud c : clouds)
 			c.translateBy(dx, dy);
-		}
-		for (Part p : parts) {
+		for (Tree t : trees)
+			t.translateBy(dx, dy);
+		for (Part p : parts)
 			p.translateBy(dx, dy);
-		}
 	}
 
 	public ThermalBoundary getThermalBoundary() {
@@ -790,6 +804,7 @@ public class Model2D {
 		thermometers.clear();
 		thermostats.clear();
 		clouds.clear();
+		trees.clear();
 		maximumHeatCapacity = -1;
 	}
 

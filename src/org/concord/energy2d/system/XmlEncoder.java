@@ -9,6 +9,7 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
+import org.concord.energy2d.model.Tree;
 import org.concord.energy2d.view.View2D;
 
 /**
@@ -114,6 +115,12 @@ class XmlEncoder {
 		if (clouds != null) {
 			for (Cloud c : clouds) {
 				sb.append(c.toXml() + "\n");
+			}
+		}
+		List<Tree> trees = box.model.getTrees();
+		if (trees != null) {
+			for (Tree t : trees) {
+				sb.append(t.toXml() + "\n");
 			}
 		}
 		sb.append("</environment>\n");

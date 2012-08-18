@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -74,6 +75,12 @@ public class Cloud extends Manipulable {
 	public void setLocation(float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	@Override
+	public Point2D.Float getCenter() {
+		Rectangle2D bound = getShape().getBounds2D();
+		return new Point2D.Float((float) bound.getCenterX() + x, (float) bound.getCenterY() + y);
 	}
 
 	@Override

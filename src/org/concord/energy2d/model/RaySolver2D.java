@@ -125,10 +125,20 @@ class RaySolver2D {
 						}
 					}
 				}
-				if (!model.getClouds().isEmpty()) { // the rule is that light is absorbed by clouds
+				if (!model.getClouds().isEmpty()) { // the rule is that clouds absorb light
 					synchronized (model.getClouds()) {
 						for (Cloud c : model.getClouds()) {
 							if (c.contains(p.getX(), p.getY())) {
+								remove = true;
+								break;
+							}
+						}
+					}
+				}
+				if (!model.getTrees().isEmpty()) { // the rule is that trees absorb light
+					synchronized (model.getTrees()) {
+						for (Tree t : model.getTrees()) {
+							if (t.contains(p.getX(), p.getY())) {
 								remove = true;
 								break;
 							}

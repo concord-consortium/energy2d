@@ -58,10 +58,6 @@ public abstract class Manipulable {
 	}
 
 	public Point2D.Float getCenter() {
-		if (this instanceof Cloud) {
-			Cloud c = (Cloud) this;
-			return new Point2D.Float((float) shape.getBounds2D().getCenterX() + c.getX(), (float) shape.getBounds2D().getCenterY() + c.getY());
-		}
 		if (shape instanceof Polygon2D)
 			return ((Polygon2D) shape).getCenter();
 		return new Point2D.Float((float) shape.getBounds2D().getCenterX(), (float) shape.getBounds2D().getCenterY());

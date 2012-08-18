@@ -15,6 +15,7 @@ import java.awt.geom.RectangularShape;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Manipulable;
+import org.concord.energy2d.model.Tree;
 
 import static org.concord.energy2d.view.View2D.BOTTOM;
 import static org.concord.energy2d.view.View2D.LEFT;
@@ -66,6 +67,14 @@ class HandleSetter {
 				Rectangle2D.Double bound = new Rectangle2D.Double();
 				bound.x = s.getBounds2D().getX() + c.getX();
 				bound.y = s.getBounds2D().getY() + c.getY();
+				bound.width = s.getBounds2D().getWidth();
+				bound.height = s.getBounds2D().getHeight();
+				setRectHandles(view, bound, handle, h);
+			} else if (m instanceof Tree) {
+				Tree t = (Tree) m;
+				Rectangle2D.Double bound = new Rectangle2D.Double();
+				bound.x = s.getBounds2D().getX() + t.getX();
+				bound.y = s.getBounds2D().getY() + t.getY();
 				bound.width = s.getBounds2D().getWidth();
 				bound.height = s.getBounds2D().getHeight();
 				setRectHandles(view, bound, handle, h);

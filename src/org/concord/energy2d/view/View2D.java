@@ -70,6 +70,7 @@ import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
+import org.concord.energy2d.model.Tree;
 import org.concord.energy2d.system.Helper;
 import org.concord.energy2d.util.ColorFill;
 import org.concord.energy2d.util.ContourMap;
@@ -324,6 +325,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.025f;
+				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.05f;
+				setSelectedManipulable(addTree(x, y, model.getLx() * 0.1f, model.getLx() * 0.2f, Tree.PINE));
+				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Tree");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a tree where the mouse last clicked");
+		getActionMap().put("Insert Tree", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
 				setSelectedManipulable(addThermometer(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f));
 				notifyManipulationListeners(null, ManipulationEvent.SENSOR_ADDED);
 				repaint();
@@ -484,6 +498,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void removeCloud(Cloud c) {
 		model.removeCloud(c);
+		repaint();
+	}
+
+	public Tree addTree(float x, float y, float w, float h, byte type) {
+		Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h));
+		t.setX(x);
+		t.setY(y);
+		t.setType(type);
+		model.addTree(t);
+		return t;
+	}
+
+	public void removeTree(Tree t) {
+		model.removeTree(t);
 		repaint();
 	}
 
@@ -842,6 +870,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			addTextBox((TextBox) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), model.getLy() - convertPixelToPointY(mouseReleasedPoint.y)));
 		} else if (copiedManipulable instanceof Cloud) {
 			model.addCloud((Cloud) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)));
+		} else if (copiedManipulable instanceof Tree) {
+			model.addTree((Tree) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)));
 		}
 		notifyManipulationListeners(copiedManipulable, ManipulationEvent.PROPERTY_CHANGE);
 		repaint();
@@ -979,6 +1009,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		drawParts(g);
 		drawClouds(g);
+		drawTrees(g);
 		drawTextBoxes(g);
 		drawPictures(g);
 		if (isotherms != null) {
@@ -1188,6 +1219,35 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					g.setFont(labelFont);
 					g.setColor(getContrastColor((int) r.getCenterX(), (int) r.getCenterY()));
 					String label = c.getLabel();
+					FontMetrics fm = g.getFontMetrics();
+					g.drawString(label, (int) r.getCenterX() - fm.stringWidth(label) / 2, (int) r.getCenterY() + fm.getHeight());
+				}
+			}
+		}
+	}
+
+	private void drawTrees(Graphics2D g) {
+		if (model.getTrees().isEmpty())
+			return;
+		g.setStroke(thickStroke);
+		Rectangle2D.Float r = new Rectangle2D.Float();
+		synchronized (model.getTrees()) {
+			for (Tree t : model.getTrees()) {
+				r.x = convertPointToPixelX(t.getX());
+				r.y = convertPointToPixelY(t.getY());
+				r.width = convertLengthToPixelX(t.getWidth());
+				r.height = convertLengthToPixelY(t.getHeight());
+				Area a = Tree.getShape(r, t.getType());
+				g.setColor(t.getColor());
+				g.fill(a);
+				g.setColor(selectedManipulable == t ? Color.yellow : Color.gray);
+				g.draw(a);
+				if (t == selectedManipulable)
+					HandleSetter.setRects(this, selectedManipulable, handle);
+				if (t.getLabel() != null) {
+					g.setFont(labelFont);
+					g.setColor(getContrastColor((int) r.getCenterX(), (int) r.getCenterY()));
+					String label = t.getLabel();
 					FontMetrics fm = g.getFontMetrics();
 					g.drawString(label, (int) r.getCenterX() - fm.stringWidth(label) / 2, (int) r.getCenterY() + fm.getHeight());
 				}
@@ -1632,6 +1692,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
+		if (!model.getTrees().isEmpty()) {
+			synchronized (model.getTrees()) {
+				for (Tree t : model.getTrees()) {
+					if (t.contains(rx, ry)) {
+						setSelectedManipulable(t);
+						return;
+					}
+				}
+			}
+		}
 		if (!textBoxes.isEmpty()) {
 			synchronized (textBoxes) {
 				for (TextBox t : textBoxes) {
@@ -1706,6 +1776,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud) {
 				((Cloud) m).translateBy(dx, dy);
+			} else if (m instanceof Tree) {
+				((Tree) m).translateBy(dx, dy);
 			}
 		} else if (s instanceof Polygon2D) {
 			((Polygon2D) s).translateBy(dx, dy);
@@ -1728,6 +1800,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud)
 				((Cloud) m).setLocation((float) (x - s.getBounds2D().getCenterX()), (float) (y - s.getBounds2D().getCenterY()));
+			else if (m instanceof Tree)
+				((Tree) m).setLocation((float) (x - s.getBounds2D().getCenterX()), (float) (y - s.getBounds2D().getCenterY()));
 		} else if (s instanceof Polygon2D) {
 			Shape shape = movingShape.getShape();
 			if (shape instanceof Polygon) {
@@ -1762,6 +1836,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				c.setDimension(w, h);
 				c.setX(x0 + x);
 				c.setY(y0 + y);
+			} else if (m instanceof Tree) {
+				Tree t = (Tree) m;
+				t.setDimension(w, h);
+				t.setX(x0 + x);
+				t.setY(y0 + y);
 			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.RESIZE);
@@ -1971,39 +2050,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							y = getHeight() - 8;
 					}
 					RectangularShape s = (RectangularShape) shape;
-					double a = s.getX(), b = s.getY(), c = s.getWidth(), d = s.getHeight();
+					float[] a = new float[] { (float) s.getX(), (float) s.getY(), (float) s.getWidth(), (float) s.getHeight() };
 					if (selectedSpot == -1) {
 						// x+width/2+pressedPointRelative.x=mouse_x
-						a = x - pressedPointRelative.x - c * 0.5;
-						b = y - pressedPointRelative.y - d * 0.5;
+						a[0] = x - pressedPointRelative.x - a[2] * 0.5f;
+						a[1] = y - pressedPointRelative.y - a[3] * 0.5f;
 						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
-							switch (selectedSpot) {
-							case LOWER_LEFT:
-							case LOWER_RIGHT:
-							case UPPER_LEFT:
-							case UPPER_RIGHT:
-								a = Math.min(x, anchorPoint.x);
-								b = Math.min(y, anchorPoint.y);
-								c = Math.abs(x - anchorPoint.x);
-								d = Math.abs(y - anchorPoint.y);
-								break;
-							case TOP:
-							case BOTTOM:
-								b = Math.min(y, anchorPoint.y);
-								d = Math.abs(y - anchorPoint.y);
-								break;
-							case LEFT:
-							case RIGHT:
-								a = Math.min(x, anchorPoint.x);
-								c = Math.abs(x - anchorPoint.x);
-								break;
-							}
+							setMovingRect(a, x, y);
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
-					s.setFrame(a, b, c, d);
+					s.setFrame(a[0], a[1], a[2], a[3]);
 				} else if (shape instanceof Polygon) {
 					Polygon s = (Polygon) shape;
 					if (selectedSpot == -1) {
@@ -2035,29 +2094,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
 							mc.setLocation(xc, yc);
 						} else {
-							double a = r.getX() + mc.getX(), b = r.getY() + mc.getY(), c = r.getWidth(), d = r.getHeight();
-							switch (selectedSpot) {
-							case LOWER_LEFT:
-							case LOWER_RIGHT:
-							case UPPER_LEFT:
-							case UPPER_RIGHT:
-								a = Math.min(x, anchorPoint.x);
-								b = Math.min(y, anchorPoint.y);
-								c = Math.abs(x - anchorPoint.x);
-								d = Math.abs(y - anchorPoint.y);
-								break;
-							case TOP:
-							case BOTTOM:
-								b = Math.min(y, anchorPoint.y);
-								d = Math.abs(y - anchorPoint.y);
-								break;
-							case LEFT:
-							case RIGHT:
-								a = Math.min(x, anchorPoint.x);
-								c = Math.abs(x - anchorPoint.x);
-								break;
-							}
-							movingShape = new MovingCloud(new Rectangle2D.Float((float) a, (float) b, (float) c, (float) d));
+							float[] a = new float[] { (float) r.getX() + mc.getX(), (float) r.getY() + mc.getY(), (float) r.getWidth(), (float) r.getHeight() };
+							movingShape = new MovingCloud(setMovingRect(a, x, y));
+							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+						}
+					} else if (selectedManipulable instanceof Tree && movingShape instanceof MovingTree) {
+						MovingTree mt = (MovingTree) movingShape;
+						Rectangle r = mt.getShape().getBounds();
+						if (selectedSpot == -1) {
+							int xc = (int) (x - pressedPointRelative.x - r.getCenterX());
+							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
+							mt.setLocation(xc, yc);
+						} else {
+							float[] a = new float[] { (float) r.getX() + mt.getX(), (float) r.getY() + mt.getY(), (float) r.getWidth(), (float) r.getHeight() };
+							movingShape = new MovingTree(setMovingRect(a, x, y), ((Tree) selectedManipulable).getType());
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
@@ -2106,6 +2156,31 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (!model.isRunning())
 			repaint();
 		e.consume();
+	}
+
+	private Rectangle2D.Float setMovingRect(float[] a, int x, int y) {
+		switch (selectedSpot) {
+		case LOWER_LEFT:
+		case LOWER_RIGHT:
+		case UPPER_LEFT:
+		case UPPER_RIGHT:
+			a[0] = Math.min(x, anchorPoint.x);
+			a[1] = Math.min(y, anchorPoint.y);
+			a[2] = Math.abs(x - anchorPoint.x);
+			a[3] = Math.abs(y - anchorPoint.y);
+			break;
+		case TOP:
+		case BOTTOM:
+			a[1] = Math.min(y, anchorPoint.y);
+			a[3] = Math.abs(y - anchorPoint.y);
+			break;
+		case LEFT:
+		case RIGHT:
+			a[0] = Math.min(x, anchorPoint.x);
+			a[2] = Math.abs(x - anchorPoint.x);
+			break;
+		}
+		return new Rectangle2D.Float(a[0], a[1], a[2], a[3]);
 	}
 
 	private void processMouseReleased(MouseEvent e) {
@@ -2195,6 +2270,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 									float w2 = convertPixelToLengthX((int) r.getWidth());
 									float h2 = convertPixelToLengthY((int) r.getHeight());
 									Point p = ((MovingCloud) movingShape).getLocation();
+									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
+									setSelectedManipulable(selectedManipulable);
+								} else if (selectedManipulable instanceof Tree && movingShape instanceof MovingTree) {
+									Rectangle2D r = shape.getBounds2D();
+									float x2 = convertPixelToPointX((int) r.getX());
+									float y2 = convertPixelToPointY((int) r.getY());
+									float w2 = convertPixelToLengthX((int) r.getWidth());
+									float h2 = convertPixelToLengthY((int) r.getHeight());
+									Point p = ((MovingTree) movingShape).getLocation();
 									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
 									setSelectedManipulable(selectedManipulable);
 								}
@@ -2320,7 +2404,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (actionMode) {
 		case SELECT_MODE:
 			int iSpot = -1;
-			if (!showGraph && (selectedManipulable instanceof Part) || (selectedManipulable instanceof Cloud)) {
+			if (!showGraph && (selectedManipulable instanceof Part || selectedManipulable instanceof Cloud || selectedManipulable instanceof Tree)) {
 				for (int i = 0; i < handle.length; i++) {
 					if (handle[i].x < -10 || handle[i].y < -10)
 						continue;
@@ -2394,6 +2478,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 								if (c.contains(rx, ry)) {
 									contained = true;
 									draggable = c.isDraggable();
+									break;
+								}
+							}
+						}
+						if (!draggable)
+							contained = false;
+					}
+					if (!contained) {
+						synchronized (model.getTrees()) {
+							for (Tree t : model.getTrees()) {
+								if (t.contains(rx, ry)) {
+									contained = true;
+									draggable = t.isDraggable();
 									break;
 								}
 							}
@@ -2508,6 +2605,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				setAnchorPointForRectangularShape(selectedSpot, x, y, r.width, r.height);
 			movingShape = new MovingCloud(r);
 			((MovingCloud) movingShape).setLocation(x, y);
+		} else if (selectedManipulable instanceof Tree) {
+			Tree tree = (Tree) selectedManipulable;
+			Rectangle2D.Float r = new Rectangle2D.Float();
+			int x = convertPointToPixelX(tree.getX());
+			int y = convertPointToPixelY(tree.getY());
+			r.width = convertLengthToPixelX(tree.getWidth());
+			r.height = convertLengthToPixelY(tree.getHeight());
+			if (anchor)
+				setAnchorPointForRectangularShape(selectedSpot, x, y, r.width, r.height);
+			movingShape = new MovingTree(r, ((Tree) selectedManipulable).getType());
+			((MovingTree) movingShape).setLocation(x, y);
 		}
 	}
 

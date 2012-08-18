@@ -7,16 +7,16 @@ package org.concord.energy2d.view;
 
 import java.awt.geom.Rectangle2D;
 
-import org.concord.energy2d.model.Cloud;
+import org.concord.energy2d.model.Tree;
 
 /**
  * @author Charles Xie
  * 
  */
-class MovingCloud extends ComplexMovingShape {
+class MovingTree extends ComplexMovingShape {
 
-	MovingCloud(Rectangle2D.Float boundingBox) {
-		area = Cloud.getShape(boundingBox);
+	MovingTree(Rectangle2D.Float boundingBox, byte type) {
+		area = Tree.getShape(boundingBox, type);
 	}
 
 }
