@@ -160,6 +160,10 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	}
 
+	public void addTask(Task t) {
+		taskManager.add(t);
+	}
+
 	private void createTasks() {
 
 		repaint = new Task(20) {
@@ -171,7 +175,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		};
 		repaint.setUid("REPAINT");
 		repaint.setDescription("Refresh the view.");
-		taskManager.add(repaint);
+		addTask(repaint);
 
 		measure = new Task(100) {
 			@Override
@@ -181,7 +185,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		};
 		measure.setUid("MEASURE");
 		measure.setDescription("Take the measurements from the sensors.");
-		taskManager.add(measure);
+		addTask(measure);
 
 		control = new Task(100) {
 			@Override
@@ -191,7 +195,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		};
 		control.setUid("CONTROL");
 		control.setDescription("Invoke the controllers (e.g., thermostats).");
-		taskManager.add(control);
+		addTask(control);
 
 		taskManager.processPendingRequests();
 

@@ -75,9 +75,9 @@ public class Polygon2D implements Shape {
 	}
 
 	public void translateBy(float dx, float dy) {
-		for (int i = 0; i < vertex.length; i++) {
-			vertex[i].x += dx;
-			vertex[i].y += dy;
+		for (Point2D.Float p : vertex) {
+			p.x += dx;
+			p.y += dy;
 		}
 	}
 
@@ -90,11 +90,25 @@ public class Polygon2D implements Shape {
 		double cos = Math.cos(a);
 		double dx = 0;
 		double dy = 0;
-		for (int i = 0; i < vertex.length; i++) {
-			dx = vertex[i].x - cx;
-			dy = vertex[i].y - cy;
-			vertex[i].x = (float) (dx * cos - dy * sin + cx);
-			vertex[i].y = (float) (dx * sin + dy * cos + cy);
+		for (Point2D.Float v : vertex) {
+			dx = v.x - cx;
+			dy = v.y - cy;
+			v.x = (float) (dx * cos - dy * sin + cx);
+			v.y = (float) (dx * sin + dy * cos + cy);
+		}
+	}
+
+	public void scale(float scale) {
+		Rectangle2D r = path.getBounds2D();
+		double cx = r.getCenterX();
+		double cy = r.getCenterY();
+		double dx = 0;
+		double dy = 0;
+		for (Point2D.Float v : vertex) {
+			dx = v.x - cx;
+			dy = v.y - cy;
+			v.x = (float) (dx * scale + cx);
+			v.y = (float) (dy * scale + cy);
 		}
 	}
 
@@ -134,19 +148,33 @@ public class Polygon2D implements Shape {
 		int ymax = -xmin;
 		for (Point2D.Float v : vertex) {
 			if (xmin > v.x)
-				xmin = (int) v.x;
+				xmin = Math.round(v.x);
 			if (ymin > v.y)
-				ymin = (int) v.y;
+				ymin = Math.round(v.y);
 			if (xmax < v.x)
-				xmax = (int) v.x;
+				xmax = Math.round(v.x);
 			if (ymax < v.y)
-				ymax = (int) v.y;
+				ymax = Math.round(v.y);
 		}
 		return new Rectangle(xmin, ymin, xmax - xmin, ymax - ymin);
 	}
 
 	public Rectangle2D getBounds2D() {
-		return getBounds();
+		float xmin = Float.MAX_VALUE;
+		float ymin = xmin;
+		float xmax = -xmin;
+		float ymax = -xmin;
+		for (Point2D.Float v : vertex) {
+			if (xmin > v.x)
+				xmin = v.x;
+			if (ymin > v.y)
+				ymin = v.y;
+			if (xmax < v.x)
+				xmax = v.x;
+			if (ymax < v.y)
+				ymax = v.y;
+		}
+		return new Rectangle2D.Float(xmin, ymin, xmax - xmin, ymax - ymin);
 	}
 
 	public boolean contains(Rectangle2D r) {

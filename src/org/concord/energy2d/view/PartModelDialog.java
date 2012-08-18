@@ -57,7 +57,7 @@ class PartModelDialog extends JDialog {
 	private JTextField reflectionField;
 	private JTextField transmissionField;
 	private JTextField emissivityField;
-	private JTextField xField, yField, wField, hField, angleField;
+	private JTextField xField, yField, wField, hField, angleField, scaleField;
 	private JTextField uidField;
 	private JTextField labelField;
 	private JRadioButton notHeatSourceRadioButton;
@@ -157,6 +157,16 @@ class PartModelDialog extends JDialog {
 					if (Float.isNaN(degree))
 						return;
 				}
+				float scale = Float.NaN;
+				if (scaleField != null) {
+					scale = parse(scaleField.getText());
+					if (Float.isNaN(scale))
+						return;
+					if (scale <= 0) {
+						JOptionPane.showMessageDialog(owner, "Scale must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
 				String uid = uidField.getText();
 				if (uid != null) {
 					uid = uid.trim();
@@ -188,8 +198,11 @@ class PartModelDialog extends JDialog {
 						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height, 0, 0);
 					}
 				} else if (shape instanceof Polygon2D) {
-					if (!Float.isNaN(degree)) {
+					if (!Float.isNaN(degree) && degree != 0) {
 						((Polygon2D) part.getShape()).rotateBy(degree);
+					}
+					if (!Float.isNaN(scale) && scale != 1) {
+						((Polygon2D) part.getShape()).scale(scale);
 					}
 				}
 
@@ -242,54 +255,49 @@ class PartModelDialog extends JDialog {
 		tabbedPane.add(pp, "Geometrical");
 		int count = 0;
 
-		JLabel label = new JLabel("Center x");
-		p.add(label);
+		p.add(new JLabel("Center x"));
 		xField = new JTextField(FORMAT.format(part.getCenter().x));
 		xField.addActionListener(okListener);
 		p.add(xField);
-		label = new JLabel("<html><i>m</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>m</i></html>"));
 
-		label = new JLabel("Center y");
-		p.add(label);
+		p.add(new JLabel("Center y"));
 		yField = new JTextField(FORMAT.format(view.model.getLy() - part.getCenter().y));
 		yField.addActionListener(okListener);
 		p.add(yField);
-		label = new JLabel("<html><i>m</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>m</i></html>"));
 		count++;
 
 		if (part.getShape() instanceof RectangularShape) {
 
-			label = new JLabel("Width");
-			p.add(label);
+			p.add(new JLabel("Width"));
 			wField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getWidth()));
 			wField.addActionListener(okListener);
 			p.add(wField);
-			label = new JLabel("<html><i>m</i></html>");
-			p.add(label);
+			p.add(new JLabel("<html><i>m</i></html>"));
 
-			label = new JLabel("Height");
-			p.add(label);
+			p.add(new JLabel("Height"));
 			hField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getHeight()));
 			hField.addActionListener(okListener);
 			p.add(hField);
-			label = new JLabel("<html><i>m</i></html>");
-			p.add(label);
+			p.add(new JLabel("<html><i>m</i></html>"));
 			count++;
 
 		} else if (part.getShape() instanceof Polygon2D) {
-			label = new JLabel("Rotate");
-			p.add(label);
+
+			p.add(new JLabel("Rotate"));
 			angleField = new JTextField("0");
 			angleField.addActionListener(okListener);
 			p.add(angleField);
-			label = new JLabel("<html>&deg;</html>");
-			p.add(label);
-			p.add(new JLabel());
-			p.add(new JLabel());
-			p.add(new JLabel());
+			p.add(new JLabel("<html>&deg;</html>"));
+
+			p.add(new JLabel("Scale"));
+			scaleField = new JTextField("1");
+			scaleField.addActionListener(okListener);
+			p.add(scaleField);
+			p.add(new JLabel("Must be a positive number."));
 			count++;
+
 		}
 
 		MiscUtil.makeCompactGrid(p, count, 6, 5, 5, 10, 2);
@@ -349,8 +357,7 @@ class PartModelDialog extends JDialog {
 		powerField = new JTextField(FORMAT.format(part.getPower()), 16);
 		powerField.addActionListener(okListener);
 		p.add(powerField);
-		label = new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>"));
 		count++;
 
 		temperatureLabel = new JLabel("Temperature");
@@ -358,26 +365,21 @@ class PartModelDialog extends JDialog {
 		temperatureField = new JTextField(FORMAT.format(part.getTemperature()), 16);
 		temperatureField.addActionListener(okListener);
 		p.add(temperatureField);
-		label = new JLabel("<html><i>\u2103</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>\u2103</i></html>"));
 		count++;
 
-		label = new JLabel("Wind speed");
-		p.add(label);
+		p.add(new JLabel("Wind speed"));
 		windSpeedField = new JTextField(FORMAT.format(part.getWindSpeed()), 8);
 		windSpeedField.addActionListener(okListener);
 		p.add(windSpeedField);
-		label = new JLabel("<html><i>m/s</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>m/s</i></html>"));
 		count++;
 
-		label = new JLabel("Wind angle");
-		p.add(label);
+		p.add(new JLabel("Wind angle"));
 		windAngleField = new JTextField(FORMAT.format(Math.toDegrees(part.getWindAngle())), 8);
 		windAngleField.addActionListener(okListener);
 		p.add(windAngleField);
-		label = new JLabel("Degrees");
-		p.add(label);
+		p.add(new JLabel("Degrees"));
 		count++;
 
 		if (part.getPower() != 0) {
@@ -396,31 +398,25 @@ class PartModelDialog extends JDialog {
 		tabbedPane.add(pp, "Thermal");
 		count = 0;
 
-		label = new JLabel("Thermal conductivity");
-		p.add(label);
+		p.add(new JLabel("Thermal conductivity"));
 		thermalConductivityField = new JTextField(FORMAT.format(part.getThermalConductivity()), 8);
 		thermalConductivityField.addActionListener(okListener);
 		p.add(thermalConductivityField);
-		label = new JLabel("<html><i>W/(m\u00b7\u2103)</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>W/(m\u00b7\u2103)</i></html>"));
 		count++;
 
-		label = new JLabel("Specific heat");
-		p.add(label);
+		p.add(new JLabel("Specific heat"));
 		specificHeatField = new JTextField(FORMAT.format(part.getSpecificHeat()), 8);
 		specificHeatField.addActionListener(okListener);
 		p.add(specificHeatField);
-		label = new JLabel("<html><i>J/(kg\u00b7\u2103)</i></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>J/(kg\u00b7\u2103)</i></html>"));
 		count++;
 
-		label = new JLabel("Density");
-		p.add(label);
+		p.add(new JLabel("Density"));
 		densityField = new JTextField(FORMAT.format(part.getDensity()), 8);
 		densityField.addActionListener(okListener);
 		p.add(densityField);
-		label = new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>");
-		p.add(label);
+		p.add(new JLabel("<html><i>kg/m<sup><font size=2>3</font></sup></html>"));
 		count++;
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
@@ -431,27 +427,23 @@ class PartModelDialog extends JDialog {
 		tabbedPane.add(pp, "Optical");
 		count = 0;
 
-		label = new JLabel("Absorption");
-		p.add(label);
+		p.add(new JLabel("Absorption"));
 		absorptionField = new JTextField(FORMAT.format(part.getAbsorption()), 8);
 		absorptionField.addActionListener(okListener);
 		p.add(absorptionField);
 
-		label = new JLabel("Reflection");
-		p.add(label);
+		p.add(new JLabel("Reflection"));
 		reflectionField = new JTextField(FORMAT.format(part.getReflection()), 8);
 		reflectionField.addActionListener(okListener);
 		p.add(reflectionField);
 		count++;
 
-		label = new JLabel("Transmission");
-		p.add(label);
+		p.add(new JLabel("Transmission"));
 		transmissionField = new JTextField(FORMAT.format(part.getTransmission()), 16);
 		transmissionField.addActionListener(okListener);
 		p.add(transmissionField);
 
-		label = new JLabel("Emissivity");
-		p.add(label);
+		p.add(new JLabel("Emissivity"));
 		emissivityField = new JTextField(FORMAT.format(part.getEmissivity()), 16);
 		emissivityField.addActionListener(okListener);
 		p.add(emissivityField);
