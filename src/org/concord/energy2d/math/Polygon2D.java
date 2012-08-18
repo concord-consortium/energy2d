@@ -102,13 +102,59 @@ public class Polygon2D implements Shape {
 		Rectangle2D r = path.getBounds2D();
 		double cx = r.getCenterX();
 		double cy = r.getCenterY();
-		double dx = 0;
-		double dy = 0;
+		for (Point2D.Float v : vertex) {
+			v.x = (float) ((v.x - cx) * scale + cx);
+			v.y = (float) ((v.y - cy) * scale + cy);
+		}
+	}
+
+	public void scaleX(float scale) {
+		Rectangle2D r = path.getBounds2D();
+		double cx = r.getCenterX();
+		for (Point2D.Float v : vertex) {
+			v.x = (float) ((v.x - cx) * scale + cx);
+		}
+	}
+
+	public void scaleY(float scale) {
+		Rectangle2D r = path.getBounds2D();
+		double cy = r.getCenterY();
+		for (Point2D.Float v : vertex) {
+			v.y = (float) ((v.y - cy) * scale + cy);
+		}
+	}
+
+	public void shearX(float shear) {
+		Rectangle2D r = path.getBounds2D();
+		double cy = r.getCenterY();
+		for (Point2D.Float v : vertex) {
+			v.x += (float) (v.y - cy) * shear;
+		}
+	}
+
+	public void shearY(float shear) {
+		Rectangle2D r = path.getBounds2D();
+		double cx = r.getCenterX();
+		for (Point2D.Float v : vertex) {
+			v.y += (float) (v.x - cx) * shear;
+		}
+	}
+
+	public void flipX() {
+		float cx = (float) path.getBounds2D().getCenterX();
+		float dx = 0;
 		for (Point2D.Float v : vertex) {
 			dx = v.x - cx;
+			v.x = cx - dx;
+		}
+	}
+
+	public void flipY() {
+		float cy = (float) path.getBounds2D().getCenterY();
+		float dy = 0;
+		for (Point2D.Float v : vertex) {
 			dy = v.y - cy;
-			v.x = (float) (dx * scale + cx);
-			v.y = (float) (dy * scale + cy);
+			v.y = cy - dy;
 		}
 	}
 

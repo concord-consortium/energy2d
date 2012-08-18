@@ -15,6 +15,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.text.DecimalFormat;
 
@@ -22,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -57,7 +59,8 @@ class PartModelDialog extends JDialog {
 	private JTextField reflectionField;
 	private JTextField transmissionField;
 	private JTextField emissivityField;
-	private JTextField xField, yField, wField, hField, angleField, scaleField;
+	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField;
+	private JCheckBox flipXCheckBox, flipYCheckBox;
 	private JTextField uidField;
 	private JTextField labelField;
 	private JRadioButton notHeatSourceRadioButton;
@@ -157,15 +160,37 @@ class PartModelDialog extends JDialog {
 					if (Float.isNaN(degree))
 						return;
 				}
-				float scale = Float.NaN;
-				if (scaleField != null) {
-					scale = parse(scaleField.getText());
-					if (Float.isNaN(scale))
+				float scaleX = Float.NaN;
+				if (scaleXField != null) {
+					scaleX = parse(scaleXField.getText());
+					if (Float.isNaN(scaleX))
 						return;
-					if (scale <= 0) {
-						JOptionPane.showMessageDialog(owner, "Scale must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+					if (scaleX <= 0) {
+						JOptionPane.showMessageDialog(owner, "Scale X must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
+				}
+				float scaleY = Float.NaN;
+				if (scaleYField != null) {
+					scaleY = parse(scaleYField.getText());
+					if (Float.isNaN(scaleY))
+						return;
+					if (scaleY <= 0) {
+						JOptionPane.showMessageDialog(owner, "Scale Y must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+				float shearX = Float.NaN;
+				if (shearXField != null) {
+					shearX = parse(shearXField.getText());
+					if (Float.isNaN(shearX))
+						return;
+				}
+				float shearY = Float.NaN;
+				if (shearYField != null) {
+					shearY = parse(shearYField.getText());
+					if (Float.isNaN(shearY))
+						return;
 				}
 				String uid = uidField.getText();
 				if (uid != null) {
@@ -198,11 +223,38 @@ class PartModelDialog extends JDialog {
 						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height, 0, 0);
 					}
 				} else if (shape instanceof Polygon2D) {
-					if (!Float.isNaN(degree) && degree != 0) {
-						((Polygon2D) part.getShape()).rotateBy(degree);
+					Polygon2D p = (Polygon2D) shape;
+					if (!Float.isNaN(xcenter) && !Float.isNaN(ycenter)) {
+						p.flipY();
+						p.translateBy(xcenter - p.getCenter().x, ycenter - p.getCenter().y);
+						float ly = view.model.getLy();
+						int n = p.getVertexCount();
+						Point2D.Float v;
+						for (int i = 0; i < n; i++) {
+							v = p.getVertex(i);
+							v.y = ly - v.y;
+						}
 					}
-					if (!Float.isNaN(scale) && scale != 1) {
-						((Polygon2D) part.getShape()).scale(scale);
+					if (!Float.isNaN(degree) && degree != 0) {
+						p.rotateBy(degree);
+					}
+					if (!Float.isNaN(scaleX) && scaleX != 1) {
+						p.scaleX(scaleX);
+					}
+					if (!Float.isNaN(scaleY) && scaleY != 1) {
+						p.scaleY(scaleY);
+					}
+					if (!Float.isNaN(shearX) && shearX != 0) {
+						p.shearX(shearX);
+					}
+					if (!Float.isNaN(shearY) && shearY != 0) {
+						p.shearY(shearY);
+					}
+					if (flipXCheckBox.isSelected()) {
+						p.flipX();
+					}
+					if (flipYCheckBox.isSelected()) {
+						p.flipY();
 					}
 				}
 
@@ -252,7 +304,7 @@ class PartModelDialog extends JDialog {
 		JPanel p = new JPanel(new SpringLayout());
 		JPanel pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
-		tabbedPane.add(pp, "Geometrical");
+		tabbedPane.add(pp, "Geometry");
 		int count = 0;
 
 		p.add(new JLabel("Center x"));
@@ -291,11 +343,37 @@ class PartModelDialog extends JDialog {
 			p.add(angleField);
 			p.add(new JLabel("<html>&deg;</html>"));
 
-			p.add(new JLabel("Scale"));
-			scaleField = new JTextField("1");
-			scaleField.addActionListener(okListener);
-			p.add(scaleField);
-			p.add(new JLabel("Must be a positive number."));
+			p.add(new JLabel("Flip"));
+			flipXCheckBox = new JCheckBox("Horizontal");
+			p.add(flipXCheckBox);
+			flipYCheckBox = new JCheckBox("Vertical");
+			p.add(flipYCheckBox);
+			count++;
+
+			p.add(new JLabel("Shear X"));
+			shearXField = new JTextField("0");
+			shearXField.addActionListener(okListener);
+			p.add(shearXField);
+			p.add(new JLabel());
+
+			p.add(new JLabel("Shear Y"));
+			shearYField = new JTextField("0");
+			shearYField.addActionListener(okListener);
+			p.add(shearYField);
+			p.add(new JLabel());
+			count++;
+
+			p.add(new JLabel("Scale X"));
+			scaleXField = new JTextField("1");
+			scaleXField.addActionListener(okListener);
+			p.add(scaleXField);
+			p.add(new JLabel("Must be > 0"));
+
+			p.add(new JLabel("Scale Y"));
+			scaleYField = new JTextField("1");
+			scaleYField.addActionListener(okListener);
+			p.add(scaleYField);
+			p.add(new JLabel("Must be > 0"));
 			count++;
 
 		}
