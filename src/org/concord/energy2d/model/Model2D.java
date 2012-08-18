@@ -346,6 +346,18 @@ public class Model2D {
 		return ly;
 	}
 
+	public void translateAllBy(float dx, float dy) {
+		for (Thermometer t : thermometers) {
+			t.translateBy(dx, dy);
+		}
+		for (Cloud c : clouds) {
+			c.translateBy(dx, dy);
+		}
+		for (Part p : parts) {
+			p.translateBy(dx, dy);
+		}
+	}
+
 	public ThermalBoundary getThermalBoundary() {
 		return heatSolver.getBoundary();
 	}

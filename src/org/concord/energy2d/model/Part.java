@@ -145,6 +145,23 @@ public class Part extends Manipulable {
 		return p;
 	}
 
+	public void translateBy(float dx, float dy) {
+		Shape s = getShape();
+		if (s instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) s;
+			r.x += dx;
+			r.y += dy;
+		} else if (s instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) s;
+			e.x += dx;
+			e.y += dy;
+		} else if (s instanceof Area) {
+			((Area) s).transform(AffineTransform.getTranslateInstance(dx, dy));
+		} else if (s instanceof Polygon2D) {
+			((Polygon2D) s).translateBy(dx, dy);
+		}
+	}
+
 	public void setWindSpeed(float windSpeed) {
 		this.windSpeed = windSpeed;
 	}

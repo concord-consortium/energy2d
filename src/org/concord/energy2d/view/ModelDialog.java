@@ -178,8 +178,14 @@ class ModelDialog extends JDialog {
 				model.setBackgroundDensity(density);
 				model.setBackgroundViscosity(viscosity);
 				model.setThermalBuoyancy(buoyancy);
-				model.setLx(width);
-				model.setLy(height);
+				float dx = width - model.getLx();
+				float dy = height - model.getLy();
+				if (dx != 0)
+					model.setLx(width);
+				if (dy != 0) {
+					model.setLy(height);
+					model.translateAllBy(0, dy); // fix the y-flip problem
+				}
 				view.setArea(0, width, 0, height);
 				model.setSolarPowerDensity(solarPower);
 				model.setSolarRaySpeed(raySpeed);
