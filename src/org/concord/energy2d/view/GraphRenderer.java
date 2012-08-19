@@ -1,8 +1,3 @@
-/*
- *   Copyright (C) 2009  The Concord Consortium, Inc.,
- *   25 Love Lane, Concord, MA 01742
- */
-
 package org.concord.energy2d.view;
 
 import java.awt.BasicStroke;
@@ -43,6 +38,7 @@ class GraphRenderer {
 	private float xmax = 360000; // 100 hours
 	private float ymin = 0;
 	private float ymax = 50;
+	private float yIncrement = 5;
 	private boolean drawFrame = true;
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
@@ -92,6 +88,7 @@ class GraphRenderer {
 
 	void setYmin(float ymin) {
 		this.ymin = ymin;
+		yIncrement = (ymax - ymin) * 0.1f;
 	}
 
 	float getYmin() {
@@ -99,11 +96,12 @@ class GraphRenderer {
 	}
 
 	void decreaseYmin() {
-		ymin -= 10;
+		ymin -= yIncrement;
 	}
 
 	void setYmax(float ymax) {
 		this.ymax = ymax;
+		yIncrement = (ymax - ymin) * 0.1f;
 	}
 
 	float getYmax() {
@@ -111,11 +109,11 @@ class GraphRenderer {
 	}
 
 	void increaseYmax() {
-		ymax += 10;
+		ymax += yIncrement;
 	}
 
 	void decreaseYmax() {
-		ymax -= 10;
+		ymax -= yIncrement;
 	}
 
 	void setDrawFrame(boolean b) {

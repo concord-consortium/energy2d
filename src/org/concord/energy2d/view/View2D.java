@@ -1081,11 +1081,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			graphRenderer.setDrawFrame(true);
 			if (model.getTime() > graphRenderer.getXmax())
 				graphRenderer.doubleXmax();
+			float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
 			synchronized (model.getThermometers()) {
 				for (Thermometer t : model.getThermometers()) {
-					if (t.getCurrentData() > graphRenderer.getYmax() + 2) { // allow 2 degrees of overshot above max
+					if (t.getCurrentData() > graphRenderer.getYmax() + dy) { // allow overshot above max
 						graphRenderer.increaseYmax();
-					} else if (t.getCurrentData() < graphRenderer.getYmin() - 2) { // allow 2 degrees of overshot below min
+					} else if (t.getCurrentData() < graphRenderer.getYmin() - dy) { // allow overshot below min
 						graphRenderer.decreaseYmin();
 					}
 					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
@@ -2372,10 +2373,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			for (Thermometer t : model.getThermometers()) {
 				float[] data = graphRenderer.getData(t.getData(), x, y);
 				if (data != null) {
-					String s = "(" + TEMPERATURE_FORMAT.format(data[0] / 60) + " min, " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+					float time = data[0];
+					String s1 = "";
+					if (time > 120 && time < 12000)
+						s1 = TEMPERATURE_FORMAT.format(time / 60) + " min, ";
+					else if (time >= 12000)
+						s1 = TEMPERATURE_FORMAT.format(time / 3600) + " hr, ";
+					else
+						s1 = TEMPERATURE_FORMAT.format(time) + " s, ";
+					String s2 = "(" + s1 + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
 					if (t.getLabel() == null)
-						return s;
-					return t.getLabel() + ": " + s;
+						return s2;
+					return t.getLabel() + ": " + s2;
 				}
 			}
 		}
