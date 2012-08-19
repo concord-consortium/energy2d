@@ -5,7 +5,7 @@
 <tasks>
 <task uid="MOVE_SUN" script="set sunny true;-linebreak-movesun 4 20;" description="Move the sun." interval="100"/>
 </tasks>
-<sunny>true</sunny><sun_angle>0.0</sun_angle>
+<sunny>true</sunny><sun_angle>0.043632984</sun_angle>
 <solar_power_density>10000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.0050</solar_ray_speed>
@@ -59,13 +59,17 @@
 <constant_temperature>false</constant_temperature>
 </part>
 </structure>
-</model>
+<environment>
+<tree color="b200" x="4.4134073" y="5.7681565" width="1.424581" height="2.3184357" type="0"/>
+<tree color="b200" x="3.4427373" y="6.550279" width="1.0195531" height="1.5363128" type="0"/>
+</environment>
 <sensor>
 <thermometer uid="T2" label="T2" x="7.5" y="7.2"/>
 <thermometer uid="T1" label="T1" x="2.5" y="7.2"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <ruler>true</ruler>
@@ -74,6 +78,5 @@
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>20.0</maximum_temperature>
 <graph>true</graph>
-<graph_xlabel>Time</graph_xlabel><text string="Pavilion" face="Arial" size="14" style="0" color="ffffff" x="7.5264378" y="4.041"/>
-</view>
+<graph_xlabel>Time</graph_xlabel></view>
 </state>

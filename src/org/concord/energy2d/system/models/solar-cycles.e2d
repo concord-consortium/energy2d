@@ -6,9 +6,9 @@
 <task uid="MOVE_SUN" script="set sunny true;-linebreak-movesun;" description="Move the sun." interval="100"/>
 </tasks>
 <sun_angle>3.1415927</sun_angle>
-<solar_power_density>10000.0</solar_power_density>
+<solar_power_density>50000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
-<solar_ray_speed>0.005</solar_ray_speed>
+<solar_ray_speed>0.0050</solar_ray_speed>
 <photon_emission_interval>5</photon_emission_interval>
 <z_heat_diffusivity>1.0E-5</z_heat_diffusivity><convective>false</convective>
 <background_conductivity>1.0</background_conductivity>
@@ -19,7 +19,7 @@
 <mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
 <density>50.0</density>
 <transmission>0.0</transmission>
@@ -43,6 +43,10 @@
 <cloud x="8.0" y="0.0" width="1.0" height="0.5" speed="1.0E-4"/>
 <cloud x="4.8523507" y="0.8743386" width="1.5" height="0.5" speed="1.0E-4"/>
 <cloud x="4.62751" y="2.420635" width="2.5396826" height="0.52910054" speed="5.0E-5"/>
+<tree color="b200" x="2.6117318" y="4.888268" width="1.2988827" height="3.1005588" type="1"/>
+<tree color="b200" x="1.9301677" y="5.9692736" width="1.0" height="2.0" type="1"/>
+<tree color="b200" x="3.4804468" y="5.98324" width="1.0" height="2.0" type="1"/>
+<tree color="b200" x="8.310056" y="6.2430167" width="0.82402235" height="1.7318436" type="1"/>
 </environment>
 <sensor>
 <thermometer x="5.0" y="7.0"/>

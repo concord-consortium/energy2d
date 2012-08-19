@@ -130,6 +130,7 @@ public class Cloud extends Manipulable {
 		Cloud c = new Cloud(new Rectangle2D.Float(0, 0, boundingBox.width, boundingBox.height));
 		c.speed = speed;
 		c.setLabel(getLabel());
+		c.color = color;
 		c.setX(x - boundingBox.width / 2); // offset to the center, since this method is called to paste.
 		c.setY(y - boundingBox.height / 2);
 		return c;

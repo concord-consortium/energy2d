@@ -502,10 +502,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public Tree addTree(float x, float y, float w, float h, byte type) {
-		Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h));
+		Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h), type);
 		t.setX(x);
 		t.setY(y);
-		t.setType(type);
 		model.addTree(t);
 		return t;
 	}

@@ -591,6 +591,7 @@ class MenuBar extends JMenuBar {
 		templates.put("Thermal Equilibrium Between Objects with Different Densities: Case 2", "models/different-density2.e2d");
 		templates.put("The Effect of Thermal Conductivity on Equilibration Speed", "models/different-conductivity.e2d");
 		templates.put("The Zeroth Law of Thermodynamics", "models/zeroth.e2d");
+		templates.put("The First Law of Thermodynamics", "models/conservation-of-energy.e2d");
 		createMenu(box, subMenu, templates);
 
 		subMenu = new JMenu("Conduction");
@@ -604,6 +605,7 @@ class MenuBar extends JMenuBar {
 		templates.put("The Series Circuit Analogy", "models/series-circuit-analogy.e2d");
 		templates.put("The Parallel Circuit Analogy", "models/parallel-circuit-analogy.e2d");
 		templates.put("Thermal Bridge", "models/thermal-bridge.e2d");
+		templates.put("Why We Feel Hot or Cold When Touching Something", "models/hand.e2d");
 		createMenu(box, subMenu, templates);
 
 		subMenu = new JMenu("Convection");
@@ -661,6 +663,7 @@ class MenuBar extends JMenuBar {
 		menu.add(subMenu);
 
 		templates.put("Ray Optics", "models/ray-optics.e2d");
+		templates.put("Thermoregulation", "models/thermoregulation.e2d");
 		templates.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
 		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
 		templates.put("Mantle Convection", "models/mantle.e2d");

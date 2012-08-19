@@ -32,25 +32,27 @@ public class Tree extends Manipulable {
 	private Rectangle2D.Float boundingBox;
 
 	/** Construct a tree based on the specified bounding box, which must start from (0, 0). If not, the (x, y) will be ignored. */
-	public Tree(Shape bb) {
+	public Tree(Shape bb, byte type) {
 		super(bb);
 		if (!(bb instanceof Rectangle2D.Float))
 			throw new IllegalArgumentException("Shape must be a Rectangle2D.Float");
+		setType(type);
 		Rectangle2D.Float r = (Rectangle2D.Float) bb;
 		setDimension(r.width, r.height);
 	}
 
 	public static Area getShape(Rectangle2D.Float r, byte type) {
 		// the positions and sizes of the circles must ensure that r is the bounding box
-		Area a = null;
+		Area a = new Area(new Rectangle2D.Float(r.x + r.width * 0.45f, r.y + r.height * 0.5f, r.width * 0.1f, r.height * 0.5f));
 		switch (type) {
 		case REGULAR:
-			float p = Math.min(r.width, r.height);
-			a = new Area(new Ellipse2D.Float(r.x, r.y, p, p * 1.2f));
-			a.add(new Area(new Rectangle2D.Float(r.x + r.width * 0.45f, r.y + r.height * 0.5f, r.width * 0.1f, r.height * 0.5f)));
+			float p = Math.min(r.width, r.height) * 0.7f;
+			float q = p * 0.9f;
+			a.add(new Area(new Ellipse2D.Float(r.x + (r.width - p) * 0.5f, r.y, p, p * 1.2f)));
+			a.add(new Area(new Ellipse2D.Float(r.x, r.y + p * 0.8f, q, q)));
+			a.add(new Area(new Ellipse2D.Float(r.x + r.width - q, r.y + p * 0.8f, q, q)));
 			break;
 		case PINE:
-			a = new Area(new Rectangle2D.Float(r.x + r.width * 0.45f, r.y + r.height * 0.5f, r.width * 0.1f, r.height * 0.5f));
 			GeneralPath path = new GeneralPath();
 			path.moveTo(r.x + r.width * 0.5f, r.y);
 			path.lineTo(r.x + r.width * 0.3f, r.y + r.height * 0.3f);
@@ -139,8 +141,9 @@ public class Tree extends Manipulable {
 
 	@Override
 	public Manipulable duplicate(float x, float y) {
-		Tree t = new Tree(new Rectangle2D.Float(0, 0, boundingBox.width, boundingBox.height));
+		Tree t = new Tree(new Rectangle2D.Float(0, 0, boundingBox.width, boundingBox.height), type);
 		t.setLabel(getLabel());
+		t.color = color;
 		t.setX(x - boundingBox.width / 2); // offset to the center, since this method is called to paste.
 		t.setY(y - boundingBox.height / 2);
 		return t;

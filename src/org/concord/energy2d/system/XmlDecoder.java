@@ -530,10 +530,9 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h)) {
-					Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h));
+					Tree t = new Tree(new Rectangle2D.Float(0, 0, w, h), type);
 					t.setX(x);
 					t.setY(y);
-					t.setType(type);
 					t.setUid(uid);
 					t.setLabel(label);
 					t.setColor(color);
