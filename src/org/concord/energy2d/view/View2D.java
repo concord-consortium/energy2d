@@ -1316,6 +1316,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					y = (int) (ry * getHeight() - ly * 0.5f);
 					ix = Math.round(nx * rx);
 					iy = Math.round(ny * ry);
+					if (ix < 0)
+						ix = 0;
+					else if (ix >= nx)
+						ix = nx - 1;
+					if (iy < 0)
+						iy = 0;
+					else if (iy >= ny)
+						iy = ny - 1;
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
@@ -1752,37 +1760,45 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void translateManipulableBy(Manipulable m, float dx, float dy) {
-		Shape s = m.getShape();
-		if (s instanceof Rectangle2D.Float) {
-			Rectangle2D.Float r = (Rectangle2D.Float) s;
-			r.x += dx;
-			r.y += dy;
-			if (m instanceof Thermometer) {
-				if (r.x + r.width / 2 < xmin + dx)
-					r.x = xmin + dx - r.width / 2;
-				else if (r.x + r.width / 2 > xmax - dx)
-					r.x = xmax - dx - r.width / 2;
-				if (r.y + r.height / 2 < ymin + dy)
-					r.y = ymin + dy - r.height / 2;
-				else if (r.y + r.height / 2 > ymax - dy)
-					r.y = ymax - dy - r.height / 2;
-			} else if (m instanceof TextBox) {
-				((TextBox) m).translateBy(dx, -dy);
+		if (m == null) {
+			model.translateAllBy(dx, dy);
+			if (!model.getParts().isEmpty())
+				notifyManipulationListeners(model.getPart(0), ManipulationEvent.TRANSLATE);
+		} else {
+			if (m.isDraggable()) {
+				Shape s = m.getShape();
+				if (s instanceof Rectangle2D.Float) {
+					Rectangle2D.Float r = (Rectangle2D.Float) s;
+					r.x += dx;
+					r.y += dy;
+					if (m instanceof Thermometer) {
+						if (r.x + r.width / 2 < xmin + dx)
+							r.x = xmin + dx - r.width / 2;
+						else if (r.x + r.width / 2 > xmax - dx)
+							r.x = xmax - dx - r.width / 2;
+						if (r.y + r.height / 2 < ymin + dy)
+							r.y = ymin + dy - r.height / 2;
+						else if (r.y + r.height / 2 > ymax - dy)
+							r.y = ymax - dy - r.height / 2;
+					} else if (m instanceof TextBox) {
+						((TextBox) m).translateBy(dx, -dy);
+					}
+				} else if (s instanceof Ellipse2D.Float) {
+					Ellipse2D.Float r = (Ellipse2D.Float) s;
+					r.x += dx;
+					r.y += dy;
+				} else if (s instanceof Area) {
+					if (m instanceof Cloud) {
+						((Cloud) m).translateBy(dx, dy);
+					} else if (m instanceof Tree) {
+						((Tree) m).translateBy(dx, dy);
+					}
+				} else if (s instanceof Polygon2D) {
+					((Polygon2D) s).translateBy(dx, dy);
+				}
+				notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 			}
-		} else if (s instanceof Ellipse2D.Float) {
-			Ellipse2D.Float r = (Ellipse2D.Float) s;
-			r.x += dx;
-			r.y += dy;
-		} else if (s instanceof Area) {
-			if (m instanceof Cloud) {
-				((Cloud) m).translateBy(dx, dy);
-			} else if (m instanceof Tree) {
-				((Tree) m).translateBy(dx, dy);
-			}
-		} else if (s instanceof Polygon2D) {
-			((Polygon2D) s).translateBy(dx, dy);
 		}
-		notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 	}
 
 	private void translateManipulableTo(Manipulable m, float x, float y) {
@@ -1852,25 +1868,27 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				cooling = true;
 			}
 		}
-		if (selectedManipulable != null && selectedManipulable.isDraggable()) {
-			boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
-			float delta = keyDown ? 1 : 5;
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				translateManipulableBy(selectedManipulable, -delta * (xmax - xmin) / getWidth(), 0);
-				break;
-			case KeyEvent.VK_RIGHT:
-				translateManipulableBy(selectedManipulable, delta * (xmax - xmin) / getWidth(), 0);
-				break;
-			case KeyEvent.VK_DOWN:
-				translateManipulableBy(selectedManipulable, 0, delta * (ymax - ymin) / getHeight());
-				break;
-			case KeyEvent.VK_UP:
-				translateManipulableBy(selectedManipulable, 0, -delta * (ymax - ymin) / getHeight());
-				break;
-			}
-			setSelectedManipulable(selectedManipulable);
+		boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
+		float delta = keyDown ? 1 : 5;
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_LEFT:
+			delta *= -(xmax - xmin) / getWidth();
+			translateManipulableBy(selectedManipulable, delta, 0);
+			break;
+		case KeyEvent.VK_RIGHT:
+			delta *= (xmax - xmin) / getWidth();
+			translateManipulableBy(selectedManipulable, delta, 0);
+			break;
+		case KeyEvent.VK_DOWN:
+			delta *= (ymax - ymin) / getHeight();
+			translateManipulableBy(selectedManipulable, 0, delta);
+			break;
+		case KeyEvent.VK_UP:
+			delta *= -(ymax - ymin) / getHeight();
+			translateManipulableBy(selectedManipulable, 0, delta);
+			break;
 		}
+		setSelectedManipulable(selectedManipulable);
 		repaint();
 		// e.consume();//don't call, or this stops key binding
 	}
@@ -2187,6 +2205,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseReleasedPoint.setLocation(x, y);
+		// if (actionMode == TRANSLATE_ALL_MODE)
+		// actionMode = SELECT_MODE;
 		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
