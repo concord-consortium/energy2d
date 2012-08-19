@@ -46,9 +46,9 @@ public class Tree extends Manipulable {
 		Area a = new Area(new Rectangle2D.Float(r.x + r.width * 0.45f, r.y + r.height * 0.5f, r.width * 0.1f, r.height * 0.5f));
 		switch (type) {
 		case REGULAR:
-			float p = Math.min(r.width, r.height) * 0.7f;
-			float q = p * 0.9f;
-			a.add(new Area(new Ellipse2D.Float(r.x + (r.width - p) * 0.5f, r.y, p, p * 1.2f)));
+			float p = Math.min(r.width, r.height) * 0.6f;
+			float q = p * 0.8f;
+			a.add(new Area(new Ellipse2D.Float(r.x + (r.width - p) * 0.5f, r.y, p, p)));
 			a.add(new Area(new Ellipse2D.Float(r.x, r.y + p * 0.8f, q, q)));
 			a.add(new Area(new Ellipse2D.Float(r.x + r.width - q, r.y + p * 0.8f, q, q)));
 			break;

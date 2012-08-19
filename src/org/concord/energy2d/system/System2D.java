@@ -59,6 +59,7 @@ import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
+import org.concord.energy2d.model.Tree;
 import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
 import org.concord.modeler.MwService;
@@ -630,6 +631,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				view.removeTextBox((TextBox) target);
 			else if (target instanceof Cloud)
 				view.removeCloud((Cloud) target);
+			else if (target instanceof Tree)
+				view.removeTree((Tree) target);
 			setSaved(false);
 			break;
 		case ManipulationEvent.RUN:
