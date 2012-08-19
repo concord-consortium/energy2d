@@ -432,6 +432,16 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
+		mi = new JMenuItem("Translate All");
+		mi.setToolTipText("Translate all the model elements");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "<html>Hold down the ALT key and use the arrow keys to move around.<br>To move more slowly, also hold down the " + (IS_MAC ? "Command" : "CTRL") + " key.", "Translate all elements", JOptionPane.INFORMATION_MESSAGE);
+				box.view.requestFocusInWindow();
+			}
+		});
+		menu.add(mi);
+
 		// view menu
 
 		final JCheckBoxMenuItem miSeeThrough = new JCheckBoxMenuItem("See-Through");

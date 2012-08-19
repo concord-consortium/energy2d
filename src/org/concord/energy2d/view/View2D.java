@@ -1759,45 +1759,45 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return copiedManipulable;
 	}
 
+	private void translateAllBy(float dx, float dy) {
+		model.translateAllBy(dx, dy);
+		if (!model.getParts().isEmpty())
+			notifyManipulationListeners(model.getPart(0), ManipulationEvent.TRANSLATE);
+	}
+
 	private void translateManipulableBy(Manipulable m, float dx, float dy) {
-		if (m == null) {
-			model.translateAllBy(dx, dy);
-			if (!model.getParts().isEmpty())
-				notifyManipulationListeners(model.getPart(0), ManipulationEvent.TRANSLATE);
-		} else {
-			if (m.isDraggable()) {
-				Shape s = m.getShape();
-				if (s instanceof Rectangle2D.Float) {
-					Rectangle2D.Float r = (Rectangle2D.Float) s;
-					r.x += dx;
-					r.y += dy;
-					if (m instanceof Thermometer) {
-						if (r.x + r.width / 2 < xmin + dx)
-							r.x = xmin + dx - r.width / 2;
-						else if (r.x + r.width / 2 > xmax - dx)
-							r.x = xmax - dx - r.width / 2;
-						if (r.y + r.height / 2 < ymin + dy)
-							r.y = ymin + dy - r.height / 2;
-						else if (r.y + r.height / 2 > ymax - dy)
-							r.y = ymax - dy - r.height / 2;
-					} else if (m instanceof TextBox) {
-						((TextBox) m).translateBy(dx, -dy);
-					}
-				} else if (s instanceof Ellipse2D.Float) {
-					Ellipse2D.Float r = (Ellipse2D.Float) s;
-					r.x += dx;
-					r.y += dy;
-				} else if (s instanceof Area) {
-					if (m instanceof Cloud) {
-						((Cloud) m).translateBy(dx, dy);
-					} else if (m instanceof Tree) {
-						((Tree) m).translateBy(dx, dy);
-					}
-				} else if (s instanceof Polygon2D) {
-					((Polygon2D) s).translateBy(dx, dy);
+		if (m != null && m.isDraggable()) {
+			Shape s = m.getShape();
+			if (s instanceof Rectangle2D.Float) {
+				Rectangle2D.Float r = (Rectangle2D.Float) s;
+				r.x += dx;
+				r.y += dy;
+				if (m instanceof Thermometer) {
+					if (r.x + r.width / 2 < xmin + dx)
+						r.x = xmin + dx - r.width / 2;
+					else if (r.x + r.width / 2 > xmax - dx)
+						r.x = xmax - dx - r.width / 2;
+					if (r.y + r.height / 2 < ymin + dy)
+						r.y = ymin + dy - r.height / 2;
+					else if (r.y + r.height / 2 > ymax - dy)
+						r.y = ymax - dy - r.height / 2;
+				} else if (m instanceof TextBox) {
+					((TextBox) m).translateBy(dx, -dy);
 				}
-				notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
+			} else if (s instanceof Ellipse2D.Float) {
+				Ellipse2D.Float r = (Ellipse2D.Float) s;
+				r.x += dx;
+				r.y += dy;
+			} else if (s instanceof Area) {
+				if (m instanceof Cloud) {
+					((Cloud) m).translateBy(dx, dy);
+				} else if (m instanceof Tree) {
+					((Tree) m).translateBy(dx, dy);
+				}
+			} else if (s instanceof Polygon2D) {
+				((Polygon2D) s).translateBy(dx, dy);
 			}
+			notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 		}
 	}
 
@@ -1873,19 +1873,31 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
 			delta *= -(xmax - xmin) / getWidth();
-			translateManipulableBy(selectedManipulable, delta, 0);
+			if (selectedManipulable != null)
+				translateManipulableBy(selectedManipulable, delta, 0);
+			else if (e.isAltDown())
+				translateAllBy(delta, 0);
 			break;
 		case KeyEvent.VK_RIGHT:
 			delta *= (xmax - xmin) / getWidth();
-			translateManipulableBy(selectedManipulable, delta, 0);
+			if (selectedManipulable != null)
+				translateManipulableBy(selectedManipulable, delta, 0);
+			else if (e.isAltDown())
+				translateAllBy(delta, 0);
 			break;
 		case KeyEvent.VK_DOWN:
 			delta *= (ymax - ymin) / getHeight();
-			translateManipulableBy(selectedManipulable, 0, delta);
+			if (selectedManipulable != null)
+				translateManipulableBy(selectedManipulable, 0, delta);
+			else if (e.isAltDown())
+				translateAllBy(0, delta);
 			break;
 		case KeyEvent.VK_UP:
 			delta *= -(ymax - ymin) / getHeight();
-			translateManipulableBy(selectedManipulable, 0, delta);
+			if (selectedManipulable != null)
+				translateManipulableBy(selectedManipulable, 0, delta);
+			else if (e.isAltDown())
+				translateAllBy(0, delta);
 			break;
 		}
 		setSelectedManipulable(selectedManipulable);
