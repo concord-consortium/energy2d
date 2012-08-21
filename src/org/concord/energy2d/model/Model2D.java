@@ -5,7 +5,11 @@
 
 package org.concord.energy2d.model;
 
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -370,6 +374,63 @@ public class Model2D {
 			t.translateBy(dx, dy);
 		for (Part p : parts)
 			p.translateBy(dx, dy);
+	}
+
+	public boolean scaleAll(float scale) {
+		Rectangle2D.Float bound = new Rectangle2D.Float(0, 0, lx, ly);
+		boolean out = false;
+		for (Thermometer t : thermometers) {
+			t.setCenter(scale * t.getX(), ly - scale * (ly - t.getY()));
+			if (!bound.intersects(t.getShape().getBounds2D()))
+				out = true;
+		}
+		for (Cloud c : clouds) {
+			c.setLocation(scale * c.getX(), ly - scale * (ly - c.getY()));
+			c.setDimension(c.getWidth() * scale, c.getHeight() * scale);
+			if (!bound.intersects(c.getShape().getBounds2D()))
+				out = true;
+		}
+		for (Tree t : trees) {
+			t.setLocation(scale * t.getX(), ly - scale * (ly - t.getY()));
+			t.setDimension(t.getWidth() * scale, t.getHeight() * scale);
+			if (!bound.intersects(t.getShape().getBounds2D()))
+				out = true;
+		}
+		for (Part p : parts) {
+			Shape s = p.getShape();
+			if (s instanceof Rectangle2D.Float) {
+				Rectangle2D.Float r = (Rectangle2D.Float) s;
+				r.x = scale * r.x;
+				r.y = ly - scale * (ly - r.y);
+				r.width *= scale;
+				r.height *= scale;
+				if (!bound.intersects(r))
+					out = true;
+			} else if (s instanceof Ellipse2D.Float) {
+				Ellipse2D.Float e = (Ellipse2D.Float) s;
+				e.x = scale * e.x;
+				e.y = ly - scale * (ly - e.y);
+				e.width *= scale;
+				e.height *= scale;
+				if (!bound.intersects(e.getBounds2D()))
+					out = true;
+			} else if (s instanceof Area) {
+				((Area) s).transform(AffineTransform.getScaleInstance(scale, scale));
+				if (!bound.intersects(s.getBounds2D()))
+					out = true;
+			} else if (s instanceof Polygon2D) {
+				Polygon2D g = (Polygon2D) s;
+				int n = g.getVertexCount();
+				for (int i = 0; i < n; i++) {
+					Point2D.Float h = g.getVertex(i);
+					h.x = scale * h.x;
+					h.y = ly - scale * (ly - h.y);
+				}
+				if (!bound.intersects(g.getBounds2D()))
+					out = true;
+			}
+		}
+		return out;
 	}
 
 	public ThermalBoundary getThermalBoundary() {

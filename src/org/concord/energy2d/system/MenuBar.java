@@ -442,6 +442,36 @@ class MenuBar extends JMenuBar {
 		});
 		menu.add(mi);
 
+		mi = new JMenuItem("Scale All");
+		mi.setToolTipText("Scale all the model elements");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = JOptionPane.showInputDialog(JOptionPane.getFrameForComponent(box.view), "Type a scale factor (must be a positive number):", "Scale All", JOptionPane.QUESTION_MESSAGE);
+				if (s == null || s.trim().equals("")) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Please type a positive number.", "Scale factor error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				float x = parse(s);
+				if (Float.isNaN(x))
+					return;
+				if (x <= 0) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Scale factor must be a positive number.", "Scale factor error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (box.model.scaleAll(x)) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Your scale factor is too large -- some objects are out of the window.", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+				if (box.model.getPartCount() > 0) {
+					box.model.refreshMaterialPropertyArrays();
+					box.model.refreshPowerArray();
+					box.model.refreshTemperatureBoundaryArray();
+				}
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.RESIZE);
+			}
+		});
+		menu.add(mi);
+
 		// view menu
 
 		final JCheckBoxMenuItem miSeeThrough = new JCheckBoxMenuItem("See-Through");
@@ -859,4 +889,13 @@ class MenuBar extends JMenuBar {
 		}
 	}
 
+	private float parse(String s) {
+		float x = Float.NaN;
+		try {
+			x = Float.parseFloat(s);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(MenuBar.this), "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return x;
+	}
 }
