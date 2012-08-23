@@ -26,6 +26,7 @@ class VectorDistributionRenderer {
 	private int ny;
 	private int spacing = 4;
 	private float scale = 100;
+	private float min = 0.0000000001f;
 	private View2D view;
 
 	VectorDistributionRenderer(View2D view, int nx, int ny) {
@@ -51,8 +52,8 @@ class VectorDistributionRenderer {
 		float arrowx = vx * r;
 		float arrowy = vy * r;
 		r = ((BasicStroke) stroke).getLineWidth();
-		float x1 = x + arrowx * (6 + r * 2) + vx * scale;
-		float y1 = y + arrowy * (6 + r * 2) + vy * scale;
+		float x1 = x + arrowx * (2 + r * 2) + vx * scale;
+		float y1 = y + arrowy * (2 + r * 2) + vy * scale;
 		g.drawLine(x, y, Math.round(x1), Math.round(y1));
 		r = 4;
 		float wingx = r * (arrowx * COS + arrowy * SIN);
@@ -83,7 +84,7 @@ class VectorDistributionRenderer {
 				y = Math.round(j * dy);
 				uij = u[i][j];
 				vij = v[i][j];
-				if (uij * uij + vij * vij > 0.0000000001f) {
+				if (uij * uij + vij * vij > min) {
 					color = view.getContrastColor(x, y);
 					color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
 					g.setColor(color);
@@ -115,7 +116,7 @@ class VectorDistributionRenderer {
 				y = Math.round(j * dy);
 				uij = -k[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * dx);
 				vij = -k[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * dy);
-				if (uij * uij + vij * vij > 0.00000001f) {
+				if (uij * uij + vij * vij > min) {
 					color = view.getContrastColor(x, y);
 					color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
 					g.setColor(color);
