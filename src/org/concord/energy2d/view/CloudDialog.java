@@ -149,7 +149,7 @@ class CloudDialog extends JDialog {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(owner, "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(owner, "Cannot parse " + e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}

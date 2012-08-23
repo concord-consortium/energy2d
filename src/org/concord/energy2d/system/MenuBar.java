@@ -175,6 +175,9 @@ class MenuBar extends JMenuBar {
 				box.model.refreshPowerArray();
 				box.model.refreshTemperatureBoundaryArray();
 				box.view.clear();
+				box.setCurrentFile(null);
+				box.setCurrentModel(null);
+				box.setFrameTitle();
 				XmlDecoder x = new XmlDecoder(box);
 				x.startDocument();
 				x.endDocument();

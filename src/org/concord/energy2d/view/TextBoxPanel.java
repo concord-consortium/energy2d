@@ -351,7 +351,7 @@ class TextBoxPanel extends JPanel {
 		try {
 			x = Float.parseFloat(s);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Cannot parse: " + s, "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "Cannot parse " + e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return x;
 	}

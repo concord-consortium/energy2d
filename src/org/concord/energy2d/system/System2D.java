@@ -797,7 +797,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			x.ioOccured(e);
 	}
 
-	private void setFrameTitle() {
+	void setFrameTitle() {
 		if (owner == null)
 			return;
 		if (currentFile != null) {
