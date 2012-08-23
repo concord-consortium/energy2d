@@ -25,14 +25,22 @@ class VectorDistributionRenderer {
 	private int nx;
 	private int ny;
 	private int spacing = 4;
-	private float scale = 100;
-	private float min = 0.0000000001f;
+	private static float defaultScale = 100;
+	private static float defaultMinSquare = 0.0000000001f;
 	private View2D view;
 
 	VectorDistributionRenderer(View2D view, int nx, int ny) {
 		this.nx = nx;
 		this.ny = ny;
 		this.view = view;
+	}
+
+	static float getDefaultMinimumValueSquare() {
+		return defaultMinSquare;
+	}
+
+	static float getDefaultScale() {
+		return defaultScale;
 	}
 
 	void setStroke(Stroke s) {
@@ -84,11 +92,11 @@ class VectorDistributionRenderer {
 				y = Math.round(j * dy);
 				uij = u[i][j];
 				vij = v[i][j];
-				if (uij * uij + vij * vij > min) {
+				if (uij * uij + vij * vij > defaultMinSquare) {
 					color = view.getContrastColor(x, y);
 					color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
 					g.setColor(color);
-					drawVector(g, x, y, uij, vij, scale);
+					drawVector(g, x, y, uij, vij, defaultScale);
 				}
 			}
 		}
@@ -96,7 +104,7 @@ class VectorDistributionRenderer {
 	}
 
 	// special case
-	void renderHeatFlux(float[][] t, float[][] k, JComponent c, Graphics2D g) {
+	void renderHeatFlux(float[][] t, float[][] k, JComponent c, Graphics2D g, float scale, float minSquare) {
 
 		if (!c.isVisible())
 			return;
@@ -116,14 +124,17 @@ class VectorDistributionRenderer {
 				y = Math.round(j * dy);
 				uij = -k[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * dx);
 				vij = -k[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * dy);
-				if (uij * uij + vij * vij > min) {
-					color = view.getContrastColor(x, y);
-					color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
-					g.setColor(color);
+				color = view.getContrastColor(x, y);
+				color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
+				g.setColor(color);
+				if (uij * uij + vij * vij > minSquare) {
 					drawVector(g, x, y, uij, vij, scale);
+				} else {
+					g.fillOval(x, y, 4, 4);
 				}
 			}
 		}
 
 	}
+
 }

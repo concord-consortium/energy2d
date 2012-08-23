@@ -133,6 +133,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
 	private VectorDistributionRenderer vectorFieldRenderer;
+	private float heatFluxMinimumValueSquare = VectorDistributionRenderer.getDefaultMinimumValueSquare();
+	private float heatFluxScale = VectorDistributionRenderer.getDefaultScale();
 	private ThermostatRenderer thermostatRenderer;
 	private boolean showIsotherm;
 	private boolean showStreamLines;
@@ -702,6 +704,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return showHeatFluxArrows;
 	}
 
+	public void setHeatFluxArrowMinimum(float minSquare) {
+		heatFluxMinimumValueSquare = minSquare;
+	}
+
+	public void setHeatFluxScale(float scale) {
+		heatFluxScale = scale;
+	}
+
 	public void setHeatFluxLinesOn(boolean b) {
 		showHeatFluxLines = b;
 		if (b && heatFluxLines == null)
@@ -1072,7 +1082,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showVelocity)
 			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
 		if (showHeatFluxArrows)
-			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g);
+			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g, heatFluxScale, heatFluxMinimumValueSquare);
 		drawPhotons(g);
 		showSunOrMoon(g);
 		drawThermometers(g);
