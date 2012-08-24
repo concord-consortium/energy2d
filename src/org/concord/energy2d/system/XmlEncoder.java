@@ -167,6 +167,9 @@ class XmlEncoder {
 		if (!box.view.isFrankOn()) {
 			sb.append("<brand>false</brand>\n");
 		}
+		if (box.view.isControlPanelVisible()) {
+			sb.append("<control_panel>true</control_panel>\n");
+		}
 		Rectangle2D.Float colorPalette = box.view.getColorPaletteRectangle();
 		sb.append("<color_palette_x>" + colorPalette.x + "</color_palette_x>");
 		sb.append("<color_palette_y>" + colorPalette.y + "</color_palette_y>");

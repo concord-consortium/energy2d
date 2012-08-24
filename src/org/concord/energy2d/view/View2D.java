@@ -147,6 +147,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGrid;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
+	private boolean showControlPanel;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
 	private byte mouseReadType = MOUSE_READ_DEFAULT;
 	private byte colorPaletteType = RAINBOW;
@@ -185,6 +186,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol moon, sun;
+	private Symbol startIcon, switchIcon;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -586,10 +588,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void toggleRun() {
 		runToggle = !runToggle;
+		if (startIcon != null)
+			startIcon.setPressed(runToggle);
 	}
 
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	public void setControlPanelVisible(boolean b) {
+		showControlPanel = b;
+	}
+
+	public boolean isControlPanelVisible() {
+		return showControlPanel;
 	}
 
 	public void setFrankOn(boolean b) {
@@ -1203,6 +1215,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.drawString(errorMessage, w / 2 - fm.stringWidth(errorMessage) / 2, h / 2);
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
+
+		if (showControlPanel)
+			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
 
 	}
 
@@ -2403,6 +2418,24 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(model.getThermometers().get(model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
 			break;
 		}
+		if (switchIcon != null) {
+			if (switchIcon.contains(x, y)) {
+				Object r = getClientProperty("close_full_screen");
+				if (r instanceof Runnable) {
+					((Runnable) r).run();
+				} else {
+					Action a = getActionMap().get("Quit");
+					if (a != null)
+						a.actionPerformed(null);
+				}
+			}
+		}
+		if (startIcon != null) {
+			if (startIcon.contains(x, y)) {
+				notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
+				startIcon.setPressed(!runToggle);
+			}
+		}
 		repaint();
 		e.consume();
 		movingShape = null;
@@ -2776,4 +2809,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.drawString(s, x, y);
 	}
 
+	private void drawControlPanel(Graphics2D g, int x, int y) {
+		if (startIcon == null) {
+			startIcon = Symbol.get("Start");
+			startIcon.setStroke(moderateStroke);
+			startIcon.setBorderPainted(true);
+		}
+		g.setStroke(thinStroke);
+		startIcon.paintIcon(this, g, x - startIcon.getIconWidth() - 4, y);
+		if (switchIcon == null) {
+			switchIcon = Symbol.get("Switch");
+			switchIcon.setStroke(moderateStroke);
+			switchIcon.setBorderPainted(true);
+		}
+		g.setStroke(thinStroke);
+		switchIcon.paintIcon(this, g, x + 4, y);
+	}
 }

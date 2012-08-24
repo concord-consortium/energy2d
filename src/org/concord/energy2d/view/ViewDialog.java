@@ -238,7 +238,17 @@ class ViewDialog extends JDialog {
 		});
 		p.add(checkBox);
 
-		p.add(new JPanel());
+		checkBox = new JCheckBox("Control Panel");
+		checkBox.setSelected(view.isControlPanelVisible());
+		checkBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBox src = (JCheckBox) e.getSource();
+				view.setControlPanelVisible(src.isSelected());
+				view.repaint();
+			}
+		});
+		p.add(checkBox);
+
 		p.add(new JPanel());
 		p.add(new JPanel());
 		count++;

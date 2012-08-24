@@ -11,9 +11,12 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.awt.Stroke;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
@@ -25,9 +28,19 @@ import javax.swing.Icon;
 
 public abstract class Symbol implements Icon {
 
-	int w = 8, h = 8;
-	Color color = Color.white;
-	Stroke stroke = new BasicStroke(1);
+	protected int x = 0, y = 0, w = 8, h = 8;
+	protected Color color = Color.white;
+	protected Stroke stroke = new BasicStroke(1);
+	protected boolean paintBorder;
+	protected boolean pressed;
+
+	public void setPressed(boolean pressed) {
+		this.pressed = pressed;
+	}
+
+	public boolean isPressed() {
+		return pressed;
+	}
 
 	public void setColor(Color color) {
 		this.color = color;
@@ -45,6 +58,14 @@ public abstract class Symbol implements Icon {
 		return stroke;
 	}
 
+	public void setBorderPainted(boolean paintBorder) {
+		this.paintBorder = paintBorder;
+	}
+
+	public boolean isBorderPainted() {
+		return paintBorder;
+	}
+
 	public void setIconWidth(int width) {
 		w = width;
 	}
@@ -59,6 +80,21 @@ public abstract class Symbol implements Icon {
 
 	public int getIconHeight() {
 		return h;
+	}
+
+	public boolean contains(int rx, int ry) {
+		return rx > x && rx < x + w && ry > y && ry < y + h;
+	}
+
+	public void paintIcon(Component c, Graphics g, int x, int y) {
+		this.x = x;
+		this.y = y;
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(color);
+		if (paintBorder) {
+			g.drawRoundRect(x, y, w, h, 10, 10);
+		}
+		g2.setStroke(stroke);
 	}
 
 	public Symbol getScaledInstance(float scale) {
@@ -93,6 +129,10 @@ public abstract class Symbol implements Icon {
 			return new Sun(Color.yellow, 16, 16);
 		if ("Moon".equals(s))
 			return new Moon(Color.white, 16, 16);
+		if ("Switch".equals(s))
+			return new SwitchIcon(Color.white, 24, 24);
+		if ("Start".equals(s))
+			return new StartIcon(Color.white, 24, 24);
 		return null;
 	}
 
@@ -105,11 +145,8 @@ public abstract class Symbol implements Icon {
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
 			Graphics2D g2 = (Graphics2D) g;
-			int w = getIconWidth();
-			int h = getIconHeight();
-			g2.setColor(color);
-			g2.setStroke(stroke);
 			Area a = new Area(new Ellipse2D.Float(x, y, w, h));
 			a.subtract(new Area(new Ellipse2D.Float(x + w * 0.25f, y, w, h)));
 			g2.fill(a);
@@ -127,11 +164,8 @@ public abstract class Symbol implements Icon {
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
 			Graphics2D g2 = (Graphics2D) g;
-			int w = getIconWidth();
-			int h = getIconHeight();
-			g2.setColor(color);
-			g2.setStroke(stroke);
 			Ellipse2D.Float s = new Ellipse2D.Float(x, y, w * 0.75f, h * 0.75f);
 			g2.fill(s);
 			int x1, y1;
@@ -166,6 +200,7 @@ public abstract class Symbol implements Icon {
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			g2.fillRect(x, y, w - 1, h - 1);
@@ -182,6 +217,52 @@ public abstract class Symbol implements Icon {
 			for (int i = 1; i < n; i++) {
 				g2.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
 				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
+			}
+		}
+
+	}
+
+	static class SwitchIcon extends Symbol {
+
+		public SwitchIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			float thickness = ((BasicStroke) stroke).getLineWidth();
+			Rectangle2D.Float s = new Rectangle2D.Float(x + w * 0.2f, y + h * 0.2f, w * 0.6f, h * 0.6f);
+			Arc2D.Float a = new Arc2D.Float(s, 80 - thickness * 10, thickness * 20 - 340, Arc2D.OPEN);
+			g2.draw(a);
+			g2.drawLine((int) (x + w * 0.5f), (int) (y + h * 0.1f), (int) (x + w * 0.5f), (int) (y + h * 0.3f));
+		}
+
+	}
+
+	static class StartIcon extends Symbol {
+
+		private int d = 4;
+		private Stroke s2 = new BasicStroke(d);
+
+		public StartIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			if (pressed) {
+				((Graphics2D) g).setStroke(s2);
+				g.drawLine(x + w / 2 - d + 1, y + d * 2, x + w / 2 - d + 1, y + h - d * 2);
+				g.drawLine(x + w / 2 + d - 1, y + d * 2, x + w / 2 + d - 1, y + h - d * 2);
+			} else {
+				int[] xpoints = new int[] { x + w / 2 - d, x + w - d, x + w / 2 - d };
+				int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
+				g.fillPolygon(new Polygon(xpoints, ypoints, 3));
 			}
 		}
 

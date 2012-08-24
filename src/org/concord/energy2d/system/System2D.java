@@ -868,7 +868,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		menuBar.addRecentFile(preferences.get("Recent File 3", null));
 		frame.setJMenuBar(menuBar);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setContentPane(box.getContentPane());
+		frame.getContentPane().add(box.getContentPane(), BorderLayout.CENTER);
 		ToolBar toolBar = new ToolBar(box);
 		box.addIOListener(toolBar);
 		box.view.addManipulationListener(toolBar);
