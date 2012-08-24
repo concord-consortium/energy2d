@@ -1139,6 +1139,18 @@ public class Model2D {
 		return t;
 	}
 
+	public float[] getHeatFluxAt(float x, float y) {
+		int i = Math.min(t.length - 2, Math.round(x / deltaX));
+		if (i < 1)
+			i = 1;
+		int j = Math.min(t[0].length - 2, Math.round(y / deltaY));
+		if (j < 1)
+			j = 1;
+		float fx = -conductivity[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * deltaX);
+		float fy = -conductivity[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * deltaY);
+		return new float[] { fx, fy };
+	}
+
 	public float[][] getXVelocity() {
 		return u;
 	}

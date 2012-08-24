@@ -103,6 +103,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte MOUSE_READ_TEMPERATURE = 1;
 	public final static byte MOUSE_READ_THERMAL_ENERGY = 2;
 	public final static byte MOUSE_READ_VELOCITY = 3;
+	public final static byte MOUSE_READ_HEAT_FLUX = 4;
 
 	public final static byte RAINBOW = 0;
 	public final static byte IRON = 1;
@@ -122,6 +123,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#.####");
+	private final static DecimalFormat HEAT_FLUX_FORMAT = new DecimalFormat("###.##");
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
 	private Font sensorReadingFont = new Font(null, Font.PLAIN, 10);
 	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
@@ -1170,6 +1172,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			case MOUSE_READ_VELOCITY:
 				float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
 				drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
+				break;
+			case MOUSE_READ_HEAT_FLUX:
+				float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+				drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
 				break;
 			case MOUSE_READ_DEFAULT:
 				if (showGraph) {
