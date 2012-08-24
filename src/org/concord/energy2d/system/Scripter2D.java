@@ -712,6 +712,8 @@ class Scripter2D extends Scripter {
 						s2d.view.setMouseReadType(View2D.MOUSE_READ_THERMAL_ENERGY);
 					else if ("VELOCITY".equalsIgnoreCase(t[1]))
 						s2d.view.setMouseReadType(View2D.MOUSE_READ_VELOCITY);
+					else if ("HEAT_FLUX".equalsIgnoreCase(t[1]))
+						s2d.view.setMouseReadType(View2D.MOUSE_READ_HEAT_FLUX);
 					else
 						showError(ci, "mouse read type not supported");
 				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {

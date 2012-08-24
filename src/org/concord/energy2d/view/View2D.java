@@ -231,6 +231,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			public void mouseReleased(MouseEvent e) {
 				processMouseReleased(e);
 			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				processMouseExited(e);
+			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
@@ -433,6 +438,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		textBoxes.clear();
 		if (pictures != null)
 			pictures.clear();
+		for (Rectangle h : handle)
+			h.x = h.y = 0;
 	}
 
 	public void addTextBox(TextBox t) {
@@ -1160,30 +1167,32 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
-			switch (mouseReadType) {
-			case MOUSE_READ_TEMPERATURE:
-				float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
-				break;
-			case MOUSE_READ_THERMAL_ENERGY:
-				pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
-				break;
-			case MOUSE_READ_VELOCITY:
-				float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
-				break;
-			case MOUSE_READ_HEAT_FLUX:
-				float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-				drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
-				break;
-			case MOUSE_READ_DEFAULT:
-				if (showGraph) {
-					String dataInfo = getGraphDataAt(mouseMovedPoint.x, mouseMovedPoint.y);
-					if (dataInfo != null)
-						drawMouseReadString(g, dataInfo);
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
+				switch (mouseReadType) {
+				case MOUSE_READ_TEMPERATURE:
+					float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+					drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
+					break;
+				case MOUSE_READ_THERMAL_ENERGY:
+					pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+					drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
+					break;
+				case MOUSE_READ_VELOCITY:
+					float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+					drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
+					break;
+				case MOUSE_READ_HEAT_FLUX:
+					float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+					drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
+					break;
+				case MOUSE_READ_DEFAULT:
+					if (showGraph) {
+						String dataInfo = getGraphDataAt(mouseMovedPoint.x, mouseMovedPoint.y);
+						if (dataInfo != null)
+							drawMouseReadString(g, dataInfo);
+					}
+					break;
 				}
-				break;
 			}
 		}
 
@@ -2436,6 +2445,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		return null;
+	}
+
+	private void processMouseExited(MouseEvent e) {
+		mouseMovedPoint.setLocation(-1, -1);
+		repaint();
 	}
 
 	private void processMouseMoved(MouseEvent e) {
