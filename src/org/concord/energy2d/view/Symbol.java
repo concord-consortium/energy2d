@@ -135,6 +135,8 @@ public abstract class Symbol implements Icon {
 			return new StartIcon(Color.white, 24, 24);
 		if ("Reset".equals(s))
 			return new ResetIcon(Color.white, 24, 24);
+		if ("Graph".equals(s))
+			return new GraphIcon(Color.white, 24, 24);
 		return null;
 	}
 
@@ -240,6 +242,34 @@ public abstract class Symbol implements Icon {
 			Arc2D.Float a = new Arc2D.Float(s, 80 - thickness * 10, thickness * 20 - 340, Arc2D.OPEN);
 			g2.draw(a);
 			g2.drawLine((int) (x + w * 0.5f), (int) (y + h * 0.1f), (int) (x + w * 0.5f), (int) (y + h * 0.4f));
+		}
+
+	}
+
+	static class GraphIcon extends Symbol {
+
+		private Stroke s2 = new BasicStroke(1);
+
+		public GraphIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			int x0 = (int) (x + w * 0.25f);
+			int y0 = (int) (y + h * 0.25f);
+			g2.drawRect(x0 - 1, y0 - 1, (int) (w * 0.5f) + 2, (int) (h * 0.5f) + 2);
+			g2.setStroke(s2);
+			if (pressed) {
+				g2.drawLine(x0, y0, (int) (x0 + w * 0.5f), (int) (y0 + h * 0.5f));
+				g2.drawLine(x0, (int) (y0 + h * 0.5f), (int) (x0 + w * 0.5f), y0);
+			} else {
+				g2.drawLine(x0, (int) (y0 + h * 0.25f), (int) (x0 + w * 0.25f), (int) (y0 + h * 0.5f));
+				g2.drawLine((int) (x0 + w * 0.25f), (int) (y0 + h * 0.5f), (int) (x0 + w * 0.5f), y0);
+			}
 		}
 
 	}

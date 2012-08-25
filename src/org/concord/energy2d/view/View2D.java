@@ -1,8 +1,3 @@
-/*
- *   Copyright (C) 2009  The Concord Consortium, Inc.,
- *   25 Love Lane, Concord, MA 01742
- */
-
 package org.concord.energy2d.view;
 
 import java.awt.BasicStroke;
@@ -185,7 +180,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol moon, sun;
-	private Symbol startIcon, resetIcon, switchIcon; // control panel to support touch screen
+	private Symbol startIcon, resetIcon, graphIcon, switchIcon; // control panel to support touch screen
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -605,12 +600,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			resetIcon = Symbol.get("Reset");
 			resetIcon.setStroke(moderateStroke);
 			resetIcon.setBorderPainted(true);
-			switchIcon = Symbol.get("Switch");
-			switchIcon.setStroke(moderateStroke);
-			switchIcon.setBorderPainted(true);
+			graphIcon = Symbol.get("Graph");
+			graphIcon.setStroke(moderateStroke);
+			graphIcon.setBorderPainted(true);
+			if (getClientProperty("close_full_screen") != null) {
+				switchIcon = Symbol.get("Switch");
+				switchIcon.setStroke(moderateStroke);
+				switchIcon.setBorderPainted(true);
+			}
 		} else {
 			startIcon = null;
 			resetIcon = null;
+			graphIcon = null;
 			switchIcon = null;
 		}
 	}
@@ -692,6 +693,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		}
 		showGraph = b;
+		if (graphIcon != null)
+			graphIcon.setPressed(showGraph);
 	}
 
 	public boolean isGraphOn() {
@@ -1192,33 +1195,47 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			int dy = rulerRenderer != null ? 30 : 15;
 			drawFrank(g, getWidth() - 84, getHeight() - dy);
 		}
+		drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
-			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight() && !isOverControlPanel(mouseMovedPoint.x, mouseMovedPoint.y)) {
-				switch (mouseReadType) {
-				case MOUSE_READ_TEMPERATURE:
-					float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-					drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
-					break;
-				case MOUSE_READ_THERMAL_ENERGY:
-					pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-					drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
-					break;
-				case MOUSE_READ_VELOCITY:
-					float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-					drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
-					break;
-				case MOUSE_READ_HEAT_FLUX:
-					float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
-					drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
-					break;
-				case MOUSE_READ_DEFAULT:
-					if (showGraph) {
-						String dataInfo = getGraphDataAt(mouseMovedPoint.x, mouseMovedPoint.y);
-						if (dataInfo != null)
-							drawMouseReadString(g, dataInfo);
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
+				Symbol controlButton = overWhichButtonOfControlPanel(mouseMovedPoint.x, mouseMovedPoint.y);
+				if (controlButton != null) {
+					if (controlButton == startIcon) {
+						drawMouseReadString(g, startIcon.isPressed() ? "Pause" : "Run");
+					} else if (controlButton == resetIcon) {
+						drawMouseReadString(g, "Reset");
+					} else if (controlButton == graphIcon) {
+						drawMouseReadString(g, graphIcon.isPressed() ? "Close graph" : "Open graph");
+					} else if (controlButton == switchIcon) {
+						drawMouseReadString(g, "Exit");
 					}
-					break;
+				} else {
+					switch (mouseReadType) {
+					case MOUSE_READ_TEMPERATURE:
+						float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
+						break;
+					case MOUSE_READ_THERMAL_ENERGY:
+						pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
+						break;
+					case MOUSE_READ_VELOCITY:
+						float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
+						break;
+					case MOUSE_READ_HEAT_FLUX:
+						float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
+						break;
+					case MOUSE_READ_DEFAULT:
+						if (showGraph) {
+							String dataInfo = getGraphDataAt(mouseMovedPoint.x, mouseMovedPoint.y);
+							if (dataInfo != null)
+								drawMouseReadString(g, dataInfo);
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -1230,8 +1247,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.drawString(errorMessage, w / 2 - fm.stringWidth(errorMessage) / 2, h / 2);
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
-
-		drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
 
 	}
 
@@ -2044,6 +2059,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			repaint();
 			e.consume();
 		}
+		if (graphIcon != null && graphIcon.contains(x, y)) {
+			setGraphOn(!showGraph);
+			repaint();
+			e.consume();
+		}
 		if (showGraph) {
 			boolean inGraph = false;
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
@@ -2300,6 +2320,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
 				notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+				if (graphIcon != null)
+					graphIcon.setPressed(false);
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				graphRenderer.doubleXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
@@ -2507,7 +2529,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseMovedPoint.setLocation(x, y);
-		if (isOverControlPanel(x, y)) {
+		if (overWhichButtonOfControlPanel(x, y) != null) {
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			repaint();
 			e.consume();
@@ -2833,8 +2855,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.drawString(s, x, y);
 	}
 
-	private boolean isOverControlPanel(int x, int y) {
-		return (switchIcon != null && switchIcon.contains(x, y)) || (startIcon != null && startIcon.contains(x, y)) || (resetIcon != null && resetIcon.contains(x, y));
+	private Symbol overWhichButtonOfControlPanel(int x, int y) {
+		if (startIcon != null && startIcon.contains(x, y))
+			return startIcon;
+		if (resetIcon != null && resetIcon.contains(x, y))
+			return resetIcon;
+		if (graphIcon != null && graphIcon.contains(x, y))
+			return graphIcon;
+		if (switchIcon != null && switchIcon.contains(x, y))
+			return switchIcon;
+		return null;
 	}
 
 	private void drawControlPanel(Graphics2D g, int x, int y) {
@@ -2846,9 +2876,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setStroke(thinStroke);
 			resetIcon.paintIcon(this, g, x - resetIcon.getIconWidth() / 2, y);
 		}
+		if (graphIcon != null) {
+			g.setStroke(thinStroke);
+			graphIcon.paintIcon(this, g, x + graphIcon.getIconWidth() / 2 + 4, y);
+		}
 		if (switchIcon != null) {
 			g.setStroke(thinStroke);
-			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() / 2 + 4, y);
+			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 3 / 2 + 8, y);
 		}
 	}
 
