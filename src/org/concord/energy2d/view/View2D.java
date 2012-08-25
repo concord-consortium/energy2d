@@ -2061,6 +2061,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (graphIcon != null && graphIcon.contains(x, y)) {
 			setGraphOn(!showGraph);
+			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
 			repaint();
 			e.consume();
 		}
