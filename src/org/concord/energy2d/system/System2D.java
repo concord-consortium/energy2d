@@ -276,7 +276,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void run() {
-		view.toggleRun();
+		view.setRunToggle(true);
 		executeInThreadService(new Runnable() {
 			public void run() {
 				model.run();
@@ -294,7 +294,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	public void stop() {
 		model.stop();
-		view.toggleRun();
+		view.setRunToggle(false);
 	}
 
 	public void reset() {

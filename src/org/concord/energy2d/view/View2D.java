@@ -185,7 +185,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol moon, sun;
-	private Symbol startIcon, resetIcon, switchIcon;
+	private Symbol startIcon, resetIcon, switchIcon; // control panel to support touch screen
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -587,8 +587,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	public void toggleRun() {
-		runToggle = !runToggle;
+	public void setRunToggle(boolean b) {
+		runToggle = b;
 		if (startIcon != null)
 			startIcon.setPressed(runToggle);
 	}
@@ -2033,8 +2033,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		}
 		if (startIcon != null && startIcon.contains(x, y)) {
+			startIcon.setPressed(!runToggle); // must do this before notification because the event handler may also set the run toggle
 			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
-			startIcon.setPressed(!runToggle);
 			repaint();
 			e.consume();
 			return;
