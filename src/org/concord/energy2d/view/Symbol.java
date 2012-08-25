@@ -125,6 +125,8 @@ public abstract class Symbol implements Icon {
 	public final static Symbol get(String s) {
 		if ("Thermometer".equals(s))
 			return Thermometer.sharedInstance();
+		if ("Anemometer".equals(s))
+			return new Anemometer(Color.white, 32, 32);
 		if ("Sun".equals(s))
 			return new Sun(Color.yellow, 16, 16);
 		if ("Moon".equals(s))
@@ -187,7 +189,7 @@ public abstract class Symbol implements Icon {
 
 	static class Thermometer extends Symbol {
 
-		// since they are many thermometers, we want to make a singleton.
+		// since there can be many thermometers, we want to make a singleton.
 		private final static Thermometer instance = new Thermometer();
 
 		public static Thermometer sharedInstance() {
@@ -222,6 +224,44 @@ public abstract class Symbol implements Icon {
 				g2.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
 				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
 			}
+		}
+
+	}
+
+	static class Anemometer extends Symbol {
+
+		private float angle;
+
+		public Anemometer(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void setAngle(float angle) {
+			this.angle = angle;
+		}
+
+		public float getAngle() {
+			return angle;
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			double xc = x + w * 0.5;
+			double yc = y + h * 0.5;
+			g.fillOval(Math.round(x + w * 0.4f), Math.round(y + h * 0.4f), Math.round(w * 0.2f), Math.round(h * 0.2f));
+			g2.rotate(angle, xc, yc);
+			int[] xPoints = new int[] { (int) xc, Math.round(x + w * 0.4f), Math.round(x + w * 0.6f) };
+			int[] yPoints = new int[] { y, Math.round(y + h * 0.4f), Math.round(y + h * 0.4f) };
+			g.fillPolygon(xPoints, yPoints, 3);
+			double theta = 2.0 * Math.PI / 3.0;
+			g2.rotate(theta, xc, yc);
+			g.fillPolygon(xPoints, yPoints, 3);
+			g2.rotate(theta, xc, yc);
+			g.fillPolygon(xPoints, yPoints, 3);
+			g2.rotate(-angle - 2 * theta, xc, yc);
 		}
 
 	}

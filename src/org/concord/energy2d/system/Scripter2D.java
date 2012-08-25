@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 
 import org.concord.energy2d.event.ScriptEvent;
 import org.concord.energy2d.event.ScriptListener;
+import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.DirichletThermalBoundary;
 import org.concord.energy2d.model.MassBoundary;
@@ -53,10 +54,12 @@ class Scripter2D extends Scripter {
 	private final static Pattern RUNSTEPS = compile("(^(?i)runsteps\\b){1}");
 	private final static Pattern PART = compile("(^(?i)part\\b){1}");
 	private final static Pattern THERMOMETER = compile("(^(?i)thermometer\\b){1}");
+	private final static Pattern ANEMOMETER = compile("(^(?i)anemometer\\b){1}");
 	private final static Pattern BOUNDARY = compile("(^(?i)boundary\\b){1}");
 	private final static Pattern PART_FIELD = compile("^%?((?i)part){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TASK_FIELD = compile("^%?((?i)task){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
-	private final static Pattern SENSOR_FIELD = compile("^%?((?i)sensor){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern ANEMOMETER_FIELD = compile("^%?((?i)anemometer){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
+	private final static Pattern THERMOMETER_FIELD = compile("^%?((?i)thermometer){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern IMAGE_FIELD = compile("^%?((?i)image){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern TEXT_FIELD = compile("^%?((?i)text){1}(\\[){1}" + REGEX_WHITESPACE + "*" + REGEX_NONNEGATIVE_DECIMAL + REGEX_WHITESPACE + "*(\\]){1}\\.");
 	private final static Pattern BOUNDARY_FIELD = compile("^%?((?i)boundary){1}(\\[){1}" + REGEX_WHITESPACE + "*\\w+" + REGEX_WHITESPACE + "*(\\]){1}\\.");
@@ -339,6 +342,24 @@ class Scripter2D extends Scripter {
 					float x = Float.parseFloat(t[0]);
 					float y = convertVerticalCoordinate(Float.parseFloat(t[1]));
 					s2d.model.addThermometer(x, y);
+				} catch (NumberFormatException e) {
+					showException(ci, e);
+					return;
+				}
+			}
+			out(ScriptEvent.FAILED, "Error in \'" + ci + "\'");
+		}
+
+		matcher = ANEMOMETER.matcher(ci);
+		if (matcher.find()) {
+			String s = ci.substring(matcher.end()).trim();
+			s = s.substring(1, s.length() - 1);
+			String[] t = s.split(REGEX_SEPARATOR + "+");
+			if (t.length == 2) {
+				try {
+					float x = Float.parseFloat(t[0]);
+					float y = convertVerticalCoordinate(Float.parseFloat(t[1]));
+					s2d.model.addAnemometer(x, y);
 				} catch (NumberFormatException e) {
 					showException(ci, e);
 					return;
@@ -892,8 +913,8 @@ class Scripter2D extends Scripter {
 						setPartField(s1, s2, s3);
 						return;
 					}
-					// sensor field
-					matcher = SENSOR_FIELD.matcher(s);
+					// thermometer field
+					matcher = THERMOMETER_FIELD.matcher(s);
 					if (matcher.find()) {
 						int end = matcher.end();
 						String s1 = s.substring(end).trim();
@@ -903,7 +924,21 @@ class Scripter2D extends Scripter {
 						String s2 = s1.substring(0, i).trim();
 						String s3 = s1.substring(i + 1).trim();
 						s1 = s.substring(0, end - 1);
-						setSensorField(s1, s2, s3);
+						setThermometerField(s1, s2, s3);
+						return;
+					}
+					// anemometer field
+					matcher = ANEMOMETER_FIELD.matcher(s);
+					if (matcher.find()) {
+						int end = matcher.end();
+						String s1 = s.substring(end).trim();
+						int i = s1.indexOf(" ");
+						if (i < 0)
+							return;
+						String s2 = s1.substring(0, i).trim();
+						String s3 = s1.substring(i + 1).trim();
+						s1 = s.substring(0, end - 1);
+						setAnemometerField(s1, s2, s3);
 						return;
 					}
 					// boundary field
@@ -1159,7 +1194,7 @@ class Scripter2D extends Scripter {
 		}
 	}
 
-	private void setSensorField(String str1, String str2, String str3) {
+	private void setThermometerField(String str1, String str2, String str3) {
 		Thermometer sensor = null;
 		int lb = str1.indexOf("[");
 		int rb = str1.indexOf("]");
@@ -1171,6 +1206,44 @@ class Scripter2D extends Scripter {
 			z = Float.NaN;
 		}
 		sensor = Float.isNaN(z) ? s2d.model.getThermometer(s) : s2d.model.getThermometer((int) Math.round(z));
+		if (sensor == null) {
+			showError(str1, "Sensor " + s + " not found");
+			return;
+		}
+		s = str2.toLowerCase().intern();
+		if (s == "label") {
+			sensor.setLabel(str3);
+			return;
+		}
+		if (s == "uid") {
+			sensor.setUid(str3);
+			return;
+		}
+		try {
+			z = Float.parseFloat(str3);
+		} catch (Exception e) {
+			showException(str3, e);
+			return;
+		}
+		if (s == "x") {
+			sensor.setX(z);
+		} else if (s == "y") {
+			sensor.setY(convertVerticalCoordinate(z));
+		}
+	}
+
+	private void setAnemometerField(String str1, String str2, String str3) {
+		Anemometer sensor = null;
+		int lb = str1.indexOf("[");
+		int rb = str1.indexOf("]");
+		String s = str1.substring(lb + 1, rb).trim();
+		float z = Float.NaN;
+		try {
+			z = Float.parseFloat(s);
+		} catch (Exception e) {
+			z = Float.NaN;
+		}
+		sensor = Float.isNaN(z) ? s2d.model.getAnemometer(s) : s2d.model.getAnemometer((int) Math.round(z));
 		if (sensor == null) {
 			showError(str1, "Sensor " + s + " not found");
 			return;

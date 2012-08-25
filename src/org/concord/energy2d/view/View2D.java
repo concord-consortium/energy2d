@@ -1125,6 +1125,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPhotons(g);
 		showSunOrMoon(g);
 		drawThermometers(g);
+		drawAnemometers(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
 			if (model.getTime() > graphRenderer.getXmax())
@@ -1353,6 +1354,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		default:
 			return Color.black;
 		}
+	}
+
+	private float angle;
+
+	private void drawAnemometers(Graphics2D g) {
+		Symbol.Anemometer s = (Symbol.Anemometer) Symbol.get("Anemometer");
+		int x = 40;
+		int y = 10;
+		float[] v = model.getVelocityAt(convertPixelToPointX(x), convertPixelToPointY(y));
+		angle += Math.hypot(v[0], v[1]);
+		angle %= 2 * Math.PI;
+		s.setAngle(angle);
+		if (Float.isNaN(angle))
+			angle = 0;
+		s.setColor(getContrastColor(x, y));
+		s.paintIcon(this, g, x, y);
 	}
 
 	private void drawThermometers(Graphics2D g) {

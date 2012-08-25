@@ -55,6 +55,7 @@ import org.concord.energy2d.event.IOEvent;
 import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
+import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
@@ -625,6 +626,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		case ManipulationEvent.DELETE:
 			if (target instanceof Part)
 				model.removePart((Part) target);
+			else if (target instanceof Anemometer)
+				model.removeAnemometer((Anemometer) target);
 			else if (target instanceof Thermometer)
 				model.removeThermometer((Thermometer) target);
 			else if (target instanceof TextBox)

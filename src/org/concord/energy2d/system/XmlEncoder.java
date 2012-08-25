@@ -3,6 +3,7 @@ package org.concord.energy2d.system;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.Model2D;
@@ -128,9 +129,15 @@ class XmlEncoder {
 		// sensors
 		sb.append("<sensor>\n");
 		List<Thermometer> thermometers = box.model.getThermometers();
-		if (thermometers != null) {
+		if (!thermometers.isEmpty()) {
 			for (Thermometer t : thermometers) {
 				sb.append(t.toXml() + "\n");
+			}
+		}
+		List<Anemometer> anemometers = box.model.getAnemometers();
+		if (!anemometers.isEmpty()) {
+			for (Anemometer a : anemometers) {
+				sb.append(a.toXml() + "\n");
 			}
 		}
 		sb.append("</sensor>\n");

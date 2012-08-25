@@ -80,6 +80,7 @@ public class Model2D {
 	// fluid cell array
 	private boolean[][] fluidity;
 
+	private List<Anemometer> anemometers;
 	private List<Thermometer> thermometers;
 	private List<Thermostat> thermostats;
 	private List<Part> parts;
@@ -156,6 +157,7 @@ public class Model2D {
 		setGridCellSize();
 
 		parts = Collections.synchronizedList(new ArrayList<Part>());
+		anemometers = Collections.synchronizedList(new ArrayList<Anemometer>());
 		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
@@ -368,6 +370,8 @@ public class Model2D {
 	public void translateAllBy(float dx, float dy) {
 		for (Thermometer t : thermometers)
 			t.translateBy(dx, dy);
+		for (Anemometer a : anemometers)
+			a.translateBy(dx, dy);
 		for (Cloud c : clouds)
 			c.translateBy(dx, dy);
 		for (Tree t : trees)
@@ -382,6 +386,11 @@ public class Model2D {
 		for (Thermometer t : thermometers) {
 			t.setCenter(scale * t.getX(), ly - scale * (ly - t.getY()));
 			if (!bound.intersects(t.getShape().getBounds2D()))
+				out = true;
+		}
+		for (Anemometer a : anemometers) {
+			a.setCenter(scale * a.getX(), ly - scale * (ly - a.getY()));
+			if (!bound.intersects(a.getShape().getBounds2D()))
 				out = true;
 		}
 		for (Cloud c : clouds) {
@@ -487,6 +496,8 @@ public class Model2D {
 		return getBackgroundViscosity() * backgroundDensity * backgroundSpecificHeat / backgroundConductivity;
 	}
 
+	// thermostats
+
 	/** only one thermostat is needed to connect a thermometer and a power source */
 	public Thermostat addThermostat(Thermometer t, Part p) {
 		Iterator<Thermostat> i = thermostats.iterator();
@@ -533,6 +544,8 @@ public class Model2D {
 	public List<Thermostat> getThermostats() {
 		return thermostats;
 	}
+
+	// thermometers
 
 	public void addThermometer(Thermometer t) {
 		thermometers.add(t);
@@ -584,14 +597,65 @@ public class Model2D {
 		return thermometers.get(i);
 	}
 
+	// anemometers
+
+	public void addAnemometer(Anemometer a) {
+		anemometers.add(a);
+	}
+
+	public void addAnemometer(float x, float y) {
+		anemometers.add(new Anemometer(x, y));
+	}
+
+	public void addAnemometer(float x, float y, String uid, String label, byte stencil) {
+		Anemometer a = new Anemometer(x, y);
+		a.setUid(uid);
+		a.setLabel(label);
+		a.setStencil(stencil);
+		anemometers.add(a);
+	}
+
+	public void removeAnemometer(Anemometer a) {
+		anemometers.remove(a);
+	}
+
+	public List<Anemometer> getAnemometers() {
+		return anemometers;
+	}
+
+	public Anemometer getAnemometer(String uid) {
+		if (uid == null)
+			return null;
+		synchronized (anemometers) {
+			for (Anemometer a : anemometers) {
+				if (uid.equals(a.getUid()))
+					return a;
+			}
+		}
+		return null;
+	}
+
+	public Anemometer getAnemometer(int i) {
+		if (i < 0 || i >= anemometers.size())
+			return null;
+		return anemometers.get(i);
+	}
+
 	/** Since the sensor data are erased, the index of step (and hence the clock) is also reset. */
 	public void clearSensorData() {
 		indexOfStep = 0;
-		if (thermometers == null || thermometers.isEmpty())
-			return;
-		synchronized (thermometers) {
-			for (Thermometer t : thermometers) {
-				t.clear();
+		if (thermometers != null && !thermometers.isEmpty()) {
+			synchronized (thermometers) {
+				for (Thermometer t : thermometers) {
+					t.clear();
+				}
+			}
+		}
+		if (anemometers != null && !anemometers.isEmpty()) {
+			synchronized (anemometers) {
+				for (Anemometer a : anemometers) {
+					a.clear();
+				}
 			}
 		}
 	}
@@ -667,6 +731,12 @@ public class Model2D {
 		synchronized (thermometers) {
 			for (Thermometer t : thermometers) {
 				if (uid.equals(t.getUid()))
+					return true;
+			}
+		}
+		synchronized (anemometers) {
+			for (Anemometer a : anemometers) {
+				if (uid.equals(a.getUid()))
 					return true;
 			}
 		}
@@ -862,6 +932,7 @@ public class Model2D {
 	public void clear() {
 		parts.clear();
 		photons.clear();
+		anemometers.clear();
 		thermometers.clear();
 		thermostats.clear();
 		clouds.clear();

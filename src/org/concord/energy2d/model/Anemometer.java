@@ -6,23 +6,23 @@ import java.awt.geom.Rectangle2D;
  * @author Charles Xie
  * 
  */
-public class Thermometer extends Sensor {
+public class Anemometer extends Sensor {
 
-	public final static float RELATIVE_WIDTH = 0.025f;
+	public final static float RELATIVE_WIDTH = 0.05f;
 	public final static float RELATIVE_HEIGHT = 0.05f;
 
-	public Thermometer(float x, float y) {
-		super(new Rectangle2D.Float()); // should have used Point2D but it is not a Shape.
+	public Anemometer(float x, float y) {
+		super(new Rectangle2D.Float());
 		setCenter(x, y);
 	}
 
-	public Thermometer(float x, float y, String label) {
+	public Anemometer(float x, float y, String label) {
 		this(x, y);
 		setLabel(label);
 	}
 
-	public Thermometer duplicate(float x, float y) {
-		return new Thermometer(x, y);
+	public Anemometer duplicate(float x, float y) {
+		return new Anemometer(x, y);
 	}
 
 	public void setCenter(float x, float y) {
@@ -61,7 +61,7 @@ public class Thermometer extends Sensor {
 
 	@Override
 	public String toXml() {
-		String xml = "<thermometer";
+		String xml = "<anemometer";
 		if (stencil != ONE_POINT)
 			xml += " stencil=\"" + stencil + "\"";
 		String uid = getUid();

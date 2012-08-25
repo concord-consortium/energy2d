@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
@@ -181,14 +182,26 @@ class XmlDecoder extends DefaultHandler {
 			box.view.setGraphYLabel(graphXLabel);
 
 		// since we don't know the width and height of the model until now, we have to fix the locations and the sizes of
-		// the thermometers, since they are relative to the size of the model.
+		// the sensors, since they are relative to the size of the model.
 		List<Thermometer> thermometers = box.model.getThermometers();
-		if (thermometers != null) {
+		if (!thermometers.isEmpty()) {
 			synchronized (thermometers) {
 				for (Thermometer t : thermometers) {
 					Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
-					r.width = 0.025f * modelWidth;
-					r.height = 0.05f * modelHeight;
+					r.width = Thermometer.RELATIVE_WIDTH * modelWidth;
+					r.height = Thermometer.RELATIVE_HEIGHT * modelHeight;
+					r.x = r.x - 0.5f * r.width;
+					r.y = r.y - 0.5f * r.height;
+				}
+			}
+		}
+		List<Anemometer> anemometers = box.model.getAnemometers();
+		if (!anemometers.isEmpty()) {
+			synchronized (anemometers) {
+				for (Anemometer a : anemometers) {
+					Rectangle2D.Float r = (Rectangle2D.Float) a.getShape();
+					r.width = Anemometer.RELATIVE_WIDTH * modelWidth;
+					r.height = Anemometer.RELATIVE_HEIGHT * modelHeight;
 					r.x = r.x - 0.5f * r.width;
 					r.y = r.y - 0.5f * r.height;
 				}
@@ -438,6 +451,29 @@ class XmlDecoder extends DefaultHandler {
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y))
 					box.model.addThermometer(x, y, uid, label, stencil);
+			}
+		} else if (qName == "anemometer") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN;
+				String label = null, uid = null;
+				byte stencil = Anemometer.ONE_POINT;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "stencil") {
+						stencil = Byte.parseByte(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "label") {
+						label = attribValue;
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y))
+					box.model.addAnemometer(x, y, uid, label, stencil);
 			}
 		} else if (qName == "thermostat") {
 			if (attrib != null) {

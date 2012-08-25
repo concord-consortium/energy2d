@@ -378,6 +378,7 @@ class MenuBar extends JMenuBar {
 		add(menu);
 
 		menu.add(box.view.getActionMap().get("Insert Thermometer"));
+		menu.add(box.view.getActionMap().get("Insert Anemometer"));
 		menu.add(box.view.getActionMap().get("Insert Cloud"));
 		menu.add(box.view.getActionMap().get("Insert Tree"));
 		menu.add(box.view.getActionMap().get("Insert Text Box"));
