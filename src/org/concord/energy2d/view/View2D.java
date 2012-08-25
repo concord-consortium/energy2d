@@ -147,7 +147,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGrid;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
-	private boolean showControlPanel;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
 	private byte mouseReadType = MOUSE_READ_DEFAULT;
 	private byte colorPaletteType = RAINBOW;
@@ -186,7 +185,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol moon, sun;
-	private Symbol startIcon, switchIcon;
+	private Symbol startIcon, resetIcon, switchIcon;
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -578,6 +577,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void reset() {
 		runToggle = false;
+		if (startIcon != null)
+			startIcon.setPressed(false);
 		setSelectedManipulable(null);
 		setTime(0);
 		if (graphRenderer != null) {
@@ -597,11 +598,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setControlPanelVisible(boolean b) {
-		showControlPanel = b;
+		if (b) {
+			startIcon = Symbol.get("Start");
+			startIcon.setStroke(moderateStroke);
+			startIcon.setBorderPainted(true);
+			resetIcon = Symbol.get("Reset");
+			resetIcon.setStroke(moderateStroke);
+			resetIcon.setBorderPainted(true);
+			switchIcon = Symbol.get("Switch");
+			switchIcon.setStroke(moderateStroke);
+			switchIcon.setBorderPainted(true);
+		} else {
+			startIcon = null;
+			resetIcon = null;
+			switchIcon = null;
+		}
 	}
 
 	public boolean isControlPanelVisible() {
-		return showControlPanel;
+		return startIcon != null;
 	}
 
 	public void setFrankOn(boolean b) {
@@ -1179,7 +1194,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
-			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight() && !isOverControlPanel(mouseMovedPoint.x, mouseMovedPoint.y)) {
 				switch (mouseReadType) {
 				case MOUSE_READ_TEMPERATURE:
 					float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
@@ -1216,8 +1231,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
 
-		if (showControlPanel)
-			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
+		drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
 
 	}
 
@@ -2006,6 +2020,30 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
+		if (switchIcon != null && switchIcon.contains(x, y)) {
+			Object r = getClientProperty("close_full_screen");
+			if (r instanceof Runnable) {
+				((Runnable) r).run();
+			} else {
+				Action a = getActionMap().get("Quit");
+				if (a != null)
+					a.actionPerformed(null);
+			}
+			e.consume();
+			return;
+		}
+		if (startIcon != null && startIcon.contains(x, y)) {
+			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
+			startIcon.setPressed(!runToggle);
+			repaint();
+			e.consume();
+			return;
+		}
+		if (resetIcon != null && resetIcon.contains(x, y)) {
+			notifyManipulationListeners(null, ManipulationEvent.RESET);
+			repaint();
+			e.consume();
+		}
 		if (showGraph) {
 			boolean inGraph = false;
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
@@ -2257,8 +2295,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseReleasedPoint.setLocation(x, y);
-		// if (actionMode == TRANSLATE_ALL_MODE)
-		// actionMode = SELECT_MODE;
 		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
@@ -2418,24 +2454,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(model.getThermometers().get(model.getThermometers().size() - 1), ManipulationEvent.OBJECT_ADDED);
 			break;
 		}
-		if (switchIcon != null) {
-			if (switchIcon.contains(x, y)) {
-				Object r = getClientProperty("close_full_screen");
-				if (r instanceof Runnable) {
-					((Runnable) r).run();
-				} else {
-					Action a = getActionMap().get("Quit");
-					if (a != null)
-						a.actionPerformed(null);
-				}
-			}
-		}
-		if (startIcon != null) {
-			if (startIcon.contains(x, y)) {
-				notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
-				startIcon.setPressed(!runToggle);
-			}
-		}
 		repaint();
 		e.consume();
 		movingShape = null;
@@ -2489,6 +2507,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseMovedPoint.setLocation(x, y);
+		if (isOverControlPanel(x, y)) {
+			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			repaint();
+			e.consume();
+			return;
+		}
 		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -2809,20 +2833,23 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.drawString(s, x, y);
 	}
 
-	private void drawControlPanel(Graphics2D g, int x, int y) {
-		if (startIcon == null) {
-			startIcon = Symbol.get("Start");
-			startIcon.setStroke(moderateStroke);
-			startIcon.setBorderPainted(true);
-		}
-		g.setStroke(thinStroke);
-		startIcon.paintIcon(this, g, x - startIcon.getIconWidth() - 4, y);
-		if (switchIcon == null) {
-			switchIcon = Symbol.get("Switch");
-			switchIcon.setStroke(moderateStroke);
-			switchIcon.setBorderPainted(true);
-		}
-		g.setStroke(thinStroke);
-		switchIcon.paintIcon(this, g, x + 4, y);
+	private boolean isOverControlPanel(int x, int y) {
+		return (switchIcon != null && switchIcon.contains(x, y)) || (startIcon != null && startIcon.contains(x, y)) || (resetIcon != null && resetIcon.contains(x, y));
 	}
+
+	private void drawControlPanel(Graphics2D g, int x, int y) {
+		if (startIcon != null) {
+			g.setStroke(thinStroke);
+			startIcon.paintIcon(this, g, x - startIcon.getIconWidth() * 3 / 2 - 4, y);
+		}
+		if (resetIcon != null) {
+			g.setStroke(thinStroke);
+			resetIcon.paintIcon(this, g, x - resetIcon.getIconWidth() / 2, y);
+		}
+		if (switchIcon != null) {
+			g.setStroke(thinStroke);
+			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() / 2 + 4, y);
+		}
+	}
+
 }
