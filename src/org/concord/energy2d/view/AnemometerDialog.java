@@ -10,18 +10,15 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Anemometer;
-import org.concord.energy2d.model.Sensor;
 
 /**
  * @author Charles Xie
@@ -35,9 +32,6 @@ class AnemometerDialog extends JDialog {
 	private JTextField yField;
 	private JTextField labelField;
 	private JTextField uidField;
-	private JRadioButton onePointButton;
-	private JRadioButton fivePointsButton;
-	private JRadioButton ninePointsButton;
 
 	AnemometerDialog(final View2D view, final Anemometer anemometer, boolean modal) {
 
@@ -84,13 +78,6 @@ class AnemometerDialog extends JDialog {
 						anemometer.setUid(uid);
 					}
 				}
-
-				if (onePointButton.isSelected())
-					anemometer.setStencil(Sensor.ONE_POINT);
-				else if (fivePointsButton.isSelected())
-					anemometer.setStencil(Sensor.FIVE_POINT);
-				else if (ninePointsButton.isSelected())
-					anemometer.setStencil(Sensor.NINE_POINT);
 
 				view.notifyManipulationListeners(anemometer, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
@@ -141,37 +128,6 @@ class AnemometerDialog extends JDialog {
 		labelField = new JTextField(anemometer.getLabel(), 10);
 		labelField.addActionListener(okListener);
 		p.add(labelField);
-
-		// anemometer calibration: how small it can be
-
-		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setBorder(BorderFactory.createTitledBorder("Sampled area (stencil)"));
-		box.add(p);
-
-		ButtonGroup bg = new ButtonGroup();
-
-		onePointButton = new JRadioButton("One point");
-		p.add(onePointButton);
-		bg.add(onePointButton);
-
-		fivePointsButton = new JRadioButton("Five points");
-		p.add(fivePointsButton);
-		bg.add(fivePointsButton);
-
-		ninePointsButton = new JRadioButton("Nine points");
-		p.add(ninePointsButton);
-		bg.add(ninePointsButton);
-
-		switch (anemometer.getStencil()) {
-		case 5:
-			fivePointsButton.setSelected(true);
-			break;
-		case 9:
-			ninePointsButton.setSelected(true);
-			break;
-		default:
-			onePointButton.setSelected(true);
-		}
 
 		pack();
 		setLocationRelativeTo(view);

@@ -1450,7 +1450,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.setFont(sensorReadingFont);
 		int x, y;
 		float rx, ry;
-		int ix, iy;
 		synchronized (thermometers) {
 			for (Thermometer t : thermometers) {
 				Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
@@ -1461,17 +1460,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
 					x = (int) (rx * getWidth() - iconW2);
 					y = (int) (ry * getHeight() - iconH2);
-					ix = Math.round(nx * rx);
-					iy = Math.round(ny * ry);
-					if (ix < 0)
-						ix = 0;
-					else if (ix >= nx)
-						ix = nx - 1;
-					if (iy < 0)
-						iy = 0;
-					else if (iy >= ny)
-						iy = ny - 1;
-					temp = model.getTemperature()[ix][iy];
+					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry), t.getStencil());
 					if (!Float.isNaN(temp)) {
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, (int) (x + iconW2), y - 5, true);

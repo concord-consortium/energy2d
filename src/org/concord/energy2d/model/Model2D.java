@@ -1113,6 +1113,79 @@ public class Model2D {
 		return t[i][j];
 	}
 
+	public float getTemperature(int i, int j, byte stencil) {
+		if (i < 0)
+			i = 0;
+		else if (i > nx - 1)
+			i = nx - 1;
+		if (j < 0)
+			j = 0;
+		else if (j > ny - 1)
+			j = ny - 1;
+		switch (stencil) {
+		case Sensor.ONE_POINT:
+			return t[i][j];
+		case Sensor.FIVE_POINT:
+			float temp = t[i][j];
+			int count = 1;
+			if (i > 0) {
+				temp += t[i - 1][j];
+				count++;
+			}
+			if (i < nx - 1) {
+				temp += t[i + 1][j];
+				count++;
+			}
+			if (j > 0) {
+				temp += t[i][j - 1];
+				count++;
+			}
+			if (j < ny - 1) {
+				temp += t[i][j + 1];
+				count++;
+			}
+			return temp / count;
+		case Sensor.NINE_POINT:
+			temp = t[i][j];
+			count = 1;
+			if (i > 0) {
+				temp += t[i - 1][j];
+				count++;
+			}
+			if (i < nx - 1) {
+				temp += t[i + 1][j];
+				count++;
+			}
+			if (j > 0) {
+				temp += t[i][j - 1];
+				count++;
+			}
+			if (j < ny - 1) {
+				temp += t[i][j + 1];
+				count++;
+			}
+			if (i > 0 && j > 0) {
+				temp += t[i - 1][j - 1];
+				count++;
+			}
+			if (i > 0 && j < ny - 1) {
+				temp += t[i - 1][j + 1];
+				count++;
+			}
+			if (i < nx - 1 && j > 0) {
+				temp += t[i + 1][j - 1];
+				count++;
+			}
+			if (i < nx - 1 && j < ny - 1) {
+				temp += t[i + 1][j + 1];
+				count++;
+			}
+			return temp / count;
+		default:
+			return t[i][j];
+		}
+	}
+
 	public void setTemperatureAt(float x, float y, float temperature) {
 		int i = Math.min(t.length - 1, Math.round(x / deltaX));
 		if (i < 0)
@@ -1253,75 +1326,13 @@ public class Model2D {
 
 	public void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
-			int ix, iy;
+			int i, j;
 			synchronized (thermometers) {
 				for (Thermometer m : thermometers) {
-					ix = Math.round(m.getX() / deltaX);
-					iy = Math.round(m.getY() / deltaY);
-					if (ix >= 0 && ix < nx && iy >= 0 && iy < ny) {
-						switch (m.getStencil()) {
-						case Thermometer.ONE_POINT:
-							m.addData(getTime(), t[ix][iy]);
-							break;
-						case Thermometer.FIVE_POINT:
-							float temp = t[ix][iy];
-							int count = 1;
-							if (ix > 0) {
-								temp += t[ix - 1][iy];
-								count++;
-							}
-							if (ix < nx - 1) {
-								temp += t[ix + 1][iy];
-								count++;
-							}
-							if (iy > 0) {
-								temp += t[ix][iy - 1];
-								count++;
-							}
-							if (iy < ny - 1) {
-								temp += t[ix][iy + 1];
-								count++;
-							}
-							m.addData(getTime(), temp / count);
-							break;
-						case Thermometer.NINE_POINT:
-							temp = t[ix][iy];
-							count = 1;
-							if (ix > 0) {
-								temp += t[ix - 1][iy];
-								count++;
-							}
-							if (ix < nx - 1) {
-								temp += t[ix + 1][iy];
-								count++;
-							}
-							if (iy > 0) {
-								temp += t[ix][iy - 1];
-								count++;
-							}
-							if (iy < ny - 1) {
-								temp += t[ix][iy + 1];
-								count++;
-							}
-							if (ix > 0 && iy > 0) {
-								temp += t[ix - 1][iy - 1];
-								count++;
-							}
-							if (ix > 0 && iy < ny - 1) {
-								temp += t[ix - 1][iy + 1];
-								count++;
-							}
-							if (ix < nx - 1 && iy > 0) {
-								temp += t[ix + 1][iy - 1];
-								count++;
-							}
-							if (ix < nx - 1 && iy < ny - 1) {
-								temp += t[ix + 1][iy + 1];
-								count++;
-							}
-							m.addData(getTime(), temp / count);
-							break;
-						}
+					i = Math.round(m.getX() / deltaX);
+					j = Math.round(m.getY() / deltaY);
+					if (i >= 0 && i < nx && j >= 0 && j < ny) {
+						m.addData(getTime(), getTemperature(i, j, m.getStencil()));
 					}
 				}
 			}
