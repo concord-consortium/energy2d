@@ -521,7 +521,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		setFrameTitle();
 	}
 
-	void loadURL(URL url) throws IOException {
+	public void loadURL(URL url) throws IOException {
 		setReloadButtonEnabled(true);
 		if (url == null)
 			return;
@@ -574,31 +574,32 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	/** Load a simulation by its file name. Currently only load from the same directory as the current file or model. */
 	public void loadSim(String fileName) throws IOException {
-		URL codeBase = null;
-		try {
-			codeBase = getCodeBase();
-		} catch (Exception e) {
-		}
-		if (codeBase != null) {
-			try {
-				loadURL(new URL(codeBase, fileName));
-			} catch (IOException e) {
-				throw e;
-			}
+		if (currentFile != null) {
+			String parentDirectory = MiscUtil.getParentDirectory(currentFile.toString());
+			if (parentDirectory != null)
+				loadFile(new File(parentDirectory, fileName));
+		} else if (currentModel != null) {
+			String parentDirectory = MiscUtil.getParentDirectory(currentModel);
+			if (parentDirectory != null)
+				loadModel(parentDirectory + fileName);
+		} else if (currentURL != null) {
+			String parentDirectory = MiscUtil.getParentDirectory(currentURL.toString());
+			if (parentDirectory != null)
+				loadURL(new URL(parentDirectory + fileName));
 		} else {
-			if (currentFile != null) {
-				String parentDirectory = MiscUtil.getParentDirectory(currentFile.toString());
-				if (parentDirectory != null)
-					loadFile(new File(parentDirectory, fileName));
-			} else {
-				if (currentModel != null) {
-					String parentDirectory = MiscUtil.getParentDirectory(currentModel);
-					if (parentDirectory != null)
-						loadModel(parentDirectory + fileName);
+			URL codeBase = null;
+			try {
+				codeBase = getCodeBase();
+			} catch (Exception e) {
+			}
+			if (codeBase != null) {
+				try {
+					loadURL(new URL(codeBase, fileName));
+				} catch (IOException e) {
+					throw e;
 				}
 			}
 		}
-
 	}
 
 	private void setReloadButtonEnabled(final boolean b) {
@@ -653,6 +654,10 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 	File getCurrentFile() {
 		return currentFile;
+	}
+
+	public URL getCurrentURL() {
+		return currentURL;
 	}
 
 	public boolean needExecutorService() {
