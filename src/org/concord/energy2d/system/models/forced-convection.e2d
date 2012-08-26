@@ -97,20 +97,25 @@
 <filled>false</filled>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T2" x="2.525" y="7.55"/>
 <thermometer label="T1" x="2.525" y="2.4500003"/>
+<anemometer label="A1" x="3.3994708" y="0.75396824"/>
+<anemometer label="A3" x="0.93915343" y="7.5793653"/>
+<anemometer label="A2" x="3.3730159" y="2.4867725"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="No fan" face="Arial" size="12" style="0" color="ffffff" border="true" draggable="false" x="0.5" y="0.5"/>
-<text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" draggable="false" x="0.5" y="5.75"/>
+<graph_xlabel>Time</graph_xlabel><text string="No fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.5" y="0.5"/>
+<text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.5" y="5.75"/>
 <text string="This model automatically stops at 0.4 hour." face="Arial" size="14" style="0" color="ffffff" x="1.4285712" y="0.535715"/>
 </view>
 </state>

@@ -29,11 +29,18 @@
 <wind_speed>0.5</wind_speed>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
+<anemometer label="A1" x="0.7407407" y="0.27777767"/>
+<anemometer label="A2" x="5.0" y="5.0"/>
+<anemometer label="A3" x="9.5" y="5.0"/>
+<anemometer label="A4" x="5.0" y="9.5"/>
+<anemometer label="A5" x="0.5" y="5.0"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>

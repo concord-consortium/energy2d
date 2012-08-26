@@ -62,18 +62,22 @@
 <filled>false</filled>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T2" x="5.0" y="9.25"/>
 <thermometer label="T1" x="5.0" y="0.75"/>
+<anemometer label="A1" x="5.0" y="3.0"/>
+<anemometer label="A2" x="5.0" y="7.0"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Which thermometer measures-linebreak-higher temperature?-linebreak-" face="Arial" size="14" style="0" color="ffffff" x="0.19179897" y="0.8333329"/>
+<graph_xlabel>Time</graph_xlabel><text string="Which thermometer measures higher temperature?-linebreak-Which anemometer measures higher speed?-linebreak-" face="Arial" size="12" style="0" color="ffffff" x="0.1918" y="0.76716244"/>
 </view>
 </state>

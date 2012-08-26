@@ -136,20 +136,23 @@
 <draggable>false</draggable>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T1" x="2.2" y="1.75"/>
 <thermometer label="T2" x="7.75" y="1.8000002"/>
+<anemometer label="A1" x="2.5" y="5.0"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <ruler>true</ruler>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Air" face="Arial" size="14" style="1" color="ffffff" x="2.2024" y="5.7606"/>
+<graph_xlabel>Time</graph_xlabel><text string="Air" face="Arial" size="14" style="1" color="ffffff" x="2.367725" y="5.7606"/>
 <text string="Can you tell the difference between heat transfer-linebreak-through air and solid (convection vs. conduction)?" face="Arial" size="14" style="0" color="ffffff" x="0.6018519" y="1.3888882"/>
 </view>
 </state>

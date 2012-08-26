@@ -78,11 +78,15 @@
 <filled>false</filled>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
+<anemometer label="A1" x="7.0" y="2.5"/>
+<anemometer label="A2" x="7.0" y="7.5"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>

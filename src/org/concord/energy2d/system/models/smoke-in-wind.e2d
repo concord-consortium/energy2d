@@ -10,7 +10,7 @@
 <photon_emission_interval>20</photon_emission_interval>
 <z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>1.0</background_conductivity>
 <background_viscosity>1.0E-4</background_viscosity>
-<thermal_buoyancy>0.0010</thermal_buoyancy>
+<thermal_buoyancy>0.001</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
 <temperature_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
@@ -39,19 +39,24 @@
 <constant_temperature>true</constant_temperature>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T1" x="2.0" y="5.0"/>
 <thermometer label="T2" x="4.0" y="5.0"/>
 <thermometer label="T3" x="8.0" y="5.0"/>
+<anemometer label="A1" x="1.5211641" y="2.2222223"/>
+<anemometer label="A2" x="1.7195767" y="7.9497356"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
 <graph_xlabel>Time</graph_xlabel><text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.3637566" y="9.887567"/>
+<text string="A combination of natural and forced convection" face="Arial" size="14" style="0" color="ffffff" x="0.25793666" y="0.58862484"/>
 </view>
 </state>

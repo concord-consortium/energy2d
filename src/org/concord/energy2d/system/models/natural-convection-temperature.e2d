@@ -130,13 +130,17 @@
 <label>Insulator</label>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T1" x="2.5" y="1.75"/>
 <thermometer label="T2" x="7.5" y="1.75"/>
+<anemometer label="A1" x="2.5" y="5.0"/>
+<anemometer label="A2" x="7.5" y="5.0"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <ruler>true</ruler>

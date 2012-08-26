@@ -32,7 +32,7 @@
 <visible>false</visible>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="0.0" y="8.3" width="10.0" height="1.6"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.0" y="8.3" width="10.0" height="1.6"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -134,11 +134,15 @@
 <label>Window</label>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
+<anemometer x="5.05291" y="1.3359789"/>
+<anemometer x="4.973545" y="5.515873"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>

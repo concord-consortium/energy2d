@@ -29,7 +29,7 @@
 <constant_temperature>false</constant_temperature>
 <color>22ccff</color>
 </part>
-<part><rectangle x="2.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="2.0" y="7.0" width="0.5" height="1.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -45,7 +45,7 @@
 <texture_height>10</texture_height>
 </texture>
 </part>
-<part><rectangle x="2.0" y="3.5" width="0.5" height="1.5"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="2.0" y="3.5" width="0.5" height="1.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -62,7 +62,7 @@
 </texture>
 </part>
 <part><polygon count="6" vertices="1.5, 3.5, 5.5, 1.0, 9.5, 3.5, 8.5, 3.5, 5.5, 1.6499996, 2.5, 3.5"/>
-<thermal_conductivity>0.0010</thermal_conductivity>
+<thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -78,7 +78,7 @@
 <texture_height>12</texture_height>
 </texture>
 </part>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -95,7 +95,7 @@
 </texture>
 <label>Ground</label>
 </part>
-<part><rectangle x="8.5" y="3.5" width="0.5" height="4.5"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="8.5" y="3.5" width="0.5" height="4.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -112,7 +112,7 @@
 </texture>
 <label>Wall</label>
 </part>
-<part><rectangle x="2.15" y="5.0" width="0.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="2.15" y="5.0" width="0.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>1.0</transmission>
@@ -124,7 +124,7 @@
 <color>ccccff</color>
 <label>Window</label>
 </part>
-<part><rectangle x="2.5" y="3.5" width="6.0" height="0.5"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="2.5" y="3.5" width="6.0" height="0.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -162,6 +162,12 @@
 <thermometer label="T1" x="1.625" y="6.25"/>
 <thermometer label="T2" x="5.125" y="6.25"/>
 <thermometer label="T3" x="6.125" y="6.25"/>
+<anemometer x="4.3915353" y="5.595238"/>
+<anemometer x="6.137566" y="5.542328"/>
+<anemometer x="2.857143" y="4.378307"/>
+<anemometer x="8.187831" y="4.378307"/>
+<anemometer x="2.8042328" y="7.420635"/>
+<anemometer x="7.7380953" y="7.4206347"/>
 </sensor>
 <controller>
 </controller>

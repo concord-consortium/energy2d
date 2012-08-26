@@ -379,6 +379,7 @@ class MenuBar extends JMenuBar {
 
 		menu.add(box.view.getActionMap().get("Insert Thermometer"));
 		menu.add(box.view.getActionMap().get("Insert Anemometer"));
+		menu.addSeparator();
 		menu.add(box.view.getActionMap().get("Insert Cloud"));
 		menu.add(box.view.getActionMap().get("Insert Tree"));
 		menu.add(box.view.getActionMap().get("Insert Text Box"));
@@ -678,7 +679,7 @@ class MenuBar extends JMenuBar {
 		templates.put("Bénard Cell", "models/benard-cell.e2d");
 		templates.put("Lid-Driven Cavity", "models/lid-driven-cavity.e2d");
 		templates.put("Smoke in Wind", "models/smoke-in-wind.e2d");
-		templates.put("Laminar/Turbulent Flow", "models/laminar-turbulent.e2d");
+		templates.put("Laminar/Turbulent Flow", "models/reynolds.e2d");
 		templates.put("Von Kármán Vortex Street", "models/vortex-street.e2d");
 		createMenu(box, subMenu, templates);
 

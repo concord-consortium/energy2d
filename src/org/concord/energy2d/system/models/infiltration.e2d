@@ -5,7 +5,7 @@
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>20000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
-<solar_ray_speed>0.0010</solar_ray_speed>
+<solar_ray_speed>0.001</solar_ray_speed>
 <photon_emission_interval>5</photon_emission_interval>
 <z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>0.2</background_conductivity>
 <background_density>1.0</background_density>
@@ -35,7 +35,7 @@
 </texture>
 <label>Wall</label>
 </part>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>3000.0</specific_heat>
 <density>50.0</density>
 <transmission>0.0</transmission>
@@ -52,7 +52,7 @@
 </texture>
 <label>Ground</label>
 </part>
-<part><rectangle x="4.5" y="2.75" width="1.0" height="5.25"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="4.5" y="2.75" width="1.0" height="5.25"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>2000.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -218,11 +218,15 @@
 <label>Window</label>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
+<anemometer label="A1" x="3.1084657" y="1.8121691"/>
+<anemometer label="A2" x="9.563492" y="2.857143"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>
