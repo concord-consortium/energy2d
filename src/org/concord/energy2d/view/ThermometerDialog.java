@@ -30,6 +30,7 @@ import javax.swing.JTextField;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.model.Part;
+import org.concord.energy2d.model.Sensor;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
 
@@ -112,11 +113,11 @@ class ThermometerDialog extends JDialog {
 				}
 
 				if (onePointButton.isSelected())
-					thermometer.setStencil(Thermometer.ONE_POINT);
+					thermometer.setStencil(Sensor.ONE_POINT);
 				else if (fivePointsButton.isSelected())
-					thermometer.setStencil(Thermometer.FIVE_POINT);
+					thermometer.setStencil(Sensor.FIVE_POINT);
 				else if (ninePointsButton.isSelected())
-					thermometer.setStencil(Thermometer.NINE_POINT);
+					thermometer.setStencil(Sensor.NINE_POINT);
 
 				float setpoint = parse(setpointField.getText());
 				if (Float.isNaN(setpoint))
@@ -135,7 +136,7 @@ class ThermometerDialog extends JDialog {
 					}
 				}
 
-				view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+				view.notifyManipulationListeners(thermometer, ManipulationEvent.PROPERTY_CHANGE);
 				view.repaint();
 				dispose();
 

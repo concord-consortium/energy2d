@@ -126,7 +126,7 @@ public abstract class Symbol implements Icon {
 		if ("Thermometer".equals(s))
 			return Thermometer.sharedInstance();
 		if ("Anemometer".equals(s))
-			return new Anemometer(Color.white, 32, 32);
+			return Anemometer.sharedInstance();
 		if ("Sun".equals(s))
 			return new Sun(Color.yellow, 16, 16);
 		if ("Moon".equals(s))
@@ -232,18 +232,18 @@ public abstract class Symbol implements Icon {
 
 		private float angle;
 
-		public Anemometer(Color color, int w, int h) {
-			setColor(color);
-			setIconWidth(w);
-			setIconHeight(h);
+		// since there can be many anemometers, we want to make a singleton.
+		private final static Anemometer instance = new Anemometer();
+
+		public static Anemometer sharedInstance() {
+			return instance;
+		}
+
+		public Anemometer() {
 		}
 
 		public void setAngle(float angle) {
 			this.angle = angle;
-		}
-
-		public float getAngle() {
-			return angle;
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {

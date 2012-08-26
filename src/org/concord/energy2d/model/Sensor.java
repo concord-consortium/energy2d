@@ -70,8 +70,8 @@ public abstract class Sensor extends Manipulable {
 		return data.get(data.size() - 1).getValue();
 	}
 
-	public void addData(float time, float temperature) {
-		data.add(new TimedData(time, temperature));
+	public void addData(float time, float x) {
+		data.add(new TimedData(time, x));
 		notifyMeasurementListeners();
 		if (data.size() > MAX)
 			data.remove(0);

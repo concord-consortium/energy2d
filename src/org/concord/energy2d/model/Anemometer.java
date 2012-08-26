@@ -11,6 +11,8 @@ public class Anemometer extends Sensor {
 	public final static float RELATIVE_WIDTH = 0.05f;
 	public final static float RELATIVE_HEIGHT = 0.05f;
 
+	private float angle;
+
 	public Anemometer(float x, float y) {
 		super(new Rectangle2D.Float());
 		setCenter(x, y);
@@ -23,6 +25,14 @@ public class Anemometer extends Sensor {
 
 	public Anemometer duplicate(float x, float y) {
 		return new Anemometer(x, y);
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+
+	public float getAngle() {
+		return angle;
 	}
 
 	public void setCenter(float x, float y) {

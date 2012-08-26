@@ -58,6 +58,7 @@ import org.concord.energy2d.event.GraphListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Model2D;
@@ -351,6 +352,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a.putValue(Action.NAME, "Thermometer");
 		a.putValue(Action.SHORT_DESCRIPTION, "Insert a thermometer where the mouse last clicked");
 		getActionMap().put("Insert Thermometer", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				setSelectedManipulable(addAnemometer(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f));
+				notifyManipulationListeners(null, ManipulationEvent.SENSOR_ADDED);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Anemometer");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert an anemometer where the mouse last clicked");
+		getActionMap().put("Insert Anemometer", a);
 
 	}
 
@@ -914,6 +926,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			model.setInitialTemperature();
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
+		} else if (copiedManipulable instanceof Anemometer) {
+			addAnemometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof TextBox) {
 			addTextBox((TextBox) copiedManipulable.duplicate(convertPixelToPointX(mouseReleasedPoint.x), model.getLy() - convertPixelToPointY(mouseReleasedPoint.y)));
 		} else if (copiedManipulable instanceof Cloud) {
@@ -1082,6 +1096,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g.setColor(Color.yellow);
 				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+			} else if (selectedManipulable instanceof Anemometer) {
+				Anemometer a = (Anemometer) selectedManipulable;
+				Rectangle2D.Float r = (Rectangle2D.Float) a.getShape();
+				int wa = convertLengthToPixelX(r.width);
+				int ha = convertLengthToPixelY(r.height);
+				int xa = convertPointToPixelX(a.getX()) - wa / 2;
+				int ya = convertPointToPixelY(a.getY()) - ha / 2;
+				g.setColor(Color.yellow);
+				g.setStroke(dashed);
+				g.drawRect(xa - 2, ya - 2, wa + 4, ha + 4);
 			} else if (selectedManipulable instanceof TextBox) { // textboxes are not resizable
 			} else {
 				g.setStroke(thinStroke);
@@ -1356,20 +1380,57 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private float angle;
-
 	private void drawAnemometers(Graphics2D g) {
+		List<Anemometer> anemometers = model.getAnemometers();
+		if (anemometers.isEmpty())
+			return;
+		g.setStroke(thinStroke);
 		Symbol.Anemometer s = (Symbol.Anemometer) Symbol.get("Anemometer");
-		int x = 40;
-		int y = 10;
-		float[] v = model.getVelocityAt(convertPixelToPointX(x), convertPixelToPointY(y));
-		angle += Math.hypot(v[0], v[1]);
-		angle %= 2 * Math.PI;
-		s.setAngle(angle);
-		if (Float.isNaN(angle))
-			angle = 0;
-		s.setColor(getContrastColor(x, y));
-		s.paintIcon(this, g, x, y);
+		float w = Anemometer.RELATIVE_WIDTH * model.getLx();
+		float h = Anemometer.RELATIVE_HEIGHT * model.getLy();
+		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
+		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
+		float iconW2 = s.getIconWidth() * 0.5f;
+		float iconH2 = s.getIconHeight() * 0.5f;
+		float vx, vy;
+		g.setFont(sensorReadingFont);
+		int x, y;
+		float rx, ry;
+		int ix, iy;
+		synchronized (anemometers) {
+			for (Anemometer a : anemometers) {
+				Rectangle2D.Float r = (Rectangle2D.Float) a.getShape();
+				r.width = w;
+				r.height = h;
+				rx = (a.getX() - xmin) / (xmax - xmin);
+				ry = (a.getY() - ymin) / (ymax - ymin);
+				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
+					x = (int) (rx * getWidth() - iconW2);
+					y = (int) (ry * getHeight() - iconH2);
+					ix = Math.round(nx * rx);
+					iy = Math.round(ny * ry);
+					if (ix < 0)
+						ix = 0;
+					else if (ix >= nx)
+						ix = nx - 1;
+					if (iy < 0)
+						iy = 0;
+					else if (iy >= ny)
+						iy = ny - 1;
+					vx = model.getXVelocity()[ix][iy];
+					vy = model.getYVelocity()[ix][iy];
+					if (!Float.isNaN(vx) && !Float.isNaN(vy)) {
+						if (model.isRunning())
+							a.setAngle((a.getAngle() + (float) Math.hypot(vx, vy) * iconW2) % (float) (2 * Math.PI));
+						if (a.getLabel() != null)
+							centerString(a.getLabel(), g, (int) (x + iconW2), y + s.getIconHeight() + 12, false);
+						s.setColor(getContrastColor(ix, iy));
+						s.setAngle(a.getAngle());
+						s.paintIcon(this, g, x, y);
+					}
+				}
+			}
+		}
 	}
 
 	private void drawThermometers(Graphics2D g) {
@@ -1382,8 +1443,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
 		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
-		float lx = s.getIconWidth();
-		float ly = s.getIconHeight();
+		float iconW2 = s.getIconWidth() * 0.5f;
+		float iconH2 = s.getIconHeight() * 0.5f;
 		float temp;
 		String str;
 		g.setFont(sensorReadingFont);
@@ -1398,8 +1459,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
-					x = (int) (rx * getWidth() - lx * 0.5f);
-					y = (int) (ry * getHeight() - ly * 0.5f);
+					x = (int) (rx * getWidth() - iconW2);
+					y = (int) (ry * getHeight() - iconH2);
 					ix = Math.round(nx * rx);
 					iy = Math.round(ny * ry);
 					if (ix < 0)
@@ -1413,9 +1474,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					temp = model.getTemperature()[ix][iy];
 					if (!Float.isNaN(temp)) {
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
-						centerString(str, g, x + s.getIconWidth() / 2, y - 5, true);
+						centerString(str, g, (int) (x + iconW2), y - 5, true);
 						if (t.getLabel() != null)
-							centerString(t.getLabel(), g, x + s.getIconWidth() / 2, y + s.getIconHeight() + 12, false);
+							centerString(t.getLabel(), g, (int) (x + iconW2), y + s.getIconHeight() + 12, false);
 						s.setValue(Math.round((temp - getMinimumTemperature()) / (getMaximumTemperature() - getMinimumTemperature()) * (s.getIconHeight() - 10)));
 					}
 					s.paintIcon(this, g, x, y);
@@ -1776,6 +1837,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
+		if (!model.getAnemometers().isEmpty()) {
+			synchronized (model.getAnemometers()) {
+				for (Anemometer a : model.getAnemometers()) {
+					if (a.contains(rx, ry)) {
+						setSelectedManipulable(a);
+						return;
+					}
+				}
+			}
+		}
 		if (!model.getClouds().isEmpty()) {
 			synchronized (model.getClouds()) {
 				for (Cloud c : model.getClouds()) {
@@ -1858,7 +1929,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Rectangle2D.Float r = (Rectangle2D.Float) s;
 				r.x += dx;
 				r.y += dy;
-				if (m instanceof Thermometer) {
+				if (m instanceof Thermometer || m instanceof Anemometer) {
 					if (r.x + r.width / 2 < xmin + dx)
 						r.x = xmin + dx - r.width / 2;
 					else if (r.x + r.width / 2 > xmax - dx)
@@ -2170,7 +2241,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseDragged(MouseEvent e) {
 		if (MiscUtil.isRightClick(e))
 			return;
-		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
+		if (showGraph && !(selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer)) {
 			e.consume();
 			return;
 		}
@@ -2185,7 +2256,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (movingShape != null && selectedManipulable != null) {
 				Shape shape = movingShape.getShape();
 				if (shape instanceof RectangularShape) {
-					if (selectedManipulable instanceof Thermometer) {
+					if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer) {
 						if (x < 8)
 							x = 8;
 						else if (x > getWidth() - 8)
@@ -2333,7 +2404,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseReleasedPoint.setLocation(x, y);
-		if (showGraph && !(selectedManipulable instanceof Thermometer)) {
+		if (showGraph && !(selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer)) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
@@ -2501,8 +2572,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void addThermometer(float x, float y, String label) {
-		Thermometer t = addThermometer(x, y);
-		t.setLabel(label);
+		addThermometer(x, y).setLabel(label);
 	}
 
 	private Thermometer addThermometer(float x, float y) {
@@ -2513,6 +2583,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		t.setCenter(x, y);
 		model.addThermometer(t);
 		return t;
+	}
+
+	public void addAnemometer(float x, float y, String label) {
+		addAnemometer(x, y).setLabel(label);
+	}
+
+	private Anemometer addAnemometer(float x, float y) {
+		Anemometer a = new Anemometer(x, y);
+		Rectangle2D.Float r = (Rectangle2D.Float) a.getShape();
+		r.width = Anemometer.RELATIVE_WIDTH * model.getLx();
+		r.height = Anemometer.RELATIVE_HEIGHT * model.getLy();
+		a.setCenter(x, y);
+		model.addAnemometer(a);
+		return a;
 	}
 
 	private String getGraphDataAt(int x, int y) {
@@ -2623,6 +2707,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (t.contains(rx, ry)) {
 							contained = true;
 							break;
+						}
+					}
+				}
+				if (!contained) {
+					synchronized (model.getAnemometers()) {
+						for (Anemometer a : model.getAnemometers()) {
+							if (a.contains(rx, ry)) {
+								contained = true;
+								break;
+							}
 						}
 					}
 				}
@@ -2752,7 +2846,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
 			}
-		} else if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof TextBox) {
+		} else if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer || selectedManipulable instanceof TextBox) {
 			Rectangle2D.Float r = (Rectangle2D.Float) selectedManipulable.getShape();
 			int a = convertPointToPixelX(r.x);
 			int b = convertPointToPixelY(r.y);
