@@ -137,6 +137,10 @@ public abstract class Symbol implements Icon {
 			return new StartIcon(Color.white, 24, 24);
 		if ("Reset".equals(s))
 			return new ResetIcon(Color.white, 24, 24);
+		if ("Next".equals(s))
+			return new NextIcon(Color.white, 24, 24);
+		if ("Prev".equals(s))
+			return new PrevIcon(Color.white, 24, 24);
 		if ("Graph".equals(s))
 			return new GraphIcon(Color.white, 24, 24);
 		return null;
@@ -381,6 +385,44 @@ public abstract class Symbol implements Icon {
 				int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
 				g.fillPolygon(new Polygon(xpoints, ypoints, 3));
 			}
+		}
+
+	}
+
+	static class NextIcon extends Symbol {
+
+		public NextIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			int d = 4;
+			int[] xpoints = new int[] { x + 3 * d, x + w - d, x + 3 * d };
+			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
+			g.fillPolygon(new Polygon(xpoints, ypoints, 3));
+			g.fillRect(x + d, y + h / 2 - d, 2 * d, 2 * d);
+		}
+
+	}
+
+	static class PrevIcon extends Symbol {
+
+		public PrevIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			int d = 4;
+			int[] xpoints = new int[] { x + w - 3 * d, x + d, x + w - 3 * d };
+			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
+			g.fillPolygon(new Polygon(xpoints, ypoints, 3));
+			g.fillRect(x + w - 3 * d, y + h / 2 - d, 2 * d, 2 * d);
 		}
 
 	}

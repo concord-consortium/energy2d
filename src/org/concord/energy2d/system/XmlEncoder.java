@@ -31,6 +31,17 @@ class XmlEncoder {
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		sb.append("<state>\n");
 
+		// links
+
+		sb.append("<links>\n");
+		if (box.getNextSimulation() != null) {
+			sb.append("<next_sim>" + box.getNextSimulation() + "</next_sim>\n");
+		}
+		if (box.getPreviousSimulation() != null) {
+			sb.append("<prev_sim>" + box.getPreviousSimulation() + "</prev_sim>\n");
+		}
+		sb.append("</links>\n");
+
 		// model properties
 
 		sb.append("<model>\n");

@@ -61,6 +61,7 @@ class XmlDecoder extends DefaultHandler {
 	private float thermalBuoyancy = 0.00025f;
 	private byte buoyancyApproximation = Model2D.BUOYANCY_AVERAGE_COLUMN;
 	private byte gravityType = Model2D.GRAVITY_UNIFORM;
+	private String nextSim, prevSim;
 
 	// view properties
 	private boolean ruler;
@@ -129,6 +130,8 @@ class XmlDecoder extends DefaultHandler {
 
 	public void endDocument() {
 
+		box.setPreviousSimulation(prevSim);
+		box.setNextSimulation(nextSim);
 		box.model.setLx(modelWidth);
 		box.model.setLy(modelHeight);
 		box.view.setArea(0, modelWidth, 0, modelHeight);
@@ -626,7 +629,11 @@ class XmlDecoder extends DefaultHandler {
 
 	public void endElement(String uri, String localName, String qName) {
 
-		if (qName == "model_width") {
+		if (qName == "next_sim") {
+			nextSim = str;
+		} else if (qName == "prev_sim") {
+			prevSim = str;
+		} else if (qName == "model_width") {
 			modelWidth = Float.parseFloat(str);
 		} else if (qName == "model_height") {
 			modelHeight = Float.parseFloat(str);
@@ -833,6 +840,8 @@ class XmlDecoder extends DefaultHandler {
 	private void resetGlobalVariables() {
 
 		// model properties
+		nextSim = null;
+		prevSim = null;
 		modelWidth = 10;
 		modelHeight = 10;
 		timeStep = 1;

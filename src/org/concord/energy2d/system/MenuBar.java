@@ -310,6 +310,18 @@ class MenuBar extends JMenuBar {
 		fileMenu.add(mi);
 		fileMenuItemCount++;
 
+		final Action scriptAction = box.view.getActionMap().get("Script");
+		mi = new JMenuItem("Script Console...");
+		mi.setAccelerator((KeyStroke) scriptAction.getValue(Action.ACCELERATOR_KEY));
+		mi.setToolTipText((String) scriptAction.getValue(Action.SHORT_DESCRIPTION));
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scriptAction.actionPerformed(e);
+			}
+		});
+		fileMenu.add(mi);
+		fileMenuItemCount++;
+
 		final Action taskAction = box.view.getActionMap().get("Task_Manager");
 		mi = new JMenuItem("Task Manager...");
 		mi.setAccelerator((KeyStroke) taskAction.getValue(Action.ACCELERATOR_KEY));
@@ -473,6 +485,17 @@ class MenuBar extends JMenuBar {
 				}
 				box.view.repaint();
 				box.view.notifyManipulationListeners(null, ManipulationEvent.RESIZE);
+			}
+		});
+		menu.add(mi);
+		menu.addSeparator();
+
+		mi = new JMenuItem("Links");
+		mi.setToolTipText("Set links to previous and next simulations");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LinksDialog d = new LinksDialog(box, true);
+				d.setVisible(true);
 			}
 		});
 		menu.add(mi);
@@ -731,17 +754,6 @@ class MenuBar extends JMenuBar {
 		menu = new JMenu("Help");
 		add(menu);
 
-		final Action scriptAction = box.view.getActionMap().get("Script");
-		mi = new JMenuItem("Script Console...");
-		mi.setAccelerator((KeyStroke) scriptAction.getValue(Action.ACCELERATOR_KEY));
-		mi.setToolTipText((String) scriptAction.getValue(Action.SHORT_DESCRIPTION));
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				scriptAction.actionPerformed(e);
-			}
-		});
-		menu.add(mi);
-
 		mi = new JMenuItem("Keyboard Shortcuts...");
 		mi.setToolTipText("See what keyboard shortcuts are supported");
 		mi.addActionListener(new ActionListener() {
@@ -757,7 +769,7 @@ class MenuBar extends JMenuBar {
 			mi.setToolTipText("Open the Online Manual");
 			mi.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Helper.openBrowser("http://energy.concord.org/energy2d/manual/index.html");
+					Helper.openBrowser("http://energy.concord.org/energy2d/manual");
 				}
 			});
 			menu.add(mi);

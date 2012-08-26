@@ -135,6 +135,24 @@ public final class MiscUtil {
 		return filename;
 	}
 
+	/** return the parent directory of this file path. */
+	public static String getParentDirectory(String path) {
+		if (path == null)
+			return null;
+		if (path.toLowerCase().indexOf("http://") != -1 || path.toLowerCase().indexOf("https://") != -1) {
+			int i = path.lastIndexOf('/');
+			if (i == -1)
+				return null;
+			return path.substring(0, i + 1);
+		}
+		int i = path.lastIndexOf(FILE_SEPARATOR);
+		if (i == -1)
+			i = path.lastIndexOf("/");
+		if (i == -1)
+			return null;
+		return path.substring(0, i + 1);
+	}
+
 	public static void setSelectedSilently(AbstractButton x, boolean b) {
 		ActionListener[] al = x.getActionListeners();
 		if (al != null && al.length > 0) {

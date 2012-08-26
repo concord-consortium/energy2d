@@ -56,6 +56,7 @@ import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Tree;
+import org.concord.energy2d.util.MiscUtil;
 import org.concord.energy2d.view.TextBox;
 import org.concord.energy2d.view.View2D;
 import org.concord.modeler.MwService;
@@ -91,6 +92,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	private URL currentURL;
 	private String currentModel;
 	private boolean saved = true;
+	private String nextSim, prevSim;
 
 	Runnable clickRun, clickStop, clickReset, clickReload;
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
@@ -248,6 +250,36 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		view.getInputMap().put(ks, "Task_Manager");
 		view.getActionMap().put("Task_Manager", a);
 
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (nextSim != null) {
+					try {
+						loadSim(nextSim);
+					} catch (IOException ioe) {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), nextSim + " cannot be loaded: " + ioe.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		};
+		a.putValue(Action.NAME, "Next");
+		a.putValue(Action.SHORT_DESCRIPTION, "Next Simulation");
+		view.getActionMap().put("Next_Simulation", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				if (prevSim != null) {
+					try {
+						loadSim(prevSim);
+					} catch (IOException ioe) {
+						JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), prevSim + " cannot be loaded: " + ioe.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		};
+		a.putValue(Action.NAME, "Previous");
+		a.putValue(Action.SHORT_DESCRIPTION, "Previous Simulation");
+		view.getActionMap().put("Previous_Simulation", a);
+
 	}
 
 	@Override
@@ -349,7 +381,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	private void loadState(Reader reader) throws IOException {
-		setSaved(true);
 		stop();
 		if (reader == null)
 			return;
@@ -366,6 +397,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					callAction(buttonStop);
 			}
 		});
+		setSaved(true);
 	}
 
 	private void loadStateApp(InputStream is) throws IOException {
@@ -376,7 +408,6 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void loadState(InputStream is) throws IOException {
-		setSaved(true);
 		stop();
 		if (is == null)
 			return;
@@ -393,6 +424,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 					callAction(buttonStop);
 			}
 		});
+		setSaved(true);
 	}
 
 	void saveState(Writer writer) throws IOException {
@@ -516,6 +548,51 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		}
 	}
 
+	public void setNextSimulation(String nextSim) {
+		this.nextSim = nextSim;
+	}
+
+	public String getNextSimulation() {
+		return nextSim;
+	}
+
+	public void setPreviousSimulation(String prevSim) {
+		this.prevSim = prevSim;
+	}
+
+	public String getPreviousSimulation() {
+		return prevSim;
+	}
+
+	/** Load a simulation by its file name. Currently only load from the same directory as the current file or model. */
+	public void loadSim(String fileName) throws IOException {
+		URL codeBase = null;
+		try {
+			codeBase = getCodeBase();
+		} catch (Exception e) {
+		}
+		if (codeBase != null) {
+			try {
+				loadURL(new URL(codeBase, fileName));
+			} catch (IOException e) {
+				throw e;
+			}
+		} else {
+			if (currentFile != null) {
+				String parentDirectory = MiscUtil.getParentDirectory(currentFile.toString());
+				if (parentDirectory != null)
+					loadFile(new File(parentDirectory, fileName));
+			} else {
+				if (currentModel != null) {
+					String parentDirectory = MiscUtil.getParentDirectory(currentModel);
+					if (parentDirectory != null)
+						loadModel(parentDirectory + fileName);
+				}
+			}
+		}
+
+	}
+
 	private void setReloadButtonEnabled(final boolean b) {
 		if (buttonReload == null)
 			return;
@@ -580,7 +657,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		if (scripter == null)
 			scripter = new Scripter2D(this);
 		scripter.executeScript(script);
-		setSaved(false);
+		if (scripter.shouldNotifySaveReminder())
+			setSaved(false);
 		return null;
 	}
 

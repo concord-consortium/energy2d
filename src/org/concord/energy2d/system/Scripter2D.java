@@ -1,8 +1,3 @@
-/*
- *   Copyright (C) 2009  The Concord Consortium, Inc.,
- *   25 Love Lane, Concord, MA 01742
- */
-
 package org.concord.energy2d.system;
 
 import static java.util.regex.Pattern.compile;
@@ -67,9 +62,14 @@ class Scripter2D extends Scripter {
 	private System2D s2d;
 	private List<ScriptListener> listenerList;
 	private boolean arrayUpdateRequested, temperatureInitializationRequested;
+	private boolean notifySaveReminder = true;
 
 	Scripter2D(System2D s2d) {
 		this.s2d = s2d;
+	}
+
+	boolean shouldNotifySaveReminder() {
+		return notifySaveReminder;
 	}
 
 	void addScriptListener(ScriptListener listener) {
@@ -119,6 +119,7 @@ class Scripter2D extends Scripter {
 	}
 
 	public void executeScript(String script) {
+		notifySaveReminder = true;
 		super.executeScript(script);
 		if (arrayUpdateRequested) {
 			s2d.model.refreshPowerArray();
@@ -142,6 +143,7 @@ class Scripter2D extends Scripter {
 			} else {
 				s2d.reset();
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -152,6 +154,7 @@ class Scripter2D extends Scripter {
 			} else {
 				s2d.reload();
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -162,6 +165,7 @@ class Scripter2D extends Scripter {
 			} else {
 				s2d.run();
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -175,6 +179,7 @@ class Scripter2D extends Scripter {
 				e.printStackTrace();
 			}
 			s2d.runSteps(nsteps);
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -185,6 +190,7 @@ class Scripter2D extends Scripter {
 			} else {
 				s2d.stop();
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -207,26 +213,26 @@ class Scripter2D extends Scripter {
 					showError(ci, "Expect two parameters for dawn and dusk time.");
 				}
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
 		matcher = INIT.matcher(ci);
 		if (matcher.find()) {
 			s2d.initialize();
+			notifySaveReminder = false;
 			return;
 		}
 
 		matcher = LOAD.matcher(ci);
 		if (matcher.find()) {
-			URL codeBase = s2d.getCodeBase();
-			if (codeBase != null) {
-				String s = ci.substring(matcher.end()).trim();
-				try {
-					s2d.loadURL(new URL(codeBase, s));
-				} catch (IOException e) {
-					showException(ci, e);
-				}
+			String s = ci.substring(matcher.end()).trim();
+			try {
+				s2d.loadSim(s);
+			} catch (IOException e) {
+				showException(ci, e);
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -238,6 +244,7 @@ class Scripter2D extends Scripter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			notifySaveReminder = false;
 			return;
 		}
 
@@ -249,6 +256,7 @@ class Scripter2D extends Scripter {
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(s2d.view), new JLabel(s));
 				}
 			});
+			notifySaveReminder = false;
 			return;
 		}
 

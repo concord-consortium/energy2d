@@ -181,7 +181,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol moon, sun;
-	private Symbol startIcon, resetIcon, graphIcon, switchIcon; // control panel to support touch screen
+	private Symbol startIcon, resetIcon, graphIcon, switchIcon, nextIcon, prevIcon; // control panel to support touch screen
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -615,15 +615,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			graphIcon = Symbol.get("Graph");
 			graphIcon.setStroke(moderateStroke);
 			graphIcon.setBorderPainted(true);
-			if (getClientProperty("close_full_screen") != null) {
-				switchIcon = Symbol.get("Switch");
-				switchIcon.setStroke(moderateStroke);
-				switchIcon.setBorderPainted(true);
-			}
+			nextIcon = Symbol.get("Next");
+			nextIcon.setStroke(moderateStroke);
+			nextIcon.setBorderPainted(true);
+			prevIcon = Symbol.get("Prev");
+			prevIcon.setStroke(moderateStroke);
+			prevIcon.setBorderPainted(true);
+			switchIcon = Symbol.get("Switch");
+			switchIcon.setStroke(moderateStroke);
+			switchIcon.setBorderPainted(true);
 		} else {
 			startIcon = null;
 			resetIcon = null;
 			graphIcon = null;
+			nextIcon = null;
+			prevIcon = null;
 			switchIcon = null;
 		}
 	}
@@ -1232,6 +1238,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						drawMouseReadString(g, "Reset");
 					} else if (controlButton == graphIcon) {
 						drawMouseReadString(g, graphIcon.isPressed() ? "Close graph" : "Open graph");
+					} else if (controlButton == nextIcon) {
+						drawMouseReadString(g, "Next");
+					} else if (controlButton == prevIcon) {
+						drawMouseReadString(g, "Previous");
 					} else if (controlButton == switchIcon) {
 						drawMouseReadString(g, "Exit");
 					}
@@ -2134,12 +2144,28 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.RESET);
 			repaint();
 			e.consume();
+			return;
+		}
+		if (nextIcon != null && nextIcon.contains(x, y)) {
+			Action a = getActionMap().get("Next_Simulation");
+			if (a != null)
+				a.actionPerformed(null);
+			e.consume();
+			return;
+		}
+		if (prevIcon != null && prevIcon.contains(x, y)) {
+			Action a = getActionMap().get("Previous_Simulation");
+			if (a != null)
+				a.actionPerformed(null);
+			e.consume();
+			return;
 		}
 		if (graphIcon != null && graphIcon.contains(x, y)) {
 			setGraphOn(!showGraph);
 			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
 			repaint();
 			e.consume();
+			return;
 		}
 		if (showGraph) {
 			boolean inGraph = false;
@@ -2962,6 +2988,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return resetIcon;
 		if (graphIcon != null && graphIcon.contains(x, y))
 			return graphIcon;
+		if (nextIcon != null && nextIcon.contains(x, y))
+			return nextIcon;
+		if (prevIcon != null && prevIcon.contains(x, y))
+			return prevIcon;
 		if (switchIcon != null && switchIcon.contains(x, y))
 			return switchIcon;
 		return null;
@@ -2970,19 +3000,27 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void drawControlPanel(Graphics2D g, int x, int y) {
 		if (startIcon != null) {
 			g.setStroke(thinStroke);
-			startIcon.paintIcon(this, g, x - startIcon.getIconWidth() * 3 / 2 - 4, y);
+			startIcon.paintIcon(this, g, x - startIcon.getIconWidth() * 3 - 12, y);
 		}
 		if (resetIcon != null) {
 			g.setStroke(thinStroke);
-			resetIcon.paintIcon(this, g, x - resetIcon.getIconWidth() / 2, y);
+			resetIcon.paintIcon(this, g, x - resetIcon.getIconWidth() * 2 - 8, y);
 		}
 		if (graphIcon != null) {
 			g.setStroke(thinStroke);
-			graphIcon.paintIcon(this, g, x + graphIcon.getIconWidth() / 2 + 4, y);
+			graphIcon.paintIcon(this, g, x - graphIcon.getIconWidth() - 4, y);
+		}
+		if (prevIcon != null) {
+			g.setStroke(thinStroke);
+			prevIcon.paintIcon(this, g, x, y);
+		}
+		if (nextIcon != null) {
+			g.setStroke(thinStroke);
+			nextIcon.paintIcon(this, g, x + nextIcon.getIconWidth() + 4, y);
 		}
 		if (switchIcon != null) {
 			g.setStroke(thinStroke);
-			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 3 / 2 + 8, y);
+			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 2 + 8, y);
 		}
 	}
 
