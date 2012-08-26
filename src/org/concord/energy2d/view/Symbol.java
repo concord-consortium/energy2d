@@ -247,21 +247,41 @@ public abstract class Symbol implements Icon {
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
+
 			super.paintIcon(c, g, x, y);
+
 			Graphics2D g2 = (Graphics2D) g;
 			double xc = x + w * 0.5;
 			double yc = y + h * 0.5;
+			g2.setColor(Color.white);
 			g.fillOval(Math.round(x + w * 0.4f), Math.round(y + h * 0.4f), Math.round(w * 0.2f), Math.round(h * 0.2f));
+			g2.setColor(Color.black);
+			g.drawOval(Math.round(x + w * 0.4f), Math.round(y + h * 0.4f), Math.round(w * 0.2f), Math.round(h * 0.2f));
+
 			g2.rotate(angle, xc, yc);
+
 			int[] xPoints = new int[] { (int) xc, Math.round(x + w * 0.4f), Math.round(x + w * 0.6f) };
 			int[] yPoints = new int[] { y, Math.round(y + h * 0.4f), Math.round(y + h * 0.4f) };
+			g2.setColor(Color.white);
 			g.fillPolygon(xPoints, yPoints, 3);
+			g2.setColor(Color.black);
+			g.drawPolygon(xPoints, yPoints, 3);
+
 			double theta = 2.0 * Math.PI / 3.0;
 			g2.rotate(theta, xc, yc);
+			g2.setColor(Color.white);
 			g.fillPolygon(xPoints, yPoints, 3);
+			g2.setColor(Color.black);
+			g.drawPolygon(xPoints, yPoints, 3);
+
 			g2.rotate(theta, xc, yc);
+			g2.setColor(Color.white);
 			g.fillPolygon(xPoints, yPoints, 3);
+			g2.setColor(Color.black);
+			g.drawPolygon(xPoints, yPoints, 3);
+
 			g2.rotate(-angle - 2 * theta, xc, yc);
+
 		}
 
 	}

@@ -1028,6 +1028,9 @@ public class Model2D {
 		setInitialVelocity();
 		for (Part p : parts)
 			p.setPowerSwitch(true);
+		if (!anemometers.isEmpty())
+			for (Anemometer a : anemometers)
+				a.setAngle(0);
 		photons.clear();
 		heatSolver.reset();
 		fluidSolver.reset();
