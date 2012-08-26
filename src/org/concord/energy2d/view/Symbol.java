@@ -33,6 +33,15 @@ public abstract class Symbol implements Icon {
 	protected Stroke stroke = new BasicStroke(1);
 	protected boolean paintBorder;
 	protected boolean pressed;
+	protected boolean disabled;
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
 
 	public void setPressed(boolean pressed) {
 		this.pressed = pressed;
@@ -399,6 +408,7 @@ public abstract class Symbol implements Icon {
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			super.paintIcon(c, g, x, y);
+			g.setColor(disabled ? Color.gray : color);
 			int d = 4;
 			int[] xpoints = new int[] { x + 3 * d, x + w - d, x + 3 * d };
 			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
@@ -418,6 +428,7 @@ public abstract class Symbol implements Icon {
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			super.paintIcon(c, g, x, y);
+			g.setColor(disabled ? Color.gray : color);
 			int d = 4;
 			int[] xpoints = new int[] { x + w - 3 * d, x + d, x + w - 3 * d };
 			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };

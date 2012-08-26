@@ -143,6 +143,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGrid;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
+	private boolean showControlPanel;
 	private byte heatMapType = HEATMAP_TEMPERATURE;
 	private byte mouseReadType = MOUSE_READ_DEFAULT;
 	private byte colorPaletteType = RAINBOW;
@@ -606,36 +607,42 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setControlPanelVisible(boolean b) {
 		if (b) {
-			startIcon = Symbol.get("Start");
-			startIcon.setStroke(moderateStroke);
-			startIcon.setBorderPainted(true);
-			resetIcon = Symbol.get("Reset");
-			resetIcon.setStroke(moderateStroke);
-			resetIcon.setBorderPainted(true);
-			graphIcon = Symbol.get("Graph");
-			graphIcon.setStroke(moderateStroke);
-			graphIcon.setBorderPainted(true);
-			nextIcon = Symbol.get("Next");
-			nextIcon.setStroke(moderateStroke);
-			nextIcon.setBorderPainted(true);
-			prevIcon = Symbol.get("Prev");
-			prevIcon.setStroke(moderateStroke);
-			prevIcon.setBorderPainted(true);
-			switchIcon = Symbol.get("Switch");
-			switchIcon.setStroke(moderateStroke);
-			switchIcon.setBorderPainted(true);
-		} else {
-			startIcon = null;
-			resetIcon = null;
-			graphIcon = null;
-			nextIcon = null;
-			prevIcon = null;
-			switchIcon = null;
+			if (startIcon == null) {
+				startIcon = Symbol.get("Start");
+				startIcon.setStroke(moderateStroke);
+				startIcon.setBorderPainted(true);
+			}
+			if (resetIcon == null) {
+				resetIcon = Symbol.get("Reset");
+				resetIcon.setStroke(moderateStroke);
+				resetIcon.setBorderPainted(true);
+			}
+			if (graphIcon == null) {
+				graphIcon = Symbol.get("Graph");
+				graphIcon.setStroke(moderateStroke);
+				graphIcon.setBorderPainted(true);
+			}
+			if (nextIcon == null) {
+				nextIcon = Symbol.get("Next");
+				nextIcon.setStroke(moderateStroke);
+				nextIcon.setBorderPainted(true);
+			}
+			if (prevIcon == null) {
+				prevIcon = Symbol.get("Prev");
+				prevIcon.setStroke(moderateStroke);
+				prevIcon.setBorderPainted(true);
+			}
+			if (switchIcon == null) {
+				switchIcon = Symbol.get("Switch");
+				switchIcon.setStroke(moderateStroke);
+				switchIcon.setBorderPainted(true);
+			}
 		}
+		showControlPanel = b;
 	}
 
 	public boolean isControlPanelVisible() {
-		return startIcon != null;
+		return showControlPanel;
 	}
 
 	public void setFrankOn(boolean b) {
@@ -1226,7 +1233,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			int dy = rulerRenderer != null ? 30 : 15;
 			drawFrank(g, getWidth() - 84, getHeight() - dy);
 		}
-		drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
+		if (showControlPanel)
+			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
@@ -1239,9 +1247,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					} else if (controlButton == graphIcon) {
 						drawMouseReadString(g, graphIcon.isPressed() ? "Close graph" : "Open graph");
 					} else if (controlButton == nextIcon) {
-						drawMouseReadString(g, "Next");
+						drawMouseReadString(g, nextIcon.isDisabled() ? "Next (disabled)" : "Next");
 					} else if (controlButton == prevIcon) {
-						drawMouseReadString(g, "Previous");
+						drawMouseReadString(g, prevIcon.isDisabled() ? "Previous (disabled)" : "Previous");
 					} else if (controlButton == switchIcon) {
 						drawMouseReadString(g, "Exit");
 					}
@@ -2146,14 +2154,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			e.consume();
 			return;
 		}
-		if (nextIcon != null && nextIcon.contains(x, y)) {
+		if (nextIcon != null && nextIcon.contains(x, y) && !nextIcon.isDisabled()) {
 			Action a = getActionMap().get("Next_Simulation");
 			if (a != null)
 				a.actionPerformed(null);
 			e.consume();
 			return;
 		}
-		if (prevIcon != null && prevIcon.contains(x, y)) {
+		if (prevIcon != null && prevIcon.contains(x, y) && !prevIcon.isDisabled()) {
 			Action a = getActionMap().get("Previous_Simulation");
 			if (a != null)
 				a.actionPerformed(null);
@@ -2795,10 +2803,21 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().equals("Time step")) {
+		String pName = e.getPropertyName();
+		if (pName.equals("Time step")) {
 			float timeStep = (Float) e.getNewValue();
 			graphRenderer.setXmax(7200 * timeStep);
 			photonLength = Math.max(5, timeStep * 0.1f);
+		} else if (pName.equals("Next Simulation")) {
+			if (nextIcon != null) {
+				nextIcon.setDisabled(e.getNewValue() == null);
+				repaint();
+			}
+		} else if (pName.equals("Prev Simulation")) {
+			if (prevIcon != null) {
+				prevIcon.setDisabled(e.getNewValue() == null);
+				repaint();
+			}
 		}
 	}
 

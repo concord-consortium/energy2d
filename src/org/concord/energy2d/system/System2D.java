@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -98,6 +100,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
 	private JLabel statusLabel;
 	private List<IOListener> ioListeners;
+	private List<PropertyChangeListener> propertyChangeListeners;
 	private JFrame owner;
 	private static Preferences preferences;
 
@@ -110,6 +113,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			e.printStackTrace();
 		}
 
+		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
+
 		model = new Model2D();
 		model.addManipulationListener(this);
 		view = new View2D();
@@ -118,6 +123,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		view.setPreferredSize(new Dimension(400, 400));
 		view.setBorder(BorderFactory.createEtchedBorder());
 		view.setArea(0, model.getLx(), 0, model.getLy());
+		addPropertyChangeListener(view);
 		model.addPropertyChangeListener(view);
 		getContentPane().add(view, BorderLayout.CENTER);
 
@@ -549,6 +555,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void setNextSimulation(String nextSim) {
+		notifyPropertyChangeListeners("Next Simulation", this.nextSim, nextSim);
 		this.nextSim = nextSim;
 	}
 
@@ -557,6 +564,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	}
 
 	public void setPreviousSimulation(String prevSim) {
+		notifyPropertyChangeListeners("Prev Simulation", this.prevSim, prevSim);
 		this.prevSim = prevSim;
 	}
 
@@ -871,6 +879,24 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			return;
 		for (IOListener x : ioListeners)
 			x.ioOccured(e);
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (!propertyChangeListeners.contains(listener))
+			propertyChangeListeners.add(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (listener != null)
+			propertyChangeListeners.remove(listener);
+	}
+
+	private void notifyPropertyChangeListeners(String propertyName, Object oldValue, Object newValue) {
+		if (propertyChangeListeners.isEmpty())
+			return;
+		PropertyChangeEvent e = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		for (PropertyChangeListener x : propertyChangeListeners)
+			x.propertyChange(e);
 	}
 
 	void setFrameTitle() {

@@ -130,6 +130,7 @@ class XmlDecoder extends DefaultHandler {
 
 	public void endDocument() {
 
+		box.view.setControlPanelVisible(controlPanel);
 		box.setPreviousSimulation(prevSim);
 		box.setNextSimulation(nextSim);
 		box.model.setLx(modelWidth);
@@ -167,7 +168,6 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setColorPaletteOn(colorPalette);
 		box.view.setColorPaletteType(colorPaletteType);
 		box.view.setFrankOn(brand);
-		box.view.setControlPanelVisible(controlPanel);
 		box.view.setHeatMapType(heatMapType);
 		float xColorPalette = colorPaletteX > 1 ? colorPaletteX / box.view.getWidth() : colorPaletteX;
 		float yColorPalette = colorPaletteY > 1 ? colorPaletteY / box.view.getHeight() : colorPaletteY;
