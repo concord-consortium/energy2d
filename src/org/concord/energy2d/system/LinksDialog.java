@@ -95,17 +95,23 @@ class LinksDialog extends JDialog {
 		panel.add(box, BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Type file names (.e2d)"));
 		box.add(p);
 
 		p.add(new JLabel("Previous simulation:"));
-		prevSimField = new JTextField(s2d.getPreviousSimulation(), 20);
+		prevSimField = new JTextField(s2d.getPreviousSimulation(), 15);
 		prevSimField.addActionListener(okListener);
 		p.add(prevSimField);
 
 		p.add(new JLabel("Next simulation:"));
-		nextSimField = new JTextField(s2d.getNextSimulation(), 20);
+		nextSimField = new JTextField(s2d.getNextSimulation(), 15);
 		nextSimField.addActionListener(okListener);
 		p.add(nextSimField);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		box.add(p);
+
+		p.add(new JLabel("<html><hr width=100 align=left>* When the Control Panel is present on the screen, its Previous and Next Buttons<br>will be set to link to the above files.</html>"));
 
 		pack();
 		setLocationRelativeTo(s2d.view);
