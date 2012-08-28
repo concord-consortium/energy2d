@@ -46,6 +46,7 @@ class CloudDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		owner = getOwner();
 
+		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				view.notifyManipulationListeners(cloud, ManipulationEvent.PROPERTY_CHANGE);
