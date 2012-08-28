@@ -918,23 +918,24 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		}
 	}
 
-	static void savePreferences(System2D box) {
-		if (preferences == null || box.owner == null)
-			return;
-		Rectangle bounds = box.owner.getBounds();
-		preferences.putInt("Upper-left x", bounds.x);
-		preferences.putInt("Upper-left y", bounds.y);
-		MenuBar menuBar = (MenuBar) box.owner.getJMenuBar();
-		preferences.put("Latest E2D Path", menuBar.getLatestPath("e2d"));
-		preferences.put("Latest HTM Path", menuBar.getLatestPath("htm"));
-		preferences.put("Latest PNG Path", menuBar.getLatestPath("png"));
-		String[] recentFiles = menuBar.getRecentFiles();
-		if (recentFiles != null) {
-			int n = recentFiles.length;
-			if (n > 0)
-				for (int i = 0; i < n; i++)
-					preferences.put("Recent File " + i, recentFiles[n - i - 1]);
+	void shutdown() {
+		if (preferences != null && owner != null) {
+			Rectangle bounds = owner.getBounds();
+			preferences.putInt("Upper-left x", bounds.x);
+			preferences.putInt("Upper-left y", bounds.y);
+			MenuBar menuBar = (MenuBar) owner.getJMenuBar();
+			preferences.put("Latest E2D Path", menuBar.getLatestPath("e2d"));
+			preferences.put("Latest HTM Path", menuBar.getLatestPath("htm"));
+			preferences.put("Latest PNG Path", menuBar.getLatestPath("png"));
+			String[] recentFiles = menuBar.getRecentFiles();
+			if (recentFiles != null) {
+				int n = recentFiles.length;
+				if (n > 0)
+					for (int i = 0; i < n; i++)
+						preferences.put("Recent File " + i, recentFiles[n - i - 1]);
+			}
 		}
+		MiscUtil.shutdown();
 	}
 
 	public static void main(final String[] args) {

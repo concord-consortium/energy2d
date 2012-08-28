@@ -21,6 +21,7 @@ public abstract class Scripter {
 
 	protected final static Pattern COMMAND_BREAK = compile("(;|\\r?\\n|\\r)+");
 	protected final static Pattern COMMENT = compile("^(//|/\\*)");
+	protected final static Pattern BEEP = compile("(^(?i)beep\\b){1}");
 	protected final static Pattern RESET = compile("(^(?i)reset\\b){1}");
 	protected final static Pattern RELOAD = compile("(^(?i)reload\\b){1}");
 	protected final static Pattern RUN = compile("(^(?i)run\\b){1}");

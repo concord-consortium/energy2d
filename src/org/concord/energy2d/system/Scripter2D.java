@@ -5,6 +5,7 @@ import static java.util.regex.Pattern.compile;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Shape;
+import java.awt.Toolkit;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -189,6 +190,35 @@ class Scripter2D extends Scripter {
 				EventQueue.invokeLater(s2d.clickStop);
 			} else {
 				s2d.stop();
+			}
+			notifySaveReminder = false;
+			return;
+		}
+
+		matcher = BEEP.matcher(ci);
+		if (matcher.find()) {
+			String s = ci.substring(matcher.end()).trim();
+			if (s.equals("")) {
+				Toolkit.getDefaultToolkit().beep();
+			} else {
+				int noteNumber = 60;
+				int velocity = 60;
+				String[] s2 = s.split(REGEX_WHITESPACE);
+				if (s2.length >= 1) {
+					try {
+						noteNumber = (int) Float.parseFloat(s2[0]);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				if (s2.length >= 2) {
+					try {
+						velocity = (int) Float.parseFloat(s2[1]);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				MiscUtil.beep(noteNumber, velocity);
 			}
 			notifySaveReminder = false;
 			return;

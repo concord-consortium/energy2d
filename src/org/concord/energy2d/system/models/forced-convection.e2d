@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>0.5</timestep>
 <measurement_interval>50</measurement_interval>
 <viewupdate_interval>10</viewupdate_interval>
 <tasks>
-<task uid="AUTO_PAUSE" script="stop; message &lt;html&gt;This simulation was designed to automatically stop here.&lt;/html&gt;" description="Automatically pause the simulation at the given frequency." interval="2880"/>
+<task uid="AUTO_PAUSE" script="stop; -linebreak-beep;-linebreak-message &lt;html&gt;This simulation was designed to automatically stop here.&lt;/html&gt;" description="Automatically pause the simulation at the given frequency." interval="2880"/>
 </tasks>
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>2000.0</solar_power_density>

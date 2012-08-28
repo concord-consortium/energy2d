@@ -353,13 +353,13 @@ class MenuBar extends JMenuBar {
 						a.actionPerformed(null);
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
-							System2D.savePreferences(box);
+							box.shutdown();
 							System.exit(0);
 						}
 					});
 					break;
 				case JOptionPane.NO_OPTION:
-					System2D.savePreferences(box);
+					box.shutdown();
 					System.exit(0);
 					break;
 				case JOptionPane.CANCEL_OPTION:

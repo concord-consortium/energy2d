@@ -14,6 +14,10 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Array;
 
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Synthesizer;
 import javax.swing.AbstractButton;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
@@ -312,6 +316,36 @@ public final class MiscUtil {
 		SpringLayout layout = (SpringLayout) parent.getLayout();
 		Component component = parent.getComponent(r * cols + c);
 		return layout.getConstraints(component);
+	}
+
+	private static Synthesizer synthesizer;
+
+	public static void beep(int noteNumber, int velocity) {
+		if (synthesizer == null) {
+			try {
+				synthesizer = MidiSystem.getSynthesizer();
+			} catch (MidiUnavailableException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+		if (synthesizer != null) {
+			try {
+				synthesizer.open();
+			} catch (MidiUnavailableException e) {
+				e.printStackTrace();
+				return;
+			}
+			MidiChannel[] channels = synthesizer.getChannels();
+			channels[0].noteOn(noteNumber, velocity);
+		}
+	}
+
+	/** Release the system resources this class may have held. */
+	public static void shutdown() {
+		if (synthesizer != null) {
+			synthesizer.close();
+		}
 	}
 
 }
