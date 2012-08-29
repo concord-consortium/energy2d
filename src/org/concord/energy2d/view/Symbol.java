@@ -141,17 +141,17 @@ public abstract class Symbol implements Icon {
 		if ("Moon".equals(s))
 			return new Moon(Color.white, 16, 16);
 		if ("Switch".equals(s))
-			return new SwitchIcon(Color.white, 24, 24);
+			return new SwitchIcon(Color.white, 32, 32);
 		if ("Start".equals(s))
-			return new StartIcon(Color.white, 24, 24);
+			return new StartIcon(Color.white, 32, 32);
 		if ("Reset".equals(s))
-			return new ResetIcon(Color.white, 24, 24);
+			return new ResetIcon(Color.white, 32, 32);
 		if ("Next".equals(s))
-			return new NextIcon(Color.white, 24, 24);
+			return new NextIcon(Color.white, 32, 32);
 		if ("Prev".equals(s))
-			return new PrevIcon(Color.white, 24, 24);
+			return new PrevIcon(Color.white, 32, 32);
 		if ("Graph".equals(s))
-			return new GraphIcon(Color.white, 24, 24);
+			return new GraphIcon(Color.white, 32, 32);
 		return null;
 	}
 
@@ -361,13 +361,13 @@ public abstract class Symbol implements Icon {
 			Rectangle2D.Float s = new Rectangle2D.Float(x + w * 0.4f, y + h * 0.3f, w * 0.4f, h * 0.4f);
 			Arc2D.Float a = new Arc2D.Float(s, -90, 180, Arc2D.OPEN);
 			g2.draw(a);
-			int x0 = (int) (x + w * 0.3f);
-			int y0 = (int) (y + h * 0.3f);
-			g2.drawLine((int) (x + w * 0.5f), y0, x0, y0);
+			int x0 = Math.round(x + w * 0.3f);
+			int y0 = Math.round(y + h * 0.28f);
+			g2.drawLine(Math.round(x + w * 0.55f), y0, x0, y0);
 			g2.drawLine(x0, y0, x0 + 2, y0 - 2);
 			g2.drawLine(x0, y0, x0 + 2, y0 + 2);
-			y0 += h * 0.4f;
-			g2.drawLine((int) (x + w * 0.5f), y0, x0, y0);
+			y0 += Math.round(h * 0.4f);
+			g2.drawLine(Math.round(x + w * 0.55f), y0, x0, y0);
 		}
 
 	}

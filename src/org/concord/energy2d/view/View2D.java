@@ -1234,7 +1234,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			drawFrank(g, getWidth() - 84, getHeight() - dy);
 		}
 		if (showControlPanel)
-			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 32));
+			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 36));
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
