@@ -317,7 +317,7 @@ class PartModelDialog extends JDialog {
 		yField = new JTextField(FORMAT.format(view.model.getLy() - part.getCenter().y));
 		yField.addActionListener(okListener);
 		p.add(yField);
-		p.add(new JLabel("<html><i>m</i></html>"));
+		p.add(new JLabel(part.getShape() instanceof Polygon2D ? "<html><i>m</i> (" + ((Polygon2D) part.getShape()).getVertexCount() + " points)</html>" : "<html><i>m</i></html>"));
 		count++;
 
 		if (part.getShape() instanceof RectangularShape) {

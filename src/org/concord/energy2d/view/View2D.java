@@ -1833,9 +1833,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		setSelectedManipulable(null);
 		float rx = convertPixelToPointX(x);
 		float ry = convertPixelToPointY(y);
-		if (!model.getThermometers().isEmpty()) { // always prefer to select a thermometer
+		// always prefer to select a thermometer
+		int n = model.getThermometers().size();
+		if (n > 0) {
 			synchronized (model.getThermometers()) {
-				for (Thermometer t : model.getThermometers()) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					Thermometer t = model.getThermometers().get(i);
 					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
@@ -1843,9 +1846,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		if (!model.getAnemometers().isEmpty()) {
+		n = model.getAnemometers().size();
+		if (n > 0) {
 			synchronized (model.getAnemometers()) {
-				for (Anemometer a : model.getAnemometers()) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					Anemometer a = model.getAnemometers().get(i);
 					if (a.contains(rx, ry)) {
 						setSelectedManipulable(a);
 						return;
@@ -1853,9 +1858,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		if (!model.getClouds().isEmpty()) {
+		n = model.getClouds().size();
+		if (n > 0) {
 			synchronized (model.getClouds()) {
-				for (Cloud c : model.getClouds()) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					Cloud c = model.getClouds().get(i);
 					if (c.contains(rx, ry)) {
 						setSelectedManipulable(c);
 						return;
@@ -1863,9 +1870,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		if (!model.getTrees().isEmpty()) {
+		n = model.getTrees().size();
+		if (n > 0) {
 			synchronized (model.getTrees()) {
-				for (Tree t : model.getTrees()) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					Tree t = model.getTrees().get(i);
 					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
@@ -1873,9 +1882,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		if (!textBoxes.isEmpty()) {
+		n = textBoxes.size();
+		if (n > 0) {
 			synchronized (textBoxes) {
-				for (TextBox t : textBoxes) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					TextBox t = textBoxes.get(i);
 					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
 						return;
@@ -1883,10 +1894,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		int n = model.getParts().size();
+		n = model.getParts().size();
 		if (n > 0) {
 			synchronized (model.getParts()) {
-				for (int i = n - 1; i >= 0; i--) { // later-added has higher priority
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
 					Part p = model.getPart(i);
 					if (p.contains(rx, ry)) {
 						setSelectedManipulable(p);
