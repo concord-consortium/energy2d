@@ -311,13 +311,13 @@ class PartModelDialog extends JDialog {
 		xField = new JTextField(FORMAT.format(part.getCenter().x));
 		xField.addActionListener(okListener);
 		p.add(xField);
-		p.add(new JLabel("<html><i>m</i></html>"));
+		p.add(new JLabel(part.getShape() instanceof Polygon2D ? "<html><i>m</i> (" + ((Polygon2D) part.getShape()).getVertexCount() + " points)</html>" : "<html><i>m</i></html>"));
 
 		p.add(new JLabel("Center y"));
 		yField = new JTextField(FORMAT.format(view.model.getLy() - part.getCenter().y));
 		yField.addActionListener(okListener);
 		p.add(yField);
-		p.add(new JLabel(part.getShape() instanceof Polygon2D ? "<html><i>m</i> (" + ((Polygon2D) part.getShape()).getVertexCount() + " points)</html>" : "<html><i>m</i></html>"));
+		p.add(new JLabel("<html><i>m</i></html>"));
 		count++;
 
 		if (part.getShape() instanceof RectangularShape) {

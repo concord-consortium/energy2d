@@ -715,7 +715,7 @@ class MenuBar extends JMenuBar {
 		templates.put("Wind Effect", "models/wind-effect.e2d");
 		templates.put("Solar Heating: Gable Roof", "models/solar-heating-gable-roof.e2d");
 		templates.put("Solar Heating: Skillion Roof", "models/solar-heating-skillion-roof.e2d");
-		templates.put("Solar Heating: Two Story", "models/solar-heating-two-story.e2d");
+		templates.put("Solar Heating: Two Stories", "models/solar-heating-two-story.e2d");
 		templates.put("Solar Heating: Convection", "models/solar-heating-convection.e2d");
 		templates.put("Solar Heating: Thermostat", "models/thermostat1.e2d");
 		createMenu(box, subMenu, templates);
