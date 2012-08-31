@@ -1241,17 +1241,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Symbol controlButton = overWhichButtonOfControlPanel(mouseMovedPoint.x, mouseMovedPoint.y);
 				if (controlButton != null) {
 					if (controlButton == startIcon) {
-						drawMouseReadString(g, startIcon.isPressed() ? "Pause" : "Run");
+						drawButtonInfo(g, startIcon.isPressed() ? "Pause" : "Run", startIcon);
 					} else if (controlButton == resetIcon) {
-						drawMouseReadString(g, "Reset");
+						drawButtonInfo(g, "Reset", resetIcon);
 					} else if (controlButton == graphIcon) {
-						drawMouseReadString(g, graphIcon.isPressed() ? "Close graph" : "Open graph");
-					} else if (controlButton == nextIcon) {
-						drawMouseReadString(g, nextIcon.isDisabled() ? "Next (disabled)" : "Next");
-					} else if (controlButton == prevIcon) {
-						drawMouseReadString(g, prevIcon.isDisabled() ? "Previous (disabled)" : "Previous");
+						drawButtonInfo(g, graphIcon.isPressed() ? "Close graph" : "Open graph", graphIcon);
+					} else if (controlButton == nextIcon && !nextIcon.isDisabled()) {
+						drawButtonInfo(g, "Next", nextIcon);
+					} else if (controlButton == prevIcon && !prevIcon.isDisabled()) {
+						drawButtonInfo(g, "Previous", prevIcon);
 					} else if (controlButton == switchIcon) {
-						drawMouseReadString(g, "Exit");
+						drawButtonInfo(g, "Exit", switchIcon);
 					}
 				} else {
 					switch (mouseReadType) {
@@ -1291,6 +1291,32 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
 
+	}
+
+	private void drawButtonInfo(Graphics2D g, String s, Symbol button) {
+		g.setFont(sensorReadingFont);
+		int stringWidth = g.getFontMetrics().stringWidth(s);
+		g.setStroke(thinStroke);
+		g.setColor(Color.black);
+		g.fillRoundRect(button.x + (button.w - stringWidth) / 2 - 5, button.y - 24, stringWidth + 10, 20, 8, 8);
+		g.setColor(Color.white);
+		g.drawString(s, button.x + (button.w - stringWidth) / 2, button.y - 12);
+	}
+
+	private void drawMouseReadString(Graphics2D g, String s) {
+		g.setFont(sensorReadingFont);
+		FontMetrics fm = g.getFontMetrics();
+		int stringWidth = fm.stringWidth(s);
+		g.setStroke(thinStroke);
+		int x2 = mouseMovedPoint.x;
+		boolean nearRightBorder = x2 > getWidth() - 50;
+		x2 += nearRightBorder ? -30 : 20;
+		g.setColor(Color.black);
+		g.fillRoundRect(x2 - 5, mouseMovedPoint.y - 14, stringWidth + 10, 20, 8, 8);
+		g.drawLine(nearRightBorder ? x2 + stringWidth + 5 : x2 - 5, mouseMovedPoint.y - 5, mouseMovedPoint.x, mouseMovedPoint.y);
+		g.fillOval(mouseMovedPoint.x - 2, mouseMovedPoint.y - 2, 4, 4);
+		g.setColor(Color.white);
+		g.drawString(s, x2, mouseMovedPoint.y);
 	}
 
 	private void showSunOrMoon(Graphics g) {
@@ -1365,22 +1391,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-	}
-
-	private void drawMouseReadString(Graphics2D g, String s) {
-		g.setFont(sensorReadingFont);
-		FontMetrics fm = g.getFontMetrics();
-		int stringWidth = fm.stringWidth(s);
-		g.setStroke(thinStroke);
-		int x2 = mouseMovedPoint.x;
-		boolean nearRightBorder = x2 > getWidth() - 50;
-		x2 += nearRightBorder ? -30 : 20;
-		g.setColor(Color.black);
-		g.fillRoundRect(x2 - 5, mouseMovedPoint.y - 14, stringWidth + 10, 20, 8, 8);
-		g.drawLine(nearRightBorder ? x2 + stringWidth + 5 : x2 - 5, mouseMovedPoint.y - 5, mouseMovedPoint.x, mouseMovedPoint.y);
-		g.fillOval(mouseMovedPoint.x - 2, mouseMovedPoint.y - 2, 4, 4);
-		g.setColor(Color.white);
-		g.drawString(s, x2, mouseMovedPoint.y);
 	}
 
 	void setErrorMessage(String message) {
