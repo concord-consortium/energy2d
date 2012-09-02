@@ -227,12 +227,12 @@ public abstract class Symbol implements Icon {
 			g2.setColor(Color.white);
 			g2.fillRect(x, y, w - 1, h - 1);
 			int w2 = Math.round(w * 1.45f);
+			int x2 = x + w / 2;
+			int y2 = y + h - w2 + 2;
 			if (value != 0) {
 				g2.setColor(Color.red);
 				BasicStroke bs = new BasicStroke(getIconWidth() / 3);
 				g2.setStroke(bs);
-				int x2 = x + w / 2;
-				int y2 = y + h - w2 + 4;
 				g2.drawLine(x2, y2 - value, x2, y2);
 			}
 			g2.setColor(Color.black);
@@ -243,10 +243,11 @@ public abstract class Symbol implements Icon {
 				g2.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
 				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
 			}
+			x2 = Math.round(x - w * 0.25f);
 			g2.setColor(Color.lightGray);
-			g2.fillOval(Math.round(x - w * 0.25f), y + h - w2 + 2, w2, w2);
+			g2.fillOval(x2, y2, w2, w2);
 			g2.setColor(Color.black);
-			g2.drawOval(Math.round(x - w * 0.25f), y + h - w2 + 2, w2, w2);
+			g2.drawOval(x2, y2, w2, w2);
 		}
 
 	}
