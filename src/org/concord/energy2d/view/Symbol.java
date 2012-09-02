@@ -226,7 +226,7 @@ public abstract class Symbol implements Icon {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			g2.fillRect(x, y, w - 1, h - 1);
-			int w2 = Math.round(w * 1.5f);
+			int w2 = Math.round(w * 1.45f);
 			if (value != 0) {
 				g2.setColor(Color.red);
 				BasicStroke bs = new BasicStroke(getIconWidth() / 3);
@@ -244,9 +244,9 @@ public abstract class Symbol implements Icon {
 				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
 			}
 			g2.setColor(Color.lightGray);
-			g2.fillOval(x + (w - w2) / 2, y + h - w2 + 2, w2, w2);
+			g2.fillOval(Math.round(x - w * 0.25f), y + h - w2 + 2, w2, w2);
 			g2.setColor(Color.black);
-			g2.drawOval(x + (w - w2) / 2, y + h - w2 + 2, w2, w2);
+			g2.drawOval(Math.round(x - w * 0.25f), y + h - w2 + 2, w2, w2);
 		}
 
 	}
