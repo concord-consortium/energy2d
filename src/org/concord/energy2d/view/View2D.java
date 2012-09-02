@@ -181,6 +181,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
+	private Symbol brand;
 	private Symbol moon, sun;
 	private Symbol startIcon, resetIcon, graphIcon, switchIcon, nextIcon, prevIcon; // control panel to support touch screen
 
@@ -261,6 +262,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		thermostatRenderer = new ThermostatRenderer();
 		manipulationListeners = new ArrayList<ManipulationListener>();
 		graphListeners = new ArrayList<GraphListener>();
+		brand = Symbol.get("Brand");
+		brand.setStroke(moderateStroke);
 	}
 
 	private void createActions() {
@@ -1230,15 +1233,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		g.setStroke(stroke);
 		if (frankOn) {
-			int dy = rulerRenderer != null ? 30 : 15;
-			drawFrank(g, getWidth() - 84, getHeight() - dy);
+			brand.setColor(heatMapType != HEATMAP_NONE ? Color.lightGray : Color.black);
+			brand.paintIcon(this, g, getWidth() - 84, getHeight() - (rulerRenderer != null ? 30 : 15));
 		}
 		if (showControlPanel)
 			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 36));
 
 		if (actionMode == SELECT_MODE) { // draw field reader last
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
-				Symbol controlButton = overWhichButtonOfControlPanel(mouseMovedPoint.x, mouseMovedPoint.y);
+				Symbol controlButton = overWhichButton(mouseMovedPoint.x, mouseMovedPoint.y);
 				if (controlButton != null) {
 					if (controlButton == startIcon) {
 						drawButtonInfo(g, startIcon.isPressed() ? "Pause" : "Run", startIcon);
@@ -1252,6 +1255,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						drawButtonInfo(g, "Previous", prevIcon);
 					} else if (controlButton == switchIcon) {
 						drawButtonInfo(g, "Exit", switchIcon);
+					} else if (controlButton == brand && frankOn) {
+						drawButtonInfo(g, "energy.concord.org", brand);
 					}
 				} else {
 					switch (mouseReadType) {
@@ -2674,7 +2679,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseMovedPoint.setLocation(x, y);
-		if (overWhichButtonOfControlPanel(x, y) != null) {
+		if (overWhichButton(x, y) != null) {
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			repaint();
 			e.consume();
@@ -3003,37 +3008,23 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private void drawFrank(Graphics2D g, int x, int y) {
-		String s = "Energy2D";
-		g.setFont(new Font("Arial", Font.BOLD, 14));
-		int w = g.getFontMetrics().stringWidth(s);
-		g.setColor(Color.gray);
-		g.fillRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
-		g.setStroke(moderateStroke);
-		g.setColor(heatMapType != HEATMAP_NONE ? Color.lightGray : Color.black);
-		g.drawRoundRect(x - 6, y - 15, w + 10, 20, 16, 16);
-		g.setColor(Color.black);
-		g.drawString(s, x + 1, y - 1);
-		g.drawString(s, x + 1, y + 1);
-		g.drawString(s, x - 1, y - 1);
-		g.drawString(s, x - 1, y + 1);
-		g.setColor(Color.lightGray);
-		g.drawString(s, x, y);
-	}
-
-	private Symbol overWhichButtonOfControlPanel(int x, int y) {
-		if (startIcon != null && startIcon.contains(x, y))
-			return startIcon;
-		if (resetIcon != null && resetIcon.contains(x, y))
-			return resetIcon;
-		if (graphIcon != null && graphIcon.contains(x, y))
-			return graphIcon;
-		if (nextIcon != null && nextIcon.contains(x, y))
-			return nextIcon;
-		if (prevIcon != null && prevIcon.contains(x, y))
-			return prevIcon;
-		if (switchIcon != null && switchIcon.contains(x, y))
-			return switchIcon;
+	private Symbol overWhichButton(int x, int y) {
+		if (showControlPanel) {
+			if (startIcon != null && startIcon.contains(x, y))
+				return startIcon;
+			if (resetIcon != null && resetIcon.contains(x, y))
+				return resetIcon;
+			if (graphIcon != null && graphIcon.contains(x, y))
+				return graphIcon;
+			if (nextIcon != null && nextIcon.contains(x, y))
+				return nextIcon;
+			if (prevIcon != null && prevIcon.contains(x, y))
+				return prevIcon;
+			if (switchIcon != null && switchIcon.contains(x, y))
+				return switchIcon;
+		}
+		if (frankOn && brand.contains(x, y))
+			return brand;
 		return null;
 	}
 

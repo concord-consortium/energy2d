@@ -1,13 +1,10 @@
-/*
- *   Copyright (C) 2012  The Concord Consortium, Inc.,
- *   25 Love Lane, Concord, MA 01742
- */
-
 package org.concord.energy2d.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -152,6 +149,8 @@ public abstract class Symbol implements Icon {
 			return new PrevIcon(Color.white, 32, 32);
 		if ("Graph".equals(s))
 			return new GraphIcon(Color.white, 32, 32);
+		if ("Brand".equals(s))
+			return new BrandIcon();
 		return null;
 	}
 
@@ -434,6 +433,41 @@ public abstract class Symbol implements Icon {
 			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
 			g.fillPolygon(new Polygon(xpoints, ypoints, 3));
 			g.fillRect(x + w - 3 * d, y + h / 2 - d, 2 * d, 2 * d);
+		}
+
+	}
+
+	static class BrandIcon extends Symbol {
+
+		private Font font;
+		private int cornerDiameter = 20;
+
+		public BrandIcon() {
+			font = new Font("Book Antiqua", Font.BOLD, 14);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x0, int y0) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			String s = "Energy2D";
+			g2.setFont(font);
+			FontMetrics fm = g.getFontMetrics();
+			w = fm.stringWidth(s) + 10;
+			h = fm.getHeight() + fm.getDescent() + 3;
+			x = x0 - 6;
+			y = y0 - fm.getAscent() - 3;
+			g2.setColor(Color.gray);
+			g2.fillRoundRect(x, y, w, h, cornerDiameter, cornerDiameter);
+			g2.setStroke(stroke);
+			g2.setColor(color);
+			g2.drawRoundRect(x, y, w, h, cornerDiameter, cornerDiameter);
+			g2.setColor(Color.black);
+			g2.drawString(s, x0 + 1, y0 - 1);
+			g2.drawString(s, x0 + 1, y0 + 1);
+			g2.drawString(s, x0 - 1, y0 - 1);
+			g2.drawString(s, x0 - 1, y0 + 1);
+			g2.setColor(Color.lightGray);
+			g2.drawString(s, x0, y0);
 		}
 
 	}
