@@ -609,9 +609,15 @@ public class Part extends Manipulable {
 	}
 
 	public String getLabel(String label, Model2D model) {
+		if (label == null)
+			return null;
+		if (label.indexOf('%') == -1)
+			return label;
 		String s = null;
 		if (label.equalsIgnoreCase("%temperature"))
 			s = (int) temperature + " \u00b0C";
+		else if (label.equalsIgnoreCase("%thermal_energy"))
+			s = Math.round(model.getThermalEnergy(this)) + " J";
 		else if (label.equalsIgnoreCase("%density"))
 			s = (int) density + " kg/m\u00b3";
 		else if (label.equalsIgnoreCase("%specific_heat"))
@@ -620,32 +626,59 @@ public class Part extends Manipulable {
 			s = (float) thermalConductivity + " W/(m\u00d7\u00b0C)";
 		else if (label.equalsIgnoreCase("%power_density"))
 			s = (int) power + " W/m\u00b3";
-		else if (label.equalsIgnoreCase("%thermal_energy")) {
-			s = Math.round(model.getThermalEnergy(this)) + " J";
-		} else if (label.equalsIgnoreCase("%area")) {
-			if (getShape() instanceof Rectangle2D.Float) {
-				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-				s = LABEL_FORMAT.format(r.width * r.height) + " m\u00b2";
-			} else if (getShape() instanceof Ellipse2D.Float) {
-				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-				s = LABEL_FORMAT.format(e.width * e.height * 0.25 * Math.PI) + " m\u00b2";
-			}
-		} else if (label.equalsIgnoreCase("%width")) {
-			if (getShape() instanceof Rectangle2D.Float) {
-				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-				s = LABEL_FORMAT.format(r.width) + " m";
-			} else if (getShape() instanceof Ellipse2D.Float) {
-				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-				s = LABEL_FORMAT.format(e.width) + " m";
-			}
-		} else if (label.equalsIgnoreCase("%height")) {
-			if (getShape() instanceof Rectangle2D.Float) {
-				Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-				s = LABEL_FORMAT.format(r.height) + " m";
-			} else if (getShape() instanceof Ellipse2D.Float) {
-				Ellipse2D.Float e = (Ellipse2D.Float) getShape();
-				s = LABEL_FORMAT.format(e.height) + " m";
-			}
+		else if (label.equalsIgnoreCase("%area"))
+			s = getAreaString();
+		else if (label.equalsIgnoreCase("%width"))
+			s = getWidthString();
+		else if (label.equalsIgnoreCase("%height"))
+			s = getHeightString();
+		else {
+			s = label.replace("%temperature", (int) temperature + " \u00b0C");
+			s = s.replace("%thermal_energy", Math.round(model.getThermalEnergy(this)) + " J");
+			s = s.replace("%density", (int) density + " kg/m\u00b3");
+			s = s.replace("%specific_heat", (int) specificHeat + " J/(kg\u00d7\u00b0C)");
+			s = s.replace("%thermal_conductivity", (float) thermalConductivity + " W/(m\u00d7\u00b0C)");
+			s = s.replace("%power_density", (int) power + " W/m\u00b3");
+			s = s.replace("%area", getAreaString());
+			s = s.replace("%width", getWidthString());
+			s = s.replace("%height", getHeightString());
+		}
+		return s;
+	}
+
+	private String getAreaString() {
+		String s = null;
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			s = LABEL_FORMAT.format(r.width * r.height) + " m\u00b2";
+		} else if (getShape() instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+			s = LABEL_FORMAT.format(e.width * e.height * 0.25 * Math.PI) + " m\u00b2";
+		}
+		return s;
+
+	}
+
+	private String getWidthString() {
+		String s = null;
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			s = LABEL_FORMAT.format(r.width) + " m";
+		} else if (getShape() instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+			s = LABEL_FORMAT.format(e.width) + " m";
+		}
+		return s;
+	}
+
+	private String getHeightString() {
+		String s = null;
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			s = LABEL_FORMAT.format(r.height) + " m";
+		} else if (getShape() instanceof Ellipse2D.Float) {
+			Ellipse2D.Float e = (Ellipse2D.Float) getShape();
+			s = LABEL_FORMAT.format(e.height) + " m";
 		}
 		return s;
 	}

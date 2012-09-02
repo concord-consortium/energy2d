@@ -2679,7 +2679,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseMovedPoint.setLocation(x, y);
-		if (overWhichButton(x, y) != null) {
+		Symbol button = overWhichButton(x, y);
+		if (button != null && button != brand) {
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			repaint();
 			e.consume();
