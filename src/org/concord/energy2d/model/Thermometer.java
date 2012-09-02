@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class Thermometer extends Sensor {
 
-	public final static float RELATIVE_WIDTH = 0.025f;
+	public final static float RELATIVE_WIDTH = 0.01f;
 	public final static float RELATIVE_HEIGHT = 0.05f;
 
 	public Thermometer(float x, float y) {
