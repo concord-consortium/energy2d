@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>100.0</timestep>
 <sun_angle>1.5707964</sun_angle>
@@ -8,7 +10,7 @@
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>20</photon_emission_interval>
 <z_heat_diffusivity>0.0</z_heat_diffusivity><convective>false</convective>
-<background_conductivity>0.0010</background_conductivity>
+<background_conductivity>0.001</background_conductivity>
 <background_viscosity>1.568E-4</background_viscosity>
 <thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
@@ -17,7 +19,7 @@
 <mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
-<part><rectangle x="0.0" y="0.0" width="3.0" height="10.0"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.0" y="0.0" width="3.0" height="10.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>1.0</density>
 <transmission>0.0</transmission>
@@ -124,12 +126,14 @@
 <draggable>false</draggable>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
-<thermometer x="7.962963" y="5.3703704"/>
+<thermometer x="7.962963" y="5.105819"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <isotherm>true</isotherm>

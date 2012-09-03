@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>0.25</timestep>
 <viewupdate_interval>10</viewupdate_interval>
@@ -65,8 +67,8 @@
 <environment>
 </environment>
 <sensor>
-<thermometer label="T2" x="5.0" y="9.25"/>
-<thermometer label="T1" x="5.0" y="0.75"/>
+<thermometer label="T2" x="5.0" y="8.919313"/>
+<thermometer label="T1" x="5.0" y="0.68386245"/>
 <anemometer label="A1" x="5.0" y="3.0"/>
 <anemometer label="A2" x="5.0" y="7.0"/>
 </sensor>

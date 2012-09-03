@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <model_width>1.0</model_width>
 <model_height>1.0</model_height>
@@ -43,13 +45,15 @@
 <filled>false</filled>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
-<thermometer label="T2" x="0.65" y="0.5"/>
-<thermometer label="T1" x="0.35" y="0.5"/>
+<thermometer label="T2" x="0.65" y="0.48015872"/>
+<thermometer label="T1" x="0.35" y="0.48015872"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <model_width>0.5</model_width>
 <model_height>0.5</model_height>
@@ -67,7 +69,7 @@
 <sensor>
 <thermometer uid="CONTROL2" x="0.37301588" y="0.3042328"/>
 <thermometer uid="CONTROL1" x="0.14219576" y="0.31084657"/>
-<thermometer x="0.24933863" y="0.1494709"/>
+<thermometer x="0.24933863" y="0.14285713"/>
 </sensor>
 <controller>
 <thermostat set_point="36.0" deadband="0.1" thermometer="CONTROL1" power_source="LEFT_HAND"/>

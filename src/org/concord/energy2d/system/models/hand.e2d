@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <model_width>0.5</model_width>
 <model_height>0.5</model_height>
@@ -65,7 +67,7 @@
 </environment>
 <sensor>
 <thermometer x="0.24735449" y="0.1415344"/>
-<thermometer x="0.118386246" y="0.31150794"/>
+<thermometer x="0.12500001" y="0.30158734"/>
 <thermometer x="0.24140212" y="0.34589946"/>
 </sensor>
 <controller>

@@ -102,8 +102,8 @@
 <environment>
 </environment>
 <sensor>
-<thermometer label="T2" x="2.525" y="7.55"/>
-<thermometer label="T1" x="2.525" y="2.4500003"/>
+<thermometer label="T2" x="2.525" y="7.285449"/>
+<thermometer label="T1" x="2.525" y="2.2515876"/>
 <anemometer label="A1" x="3.3994708" y="0.75396824"/>
 <anemometer label="A3" x="0.93915343" y="7.5793653"/>
 <anemometer label="A2" x="3.3730159" y="2.4867725"/>

@@ -44,7 +44,7 @@
 <environment>
 </environment>
 <sensor>
-<thermometer x="5.05291" y="7.0767198"/>
+<thermometer x="5.0" y="7.0"/>
 <anemometer x="5.026455" y="4.0608463"/>
 </sensor>
 <controller>
