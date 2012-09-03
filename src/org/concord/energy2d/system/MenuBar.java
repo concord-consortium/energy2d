@@ -737,6 +737,7 @@ class MenuBar extends JMenuBar {
 		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
 		templates.put("USA Isotherm", "models/usa-isotherm.e2d");
 		templates.put("Mantle Convection", "models/mantle.e2d");
+		templates.put("Linking Simulations", "models/step1.e2d");
 		createMenu(box, subMenu, templates);
 
 		menu.addSeparator();

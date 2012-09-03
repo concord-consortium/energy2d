@@ -170,7 +170,7 @@ public class FieldLines {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
 				if (!map[i][j]) {
-					// place a seed point in the centre of the region
+					// place a seed point at the center of the region
 					x = (i + 0.5f) * fluxLineSpacing;
 					y = (j + 0.5f) * fluxLineSpacing;
 					// draw flux lines forward and backward through the seed point

@@ -104,7 +104,7 @@ class VectorDistributionRenderer {
 	}
 
 	// special case
-	void renderHeatFlux(float[][] t, float[][] k, JComponent c, Graphics2D g, float scale, float minSquare) {
+	void renderHeatFlux(float[][] t, float[][] k, JComponent c, Graphics2D g, float scale, float minSquare, boolean dotForZero) {
 
 		if (!c.isVisible())
 			return;
@@ -117,20 +117,18 @@ class VectorDistributionRenderer {
 		g.setStroke(stroke);
 		int x, y;
 		float uij, vij;
-		Color color = null;
 		for (int i = 1; i < nx - 1; i += spacing) {
 			x = Math.round(i * dx);
 			for (int j = 1; j < ny - 1; j += spacing) {
 				y = Math.round(j * dy);
 				uij = -k[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * dx);
 				vij = -k[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * dy);
-				color = view.getContrastColor(x, y);
-				color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 200);
-				g.setColor(color);
+				g.setColor(view.getContrastColor(x, y));
 				if (uij * uij + vij * vij > minSquare) {
 					drawVector(g, x, y, uij, vij, scale);
 				} else {
-					g.fillOval(x, y, 4, 4);
+					if (dotForZero)
+						g.fillOval(x, y, 4, 4);
 				}
 			}
 		}

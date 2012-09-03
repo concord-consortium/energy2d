@@ -133,6 +133,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private VectorDistributionRenderer vectorFieldRenderer;
 	private float heatFluxMinimumValueSquare = VectorDistributionRenderer.getDefaultMinimumValueSquare();
 	private float heatFluxScale = VectorDistributionRenderer.getDefaultScale();
+	private boolean dotForZeroHeatFlux;
 	private ThermostatRenderer thermostatRenderer;
 	private boolean showIsotherm;
 	private boolean showStreamLines;
@@ -779,6 +780,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		heatFluxScale = scale;
 	}
 
+	/** To draw a dot for tiny heat flux or not */
+	public void setDotForZeroHeatFlux(boolean b) {
+		dotForZeroHeatFlux = b;
+	}
+
 	public void setHeatFluxLinesOn(boolean b) {
 		showHeatFluxLines = b;
 		if (b && heatFluxLines == null)
@@ -1161,7 +1167,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showVelocity)
 			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
 		if (showHeatFluxArrows)
-			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g, heatFluxScale, heatFluxMinimumValueSquare);
+			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g, heatFluxScale, heatFluxMinimumValueSquare, dotForZeroHeatFlux);
 		drawPhotons(g);
 		showSunOrMoon(g);
 		drawThermometers(g);
@@ -1477,6 +1483,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
+		int shiftH = Math.round(0.5f * s.getIconHeight() / getHeight() * ny);
 		float temp;
 		String str;
 		g.setFont(sensorReadingFont);
@@ -1492,7 +1499,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
 					x = (int) (rx * getWidth() - iconW2);
 					y = (int) (ry * getHeight() - iconH2);
-					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry), t.getStencil());
+					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry) + shiftH, t.getStencil());
 					if (!Float.isNaN(temp)) {
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, (int) (x + iconW2), y - 5, true);
@@ -2452,7 +2459,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x = e.getX();
 		int y = e.getY();
 		mouseReleasedPoint.setLocation(x, y);
-		if (showGraph && !(selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer)) {
+		if (showGraph) {
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				showGraph = false;
 				notifyGraphListeners(GraphEvent.GRAPH_CLOSED);
@@ -2687,18 +2694,28 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		}
 		if (showGraph) {
+			boolean buttonContained = false;
 			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
 			} else {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			}
+			if (buttonContained) {
+				e.consume();
+				return;
 			}
 		}
 		switch (actionMode) {
