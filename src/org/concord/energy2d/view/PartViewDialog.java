@@ -44,6 +44,7 @@ class PartViewDialog extends JDialog {
 	private TextureChooser textureChooser;
 	private JCheckBox visibleCheckBox;
 	private JCheckBox draggableCheckBox;
+	private JCheckBox seeThroughCheckBox;
 	private BackgroundComboBox bgComboBox;
 	private ActionListener okListener;
 
@@ -64,6 +65,7 @@ class PartViewDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				part.setDraggable(draggableCheckBox.isSelected());
 				part.setVisible(visibleCheckBox.isSelected());
+				part.setFilled(!seeThroughCheckBox.isSelected());
 				view.notifyManipulationListeners(part, ManipulationEvent.PROPERTY_CHANGE);
 				view.setSelectedManipulable(view.getSelectedManipulable());
 				view.repaint();
@@ -174,6 +176,10 @@ class PartViewDialog extends JDialog {
 
 		visibleCheckBox = new JCheckBox("Visible", part.isVisible());
 		p.add(visibleCheckBox);
+
+		seeThroughCheckBox = new JCheckBox("See through", !part.isFilled());
+		p.add(seeThroughCheckBox);
+
 		draggableCheckBox = new JCheckBox("Draggable by user", part.isDraggable());
 		p.add(draggableCheckBox);
 
