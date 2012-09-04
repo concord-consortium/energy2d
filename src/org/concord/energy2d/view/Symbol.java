@@ -259,22 +259,38 @@ public abstract class Symbol implements Icon {
 		// since there can be many heat flux sensors, we want to make a singleton.
 		private final static HeatFluxSensor instance = new HeatFluxSensor();
 
+		private Stroke stroke2;
+
 		public static HeatFluxSensor sharedInstance() {
 			return instance;
 		}
 
 		public HeatFluxSensor() {
+			stroke2 = new BasicStroke(3);
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			super.paintIcon(c, g, x, y);
+			int y2 = Math.round(y + h * 0.5f);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			g2.fillRect(x, y, w, h);
+			g2.fillOval(x - 9, y2 - 3, 6, 6);
 			g2.setColor(Color.black);
 			g2.drawRect(x, y, w, h);
+			for (int i = 4; i < w - 4; i += 4) {
+				if (i % 8 == 0) {
+					g2.drawLine(x + i, y, x + i + 4, y + h);
+				} else {
+					g2.drawLine(x + i, y + h, x + i + 4, y);
+				}
+			}
+			g2.drawLine(x - 2, y2, x + 4, y2);
+			g2.drawOval(x - 9, y2 - 3, 6, 6);
+			g2.setStroke(stroke2);
+			g2.drawLine(x, y, x + w, y);
+			g2.drawLine(x, y + h, x + w, y + h);
 		}
-
 	}
 
 	static class Anemometer extends Symbol {

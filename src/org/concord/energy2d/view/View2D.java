@@ -1173,7 +1173,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (movingShape != null) {
 				g.setColor(Color.white);
 				g.setStroke(dashed);
-				movingShape.render(g);
+				if (selectedManipulable instanceof HeatFluxSensor) {
+					float angle = ((HeatFluxSensor) selectedManipulable).getAngle();
+					Rectangle r = movingShape.getShape().getBounds();
+					g.rotate(angle, r.x + r.width / 2, r.y + r.height / 2);
+					movingShape.render(g);
+					g.rotate(-angle, r.x + r.width / 2, r.y + r.height / 2);
+				} else {
+					movingShape.render(g);
+				}
 			}
 		}
 		if (showGrid && gridRenderer != null)
