@@ -25,40 +25,6 @@ public class Thermometer extends Sensor {
 		return new Thermometer(x, y);
 	}
 
-	public void setCenter(float x, float y) {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		r.x = x - 0.5f * r.width;
-		r.y = y - 0.5f * r.height;
-	}
-
-	public void translateBy(float dx, float dy) {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		r.x += dx;
-		r.y += dy;
-	}
-
-	public void setX(float x) {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		r.x = x - 0.5f * r.width;
-	}
-
-	public void setY(float y) {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		r.y = y - 0.5f * r.height;
-	}
-
-	/** returns the x coordinate of the center */
-	public float getX() {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		return r.x + 0.5f * r.width;
-	}
-
-	/** returns the y coordinate of the center */
-	public float getY() {
-		Rectangle2D.Float r = (Rectangle2D.Float) getShape();
-		return r.y + 0.5f * r.height;
-	}
-
 	@Override
 	public String toXml() {
 		String xml = "<thermometer";

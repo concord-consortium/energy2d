@@ -390,6 +390,7 @@ class MenuBar extends JMenuBar {
 		add(menu);
 
 		menu.add(box.view.getActionMap().get("Insert Thermometer"));
+		menu.add(box.view.getActionMap().get("Insert Heat Flux Sensor"));
 		menu.add(box.view.getActionMap().get("Insert Anemometer"));
 		menu.addSeparator();
 		menu.add(box.view.getActionMap().get("Insert Cloud"));

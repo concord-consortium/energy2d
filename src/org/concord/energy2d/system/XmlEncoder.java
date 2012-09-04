@@ -6,6 +6,7 @@ import java.util.List;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
+import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -143,6 +144,12 @@ class XmlEncoder {
 		if (!thermometers.isEmpty()) {
 			for (Thermometer t : thermometers) {
 				sb.append(t.toXml() + "\n");
+			}
+		}
+		List<HeatFluxSensor> heatFluxSensors = box.model.getHeatFluxSensors();
+		if (!heatFluxSensors.isEmpty()) {
+			for (HeatFluxSensor h : heatFluxSensors) {
+				sb.append(h.toXml() + "\n");
 			}
 		}
 		List<Anemometer> anemometers = box.model.getAnemometers();

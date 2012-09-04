@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
+import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -44,6 +45,8 @@ final class DialogFactory {
 			return new ThermometerDialog(view, (Thermometer) o, modal);
 		if (o instanceof Anemometer)
 			return new AnemometerDialog(view, (Anemometer) o, modal);
+		if (o instanceof HeatFluxSensor)
+			return new HeatFluxSensorDialog(view, (HeatFluxSensor) o, modal);
 		if (o instanceof TextBox)
 			return new TextBoxPanel((TextBox) o, view).createDialog(modal);
 		return null;
@@ -62,6 +65,8 @@ final class DialogFactory {
 			return new ThermometerDialog(view, (Thermometer) o, modal);
 		if (o instanceof Anemometer)
 			return new AnemometerDialog(view, (Anemometer) o, modal);
+		if (o instanceof HeatFluxSensor)
+			return new HeatFluxSensorDialog(view, (HeatFluxSensor) o, modal);
 		if (o instanceof TextBox)
 			return new TextBoxPanel((TextBox) o, view).createDialog(modal);
 		return null;

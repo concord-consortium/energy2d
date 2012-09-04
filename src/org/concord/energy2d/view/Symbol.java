@@ -133,6 +133,8 @@ public abstract class Symbol implements Icon {
 			return Thermometer.sharedInstance();
 		if ("Anemometer".equals(s))
 			return Anemometer.sharedInstance();
+		if ("Heat Flux Sensor".equals(s))
+			return HeatFluxSensor.sharedInstance();
 		if ("Sun".equals(s))
 			return new Sun(Color.yellow, 16, 16);
 		if ("Moon".equals(s))
@@ -248,6 +250,29 @@ public abstract class Symbol implements Icon {
 			g2.fillOval(x2, y2, w2, w2);
 			g2.setColor(Color.black);
 			g2.drawOval(x2, y2, w2, w2);
+		}
+
+	}
+
+	static class HeatFluxSensor extends Symbol {
+
+		// since there can be many heat flux sensors, we want to make a singleton.
+		private final static HeatFluxSensor instance = new HeatFluxSensor();
+
+		public static HeatFluxSensor sharedInstance() {
+			return instance;
+		}
+
+		public HeatFluxSensor() {
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(Color.white);
+			g2.fillRect(x, y, w, h);
+			g2.setColor(Color.black);
+			g2.drawRect(x, y, w, h);
 		}
 
 	}

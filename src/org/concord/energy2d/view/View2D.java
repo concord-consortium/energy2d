@@ -60,10 +60,12 @@ import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
+import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Photon;
+import org.concord.energy2d.model.Sensor;
 import org.concord.energy2d.model.Thermometer;
 import org.concord.energy2d.model.Thermostat;
 import org.concord.energy2d.model.Tree;
@@ -357,6 +359,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a.putValue(Action.NAME, "Thermometer");
 		a.putValue(Action.SHORT_DESCRIPTION, "Insert a thermometer where the mouse last clicked");
 		getActionMap().put("Insert Thermometer", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				setSelectedManipulable(addHeatFluxSensor(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f));
+				notifyManipulationListeners(null, ManipulationEvent.SENSOR_ADDED);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Heat Flux Sensor");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a heat flux sensor where the mouse last clicked");
+		getActionMap().put("Insert Heat Flux Sensor", a);
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -948,6 +961,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			model.setInitialTemperature();
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
+		} else if (copiedManipulable instanceof HeatFluxSensor) {
+			addHeatFluxSensor(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof Anemometer) {
 			addAnemometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof TextBox) {
@@ -1118,6 +1133,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g.setColor(Color.yellow);
 				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+			} else if (selectedManipulable instanceof HeatFluxSensor) {
+				HeatFluxSensor f = (HeatFluxSensor) selectedManipulable;
+				Rectangle2D.Float r = (Rectangle2D.Float) f.getShape();
+				int wt = convertLengthToPixelX(r.width);
+				int ht = convertLengthToPixelY(r.height);
+				int xt = convertPointToPixelX(f.getX()) - wt / 2;
+				int yt = convertPointToPixelY(f.getY()) - ht / 2;
+				g.setColor(Color.yellow);
+				if (f.getAngle() != 0)
+					g.rotate(f.getAngle(), xt + wt / 2, yt + ht / 2);
+				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+				if (f.getAngle() != 0)
+					g.rotate(-f.getAngle(), xt + wt / 2, yt + ht / 2);
 			} else if (selectedManipulable instanceof Anemometer) {
 				Anemometer a = (Anemometer) selectedManipulable;
 				Rectangle2D.Float r = (Rectangle2D.Float) a.getShape();
@@ -1171,6 +1199,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawPhotons(g);
 		showSunOrMoon(g);
 		drawThermometers(g);
+		drawHeatFluxSensors(g);
 		drawAnemometers(g);
 		if (showGraph && !model.getThermometers().isEmpty()) {
 			graphRenderer.setDrawFrame(true);
@@ -1466,6 +1495,47 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						s.setAngle(a.getAngle());
 						s.paintIcon(this, g, x, y);
 					}
+				}
+			}
+		}
+	}
+
+	private void drawHeatFluxSensors(Graphics2D g) {
+		List<HeatFluxSensor> heatFluxSensors = model.getHeatFluxSensors();
+		if (heatFluxSensors.isEmpty())
+			return;
+		g.setStroke(thinStroke);
+		Symbol.HeatFluxSensor s = (Symbol.HeatFluxSensor) Symbol.get("Heat Flux Sensor");
+		float w = HeatFluxSensor.RELATIVE_WIDTH * model.getLx();
+		float h = HeatFluxSensor.RELATIVE_HEIGHT * model.getLy();
+		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
+		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
+		float iconW2 = s.getIconWidth() * 0.5f;
+		float iconH2 = s.getIconHeight() * 0.5f;
+		g.setFont(sensorReadingFont);
+		int x, y;
+		float rx, ry;
+		String str;
+		synchronized (heatFluxSensors) {
+			for (HeatFluxSensor f : heatFluxSensors) {
+				Rectangle2D.Float r = (Rectangle2D.Float) f.getShape();
+				r.width = w;
+				r.height = h;
+				rx = (f.getX() - xmin) / (xmax - xmin);
+				ry = (f.getY() - ymin) / (ymax - ymin);
+				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
+					x = (int) (rx * getWidth() - iconW2);
+					y = (int) (ry * getHeight() - iconH2);
+					float[] flux = model.getHeatFluxAt(f.getX(), f.getY());
+					str = HEAT_FLUX_FORMAT.format(flux[0] * Math.sin(f.getAngle()) + flux[1] * Math.cos(f.getAngle())) + "W/m^2";
+					if (f.getAngle() != 0)
+						g.rotate(f.getAngle(), x + s.w / 2, y + s.h / 2);
+					centerString(str, g, (int) (x + iconW2), y - 5, true);
+					if (f.getLabel() != null)
+						centerString(f.getLabel(), g, (int) (x + iconW2), y + s.getIconHeight() + 12, false);
+					s.paintIcon(this, g, x, y);
+					if (f.getAngle() != 0)
+						g.rotate(-f.getAngle(), x + s.w / 2, y + s.h / 2);
 				}
 			}
 		}
@@ -1880,6 +1950,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
+		n = model.getHeatFluxSensors().size();
+		if (n > 0) {
+			synchronized (model.getHeatFluxSensors()) {
+				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
+					HeatFluxSensor f = model.getHeatFluxSensors().get(i);
+					if (f.contains(rx, ry)) {
+						setSelectedManipulable(f);
+						return;
+					}
+				}
+			}
+		}
 		n = model.getClouds().size();
 		if (n > 0) {
 			synchronized (model.getClouds()) {
@@ -1968,7 +2050,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Rectangle2D.Float r = (Rectangle2D.Float) s;
 				r.x += dx;
 				r.y += dy;
-				if (m instanceof Thermometer || m instanceof Anemometer) {
+				if (m instanceof Thermometer || m instanceof Anemometer || m instanceof HeatFluxSensor) {
 					if (r.x + r.width / 2 < xmin + dx)
 						r.x = xmin + dx - r.width / 2;
 					else if (r.x + r.width / 2 > xmax - dx)
@@ -2296,7 +2378,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void processMouseDragged(MouseEvent e) {
 		if (MiscUtil.isRightClick(e))
 			return;
-		if (showGraph && !(selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer)) {
+		if (showGraph && !(selectedManipulable instanceof Sensor)) {
 			e.consume();
 			return;
 		}
@@ -2311,7 +2393,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (movingShape != null && selectedManipulable != null) {
 				Shape shape = movingShape.getShape();
 				if (shape instanceof RectangularShape) {
-					if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer) {
+					if (selectedManipulable instanceof Sensor) {
 						if (x < 8)
 							x = 8;
 						else if (x > getWidth() - 8)
@@ -2640,6 +2722,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return t;
 	}
 
+	public void addHeatFluxSensor(float x, float y, String label) {
+		addHeatFluxSensor(x, y).setLabel(label);
+	}
+
+	private HeatFluxSensor addHeatFluxSensor(float x, float y) {
+		HeatFluxSensor h = new HeatFluxSensor(x, y);
+		Rectangle2D.Float r = (Rectangle2D.Float) h.getShape();
+		r.width = Anemometer.RELATIVE_WIDTH * model.getLx();
+		r.height = Anemometer.RELATIVE_HEIGHT * model.getLy();
+		h.setCenter(x, y);
+		model.addHeatFluxSensor(h);
+		return h;
+	}
+
 	public void addAnemometer(float x, float y, String label) {
 		addAnemometer(x, y).setLabel(label);
 	}
@@ -2786,6 +2882,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 					}
 				}
+				if (!contained) {
+					synchronized (model.getHeatFluxSensors()) {
+						for (HeatFluxSensor f : model.getHeatFluxSensors()) {
+							if (f.contains(rx, ry)) {
+								contained = true;
+								break;
+							}
+						}
+					}
+				}
 				if (!contained && !showGraph) {
 					boolean draggable = false;
 					synchronized (model.getParts()) {
@@ -2923,7 +3029,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
 			}
-		} else if (selectedManipulable instanceof Thermometer || selectedManipulable instanceof Anemometer || selectedManipulable instanceof TextBox) {
+		} else if (selectedManipulable instanceof Sensor || selectedManipulable instanceof TextBox) {
 			Rectangle2D.Float r = (Rectangle2D.Float) selectedManipulable.getShape();
 			int a = convertPointToPixelX(r.x);
 			int b = convertPointToPixelY(r.y);

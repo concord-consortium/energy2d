@@ -10,6 +10,7 @@ import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.MassBoundary;
 import org.concord.energy2d.model.SimpleMassBoundary;
 import org.concord.energy2d.model.ThermalBoundary;
@@ -193,6 +194,18 @@ class XmlDecoder extends DefaultHandler {
 					Rectangle2D.Float r = (Rectangle2D.Float) t.getShape();
 					r.width = Thermometer.RELATIVE_WIDTH * modelWidth;
 					r.height = Thermometer.RELATIVE_HEIGHT * modelHeight;
+					r.x = r.x - 0.5f * r.width;
+					r.y = r.y - 0.5f * r.height;
+				}
+			}
+		}
+		List<HeatFluxSensor> heatFluxSensors = box.model.getHeatFluxSensors();
+		if (!heatFluxSensors.isEmpty()) {
+			synchronized (heatFluxSensors) {
+				for (HeatFluxSensor h : heatFluxSensors) {
+					Rectangle2D.Float r = (Rectangle2D.Float) h.getShape();
+					r.width = HeatFluxSensor.RELATIVE_WIDTH * modelWidth;
+					r.height = HeatFluxSensor.RELATIVE_HEIGHT * modelHeight;
 					r.x = r.x - 0.5f * r.width;
 					r.y = r.y - 0.5f * r.height;
 				}
@@ -454,6 +467,29 @@ class XmlDecoder extends DefaultHandler {
 				}
 				if (!Float.isNaN(x) && !Float.isNaN(y))
 					box.model.addThermometer(x, y, uid, label, stencil);
+			}
+		} else if (qName == "heat_flux_sensor") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN;
+				String label = null, uid = null;
+				float angle = 0;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "angle") {
+						angle = Float.parseFloat(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "label") {
+						label = attribValue;
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y))
+					box.model.addHeatFluxSensor(x, y, uid, label, angle);
 			}
 		} else if (qName == "anemometer") {
 			if (attrib != null) {

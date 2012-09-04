@@ -75,6 +75,7 @@ public class Model2D {
 	// fluid cell array
 	private boolean[][] fluidity;
 
+	private List<HeatFluxSensor> heatFluxSensors;
 	private List<Anemometer> anemometers;
 	private List<Thermometer> thermometers;
 	private List<Thermostat> thermostats;
@@ -130,6 +131,15 @@ public class Model2D {
 		density = new float[nx][ny];
 		fluidity = new boolean[nx][ny];
 
+		parts = Collections.synchronizedList(new ArrayList<Part>());
+		heatFluxSensors = Collections.synchronizedList(new ArrayList<HeatFluxSensor>());
+		anemometers = Collections.synchronizedList(new ArrayList<Anemometer>());
+		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
+		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
+		photons = Collections.synchronizedList(new ArrayList<Photon>());
+		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
+		trees = Collections.synchronizedList(new ArrayList<Tree>());
+
 		init();
 
 		heatSolver = new HeatSolver2DImpl(nx, ny);
@@ -150,14 +160,6 @@ public class Model2D {
 		raySolver.setPower(q);
 
 		setGridCellSize();
-
-		parts = Collections.synchronizedList(new ArrayList<Part>());
-		anemometers = Collections.synchronizedList(new ArrayList<Anemometer>());
-		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
-		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
-		photons = Collections.synchronizedList(new ArrayList<Photon>());
-		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
-		trees = Collections.synchronizedList(new ArrayList<Tree>());
 
 		propertyChangeListeners = new ArrayList<PropertyChangeListener>();
 		manipulationListeners = new ArrayList<ManipulationListener>();
@@ -363,14 +365,21 @@ public class Model2D {
 	}
 
 	public void translateAllBy(float dx, float dy) {
-		for (Thermometer t : thermometers)
-			t.translateBy(dx, dy);
-		for (Anemometer a : anemometers)
-			a.translateBy(dx, dy);
-		for (Cloud c : clouds)
-			c.translateBy(dx, dy);
-		for (Tree t : trees)
-			t.translateBy(dx, dy);
+		if (!thermometers.isEmpty())
+			for (Thermometer t : thermometers)
+				t.translateBy(dx, dy);
+		if (!anemometers.isEmpty())
+			for (Anemometer a : anemometers)
+				a.translateBy(dx, dy);
+		if (!heatFluxSensors.isEmpty())
+			for (HeatFluxSensor h : heatFluxSensors)
+				h.translateBy(dx, dy);
+		if (!clouds.isEmpty())
+			for (Cloud c : clouds)
+				c.translateBy(dx, dy);
+		if (!trees.isEmpty())
+			for (Tree t : trees)
+				t.translateBy(dx, dy);
 		for (Part p : parts)
 			p.translateBy(dx, dy);
 	}
@@ -378,28 +387,38 @@ public class Model2D {
 	public boolean scaleAll(float scale) {
 		Rectangle2D.Float bound = new Rectangle2D.Float(0, 0, lx, ly);
 		boolean out = false;
-		for (Thermometer t : thermometers) {
-			t.setCenter(scale * t.getX(), ly - scale * (ly - t.getY()));
-			if (!bound.intersects(t.getShape().getBounds2D()))
-				out = true;
-		}
-		for (Anemometer a : anemometers) {
-			a.setCenter(scale * a.getX(), ly - scale * (ly - a.getY()));
-			if (!bound.intersects(a.getShape().getBounds2D()))
-				out = true;
-		}
-		for (Cloud c : clouds) {
-			c.setLocation(scale * c.getX(), ly - scale * (ly - c.getY()));
-			c.setDimension(c.getWidth() * scale, c.getHeight() * scale);
-			if (!bound.intersects(c.getShape().getBounds2D()))
-				out = true;
-		}
-		for (Tree t : trees) {
-			t.setLocation(scale * t.getX(), ly - scale * (ly - t.getY()));
-			t.setDimension(t.getWidth() * scale, t.getHeight() * scale);
-			if (!bound.intersects(t.getShape().getBounds2D()))
-				out = true;
-		}
+		if (!thermometers.isEmpty())
+			for (Thermometer t : thermometers) {
+				t.setCenter(scale * t.getX(), ly - scale * (ly - t.getY()));
+				if (!bound.intersects(t.getShape().getBounds2D()))
+					out = true;
+			}
+		if (!anemometers.isEmpty())
+			for (Anemometer a : anemometers) {
+				a.setCenter(scale * a.getX(), ly - scale * (ly - a.getY()));
+				if (!bound.intersects(a.getShape().getBounds2D()))
+					out = true;
+			}
+		if (!heatFluxSensors.isEmpty())
+			for (HeatFluxSensor h : heatFluxSensors) {
+				h.setCenter(scale * h.getX(), ly - scale * (ly - h.getY()));
+				if (!bound.intersects(h.getShape().getBounds2D()))
+					out = true;
+			}
+		if (!clouds.isEmpty())
+			for (Cloud c : clouds) {
+				c.setLocation(scale * c.getX(), ly - scale * (ly - c.getY()));
+				c.setDimension(c.getWidth() * scale, c.getHeight() * scale);
+				if (!bound.intersects(c.getShape().getBounds2D()))
+					out = true;
+			}
+		if (!trees.isEmpty())
+			for (Tree t : trees) {
+				t.setLocation(scale * t.getX(), ly - scale * (ly - t.getY()));
+				t.setDimension(t.getWidth() * scale, t.getHeight() * scale);
+				if (!bound.intersects(t.getShape().getBounds2D()))
+					out = true;
+			}
 		for (Part p : parts) {
 			Shape s = p.getShape();
 			if (s instanceof Rectangle2D.Float) {
@@ -636,20 +655,71 @@ public class Model2D {
 		return anemometers.get(i);
 	}
 
+	// heat flux sensors
+
+	public void addHeatFluxSensor(HeatFluxSensor h) {
+		heatFluxSensors.add(h);
+	}
+
+	public void addHeatFluxSensor(float x, float y) {
+		heatFluxSensors.add(new HeatFluxSensor(x, y));
+	}
+
+	public void addHeatFluxSensor(float x, float y, String uid, String label, float angle) {
+		HeatFluxSensor h = new HeatFluxSensor(x, y);
+		h.setUid(uid);
+		h.setLabel(label);
+		h.setAngle(angle);
+		heatFluxSensors.add(h);
+	}
+
+	public void removeHeatFluxSensor(HeatFluxSensor h) {
+		heatFluxSensors.remove(h);
+	}
+
+	public List<HeatFluxSensor> getHeatFluxSensors() {
+		return heatFluxSensors;
+	}
+
+	public HeatFluxSensor getHeatFluxSensor(String uid) {
+		if (uid == null)
+			return null;
+		synchronized (heatFluxSensors) {
+			for (HeatFluxSensor h : heatFluxSensors) {
+				if (uid.equals(h.getUid()))
+					return h;
+			}
+		}
+		return null;
+	}
+
+	public HeatFluxSensor getHeatFluxSensor(int i) {
+		if (i < 0 || i >= heatFluxSensors.size())
+			return null;
+		return heatFluxSensors.get(i);
+	}
+
 	/** Since the sensor data are erased, the index of step (and hence the clock) is also reset. */
 	public void clearSensorData() {
 		indexOfStep = 0;
-		if (thermometers != null && !thermometers.isEmpty()) {
+		if (!thermometers.isEmpty()) {
 			synchronized (thermometers) {
 				for (Thermometer t : thermometers) {
 					t.clear();
 				}
 			}
 		}
-		if (anemometers != null && !anemometers.isEmpty()) {
+		if (!anemometers.isEmpty()) {
 			synchronized (anemometers) {
 				for (Anemometer a : anemometers) {
 					a.clear();
+				}
+			}
+		}
+		if (!heatFluxSensors.isEmpty()) {
+			synchronized (heatFluxSensors) {
+				for (HeatFluxSensor h : heatFluxSensors) {
+					h.clear();
 				}
 			}
 		}
@@ -732,6 +802,12 @@ public class Model2D {
 		synchronized (anemometers) {
 			for (Anemometer a : anemometers) {
 				if (uid.equals(a.getUid()))
+					return true;
+			}
+		}
+		synchronized (heatFluxSensors) {
+			for (HeatFluxSensor h : heatFluxSensors) {
+				if (uid.equals(h.getUid()))
 					return true;
 			}
 		}
@@ -929,6 +1005,7 @@ public class Model2D {
 		photons.clear();
 		anemometers.clear();
 		thermometers.clear();
+		heatFluxSensors.clear();
 		thermostats.clear();
 		clouds.clear();
 		trees.clear();

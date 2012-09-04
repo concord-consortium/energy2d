@@ -1,6 +1,7 @@
 package org.concord.energy2d.model;
 
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,62 @@ public abstract class Sensor extends Manipulable {
 		super(shape);
 		data = Collections.synchronizedList(new ArrayList<TimedData>());
 		listeners = new ArrayList<MeasurementListener>();
+	}
+
+	public void setCenter(float x, float y) {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			r.x = x - 0.5f * r.width;
+			r.y = y - 0.5f * r.height;
+		} else {
+			// TODO: none-rectangular shape
+		}
+	}
+
+	public void translateBy(float dx, float dy) {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			r.x += dx;
+			r.y += dy;
+		} else {
+			// TODO: none-rectangular shape
+		}
+	}
+
+	public void setX(float x) {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			r.x = x - 0.5f * r.width;
+		} else {
+			// TODO: none-rectangular shape
+		}
+	}
+
+	public void setY(float y) {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			r.y = y - 0.5f * r.height;
+		} else {
+			// TODO: none-rectangular shape
+		}
+	}
+
+	/** returns the x coordinate of the center */
+	public float getX() {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			return r.x + 0.5f * r.width;
+		}
+		return (float) getShape().getBounds2D().getCenterX();
+	}
+
+	/** returns the y coordinate of the center */
+	public float getY() {
+		if (getShape() instanceof Rectangle2D.Float) {
+			Rectangle2D.Float r = (Rectangle2D.Float) getShape();
+			return r.y + 0.5f * r.height;
+		}
+		return (float) getShape().getBounds2D().getCenterY();
 	}
 
 	public void setStencil(byte stencil) {
