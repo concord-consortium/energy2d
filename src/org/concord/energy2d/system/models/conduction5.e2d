@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <model_width>0.1</model_width>
 <model_height>0.1</model_height>
@@ -122,13 +124,19 @@
 <draggable>false</draggable>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T2" x="0.09" y="0.08"/>
 <thermometer label="T1" x="0.09" y="0.020000003"/>
+<heat_flux_sensor uid="F1" label="F1" angle="1.5707964" x="0.065" y="0.020000003"/>
+<heat_flux_sensor label="F2" angle="1.5707964" x="0.065" y="0.08"/>
+<heat_flux_sensor label="F3" angle="1.5707964" x="0.03" y="0.020000003"/>
+<heat_flux_sensor label="F4" angle="1.5707964" x="0.03" y="0.08"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>
