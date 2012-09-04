@@ -18,13 +18,14 @@ public class HeatFluxSensor extends Sensor {
 		setCenter(x, y);
 	}
 
-	public HeatFluxSensor(float x, float y, String label) {
+	public HeatFluxSensor(float x, float y, String label, float angle) {
 		this(x, y);
+		this.angle = angle;
 		setLabel(label);
 	}
 
 	public HeatFluxSensor duplicate(float x, float y) {
-		return new HeatFluxSensor(x, y);
+		return new HeatFluxSensor(x, y, null, angle);
 	}
 
 	public void setAngle(float angle) {

@@ -962,7 +962,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (copiedManipulable instanceof Thermometer) {
 			addThermometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof HeatFluxSensor) {
-			addHeatFluxSensor(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
+			addHeatFluxSensor(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y)).setAngle(((HeatFluxSensor) copiedManipulable).getAngle());
 		} else if (copiedManipulable instanceof Anemometer) {
 			addAnemometer(convertPixelToPointX(mouseReleasedPoint.x), convertPixelToPointY(mouseReleasedPoint.y));
 		} else if (copiedManipulable instanceof TextBox) {

@@ -395,6 +395,7 @@ class MenuBar extends JMenuBar {
 		menu.addSeparator();
 		menu.add(box.view.getActionMap().get("Insert Cloud"));
 		menu.add(box.view.getActionMap().get("Insert Tree"));
+		menu.addSeparator();
 		menu.add(box.view.getActionMap().get("Insert Text Box"));
 
 		// edit menu
