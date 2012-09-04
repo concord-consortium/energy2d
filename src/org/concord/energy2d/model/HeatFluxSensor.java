@@ -9,7 +9,7 @@ import java.awt.geom.Rectangle2D;
 public class HeatFluxSensor extends Sensor {
 
 	public final static float RELATIVE_WIDTH = 0.036f;
-	public final static float RELATIVE_HEIGHT = 0.015f;
+	public final static float RELATIVE_HEIGHT = 0.012f;
 
 	private float angle;
 
