@@ -186,7 +186,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Color lightColor = new Color(255, 255, 255, 128);
 	private Symbol brand;
 	private Symbol moon, sun;
-	private Symbol startIcon, resetIcon, graphIcon, switchIcon, nextIcon, prevIcon; // control panel to support touch screen
+	private Symbol startIcon, resetIcon, graphIcon, switchIcon, nextIcon, prevIcon, modeIcon; // control panel to support touch screen
 
 	Model2D model;
 	private Manipulable selectedManipulable, copiedManipulable;
@@ -648,6 +648,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				prevIcon = Symbol.get("Prev");
 				prevIcon.setStroke(moderateStroke);
 				prevIcon.setBorderPainted(true);
+			}
+			if (modeIcon == null) {
+				modeIcon = Symbol.get("Mode");
+				modeIcon.setStroke(moderateStroke);
+				modeIcon.setBorderPainted(true);
 			}
 			if (switchIcon == null) {
 				switchIcon = Symbol.get("Switch");
@@ -1282,7 +1287,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (showControlPanel)
 			drawControlPanel(g, getWidth() / 2, getHeight() - (rulerRenderer != null ? 50 : 36));
 
-		if (actionMode == SELECT_MODE) { // draw field reader last
+		if (actionMode == SELECT_MODE || actionMode == HEATING_MODE) { // draw field reader last
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseMovedPoint.x < getWidth() && mouseMovedPoint.y < getHeight()) {
 				Symbol controlButton = overWhichButton(mouseMovedPoint.x, mouseMovedPoint.y);
 				if (controlButton != null) {
@@ -1296,6 +1301,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						drawButtonInfo(g, "Next", nextIcon);
 					} else if (controlButton == prevIcon && !prevIcon.isDisabled()) {
 						drawButtonInfo(g, "Previous", prevIcon);
+					} else if (controlButton == modeIcon) {
+						drawButtonInfo(g, modeIcon.isPressed() ? "Heat" : "Select", modeIcon);
 					} else if (controlButton == switchIcon) {
 						drawButtonInfo(g, "Exit", switchIcon);
 					} else if (controlButton == brand && frankOn) {
@@ -2252,7 +2259,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
-		if (switchIcon != null && switchIcon.contains(x, y)) {
+		if (isFullScreen() && switchIcon != null && switchIcon.contains(x, y)) {
 			Object r = getClientProperty("close_full_screen");
 			if (r instanceof Runnable) {
 				((Runnable) r).run();
@@ -2294,6 +2301,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (graphIcon != null && graphIcon.contains(x, y)) {
 			setGraphOn(!showGraph);
 			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
+			repaint();
+			e.consume();
+			return;
+		}
+		if (modeIcon != null && modeIcon.contains(x, y)) {
+			modeIcon.setPressed(!modeIcon.isPressed());
+			setActionMode(modeIcon.isPressed() ? HEATING_MODE : SELECT_MODE);
 			repaint();
 			e.consume();
 			return;
@@ -3152,7 +3166,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				return nextIcon;
 			if (prevIcon != null && prevIcon.contains(x, y))
 				return prevIcon;
-			if (switchIcon != null && switchIcon.contains(x, y))
+			if (modeIcon != null && modeIcon.contains(x, y))
+				return modeIcon;
+			if (isFullScreen() && switchIcon != null && switchIcon.contains(x, y))
 				return switchIcon;
 		}
 		if (frankOn && brand.contains(x, y))
@@ -3173,18 +3189,26 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setStroke(thinStroke);
 			graphIcon.paintIcon(this, g, x - graphIcon.getIconWidth() - 4, y);
 		}
+		if (modeIcon != null) {
+			g.setStroke(thinStroke);
+			modeIcon.paintIcon(this, g, x, y);
+		}
 		if (prevIcon != null) {
 			g.setStroke(thinStroke);
-			prevIcon.paintIcon(this, g, x, y);
+			prevIcon.paintIcon(this, g, x + nextIcon.getIconWidth() + 4, y);
 		}
 		if (nextIcon != null) {
 			g.setStroke(thinStroke);
-			nextIcon.paintIcon(this, g, x + nextIcon.getIconWidth() + 4, y);
+			nextIcon.paintIcon(this, g, x + nextIcon.getIconWidth() * 2 + 8, y);
 		}
-		if (switchIcon != null) {
+		if (isFullScreen() && switchIcon != null) {
 			g.setStroke(thinStroke);
-			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 2 + 8, y);
+			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 3 + 12, y);
 		}
+	}
+
+	private boolean isFullScreen() {
+		return getClientProperty("close_full_screen") != null;
 	}
 
 }

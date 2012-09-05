@@ -513,6 +513,7 @@ class MenuBar extends JMenuBar {
 		final JCheckBoxMenuItem miColorPalette = new JCheckBoxMenuItem("Color Palette");
 		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
 		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
+		final JCheckBoxMenuItem miControlPanel = new JCheckBoxMenuItem("Control Panel");
 
 		menu = new JMenu("View");
 		menu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
@@ -532,6 +533,7 @@ class MenuBar extends JMenuBar {
 				MiscUtil.setSelectedSilently(miColorPalette, box.view.isColorPaletteOn());
 				MiscUtil.setSelectedSilently(miRuler, box.view.isRulerOn());
 				MiscUtil.setSelectedSilently(miGrid, box.view.isGridOn());
+				MiscUtil.setSelectedSilently(miControlPanel, box.view.isControlPanelVisible());
 			}
 		});
 		add(menu);
@@ -612,6 +614,17 @@ class MenuBar extends JMenuBar {
 		});
 		miColorPalette.setToolTipText("Check if you wish to show the Color Palette");
 		menu.add(miColorPalette);
+
+		miControlPanel.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
+				box.view.setControlPanelVisible(src.isSelected());
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		miControlPanel.setToolTipText("Check if you wish to show the built-in control panel");
+		menu.add(miControlPanel);
 
 		miRuler.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

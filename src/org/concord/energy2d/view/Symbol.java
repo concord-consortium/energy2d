@@ -149,6 +149,8 @@ public abstract class Symbol implements Icon {
 			return new NextIcon(Color.white, 32, 32);
 		if ("Prev".equals(s))
 			return new PrevIcon(Color.white, 32, 32);
+		if ("Mode".equals(s))
+			return new ModeIcon(Color.white, 32, 32);
 		if ("Graph".equals(s))
 			return new GraphIcon(Color.white, 32, 32);
 		if ("Brand".equals(s))
@@ -486,6 +488,37 @@ public abstract class Symbol implements Icon {
 			int[] ypoints = new int[] { y + d, y + h / 2, y + h - d };
 			g.fillPolygon(new Polygon(xpoints, ypoints, 3));
 			g.fillRect(x + w - 3 * d, y + h / 2 - d, 2 * d, 2 * d);
+		}
+
+	}
+
+	static class ModeIcon extends Symbol {
+
+		private Stroke stroke2 = new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 1 }, 0);
+
+		public ModeIcon(Color color, int w, int h) {
+			setColor(color);
+			setIconWidth(w);
+			setIconHeight(h);
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			super.paintIcon(c, g, x, y);
+			Graphics2D g2 = (Graphics2D) g;
+			if (pressed) {
+				g2.setStroke(stroke2);
+				g2.drawOval(x + 5, y + 5, w - 10, h - 10);
+				g2.drawOval(x + 10, y + 10, w - 20, h - 20);
+				g2.drawOval(x + 15, y + 15, w - 30, h - 30);
+			} else {
+				g2.rotate(Math.PI / 3, x + w / 2, y + h / 2);
+				int d = 6;
+				int[] xpoints = new int[] { x + w - 2 * d, x + d, x + w - 2 * d };
+				int[] ypoints = new int[] { y + 3 * d / 2, y + h / 2, y + h - 3 * d / 2 };
+				g.fillPolygon(new Polygon(xpoints, ypoints, 3));
+				g.fillRect(x + w - 3 * d, y + h / 2 - d / 2, 2 * d, d);
+				g2.rotate(-Math.PI / 3, x + w / 2, y + h / 2);
+			}
 		}
 
 	}
