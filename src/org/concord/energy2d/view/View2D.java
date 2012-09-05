@@ -429,6 +429,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (mode) {
 		case SELECT_MODE:
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if (modeIcon != null)
+				modeIcon.setPressed(false);
 			break;
 		case RECTANGLE_MODE:
 		case ELLIPSE_MODE:
@@ -443,6 +445,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			// in case the engine hasn't been initialized, call the following to set the stage
 			model.refreshTemperatureBoundaryArray();
 			model.refreshMaterialPropertyArrays();
+			if (modeIcon != null)
+				modeIcon.setPressed(true);
 			break;
 		}
 		repaint();
@@ -610,6 +614,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			graphRenderer.setYmin(getMinimumTemperature());
 			graphRenderer.setYmax(getMaximumTemperature());
 		}
+		setActionMode(SELECT_MODE);
+		if (modeIcon != null)
+			modeIcon.setPressed(false);
 	}
 
 	public void setRunToggle(boolean b) {
@@ -2308,6 +2315,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (modeIcon != null && modeIcon.contains(x, y)) {
 			modeIcon.setPressed(!modeIcon.isPressed());
 			setActionMode(modeIcon.isPressed() ? HEATING_MODE : SELECT_MODE);
+			notifyManipulationListeners(null, modeIcon.isPressed() ? ManipulationEvent.HEATING_MODE_CHOSEN : ManipulationEvent.SELECT_MODE_CHOSEN);
 			repaint();
 			e.consume();
 			return;

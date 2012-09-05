@@ -30,6 +30,8 @@ public class ManipulationEvent extends EventObject {
 	public static final byte GRAPH = 16;
 	public static final byte MOUSE_READ_CHANGED = 17;
 	public static final byte REPAINT = 18;
+	public static final byte SELECT_MODE_CHOSEN = 21;
+	public static final byte HEATING_MODE_CHOSEN = 22;
 
 	private Object target;
 	private byte type = -1;

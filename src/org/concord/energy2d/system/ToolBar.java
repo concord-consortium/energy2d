@@ -36,6 +36,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 
 	private JToggleButton graphButton;
 	private JToggleButton selectButton;
+	private JToggleButton heatingButton;
 	private JComboBox mouseReadComboBox;
 
 	private System2D box;
@@ -123,20 +124,20 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));
-		x.setToolTipText("Click to heat, shift-click to cool");
-		x.addItemListener(new ItemListener() {
+		heatingButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));
+		heatingButton.setToolTipText("Click to heat, shift-click to cool");
+		heatingButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				box.view.setActionMode(View2D.HEATING_MODE);
 			}
 		});
-		x.addActionListener(new ActionListener() {
+		heatingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MiscUtil.setSelectedSilently(graphButton, false);
 			}
 		});
-		add(x);
-		bg.add(x);
+		add(heatingButton);
+		bg.add(heatingButton);
 
 		graphButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/graph.png")));
 		graphButton.setToolTipText("Show or hide graphs");
@@ -179,7 +180,11 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 			MiscUtil.setSelectedSilently(graphButton, !box.model.getThermometers().isEmpty());
 			break;
 		case ManipulationEvent.OBJECT_ADDED:
+		case ManipulationEvent.SELECT_MODE_CHOSEN:
 			selectButton.doClick();
+			break;
+		case ManipulationEvent.HEATING_MODE_CHOSEN:
+			heatingButton.doClick();
 			break;
 		case ManipulationEvent.SENSOR_ADDED:
 			graphButton.setEnabled(true);
