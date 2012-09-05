@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+<next_sim>fixed-flux-boundary.e2d</next_sim>
+</links>
 <model>
 <timestep>100.0</timestep>
 <viewupdate_interval>10</viewupdate_interval>
@@ -29,15 +32,18 @@
 <power>20.0</power>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid_size>10</grid_size>
 <isotherm>true</isotherm>
 <color_palette_type>0</color_palette_type>
+<control_panel>true</control_panel>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
 <heat_flux_line>true</heat_flux_line>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+<next_sim>different-density2.e2d</next_sim>
+</links>
 <model>
 <model_width>1.0</model_width>
 <model_height>1.0</model_height>
@@ -45,19 +48,22 @@
 <label>%density</label>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T1" x="0.35" y="0.42000002"/>
 <thermometer label="T2" x="0.65" y="0.42000002"/>
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>
+<control_panel>true</control_panel>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>60.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="These two materials differ only in density (they have-linebreak-identical specific heat)." face="Arial" size="14" style="0" color="ffffff" x="0.2718" y="0.8545"/>
+<graph_xlabel>Time</graph_xlabel><text string="These two materials differ only in density (they have-linebreak-identical specific heat)." face="Arial" size="14" style="0" color="ffffff" x="0.25" y="0.8"/>
 </view>
 </state>

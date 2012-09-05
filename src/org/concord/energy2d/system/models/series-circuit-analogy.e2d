@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+<next_sim>parallel-circuit-analogy.e2d</next_sim>
+</links>
 <model>
 <model_width>0.1</model_width>
 <model_height>0.1</model_height>
@@ -123,7 +126,8 @@
 <label>R2</label>
 </part>
 </structure>
-</model>
+<environment>
+</environment>
 <sensor>
 <thermometer label="T5" x="0.09" y="0.06"/>
 <thermometer label="T4" x="0.073" y="0.06"/>
@@ -133,10 +137,12 @@
 </sensor>
 <controller>
 </controller>
+</model>
 <view>
 <grid>true</grid>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>
+<control_panel>true</control_panel>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
 <heat_flux_line>true</heat_flux_line>

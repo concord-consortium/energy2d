@@ -655,10 +655,8 @@ class MenuBar extends JMenuBar {
 
 		LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
 		templates.put("Thermal Equilibrium Between Identical Objects", "models/identical-heat-capacity.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Specific Heats: Case 1", "models/different-specific-heat1.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Specific Heats: Case 2", "models/different-specific-heat2.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Densities: Case 1", "models/different-density1.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Densities: Case 2", "models/different-density2.e2d");
+		templates.put("Thermal Equilibrium Between Objects with Different Specific Heats", "models/different-specific-heat1.e2d");
+		templates.put("Thermal Equilibrium Between Objects with Different Densities", "models/different-density1.e2d");
 		templates.put("The Effect of Thermal Conductivity on Equilibration Speed", "models/different-conductivity.e2d");
 		templates.put("The Zeroth Law of Thermodynamics", "models/zeroth.e2d");
 		templates.put("The First Law of Thermodynamics", "models/conservation-of-energy.e2d");
@@ -739,7 +737,6 @@ class MenuBar extends JMenuBar {
 		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
 		templates.put("USA Isotherm", "models/usa-isotherm.e2d");
 		templates.put("Mantle Convection", "models/mantle.e2d");
-		templates.put("Linking Simulations", "models/step1.e2d");
 		createMenu(box, subMenu, templates);
 
 		menu.addSeparator();
