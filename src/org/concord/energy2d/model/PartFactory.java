@@ -12,7 +12,7 @@ public class PartFactory {
 		this.model = model;
 	}
 
-	public void addParabola(float a) {
+	public void addParabola(float a, float b) {
 		int nx = model.getNx();
 		float lx = model.getLx();
 		float ly = model.getLy();
@@ -22,7 +22,7 @@ public class PartFactory {
 			x[i] = lx / nx * i;
 			y[i] = ly - a * (x[i] - lx * 0.5f) * (x[i] - lx * 0.5f);
 			x[2 * nx - 1 - i] = x[i];
-			y[2 * nx - 1 - i] = y[i] + ly * 0.01f;
+			y[2 * nx - 1 - i] = y[i] + b;
 		}
 		model.addPolygonPart(x, y);
 	}
