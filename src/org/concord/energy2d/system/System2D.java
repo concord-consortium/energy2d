@@ -78,7 +78,7 @@ import com.apple.eawt.ApplicationEvent;
  */
 public class System2D extends JApplet implements MwService, ManipulationListener {
 
-	final static String BRAND = "Energy2D V1.0";
+	final static String BRAND_NAME = "Energy2D V1.0";
 
 	Model2D model;
 	View2D view;
@@ -300,7 +300,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			runNativeScript(s);
 		}
 		view.repaint();
-		System.out.println(BRAND + " initialized.");
+		System.out.println(BRAND_NAME + " initialized.");
 	}
 
 	void executeInThreadService(Runnable r) {
@@ -908,13 +908,13 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		if (owner == null)
 			return;
 		if (currentFile != null) {
-			owner.setTitle(BRAND + ": " + currentFile + (saved ? "" : " *"));
+			owner.setTitle(BRAND_NAME + ": " + currentFile + (saved ? "" : " *"));
 		} else if (currentModel != null) {
-			owner.setTitle(BRAND + ": " + currentModel);
+			owner.setTitle(BRAND_NAME + ": " + currentModel);
 		} else if (currentURL != null) {
-			owner.setTitle(BRAND + ": " + currentURL);
+			owner.setTitle(BRAND_NAME + ": " + currentURL);
 		} else {
-			owner.setTitle(BRAND);
+			owner.setTitle(BRAND_NAME);
 		}
 	}
 
@@ -951,7 +951,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 		if (System.getProperty("os.name").startsWith("Mac")) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND);
+			System.setProperty("com.apple.mrj.application.apple.menu.about.name", BRAND_NAME);
 		}
 
 		if (preferences == null)
@@ -991,7 +991,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		int x = preferences.getInt("Upper-left x", (screen.height - w) / 8);
 		int y = preferences.getInt("Upper-left y", (screen.height - w) / 8);
 		frame.setLocation(x, y);
-		frame.setTitle(BRAND);
+		frame.setTitle(BRAND_NAME);
 		frame.pack();
 		frame.setVisible(true);
 		frame.addWindowListener(new WindowAdapter() {
