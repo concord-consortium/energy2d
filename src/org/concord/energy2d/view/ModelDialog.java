@@ -480,7 +480,7 @@ class ModelDialog extends JDialog {
 		p = new JPanel(new SpringLayout());
 		pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
-		tabbedPane.add(pp, "Radiation");
+		tabbedPane.add(pp, "Light");
 		count = 0;
 
 		rayNumberLabel = new JLabel("Ray number");

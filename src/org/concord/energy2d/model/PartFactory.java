@@ -27,4 +27,24 @@ public class PartFactory {
 		model.addPolygonPart(x, y);
 	}
 
+	public void addStair(float x, float y, float w, float h, int n) {
+		float dx = w / n;
+		float dy = h / n;
+		float[] sx = new float[n * 2 + 3];
+		float[] sy = new float[n * 2 + 3];
+		for (int i = 0; i < n; i++) {
+			sx[i * 2] = x + i * dx;
+			sy[i * 2] = y + i * dy;
+			sx[i * 2 + 1] = x + (i + 1) * dx;
+			sy[i * 2 + 1] = y + i * dy;
+		}
+		sx[n * 2] = x + w;
+		sy[n * 2] = y + h;
+		sx[n * 2 + 1] = x + w - dx;
+		sy[n * 2 + 1] = y + h;
+		sx[n * 2 + 2] = x;
+		sy[n * 2 + 2] = y + dy;
+		model.addPolygonPart(sx, sy);
+	}
+
 }

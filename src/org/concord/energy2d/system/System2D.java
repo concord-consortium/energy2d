@@ -964,7 +964,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		box.view.setPreferredSize(new Dimension(w, w));
 		box.view.setGridOn(true);
 		box.view.setRulerOn(true);
-		// new org.concord.energy2d.model.PartFactory(box.model).addParabola(0.01f * box.model.getLx(), 0.02f * box.model.getLy());
+		// new org.concord.energy2d.model.PartFactory(box.model).addStair(0, 0, box.model.getLx(), box.model.getLy(), 10);
 		final JFrame frame = new JFrame();
 		frame.setIconImage(new ImageIcon(System2D.class.getResource("resources/frame.png")).getImage());
 		final MenuBar menuBar = new MenuBar(box, frame);

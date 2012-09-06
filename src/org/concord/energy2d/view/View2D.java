@@ -382,6 +382,28 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a.putValue(Action.SHORT_DESCRIPTION, "Insert an anemometer where the mouse last clicked");
 		getActionMap().put("Insert Anemometer", a);
 
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(View2D.this, "Undo is not supported yet.");
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
+		a.putValue(Action.NAME, "Undo");
+		a.putValue(Action.ACCELERATOR_KEY, ks);
+		getInputMap().put(ks, "Undo");
+		getActionMap().put("Undo", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(View2D.this, "Redo is not supported yet.");
+			}
+		};
+		ks = IS_MAC ? KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.META_MASK) : KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK);
+		a.putValue(Action.NAME, "Redo");
+		a.putValue(Action.ACCELERATOR_KEY, ks);
+		getInputMap().put(ks, "Redo");
+		getActionMap().put("Redo", a);
+
 	}
 
 	public void setMouseReadType(byte mouseReadType) {
@@ -2677,18 +2699,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case RECTANGLE_MODE:
-			if (rectangle.width * rectangle.height > 9) {
+			if (rectangle.width > (float) getWidth() / (float) nx && rectangle.height > (float) getHeight() / (float) ny) {
 				model.addRectangularPart(convertPixelToPointX(rectangle.x), convertPixelToPointY(rectangle.y), convertPixelToLengthX(rectangle.width), convertPixelToLengthY(rectangle.height), model.getBackgroundTemperature() + 20);
 				model.refreshPowerArray();
 				model.refreshTemperatureBoundaryArray();
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
+			} else {
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The rectangle you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			rectangle.setRect(-1000, -1000, 0, 0);
 			break;
 		case ELLIPSE_MODE:
-			if (ellipse.width * ellipse.height > 9) {
+			if (ellipse.width > (float) getWidth() / (float) nx && ellipse.height > (float) getHeight() / (float) ny) {
 				float ex = convertPixelToPointX((int) ellipse.x);
 				float ey = convertPixelToPointY((int) ellipse.y);
 				float ew = convertPixelToLengthX((int) ellipse.width);
@@ -2699,6 +2723,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.refreshMaterialPropertyArrays();
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
+			} else {
+				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The ellipse you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
@@ -2706,7 +2732,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (e.getClickCount() >= 2) {
 				resetMousePoints();
 				int n = polygon.npoints;
-				if (n > 0) {
+				if (n >= 3) {
 					float[] px = new float[n];
 					float[] py = new float[n];
 					for (int i = 0; i < n; i++) {
@@ -2719,8 +2745,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					model.refreshMaterialPropertyArrays();
 					model.setInitialTemperature();
 					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
-					polygon.reset();
+				} else {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The polygon must be at least a triangle!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				polygon.reset();
 			}
 			break;
 		case HEATING_MODE:
