@@ -1,6 +1,8 @@
 package org.concord.energy2d.model;
 
 /**
+ * Make some custom shapes
+ * 
  * @author Charles Xie
  * 
  */
