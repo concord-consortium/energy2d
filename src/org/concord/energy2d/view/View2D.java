@@ -79,6 +79,8 @@ import org.concord.energy2d.util.Texture;
 import org.concord.energy2d.util.TextureFactory;
 
 /**
+ * Visualizations and interactions
+ * 
  * @author Charles Xie
  * 
  */
