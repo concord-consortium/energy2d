@@ -2340,6 +2340,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			modeIcon.setPressed(!modeIcon.isPressed());
 			setActionMode(modeIcon.isPressed() ? HEATING_MODE : SELECT_MODE);
 			notifyManipulationListeners(null, modeIcon.isPressed() ? ManipulationEvent.HEATING_MODE_CHOSEN : ManipulationEvent.SELECT_MODE_CHOSEN);
+			mouseMovedPoint.setLocation(x, y);
 			repaint();
 			e.consume();
 			return;

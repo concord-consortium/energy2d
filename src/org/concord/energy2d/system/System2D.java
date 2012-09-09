@@ -48,8 +48,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.concord.energy2d.event.IOEvent;
-import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.model.Anemometer;
@@ -99,7 +97,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 	Runnable clickRun, clickStop, clickReset, clickReload;
 	private JButton buttonRun, buttonStop, buttonReset, buttonReload;
 	private JLabel statusLabel;
-	private List<IOListener> ioListeners;
+	private ToolBarListener toolBarListener;
 	private List<PropertyChangeListener> propertyChangeListeners;
 	private JFrame owner;
 	private static Preferences preferences;
@@ -496,7 +494,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), e.getLocalizedMessage(), "File error", JOptionPane.ERROR_MESSAGE);
 		}
-		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
+		notifyToolBarListener(new ToolBarEvent(ToolBarEvent.FILE_INPUT, this));
 		currentFile = file;
 		currentModel = null;
 		currentURL = null;
@@ -514,7 +512,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
+		notifyToolBarListener(new ToolBarEvent(ToolBarEvent.FILE_INPUT, this));
 		currentModel = name;
 		currentFile = null;
 		currentURL = null;
@@ -528,7 +526,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		if (!askSaveBeforeLoading())
 			return;
 		loadStateApp(url.openConnection().getInputStream());
-		notifyIOListeners(new IOEvent(IOEvent.FILE_INPUT, this));
+		notifyToolBarListener(new ToolBarEvent(ToolBarEvent.FILE_INPUT, this));
 		currentURL = url;
 		currentFile = null;
 		currentModel = null;
@@ -813,6 +811,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				reset();
 				buttonRun.setEnabled(true);
 				buttonStop.setEnabled(false);
+				notifyToolBarListener(new ToolBarEvent(ToolBarEvent.RESET, buttonReset));
 			}
 		});
 		p.add(buttonReset);
@@ -865,25 +864,14 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			x.actionPerformed(null);
 	}
 
-	void addIOListener(IOListener l) {
-		if (ioListeners == null)
-			ioListeners = new ArrayList<IOListener>();
-		if (!ioListeners.contains(l))
-			ioListeners.add(l);
+	void setToolBarListener(ToolBarListener l) {
+		toolBarListener = l;
 	}
 
-	void removeIOListener(IOListener l) {
-		if (ioListeners == null)
-			return;
-		ioListeners.remove(l);
-	}
-
-	private void notifyIOListeners(IOEvent e) {
+	private void notifyToolBarListener(ToolBarEvent e) {
 		setFrameTitle();
-		if (ioListeners == null)
-			return;
-		for (IOListener x : ioListeners)
-			x.ioOccured(e);
+		if (toolBarListener != null)
+			toolBarListener.tableBarShouldChange(e);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -979,7 +967,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().add(box.getContentPane(), BorderLayout.CENTER);
 		ToolBar toolBar = new ToolBar(box);
-		box.addIOListener(toolBar);
+		box.setToolBarListener(toolBar);
 		box.view.addManipulationListener(toolBar);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		JPanel bottomPanel = new JPanel(new BorderLayout());

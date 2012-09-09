@@ -21,8 +21,6 @@ import javax.swing.JToolBar;
 
 import org.concord.energy2d.event.GraphEvent;
 import org.concord.energy2d.event.GraphListener;
-import org.concord.energy2d.event.IOEvent;
-import org.concord.energy2d.event.IOListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.util.MiscUtil;
@@ -32,7 +30,7 @@ import org.concord.energy2d.view.View2D;
  * @author Charles Xie
  * 
  */
-class ToolBar extends JToolBar implements GraphListener, IOListener, ManipulationListener {
+class ToolBar extends JToolBar implements GraphListener, ToolBarListener, ManipulationListener {
 
 	private JToggleButton graphButton;
 	private JToggleButton selectButton;
@@ -181,6 +179,7 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 			break;
 		case ManipulationEvent.OBJECT_ADDED:
 		case ManipulationEvent.SELECT_MODE_CHOSEN:
+		case ManipulationEvent.RESET:
 			selectButton.doClick();
 			break;
 		case ManipulationEvent.HEATING_MODE_CHOSEN:
@@ -195,9 +194,9 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 		}
 	}
 
-	public void ioOccured(IOEvent e) {
+	public void tableBarShouldChange(ToolBarEvent e) {
 		switch (e.getType()) {
-		case IOEvent.FILE_INPUT:
+		case ToolBarEvent.FILE_INPUT:
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					selectButton.doClick();
@@ -207,7 +206,8 @@ class ToolBar extends JToolBar implements GraphListener, IOListener, Manipulatio
 				}
 			});
 			break;
-		case IOEvent.FILE_OUTPUT:
+		case ToolBarEvent.RESET:
+			selectButton.doClick();
 			break;
 		}
 	}
