@@ -16,10 +16,12 @@ import java.util.List;
  */
 class RaySolver2D {
 
+	private final static int DEFAULT_RAY_COUNT = 24;
+
 	private float[][] q;
 	private float deltaX, deltaY;
 	private float lx, ly, sunAngle = (float) Math.PI * 0.5f;
-	private int rayCount = 24;
+	private int rayCount = DEFAULT_RAY_COUNT;
 	private float solarPowerDensity = 2000;
 	private float rayPower = solarPowerDensity;
 
@@ -49,7 +51,7 @@ class RaySolver2D {
 
 	void setSolarPowerDensity(float solarPowerDensity) {
 		this.solarPowerDensity = solarPowerDensity;
-		rayPower = solarPowerDensity * 24 / rayCount;
+		rayPower = solarPowerDensity * DEFAULT_RAY_COUNT / rayCount;
 	}
 
 	float getSolarPowerDensity() {
@@ -58,7 +60,7 @@ class RaySolver2D {
 
 	void setSolarRayCount(int solarRayCount) {
 		rayCount = solarRayCount;
-		rayPower = solarPowerDensity * 24 / rayCount;
+		rayPower = solarPowerDensity * DEFAULT_RAY_COUNT / rayCount;
 	}
 
 	int getSolarRayCount() {
@@ -106,10 +108,10 @@ class RaySolver2D {
 					remove = false;
 					synchronized (model.getParts()) {
 						for (Part part : model.getParts()) {
-							if (Math.abs(part.getReflection() - 1) < 0.001f) {
+							if (Math.abs(part.getReflection() - 1) < 0.001f) { // in current implementation, reflection is either 1 or 0
 								if (part.reflect(p, timeStep))
 									break;
-							} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) {
+							} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) { // in current implementation, absorption is either 1 or 0
 								if (part.absorb(p)) {
 									i = Math.min(nx, Math.round(p.getX() * idx));
 									j = Math.min(ny, Math.round(p.getY() * idy));
@@ -182,8 +184,8 @@ class RaySolver2D {
 	}
 
 	private void shootAtAngle(float dx, float dy, List<Photon> photons, List<Part> parts) {
-		int m = (int) (lx / dx);
-		int n = (int) (ly / dy);
+		int m = Math.round(lx / dx);
+		int n = Math.round(ly / dy);
 		float x, y;
 		if (sunAngle >= 0 && sunAngle < 0.5f * Math.PI) {
 			y = 0;

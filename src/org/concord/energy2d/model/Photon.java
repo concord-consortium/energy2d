@@ -6,8 +6,7 @@
 package org.concord.energy2d.model;
 
 /**
- * This is NOT really a photon in strict physics sense. It is just a particle
- * for modeling the traveling of light energy in light of ray optics.
+ * This is NOT really a photon in strict physics sense. It is just a particle for modeling the traveling of light energy.
  * 
  * */
 

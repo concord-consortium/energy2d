@@ -55,9 +55,9 @@ class PartModelDialog extends JDialog {
 	private JTextField temperatureField;
 	private JTextField windSpeedField;
 	private JTextField windAngleField;
-	private JTextField absorptionField;
-	private JTextField reflectionField;
-	private JTextField transmissionField;
+	private JRadioButton absorptionRadioButton;
+	private JRadioButton reflectionRadioButton;
+	private JRadioButton transmissionRadioButton;
 	private JTextField emissivityField;
 	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField;
 	private JCheckBox flipXCheckBox, flipYCheckBox;
@@ -86,15 +86,11 @@ class PartModelDialog extends JDialog {
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				float absorption = parse(absorptionField.getText());
-				if (Float.isNaN(absorption))
-					return;
-				float reflection = parse(reflectionField.getText());
-				if (Float.isNaN(reflection))
-					return;
-				float transmission = parse(transmissionField.getText());
-				if (Float.isNaN(transmission))
-					return;
+				// currently, a photon is either absorbed, reflected, or transmitted.
+				int absorption = absorptionRadioButton.isSelected() ? 1 : 0;
+				int reflection = reflectionRadioButton.isSelected() ? 1 : 0;
+				int transmission = transmissionRadioButton.isSelected() ? 1 : 0;
+
 				float emissivity = parse(emissivityField.getText());
 				if (Float.isNaN(emissivity))
 					return;
@@ -499,39 +495,33 @@ class PartModelDialog extends JDialog {
 
 		MiscUtil.makeCompactGrid(p, count, 3, 5, 5, 10, 2);
 
-		p = new JPanel(new SpringLayout());
+		// optics
+
+		p = new JPanel(new FlowLayout());
 		pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
 		tabbedPane.add(pp, "Optical");
-		count = 0;
 
-		p.add(new JLabel("Absorption"));
-		absorptionField = new JTextField(FORMAT.format(part.getAbsorption()), 8);
-		absorptionField.addActionListener(okListener);
-		p.add(absorptionField);
+		bg = new ButtonGroup();
 
-		p.add(new JLabel("Reflection"));
-		reflectionField = new JTextField(FORMAT.format(part.getReflection()), 8);
-		reflectionField.addActionListener(okListener);
-		p.add(reflectionField);
-		count++;
+		absorptionRadioButton = new JRadioButton("Absorption", Math.abs(part.getAbsorption() - 1) < 0.01);
+		p.add(absorptionRadioButton);
+		bg.add(absorptionRadioButton);
 
-		p.add(new JLabel("Transmission"));
-		transmissionField = new JTextField(FORMAT.format(part.getTransmission()), 16);
-		transmissionField.addActionListener(okListener);
-		p.add(transmissionField);
+		reflectionRadioButton = new JRadioButton("Reflection", Math.abs(part.getReflection() - 1) < 0.01);
+		p.add(reflectionRadioButton);
+		bg.add(reflectionRadioButton);
 
-		p.add(new JLabel("Emissivity"));
-		emissivityField = new JTextField(FORMAT.format(part.getEmissivity()), 16);
+		transmissionRadioButton = new JRadioButton("Transmission", Math.abs(part.getTransmission() - 1) < 0.01);
+		p.add(transmissionRadioButton);
+		bg.add(transmissionRadioButton);
+
+		p.add(new JLabel("Emissivity:"));
+		emissivityField = new JTextField(FORMAT.format(part.getEmissivity()), 10);
 		emissivityField.addActionListener(okListener);
 		p.add(emissivityField);
-		count++;
 
-		MiscUtil.makeCompactGrid(p, count, 4, 5, 5, 10, 2);
-
-		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pp.add(p, BorderLayout.CENTER);
-		p.add(new JLabel("<html><br><hr align=left width=100>1) All the above coefficients must be within [0, 1].<br>2) The sum of the absorption, reflection, and transmission coefficients must be exactly one.</html>"));
+		// miscellaneous
 
 		Box miscBox = Box.createVerticalBox();
 		pp = new JPanel(new BorderLayout());
