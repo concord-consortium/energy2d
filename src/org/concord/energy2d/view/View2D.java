@@ -175,7 +175,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private FieldLines streamlines;
 	private FieldLines heatFluxLines;
 	private Polygon multigon;
-	private float photonLength = 10;
+	private float photonLength = 5;
 	private byte actionMode = SELECT_MODE;
 	private Rectangle rectangle = new Rectangle();
 	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
@@ -1906,13 +1906,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		int x, y;
 		g.setColor(lightColor);
 		g.setStroke(thinStroke);
-		double r;
+		float r;
 		synchronized (model.getPhotons()) {
 			for (Photon p : model.getPhotons()) {
 				x = convertPointToPixelX(p.getX());
 				y = convertPointToPixelY(p.getY());
-				r = 1.0 / Math.hypot(p.getVx(), p.getVy());
-				g.drawLine((int) (x - photonLength * p.getVx() * r), (int) (y - photonLength * p.getVy() * r), x, y);
+				r = 1.0f / (float) Math.hypot(p.getVx(), p.getVy());
+				g.drawLine(Math.round(x - photonLength * p.getVx() * r), Math.round(y - photonLength * p.getVy() * r), x, y);
 			}
 		}
 	}

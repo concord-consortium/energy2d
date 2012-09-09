@@ -614,11 +614,12 @@ public class Part extends Manipulable {
 		if (label.indexOf('%') == -1)
 			return label;
 		String s = null;
-		if (label.equalsIgnoreCase("%temperature"))
-			s = (int) temperature + " \u00b0C";
-		else if (label.equalsIgnoreCase("%thermal_energy"))
+		if (label.equalsIgnoreCase("%temperature")) {
+			Rectangle2D bounds = getShape().getBounds2D();
+			s = Math.round(model.getTemperatureAt((float) bounds.getCenterX(), (float) bounds.getCenterY())) + " \u00b0C";
+		} else if (label.equalsIgnoreCase("%thermal_energy")) {
 			s = Math.round(model.getThermalEnergy(this)) + " J";
-		else if (label.equalsIgnoreCase("%density"))
+		} else if (label.equalsIgnoreCase("%density"))
 			s = (int) density + " kg/m\u00b3";
 		else if (label.equalsIgnoreCase("%specific_heat"))
 			s = (int) specificHeat + " J/(kg\u00d7\u00b0C)";
