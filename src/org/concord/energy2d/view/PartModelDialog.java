@@ -6,6 +6,7 @@
 package org.concord.energy2d.view;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Shape;
 import java.awt.Window;
@@ -13,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
@@ -389,6 +392,7 @@ class PartModelDialog extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					temperatureLabel.setEnabled(true);
 					temperatureField.setEnabled(true);
+					powerLabel.setText("Power density");
 					powerLabel.setEnabled(false);
 					powerField.setEnabled(false);
 				}
@@ -403,6 +407,7 @@ class PartModelDialog extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					temperatureLabel.setEnabled(true);
 					temperatureField.setEnabled(true);
+					powerLabel.setText("Power density");
 					powerLabel.setEnabled(false);
 					powerField.setEnabled(false);
 				}
@@ -417,6 +422,7 @@ class PartModelDialog extends JDialog {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					temperatureLabel.setEnabled(false);
 					temperatureField.setEnabled(false);
+					powerLabel.setText("<html><u><font color=blue>Power density</font></u></html>");
 					powerLabel.setEnabled(true);
 					powerField.setEnabled(true);
 				}
@@ -426,20 +432,34 @@ class PartModelDialog extends JDialog {
 		bg.add(powerRadioButton);
 		count++;
 
-		powerLabel = new JLabel("Power density");
-		p.add(powerLabel);
-		powerField = new JTextField(FORMAT.format(part.getPower()), 16);
-		powerField.addActionListener(okListener);
-		p.add(powerField);
-		p.add(new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>"));
-		count++;
-
 		temperatureLabel = new JLabel("Temperature");
 		p.add(temperatureLabel);
 		temperatureField = new JTextField(FORMAT.format(part.getTemperature()), 16);
 		temperatureField.addActionListener(okListener);
 		p.add(temperatureField);
 		p.add(new JLabel("<html><i>\u2103</i></html>"));
+		count++;
+
+		powerLabel = new JLabel("Power density");
+		powerLabel.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				System.out.println(e);
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				powerLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				powerLabel.setToolTipText(powerLabel.isEnabled() ? "Click to add a thermostat" : null);
+			}
+
+			public void mouseExited(MouseEvent e) {
+				powerLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
+		p.add(powerLabel);
+		powerField = new JTextField(FORMAT.format(part.getPower()), 16);
+		powerField.addActionListener(okListener);
+		p.add(powerField);
+		p.add(new JLabel("<html><i>W/m<sup><font size=2>3</font></sup></html>"));
 		count++;
 
 		p.add(new JLabel("Wind speed"));

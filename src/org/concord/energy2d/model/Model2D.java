@@ -515,10 +515,12 @@ public class Model2D {
 	/** only one thermostat is needed to connect a thermometer and a power source */
 	public Thermostat addThermostat(Thermometer t, Part p) {
 		Iterator<Thermostat> i = thermostats.iterator();
-		while (i.hasNext()) {
-			Thermostat x = i.next();
-			if (x.getThermometer() == t && x.getPowerSource() == p)
-				return x;
+		synchronized (thermostats) {
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == t && x.getPowerSource() == p)
+					return x;
+			}
 		}
 		Thermostat x = new Thermostat(t, p);
 		thermostats.add(x);
@@ -528,29 +530,35 @@ public class Model2D {
 	public void removeThermostat(Thermometer t, Part p) {
 		if (thermostats.isEmpty())
 			return;
-		for (Iterator<Thermostat> i = thermostats.iterator(); i.hasNext();) {
-			Thermostat x = i.next();
-			if (x.getThermometer() == t && x.getPowerSource() == p)
-				i.remove();
+		synchronized (thermostats) {
+			for (Iterator<Thermostat> i = thermostats.iterator(); i.hasNext();) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == t && x.getPowerSource() == p)
+					i.remove();
+			}
 		}
 	}
 
 	public boolean isConnected(Thermometer t, Part p) {
 		Iterator<Thermostat> i = thermostats.iterator();
-		while (i.hasNext()) {
-			Thermostat x = i.next();
-			if (x.getThermometer() == t && x.getPowerSource() == p)
-				return true;
+		synchronized (thermostats) {
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == t && x.getPowerSource() == p)
+					return true;
+			}
 		}
 		return false;
 	}
 
 	public Thermostat getThermostat(Object o) {
 		Iterator<Thermostat> i = thermostats.iterator();
-		while (i.hasNext()) {
-			Thermostat x = i.next();
-			if (x.getThermometer() == o || x.getPowerSource() == o)
-				return x;
+		synchronized (thermostats) {
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == o || x.getPowerSource() == o)
+					return x;
+			}
 		}
 		return null;
 	}
@@ -1423,7 +1431,7 @@ public class Model2D {
 	public void control() {
 		boolean refresh = false;
 		for (Thermostat x : thermostats) {
-			if (x.onoff())
+			if (x.onoff(this))
 				refresh = true;
 		}
 		if (refresh)

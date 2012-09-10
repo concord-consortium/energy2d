@@ -531,10 +531,12 @@ class XmlDecoder extends DefaultHandler {
 						powerSourceUID = attribValue;
 					}
 				}
-				if (!Float.isNaN(setpoint) && !Float.isNaN(deadband) && thermometerUID != null && powerSourceUID != null) {
-					Thermometer t = box.model.getThermometer(thermometerUID);
+				if (!Float.isNaN(setpoint) && !Float.isNaN(deadband) && powerSourceUID != null) {
 					Part p = box.model.getPart(powerSourceUID);
-					if (t != null && p != null) {
+					if (p != null) {
+						Thermometer t = null;
+						if (thermometerUID != null)
+							t = box.model.getThermometer(thermometerUID);
 						Thermostat ts = box.model.addThermostat(t, p);
 						ts.setDeadband(deadband);
 						ts.setSetPoint(setpoint);
