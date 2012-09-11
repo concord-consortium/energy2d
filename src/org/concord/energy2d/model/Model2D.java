@@ -1427,12 +1427,13 @@ public class Model2D {
 	public void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
 			int i, j;
+			int offset = Math.round(thermometers.get(0).getSensingSpotY() / ly * ny);
 			synchronized (thermometers) {
 				for (Thermometer m : thermometers) {
 					i = Math.round(m.getX() / deltaX);
 					j = Math.round(m.getY() / deltaY);
 					if (i >= 0 && i < nx && j >= 0 && j < ny) {
-						m.addData(getTime(), getTemperature(i, j, m.getStencil()));
+						m.addData(getTime(), getTemperature(i, j + offset, m.getStencil()));
 					}
 				}
 			}

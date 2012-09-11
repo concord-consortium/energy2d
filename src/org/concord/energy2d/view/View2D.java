@@ -1599,7 +1599,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
-		int shiftH = Math.round(0.5f * s.getIconHeight() / getHeight() * ny);
+		float sensingSpotY = 0.5f * s.getIconHeight() / getHeight() * model.getLy();
+		int shiftH = Math.round(sensingSpotY / model.getLy() * ny);
 		float temp;
 		String str;
 		g.setFont(sensorReadingFont);
@@ -1617,6 +1618,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					y = (int) (ry * getHeight() - iconH2);
 					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry) + shiftH, t.getStencil());
 					if (!Float.isNaN(temp)) {
+						t.setSensingSpotY(sensingSpotY);
 						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
 						centerString(str, g, (int) (x + iconW2), y - 5, true);
 						if (t.getLabel() != null)

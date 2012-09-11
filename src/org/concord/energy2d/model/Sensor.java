@@ -25,6 +25,8 @@ public abstract class Sensor extends Manipulable {
 	List<TimedData> data;
 	private List<MeasurementListener> listeners;
 
+	private float sensingSpotX, sensingSpotY;
+
 	public Sensor(Shape shape) {
 		super(shape);
 		data = Collections.synchronizedList(new ArrayList<TimedData>());
@@ -85,6 +87,22 @@ public abstract class Sensor extends Manipulable {
 			return r.y + 0.5f * r.height;
 		}
 		return (float) getShape().getBounds2D().getCenterY();
+	}
+
+	public void setSensingSpotX(float sensingSpotX) {
+		this.sensingSpotX = sensingSpotX;
+	}
+
+	public float getSensingSpotX() {
+		return sensingSpotX;
+	}
+
+	public void setSensingSpotY(float sensingSpotY) {
+		this.sensingSpotY = sensingSpotY;
+	}
+
+	public float getSensingSpotY() {
+		return sensingSpotY;
 	}
 
 	public void setStencil(byte stencil) {

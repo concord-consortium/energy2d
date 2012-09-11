@@ -97,7 +97,7 @@ class ThermometerDialog extends JDialog {
 				x = parse(yField.getText());
 				if (Float.isNaN(x))
 					return;
-				thermometer.setY(view.model.getLy() - x);
+				thermometer.setY(view.model.getLy() - x - thermometer.getSensingSpotY());
 
 				thermometer.setLabel(labelField.getText());
 				String uid = uidField.getText();
@@ -172,7 +172,7 @@ class ThermometerDialog extends JDialog {
 		p.add(xField);
 
 		p.add(new JLabel("Y:"));
-		yField = new JTextField((view.model.getLy() - thermometer.getY()) + "", 10);
+		yField = new JTextField((view.model.getLy() - thermometer.getY() - thermometer.getSensingSpotY()) + "", 10);
 		yField.addActionListener(okListener);
 		p.add(yField);
 
