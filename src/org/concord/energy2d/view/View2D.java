@@ -1827,7 +1827,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void drawStatus(Graphics2D g, Part p, int x, int y) {
-		if (p.getPower() != 0) {
+		if (p.getPower() != 0 && model.getThermostat(p) != null) {
 			String onoff = p.getPowerSwitch() ? "On" : "Off";
 			g.setColor(getContrastColor(x, y));
 			g.setFont(smallFont);

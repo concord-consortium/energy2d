@@ -30,30 +30,36 @@ class ThermostatRenderer {
 		if (!v.isVisible())
 			return;
 
-		Stroke oldStroke = g.getStroke();
-		Color oldColor = g.getColor();
-		g.setStroke(stroke1);
-		g.setColor(Color.black);
+		if (t.getThermometer() != null) {
 
-		int x1 = v.convertPointToPixelX(t.getThermometer().getX());
-		int y1 = v.convertPointToPixelY(t.getThermometer().getY());
-		int x2 = v.convertPointToPixelX(t.getPowerSource().getCenter().x);
-		int y2 = v.convertPointToPixelY(t.getPowerSource().getCenter().y);
-		g.drawLine(x1, y1, x1, y2);
-		g.drawLine(x1, y2, x2, y2);
+			Stroke oldStroke = g.getStroke();
+			Color oldColor = g.getColor();
+			g.setStroke(stroke1);
+			g.setColor(Color.black);
 
-		g.setStroke(stroke2);
-		g.drawOval(x1 - 3, y1 - 3, 6, 6);
-		g.drawOval(x2 - 3, y2 - 3, 6, 6);
+			int x1 = v.convertPointToPixelX(t.getThermometer().getX());
+			int y1 = v.convertPointToPixelY(t.getThermometer().getY());
+			int x2 = v.convertPointToPixelX(t.getPowerSource().getCenter().x);
+			int y2 = v.convertPointToPixelY(t.getPowerSource().getCenter().y);
+			g.drawLine(x1, y1, x1, y2);
+			g.drawLine(x1, y2, x2, y2);
 
-		g.setColor(Color.white);
-		g.drawLine(x1, y1, x1, y2);
-		g.drawLine(x1, y2, x2, y2);
-		g.fillOval(x1 - 2, y1 - 2, 4, 4);
-		g.fillOval(x2 - 2, y2 - 2, 4, 4);
+			g.setStroke(stroke2);
+			g.drawOval(x1 - 3, y1 - 3, 6, 6);
+			g.drawOval(x2 - 3, y2 - 3, 6, 6);
 
-		g.setStroke(oldStroke);
-		g.setColor(oldColor);
+			g.setColor(Color.white);
+			g.drawLine(x1, y1, x1, y2);
+			g.drawLine(x1, y2, x2, y2);
+			g.fillOval(x1 - 2, y1 - 2, 4, 4);
+			g.fillOval(x2 - 2, y2 - 2, 4, 4);
+
+			g.setStroke(oldStroke);
+			g.setColor(oldColor);
+
+		} else {
+
+		}
 
 	}
 

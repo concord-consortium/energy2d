@@ -512,7 +512,7 @@ public class Model2D {
 
 	// thermostats
 
-	/** only one thermostat is needed to connect a thermometer and a power source */
+	/** only one thermostat is needed for a power source or to connect a thermometer and a power source */
 	public Thermostat addThermostat(Thermometer t, Part p) {
 		Iterator<Thermostat> i = thermostats.iterator();
 		synchronized (thermostats) {
@@ -557,6 +557,18 @@ public class Model2D {
 			while (i.hasNext()) {
 				Thermostat x = i.next();
 				if (x.getThermometer() == o || x.getPowerSource() == o)
+					return x;
+			}
+		}
+		return null;
+	}
+
+	public Thermostat getThermostat(Thermometer t, Part p) {
+		Iterator<Thermostat> i = thermostats.iterator();
+		synchronized (thermostats) {
+			while (i.hasNext()) {
+				Thermostat x = i.next();
+				if (x.getThermometer() == t && x.getPowerSource() == p)
 					return x;
 			}
 		}

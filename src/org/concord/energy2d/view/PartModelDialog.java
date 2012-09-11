@@ -443,12 +443,12 @@ class PartModelDialog extends JDialog {
 		powerLabel = new JLabel("Power density");
 		powerLabel.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				System.out.println(e);
+				new ThermostatDialog(view, part, true).setVisible(true);
 			}
 
 			public void mouseEntered(MouseEvent e) {
 				powerLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				powerLabel.setToolTipText(powerLabel.isEnabled() ? "Click to add a thermostat" : null);
+				powerLabel.setToolTipText(powerLabel.isEnabled() ? "Click to set up a thermostat" : null);
 			}
 
 			public void mouseExited(MouseEvent e) {
