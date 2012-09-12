@@ -209,6 +209,11 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		case ToolBarEvent.RESET:
 			selectButton.doClick();
 			break;
+		case ToolBarEvent.NEW_FILE:
+			selectButton.doClick();
+			if (graphButton.isSelected())
+				MiscUtil.setSelectedSilently(graphButton, false);
+			break;
 		}
 	}
 

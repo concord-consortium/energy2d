@@ -1378,16 +1378,22 @@ public class Model2D {
 		return t;
 	}
 
-	public float[] getHeatFluxAt(float x, float y) {
-		int i = Math.min(t.length - 2, Math.round(x / deltaX));
+	public float[] getHeatFlux(int i, int j) {
 		if (i < 1)
 			i = 1;
-		int j = Math.min(t[0].length - 2, Math.round(y / deltaY));
+		else if (i > nx - 2)
+			i = nx - 2;
 		if (j < 1)
 			j = 1;
+		else if (j > ny - 2)
+			j = ny - 2;
 		float fx = -conductivity[i][j] * (t[i + 1][j] - t[i - 1][j]) / (2 * deltaX);
 		float fy = -conductivity[i][j] * (t[i][j + 1] - t[i][j - 1]) / (2 * deltaY);
 		return new float[] { fx, fy };
+	}
+
+	public float[] getHeatFluxAt(float x, float y) {
+		return getHeatFlux(Math.round(x / deltaX), Math.round(y / deltaY));
 	}
 
 	public float[][] getXVelocity() {
@@ -1424,6 +1430,10 @@ public class Model2D {
 		return conductivity;
 	}
 
+	public boolean hasSensor() {
+		return !thermometers.isEmpty() || !heatFluxSensors.isEmpty() || !anemometers.isEmpty();
+	}
+
 	public void takeMeasurement() {
 		if (!thermometers.isEmpty()) {
 			int i, j;
@@ -1434,6 +1444,31 @@ public class Model2D {
 					j = Math.round(m.getY() / deltaY);
 					if (i >= 0 && i < nx && j >= 0 && j < ny) {
 						m.addData(getTime(), getTemperature(i, j + offset, m.getStencil()));
+					}
+				}
+			}
+		}
+		if (!heatFluxSensors.isEmpty()) {
+			int i, j;
+			synchronized (heatFluxSensors) {
+				for (HeatFluxSensor f : heatFluxSensors) {
+					i = Math.round(f.getX() / deltaX);
+					j = Math.round(f.getY() / deltaY);
+					if (i >= 0 && i < nx && j >= 0 && j < ny) {
+						float[] h = getHeatFlux(i, j);
+						f.addData(getTime(), (float) (h[0] * Math.sin(f.getAngle()) + h[1] * Math.cos(f.getAngle())));
+					}
+				}
+			}
+		}
+		if (!anemometers.isEmpty()) {
+			int i, j;
+			synchronized (anemometers) {
+				for (Anemometer a : anemometers) {
+					i = Math.round(a.getX() / deltaX);
+					j = Math.round(a.getY() / deltaY);
+					if (i >= 0 && i < nx && j >= 0 && j < ny) {
+						a.addData(getTime(), (float) Math.hypot(u[i][j], v[i][j]));
 					}
 				}
 			}

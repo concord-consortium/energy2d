@@ -364,7 +364,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		return view;
 	}
 
-	private void setSaved(boolean b) {
+	void setSaved(boolean b) {
 		saved = b;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -868,7 +868,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		toolBarListener = l;
 	}
 
-	private void notifyToolBarListener(ToolBarEvent e) {
+	void notifyToolBarListener(ToolBarEvent e) {
 		setFrameTitle();
 		if (toolBarListener != null)
 			toolBarListener.tableBarShouldChange(e);

@@ -65,6 +65,7 @@ class XmlDecoder extends DefaultHandler {
 	private String nextSim, prevSim;
 
 	// view properties
+	private byte graphDataType;
 	private boolean ruler;
 	private boolean grid;
 	private boolean isotherm;
@@ -158,6 +159,7 @@ class XmlDecoder extends DefaultHandler {
 		box.model.setBuoyancyApproximation(buoyancyApproximation);
 		box.model.setGravityType(gravityType);
 
+		box.view.setGraphDataType(graphDataType);
 		box.view.setRulerOn(ruler);
 		box.view.setGridOn(grid);
 		box.view.setGridSize(gridSize);
@@ -183,7 +185,7 @@ class XmlDecoder extends DefaultHandler {
 		if (graphXLabel != null)
 			box.view.setGraphXLabel(graphXLabel);
 		if (graphYLabel != null)
-			box.view.setGraphYLabel(graphXLabel);
+			box.view.setGraphYLabel(graphYLabel);
 
 		// since we don't know the width and height of the model until now, we have to fix the locations and the sizes of
 		// the sensors, since they are relative to the size of the model.
@@ -719,6 +721,8 @@ class XmlDecoder extends DefaultHandler {
 			minimumTemperature = Float.parseFloat(str);
 		} else if (qName == "maximum_temperature") {
 			maximumTemperature = Float.parseFloat(str);
+		} else if (qName == "graph_data_type") {
+			graphDataType = Byte.parseByte(str);
 		} else if (qName == "ruler") {
 			ruler = Boolean.parseBoolean(str);
 		} else if (qName == "isotherm") {
@@ -904,6 +908,7 @@ class XmlDecoder extends DefaultHandler {
 		gravityType = Model2D.GRAVITY_UNIFORM;
 
 		// view properties
+		graphDataType = 0;
 		ruler = false;
 		grid = false;
 		gridSize = 10;

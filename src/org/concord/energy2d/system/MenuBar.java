@@ -170,6 +170,8 @@ class MenuBar extends JMenuBar {
 		mi.setAccelerator(ks);
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!box.askSaveBeforeLoading())
+					return;
 				box.model.clear();
 				box.model.refreshMaterialPropertyArrays();
 				box.model.refreshPowerArray();
@@ -184,6 +186,8 @@ class MenuBar extends JMenuBar {
 				box.view.setGridOn(true);
 				box.view.setRulerOn(true);
 				box.view.repaint();
+				box.notifyToolBarListener(new ToolBarEvent(ToolBarEvent.NEW_FILE, MenuBar.this));
+				box.setSaved(true);
 			}
 		});
 		fileMenu.add(mi);

@@ -86,9 +86,6 @@ import org.concord.energy2d.util.TextureFactory;
  */
 public class View2D extends JPanel implements PropertyChangeListener {
 
-	public final static String DEFAULT_YLABEL = "Temperature (" + '\u2103' + ")";
-	public final static String DEFAULT_XLABEL = "Time (hr)";
-
 	public final static byte SELECT_MODE = 0;
 	public final static byte RECTANGLE_MODE = 1;
 	public final static byte ELLIPSE_MODE = 2;
@@ -121,6 +118,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
 	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
+	private final static DecimalFormat TIME_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#.####");
 	private final static DecimalFormat HEAT_FLUX_FORMAT = new DecimalFormat("###.##");
@@ -480,6 +478,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return actionMode;
 	}
 
+	public void setGraphDataType(byte dataType) {
+		graphRenderer.setDataType(dataType);
+	}
+
+	public byte getGraphDataType() {
+		return graphRenderer.getDataType();
+	}
+
 	public void setTemperatureIncrement(float temperatureIncrement) {
 		this.temperatureIncrement = temperatureIncrement;
 	}
@@ -489,6 +495,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void clear() {
+		setSelectedManipulable(null);
 		textBoxes.clear();
 		if (pictures != null)
 			pictures.clear();
@@ -634,10 +641,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			startIcon.setPressed(false);
 		setSelectedManipulable(null);
 		setTime(0);
-		if (graphRenderer != null) {
-			graphRenderer.setYmin(getMinimumTemperature());
-			graphRenderer.setYmax(getMaximumTemperature());
-		}
+		graphRenderer.setYmin(getMinimumTemperature());
+		graphRenderer.setYmax(getMaximumTemperature());
 		setActionMode(SELECT_MODE);
 		if (modeIcon != null)
 			modeIcon.setPressed(false);
@@ -761,10 +766,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setGraphOn(boolean b) {
-		if (b && model.getThermometers().isEmpty()) {
+		if (b && !model.hasSensor()) {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(View2D.this, "No graph can be shown because there is no thermometer.");
+					JOptionPane.showMessageDialog(View2D.this, "No graph can be shown because there is no virtual sensor.");
 				}
 			});
 			notifyManipulationListeners(null, ManipulationEvent.GRAPH);
@@ -1168,7 +1173,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				int xt = convertPointToPixelX(t.getX()) - wt / 2;
 				int yt = convertPointToPixelY(t.getY()) - ht / 2;
 				g.setColor(Color.yellow);
-				g.fillRect(xt - 3, yt - 3, wt + 5, ht + 5);
+				g.fillRect(xt - 3, yt - 3, wt + 7, ht + 7);
 			} else if (selectedManipulable instanceof HeatFluxSensor) {
 				HeatFluxSensor f = (HeatFluxSensor) selectedManipulable;
 				Rectangle2D.Float r = (Rectangle2D.Float) f.getShape();
@@ -1245,20 +1250,56 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawThermometers(g);
 		drawHeatFluxSensors(g);
 		drawAnemometers(g);
-		if (showGraph && !model.getThermometers().isEmpty()) {
-			graphRenderer.setDrawFrame(true);
+		if (showGraph) {
+			graphRenderer.drawFrame(g);
 			if (model.getTime() > graphRenderer.getXmax())
 				graphRenderer.doubleXmax();
-			float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
-			synchronized (model.getThermometers()) {
-				for (Thermometer t : model.getThermometers()) {
-					if (t.getCurrentData() > graphRenderer.getYmax() + dy) { // allow overshot above max
-						graphRenderer.increaseYmax();
-					} else if (t.getCurrentData() < graphRenderer.getYmin() - dy) { // allow overshot below min
-						graphRenderer.decreaseYmin();
+			switch (graphRenderer.getDataType()) {
+			case 0: // temperature
+				if (!model.getThermometers().isEmpty()) {
+					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
+					synchronized (model.getThermometers()) {
+						for (Thermometer t : model.getThermometers()) {
+							if (t.getCurrentData() > graphRenderer.getYmax() + dy) { // allow overshot above max
+								graphRenderer.increaseYmax();
+							} else if (t.getCurrentData() < graphRenderer.getYmin() - dy) { // allow overshot below min
+								graphRenderer.decreaseYmin();
+							}
+							graphRenderer.drawData(g, t.getData(), t.getLabel(), selectedManipulable == t);
+						}
 					}
-					graphRenderer.render(this, g, t.getData(), t.getLabel(), selectedManipulable == t);
 				}
+				break;
+			case 1: // heat flux
+				if (!model.getHeatFluxSensors().isEmpty()) {
+					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
+					synchronized (model.getHeatFluxSensors()) {
+						for (HeatFluxSensor f : model.getHeatFluxSensors()) {
+							if (f.getCurrentData() > graphRenderer.getYmax() + dy) { // allow overshot above max
+								graphRenderer.increaseYmax();
+							} else if (f.getCurrentData() < graphRenderer.getYmin() - dy) { // allow overshot below min
+								graphRenderer.decreaseYmin();
+							}
+							graphRenderer.drawData(g, f.getData(), f.getLabel(), selectedManipulable == f);
+						}
+					}
+				}
+				break;
+			case 2: // wind speed
+				if (!model.getAnemometers().isEmpty()) {
+					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
+					synchronized (model.getAnemometers()) {
+						for (Anemometer a : model.getAnemometers()) {
+							if (a.getCurrentData() > graphRenderer.getYmax() + dy) { // allow overshot above max
+								graphRenderer.increaseYmax();
+							} else if (a.getCurrentData() < graphRenderer.getYmin() - dy) { // allow overshot below min
+								graphRenderer.decreaseYmin();
+							}
+							graphRenderer.drawData(g, a.getData(), a.getLabel(), selectedManipulable == a);
+						}
+					}
+				}
+				break;
 			}
 		}
 		if (clockOn) {
@@ -2359,6 +2400,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				inGraph = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				inGraph = true;
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
+				inGraph = true;
 			}
 			if (inGraph) {
 				e.consume();
@@ -2613,6 +2656,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				graphRenderer.increaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.decreaseYmax();
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
+				graphRenderer.next();
 			}
 			repaint();
 			e.consume();
@@ -2792,8 +2837,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private HeatFluxSensor addHeatFluxSensor(float x, float y) {
 		HeatFluxSensor h = new HeatFluxSensor(x, y);
 		Rectangle2D.Float r = (Rectangle2D.Float) h.getShape();
-		r.width = Anemometer.RELATIVE_WIDTH * model.getLx();
-		r.height = Anemometer.RELATIVE_HEIGHT * model.getLy();
+		r.width = HeatFluxSensor.RELATIVE_WIDTH * model.getLx();
+		r.height = HeatFluxSensor.RELATIVE_HEIGHT * model.getLy();
 		h.setCenter(x, y);
 		model.addHeatFluxSensor(h);
 		return h;
@@ -2813,25 +2858,58 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return a;
 	}
 
+	private static String getFormattedTime(float time) {
+		String s = "";
+		if (time > 120 && time < 12000)
+			s = TIME_FORMAT.format(time / 60) + " min";
+		else if (time >= 12000)
+			s = TIME_FORMAT.format(time / 3600) + " hr";
+		else
+			s = TIME_FORMAT.format(time) + " s";
+		return s;
+	}
+
 	private String getGraphDataAt(int x, int y) {
-		synchronized (model.getThermometers()) {
-			for (Thermometer t : model.getThermometers()) {
-				float[] data = graphRenderer.getData(t.getData(), x, y);
-				if (data != null) {
-					float time = data[0];
-					String s1 = "";
-					if (time > 120 && time < 12000)
-						s1 = TEMPERATURE_FORMAT.format(time / 60) + " min, ";
-					else if (time >= 12000)
-						s1 = TEMPERATURE_FORMAT.format(time / 3600) + " hr, ";
-					else
-						s1 = TEMPERATURE_FORMAT.format(time) + " s, ";
-					String s2 = "(" + s1 + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
-					if (t.getLabel() == null)
-						return s2;
-					return t.getLabel() + ": " + s2;
+		switch (getGraphDataType()) {
+		case 0:
+			synchronized (model.getThermometers()) {
+				for (Thermometer t : model.getThermometers()) {
+					float[] data = graphRenderer.getData(t.getData(), x, y);
+					if (data != null) {
+						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+						if (t.getLabel() == null)
+							return s;
+						return t.getLabel() + ": " + s;
+					}
 				}
 			}
+			break;
+		case 1:
+			synchronized (model.getHeatFluxSensors()) {
+				for (HeatFluxSensor f : model.getHeatFluxSensors()) {
+					float[] data = graphRenderer.getData(f.getData(), x, y);
+					if (data != null) {
+						String s = "(" + getFormattedTime(data[0]) + ", " + HEAT_FLUX_FORMAT.format(data[1]) + " W/m^2)";
+						if (f.getLabel() == null)
+							return s;
+						return f.getLabel() + ": " + s;
+					}
+				}
+			}
+			break;
+		case 2:
+			synchronized (model.getAnemometers()) {
+				for (Anemometer a : model.getAnemometers()) {
+					float[] data = graphRenderer.getData(a.getData(), x, y);
+					if (data != null) {
+						String s = "(" + getFormattedTime(data[0]) + ", " + VELOCITY_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+						if (a.getLabel() == null)
+							return s;
+						return a.getLabel() + ": " + s;
+					}
+				}
+			}
+			break;
 		}
 		return null;
 	}
@@ -2867,6 +2945,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				buttonContained = true;
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				buttonContained = true;
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				buttonContained = true;
 			} else {

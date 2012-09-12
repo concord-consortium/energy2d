@@ -179,6 +179,9 @@ class XmlEncoder {
 			sb.append("<grid>true</grid>\n");
 		}
 		sb.append("<grid_size>" + box.view.getGridSize() + "</grid_size>\n");
+		if (box.view.getGraphDataType() > 0) {
+			sb.append("<graph_data_type>" + box.view.getGraphDataType() + "</graph_data_type>\n");
+		}
 		if (box.view.isRulerOn()) {
 			sb.append("<ruler>true</ruler>\n");
 		}
@@ -217,10 +220,8 @@ class XmlEncoder {
 		if (box.view.isGraphOn()) {
 			sb.append("<graph>true</graph>\n");
 		}
-		if (!View2D.DEFAULT_XLABEL.equals(box.view.getGraphXLabel()))
-			sb.append("<graph_xlabel>" + box.view.getGraphXLabel() + "</graph_xlabel>");
-		if (!View2D.DEFAULT_YLABEL.equals(box.view.getGraphYLabel()))
-			sb.append("<graph_ylabel>" + box.view.getGraphYLabel() + "</graph_ylabel>");
+		sb.append("<graph_xlabel>" + box.view.getGraphXLabel() + "</graph_xlabel>");
+		sb.append("<graph_ylabel>" + box.view.getGraphYLabel() + "</graph_ylabel>");
 		if (!box.view.isClockOn()) {
 			sb.append("<clock>false</clock>\n");
 		}
