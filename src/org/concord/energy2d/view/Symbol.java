@@ -213,6 +213,7 @@ public abstract class Symbol implements Icon {
 		}
 
 		private int value;
+		private int ballDiameter;
 
 		public Thermometer() {
 		}
@@ -225,33 +226,37 @@ public abstract class Symbol implements Icon {
 			return h - Math.round(w * 1.5f);
 		}
 
+		public int getBallDiameterOffset() {
+			return ballDiameter - 3;
+		}
+
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			super.paintIcon(c, g, x, y);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
-			g2.fillRect(x, y, w - 1, h - 1);
-			int w2 = Math.round(w * 1.45f);
+			g2.fillRect(x, y, w, h);
+			ballDiameter = Math.round(w * 1.45f);
 			int x2 = x + w / 2;
-			int y2 = y + h - w2 + 2;
+			int y2 = y + h - ballDiameter + 2;
 			if (value != 0) {
 				g2.setColor(Color.red);
-				BasicStroke bs = new BasicStroke(getIconWidth() / 3);
+				BasicStroke bs = new BasicStroke(getIconWidth() * 0.3f);
 				g2.setStroke(bs);
 				g2.drawLine(x2, y2 - value, x2, y2);
 			}
 			g2.setColor(Color.black);
 			g2.setStroke(stroke);
-			g2.drawRect(x, y, w - 1, h - 1);
+			g2.drawRect(x, y, w, h);
 			int n = h / 2;
 			for (int i = 1; i < n; i++) {
 				g2.drawLine(x, y + i * 2, Math.round(x + 0.2f * w), y + i * 2);
-				g2.drawLine(x + w - 1, y + i * 2, Math.round(x + w - 1 - 0.2f * w), y + i * 2);
+				g2.drawLine(x + w, y + i * 2, Math.round(x + w - 0.2f * w), y + i * 2);
 			}
 			x2 = Math.round(x - w * 0.25f);
 			g2.setColor(Color.lightGray);
-			g2.fillOval(x2, y2, w2, w2);
+			g2.fillOval(x2, y2, ballDiameter, ballDiameter);
 			g2.setColor(Color.black);
-			g2.drawOval(x2, y2, w2, w2);
+			g2.drawOval(x2, y2, ballDiameter, ballDiameter);
 		}
 
 	}

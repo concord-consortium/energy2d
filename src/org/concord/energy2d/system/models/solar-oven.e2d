@@ -5,12 +5,13 @@
 </links>
 <model>
 <timestep>1.0</timestep>
+<viewupdate_interval>2</viewupdate_interval>
 <sunny>true</sunny><sun_angle>1.5707964</sun_angle>
-<solar_power_density>20000.0</solar_power_density>
+<solar_power_density>10000.0</solar_power_density>
 <solar_ray_count>24</solar_ray_count>
 <solar_ray_speed>0.1</solar_ray_speed>
 <photon_emission_interval>2</photon_emission_interval>
-<z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>0.0010</background_conductivity>
+<z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>0.001</background_conductivity>
 <background_viscosity>1.0E-4</background_viscosity>
 <thermal_buoyancy>2.5E-4</thermal_buoyancy>
 <buoyancy_approximation>0</buoyancy_approximation>

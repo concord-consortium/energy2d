@@ -1595,11 +1595,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Symbol.Thermometer s = (Symbol.Thermometer) Symbol.get("Thermometer");
 		float w = Thermometer.RELATIVE_WIDTH * model.getLx();
 		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
-		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
-		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
+		s.setIconWidth(Math.round(getWidth() * w / (xmax - xmin)));
+		s.setIconHeight(Math.round(getHeight() * h / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
-		float sensingSpotY = 0.5f * s.getIconHeight() / getHeight() * model.getLy();
+		float sensingSpotY = (iconH2 - s.getBallDiameterOffset() * 0.5f) / getHeight() * model.getLy();
 		int shiftH = Math.round(sensingSpotY / model.getLy() * ny);
 		float temp;
 		String str;
@@ -1614,8 +1614,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				rx = (t.getX() - xmin) / (xmax - xmin);
 				ry = (t.getY() - ymin) / (ymax - ymin);
 				if (rx >= 0 && rx < 1 && ry >= 0 && ry < 1) {
-					x = (int) (rx * getWidth() - iconW2);
-					y = (int) (ry * getHeight() - iconH2);
+					x = Math.round(rx * getWidth() - iconW2);
+					y = Math.round(ry * getHeight() - iconH2);
 					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry) + shiftH, t.getStencil());
 					if (!Float.isNaN(temp)) {
 						t.setSensingSpotY(sensingSpotY);
