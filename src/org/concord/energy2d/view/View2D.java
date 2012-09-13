@@ -2669,7 +2669,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.decreaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_FIT_BUTTON, x, y)) {
-				graphRenderer.fitYAxis();
+				float[] bounds = model.getSensorDataBounds(getGraphDataType());
+				if (bounds != null && bounds[0] < bounds[1]) {
+					graphRenderer.setYmin(bounds[0]);
+					graphRenderer.setYmax(bounds[1]);
+				}
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON, x, y)) {
 				graphRenderer.next();
 			}

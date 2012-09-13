@@ -138,10 +138,6 @@ class GraphRenderer {
 		ymax -= yIncrement;
 	}
 
-	void fitYAxis() {
-
-	}
-
 	void setFrame(int x, int y, int w, int h) {
 		this.x = x;
 		this.y = y;

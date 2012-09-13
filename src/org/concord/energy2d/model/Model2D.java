@@ -745,6 +745,69 @@ public class Model2D {
 		}
 	}
 
+	public float[] getSensorDataBounds(byte type) {
+		switch (type) {
+		case 0:
+			if (!thermometers.isEmpty()) {
+				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
+				float min, max;
+				synchronized (thermometers) {
+					for (Thermometer t : thermometers) {
+						min = t.getDataMinimum();
+						if (Float.isNaN(min)) // no data has been collected
+							return null;
+						max = t.getDataMaximum();
+						if (bounds[0] > min)
+							bounds[0] = min;
+						if (bounds[1] < max)
+							bounds[1] = max;
+					}
+				}
+				return bounds;
+			}
+			break;
+		case 1:
+			if (!heatFluxSensors.isEmpty()) {
+				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
+				float min, max;
+				synchronized (heatFluxSensors) {
+					for (HeatFluxSensor f : heatFluxSensors) {
+						min = f.getDataMinimum();
+						if (Float.isNaN(min)) // no data has been collected
+							return null;
+						max = f.getDataMaximum();
+						if (bounds[0] > min)
+							bounds[0] = min;
+						if (bounds[1] < max)
+							bounds[1] = max;
+					}
+				}
+				return bounds;
+			}
+			break;
+		case 2:
+			if (!anemometers.isEmpty()) {
+				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
+				float min, max;
+				synchronized (anemometers) {
+					for (Anemometer a : anemometers) {
+						min = a.getDataMinimum();
+						if (Float.isNaN(min)) // no data has been collected
+							return null;
+						max = a.getDataMaximum();
+						if (bounds[0] > min)
+							bounds[0] = min;
+						if (bounds[1] < max)
+							bounds[1] = max;
+					}
+				}
+				return bounds;
+			}
+			break;
+		}
+		return null; // no sensor
+	}
+
 	public Part addRectangularPart(float x, float y, float w, float h) {
 		Part p = new Part(new Rectangle2D.Float(x, y, w, h));
 		addPart(p);

@@ -145,6 +145,32 @@ public abstract class Sensor extends Manipulable {
 		return data.get(data.size() - 1).getValue();
 	}
 
+	public float getDataMinimum() {
+		if (data.isEmpty())
+			return Float.NaN;
+		float min = Float.MAX_VALUE;
+		synchronized (data) {
+			for (TimedData d : data) {
+				if (min > d.getValue())
+					min = d.getValue();
+			}
+		}
+		return min;
+	}
+
+	public float getDataMaximum() {
+		if (data.isEmpty())
+			return Float.NaN;
+		float max = -Float.MAX_VALUE;
+		synchronized (data) {
+			for (TimedData d : data) {
+				if (max < d.getValue())
+					max = d.getValue();
+			}
+		}
+		return max;
+	}
+
 	public void addData(float time, float x) {
 		data.add(new TimedData(time, x));
 		notifyMeasurementListeners();
