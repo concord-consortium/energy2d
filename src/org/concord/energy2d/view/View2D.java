@@ -1544,7 +1544,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Symbol.Anemometer s = (Symbol.Anemometer) Symbol.get("Anemometer");
 		float w = Anemometer.RELATIVE_WIDTH * model.getLx();
 		float h = Anemometer.RELATIVE_HEIGHT * model.getLy();
-		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
+		s.setIconWidth((int) (w * getHeight() / (xmax - xmin))); // use view height to set icon dimension so that the anemometer doesn't get distorted
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
@@ -1596,7 +1596,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Symbol.HeatFluxSensor s = (Symbol.HeatFluxSensor) Symbol.get("Heat Flux Sensor");
 		float w = HeatFluxSensor.RELATIVE_WIDTH * model.getLx();
 		float h = HeatFluxSensor.RELATIVE_HEIGHT * model.getLy();
-		s.setIconWidth((int) (w * getWidth() / (xmax - xmin)));
+		s.setIconWidth((int) (w * getHeight() / (xmax - xmin))); // use view height to set icon dimension so that the sensor doesn't get distorted
 		s.setIconHeight((int) (h * getHeight() / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
@@ -1637,7 +1637,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		Symbol.Thermometer s = (Symbol.Thermometer) Symbol.get("Thermometer");
 		float w = Thermometer.RELATIVE_WIDTH * model.getLx();
 		float h = Thermometer.RELATIVE_HEIGHT * model.getLy();
-		s.setIconWidth(Math.round(getWidth() * w / (xmax - xmin)));
+		s.setIconWidth(Math.round(getHeight() * w / (xmax - xmin))); // use view height to set icon dimension so that the thermometer doesn't get distorted
 		s.setIconHeight(Math.round(getHeight() * h / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
