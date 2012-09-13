@@ -117,7 +117,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private final static boolean IS_MAC = System.getProperty("os.name").startsWith("Mac");
 
-	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 20;
+	private final static int MINIMUM_MOUSE_DRAG_RESPONSE_INTERVAL = 5;
 	private final static DecimalFormat TIME_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#.####");
@@ -144,6 +144,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGraph;
 	private boolean showColorPalette;
 	private boolean showGrid;
+	private byte gridLine = -1;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
 	private boolean showControlPanel;
@@ -2333,6 +2334,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		requestFocusInWindow();
 		int x = e.getX();
 		int y = e.getY();
+		mousePressedPoint.setLocation(x, y);
 		if (isFullScreen() && switchIcon != null && switchIcon.contains(x, y)) {
 			Object r = getClientProperty("close_full_screen");
 			if (r instanceof Runnable) {
@@ -2432,6 +2434,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					pressedPointRelative.x = x - convertPointToPixelX(center.x);
 					pressedPointRelative.y = y - convertPointToPixelY(center.y);
 					setMovingShape(false);
+				} else {
+					gridLine = gridRenderer.onGridLine(this, x, y);
 				}
 			}
 			break;
@@ -2441,7 +2445,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				e.consume();
 				return;
 			}
-			mousePressedPoint.setLocation(x, y);
 			break;
 		case POLYGON_MODE:
 			if (showGraph) {
@@ -2567,6 +2570,30 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				} else {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
+				}
+			} else {
+				if (gridLine == GridRenderer.Y_LINE) {
+					int gridSize = gridRenderer.getGridSize();
+					int increment = 1;
+					if (x < mousePressedPoint.x) {
+						if (gridSize > GridRenderer.MIN_GRID_SIZE)
+							gridSize -= increment;
+					} else {
+						if (gridSize < GridRenderer.MAX_GRID_SIZE)
+							gridSize += increment;
+					}
+					gridRenderer.setGridSize(gridSize);
+				} else if (gridLine == GridRenderer.X_LINE) {
+					int gridSize = gridRenderer.getGridSize();
+					int increment = 5;
+					if (y > mousePressedPoint.y) {
+						if (gridSize > GridRenderer.MIN_GRID_SIZE)
+							gridSize -= increment;
+					} else {
+						if (gridSize < GridRenderer.MAX_GRID_SIZE)
+							gridSize += increment;
+					}
+					gridRenderer.setGridSize(gridSize);
 				}
 			}
 			break;
@@ -2902,7 +2929,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				for (Anemometer a : model.getAnemometers()) {
 					float[] data = graphRenderer.getData(a.getData(), x, y);
 					if (data != null) {
-						String s = "(" + getFormattedTime(data[0]) + ", " + VELOCITY_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+						String s = "(" + getFormattedTime(data[0]) + ", " + VELOCITY_FORMAT.format(data[1]) + " m/s)";
 						if (a.getLabel() == null)
 							return s;
 						return a.getLabel() + ": " + s;
@@ -3007,6 +3034,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				float rx = convertPixelToPointX(x);
 				float ry = convertPixelToPointY(y);
 				boolean contained = false;
+				byte gridLine = -1;
 				// prioritize sensor selection
 				synchronized (model.getThermometers()) {
 					for (Thermometer t : model.getThermometers()) {
@@ -3075,8 +3103,30 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						if (!draggable)
 							contained = false;
 					}
+					if (!contained) {
+						synchronized (textBoxes) {
+							for (TextBox t : textBoxes) {
+								if (t.contains(rx, ry)) {
+									contained = true;
+									draggable = t.isDraggable();
+									break;
+								}
+							}
+						}
+						if (!draggable)
+							contained = false;
+					}
+					if (!contained) {
+						if (showGrid && gridRenderer != null) {
+							gridLine = gridRenderer.onGridLine(this, x, y);
+						}
+					}
 				}
-				setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
+				if (gridLine != -1) {
+					setCursor(Cursor.getPredefinedCursor(gridLine == GridRenderer.Y_LINE ? Cursor.W_RESIZE_CURSOR : Cursor.N_RESIZE_CURSOR));
+				} else {
+					setCursor(Cursor.getPredefinedCursor(contained ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
+				}
 			}
 			if (!model.isRunning())
 				repaint();

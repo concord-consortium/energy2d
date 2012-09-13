@@ -1,8 +1,3 @@
-/*
- *   Copyright (C) 2009  The Concord Consortium, Inc.,
- *   25 Love Lane, Concord, MA 01742
- */
-
 package org.concord.energy2d.view;
 
 import java.awt.BasicStroke;
@@ -18,8 +13,12 @@ import javax.swing.JComponent;
  */
 class GridRenderer {
 
-	private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1,
-			new float[] { 1.5f }, 0);
+	final static byte X_LINE = 0;
+	final static byte Y_LINE = 1;
+	final static int MIN_GRID_SIZE = 5;
+	final static int MAX_GRID_SIZE = 50;
+
+	private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 1.5f }, 0);
 	private Color color = new Color(128, 128, 225, 128);
 	private int nx;
 	private int ny;
@@ -36,6 +35,23 @@ class GridRenderer {
 
 	int getGridSize() {
 		return gridSize;
+	}
+
+	byte onGridLine(JComponent c, int x, int y) {
+		float dx = (float) c.getWidth() / (float) nx;
+		float dy = (float) c.getHeight() / (float) ny;
+		int k;
+		for (int i = 0; i < nx; i += gridSize) {
+			k = Math.round(i * dx);
+			if (Math.abs(x - k) < 5)
+				return Y_LINE;
+		}
+		for (int i = 0; i < ny; i += gridSize) {
+			k = Math.round(i * dy);
+			if (Math.abs(y - k) < 5)
+				return X_LINE;
+		}
+		return -1;
 	}
 
 	void render(JComponent c, Graphics2D g) {
