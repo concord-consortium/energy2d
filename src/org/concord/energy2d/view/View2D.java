@@ -263,6 +263,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		setColorPaletteType(colorPaletteType);
 		dialogFactory = new DialogFactory(this);
 		graphRenderer = new GraphRenderer(50, 50, 200, 200);
+		graphRenderer.setMouseMovedPoint(mouseMovedPoint);
 		thermostatRenderer = new ThermostatRenderer();
 		manipulationListeners = new ArrayList<ManipulationListener>();
 		graphListeners = new ArrayList<GraphListener>();
@@ -2390,25 +2391,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			e.consume();
 			return;
 		}
-		if (showGraph) {
-			boolean inGraph = false;
-			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
-				inGraph = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
-				inGraph = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
-				inGraph = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
-				inGraph = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
-				inGraph = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
-				inGraph = true;
-			}
-			if (inGraph) {
-				e.consume();
-				return;
-			}
+		if (showGraph && graphRenderer.buttonContains(x, y)) {
+			e.consume();
+			return;
 		}
 		switch (actionMode) {
 		case SELECT_MODE:
@@ -2683,7 +2668,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				graphRenderer.increaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.decreaseYmax();
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_FIT_BUTTON, x, y)) {
+				graphRenderer.fitYAxis();
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON, x, y)) {
 				graphRenderer.next();
 			}
 			repaint();
@@ -2958,31 +2945,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			return;
 		}
 		if (showGraph) {
-			boolean buttonContained = false;
-			if (graphRenderer.buttonContains(GraphRenderer.CLOSE_BUTTON, x, y)) {
+			if (graphRenderer.buttonContains(x, y)) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_BUTTON, x, y)) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				buttonContained = true;
-			} else {
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			}
-			if (buttonContained) {
+				repaint();
 				e.consume();
 				return;
+			} else {
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
 		switch (actionMode) {

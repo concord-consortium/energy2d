@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -24,7 +25,8 @@ class GraphRenderer {
 	final static byte X_SHRINK_BUTTON = 2;
 	final static byte Y_EXPAND_BUTTON = 3;
 	final static byte Y_SHRINK_BUTTON = 4;
-	final static byte Y_BUTTON = 5;
+	final static byte Y_FIT_BUTTON = 5;
+	final static byte Y_SELECTION_BUTTON = 6;
 
 	final static String[] DATA_TYPES = new String[] { "Temperature (" + '\u2103' + ")", "Heat flux (W/m^2)", "Wind speed (m/s)" };
 
@@ -48,8 +50,10 @@ class GraphRenderer {
 	private Rectangle closeButton;
 	private Rectangle xExpandButton, xShrinkButton;
 	private Rectangle yExpandButton, yShrinkButton;
-	private Rectangle yButton;
+	private Rectangle ySelectButton;
+	private Rectangle yFitButton;
 	private Polygon spinButton;
+	private Point mouseMovedPoint;
 
 	GraphRenderer(int x, int y, int w, int h) {
 		closeButton = new Rectangle();
@@ -57,7 +61,8 @@ class GraphRenderer {
 		xShrinkButton = new Rectangle();
 		yExpandButton = new Rectangle();
 		yShrinkButton = new Rectangle();
-		yButton = new Rectangle();
+		ySelectButton = new Rectangle();
+		yFitButton = new Rectangle();
 		spinButton = new Polygon();
 		setFrame(x, y, w, h);
 	}
@@ -65,6 +70,10 @@ class GraphRenderer {
 	void reset() {
 		dataType = 0;
 		yLabel = DATA_TYPES[0];
+	}
+
+	void setMouseMovedPoint(Point mouseMovedPoint) {
+		this.mouseMovedPoint = mouseMovedPoint;
 	}
 
 	void setLabelX(String xLabel) {
@@ -129,6 +138,10 @@ class GraphRenderer {
 		ymax -= yIncrement;
 	}
 
+	void fitYAxis() {
+
+	}
+
 	void setFrame(int x, int y, int w, int h) {
 		this.x = x;
 		this.y = y;
@@ -139,10 +152,15 @@ class GraphRenderer {
 		xShrinkButton.setBounds(x + w - 68, y, 20, 20);
 		yExpandButton.setBounds(x + w - 92, y, 20, 20);
 		yShrinkButton.setBounds(x + w - 116, y, 20, 20);
+		yFitButton.setBounds(x + w - 140, y, 20, 20);
 	}
 
 	boolean windowContains(int rx, int ry) {
 		return rx > x && rx < x + w && ry > y && ry < y + h;
+	}
+
+	boolean buttonContains(int rx, int ry) {
+		return closeButton.contains(rx, ry) || xExpandButton.contains(rx, ry) || xShrinkButton.contains(rx, ry) || yExpandButton.contains(rx, ry) || yShrinkButton.contains(rx, ry) || yFitButton.contains(rx, ry) || ySelectButton.contains(rx, ry);
 	}
 
 	boolean buttonContains(byte button, int rx, int ry) {
@@ -157,8 +175,10 @@ class GraphRenderer {
 			return yExpandButton.contains(rx, ry);
 		case Y_SHRINK_BUTTON:
 			return yShrinkButton.contains(rx, ry);
-		case Y_BUTTON:
-			return yButton.contains(rx, ry);
+		case Y_FIT_BUTTON:
+			return yFitButton.contains(rx, ry);
+		case Y_SELECTION_BUTTON:
+			return ySelectButton.contains(rx, ry);
 		default:
 			return false;
 		}
@@ -183,8 +203,8 @@ class GraphRenderer {
 		if (shape == spinButton) {
 			Color oldColor = g.getColor();
 			g.setColor(Color.lightGray);
-			yButton.setBounds(x - stringWidth / 2 - 5, y - 10, stringWidth + 20, 16);
-			g.fill3DRect(yButton.x, yButton.y, yButton.width, yButton.height, true);
+			ySelectButton.setBounds(x - stringWidth / 2 - 5, y - 10, stringWidth + 20, 16);
+			g.fill3DRect(ySelectButton.x, ySelectButton.y, ySelectButton.width, ySelectButton.height, true);
 			g.setColor(oldColor);
 			int x2 = x + stringWidth / 2 + 2;
 			spinButton.reset();
@@ -266,6 +286,20 @@ class GraphRenderer {
 		g.drawLine(x2, yShrinkButton.y + 3, x2 + 4, yShrinkButton.y + 6);
 		g.drawLine(x2, yShrinkButton.y + 3, x2 - 4, yShrinkButton.y + 6);
 
+		g.setColor(fgColor);
+		g.fillRect(yFitButton.x + 2, yFitButton.y + 2, yFitButton.width, yFitButton.height);
+		g.setColor(Color.lightGray);
+		g.fill(yFitButton);
+		g.setColor(fgColor);
+		g.draw(yFitButton);
+		x2 = yFitButton.x + yFitButton.width / 2;
+		g.drawLine(x2, yFitButton.y + 3, x2, y2);
+		g.drawLine(x2, yFitButton.y + 3, x2 + 4, yFitButton.y + 6);
+		g.drawLine(x2, yFitButton.y + 3, x2 - 4, yFitButton.y + 6);
+		y2 = yFitButton.y + yFitButton.height - 4;
+		g.drawLine(x2, y2 + 1, x2 + 4, y2 - 3);
+		g.drawLine(x2, y2 + 1, x2 - 4, y2 - 3);
+
 		// draw axes
 		g.drawLine(x, y, x, y + h);
 		g.drawLine(x, y + h, x + w, y + h);
@@ -297,6 +331,45 @@ class GraphRenderer {
 		}
 		centerString(yLabel, g, x + 50, y + 10, spinButton);
 
+		if (mouseMovedPoint != null)
+			drawButtonInfo(g);
+
+	}
+
+	private void drawButtonInfo(Graphics2D g) {
+		String s = null;
+		Rectangle r = null;
+		if (closeButton.contains(mouseMovedPoint)) {
+			s = "Close graph";
+			r = closeButton;
+		} else if (xExpandButton.contains(mouseMovedPoint)) {
+			s = "Expand x axis";
+			r = xExpandButton;
+		} else if (xShrinkButton.contains(mouseMovedPoint)) {
+			s = "Shrink x axis";
+			r = xShrinkButton;
+		} else if (yExpandButton.contains(mouseMovedPoint)) {
+			s = "Expand y axis";
+			r = yExpandButton;
+		} else if (yShrinkButton.contains(mouseMovedPoint)) {
+			s = "Shrink y axis";
+			r = yShrinkButton;
+		} else if (yFitButton.contains(mouseMovedPoint)) {
+			s = "Fit y axis to data";
+			r = yFitButton;
+		} else if (ySelectButton.contains(mouseMovedPoint)) {
+			s = "Select data type";
+			r = ySelectButton;
+		}
+		if (s == null)
+			return;
+		g.setFont(smallFont);
+		int stringWidth = g.getFontMetrics().stringWidth(s);
+		g.setStroke(thinStroke);
+		g.setColor(Color.black);
+		g.fillRoundRect(r.x + (r.width - stringWidth) / 2 - 5, r.y - 24, stringWidth + 10, 20, 8, 8);
+		g.setColor(Color.white);
+		g.drawString(s, r.x + (r.width - stringWidth) / 2, r.y - 12);
 	}
 
 	void drawData(Graphics2D g, List<TimedData> data, String label, boolean highlight) {
