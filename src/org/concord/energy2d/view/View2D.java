@@ -3324,30 +3324,37 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void drawControlPanel(Graphics2D g, int x, int y) {
 		if (startIcon != null) {
 			g.setStroke(thinStroke);
+			startIcon.setColor(getContrastColor(x, y));
 			startIcon.paintIcon(this, g, x - startIcon.getIconWidth() * 3 - 12, y);
 		}
 		if (resetIcon != null) {
 			g.setStroke(thinStroke);
+			resetIcon.setColor(getContrastColor(x, y));
 			resetIcon.paintIcon(this, g, x - resetIcon.getIconWidth() * 2 - 8, y);
 		}
 		if (graphIcon != null) {
 			g.setStroke(thinStroke);
+			graphIcon.setColor(getContrastColor(x, y));
 			graphIcon.paintIcon(this, g, x - graphIcon.getIconWidth() - 4, y);
 		}
 		if (modeIcon != null) {
 			g.setStroke(thinStroke);
+			modeIcon.setColor(getContrastColor(x, y));
 			modeIcon.paintIcon(this, g, x, y);
 		}
 		if (prevIcon != null) {
 			g.setStroke(thinStroke);
+			prevIcon.setColor(getContrastColor(x, y));
 			prevIcon.paintIcon(this, g, x + nextIcon.getIconWidth() + 4, y);
 		}
 		if (nextIcon != null) {
 			g.setStroke(thinStroke);
+			nextIcon.setColor(getContrastColor(x, y));
 			nextIcon.paintIcon(this, g, x + nextIcon.getIconWidth() * 2 + 8, y);
 		}
 		if (isFullScreen() && switchIcon != null) {
 			g.setStroke(thinStroke);
+			switchIcon.setColor(getContrastColor(x, y));
 			switchIcon.paintIcon(this, g, x + switchIcon.getIconWidth() * 3 + 12, y);
 		}
 	}
