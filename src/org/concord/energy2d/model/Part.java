@@ -7,8 +7,6 @@ package org.concord.energy2d.model;
 
 import java.awt.Color;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -113,12 +111,10 @@ public class Part extends Manipulable {
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float e = (Ellipse2D.Float) s;
 			s = new Ellipse2D.Float(x - 0.5f * e.width, y - 0.5f * e.height, e.width, e.height);
-		} else if (s instanceof Area) {
-			s = new Area(s);
+		} else if (s instanceof Ring2D) {
+			s = new Ring2D((Ring2D) s);
 			Rectangle2D r = s.getBounds2D();
-			float dx = x - (float) r.getCenterX();
-			float dy = y - (float) r.getCenterY();
-			((Area) s).transform(AffineTransform.getTranslateInstance(dx, dy));
+			((Ring2D) s).translateBy(x - (float) r.getCenterX(), y - (float) r.getCenterY());
 		} else if (s instanceof Polygon2D) {
 			s = ((Polygon2D) s).duplicate();
 			Rectangle2D r = s.getBounds2D();
@@ -155,8 +151,8 @@ public class Part extends Manipulable {
 			Ellipse2D.Float e = (Ellipse2D.Float) s;
 			e.x += dx;
 			e.y += dy;
-		} else if (s instanceof Area) {
-			((Area) s).transform(AffineTransform.getTranslateInstance(dx, dy));
+		} else if (s instanceof Ring2D) {
+			((Ring2D) s).translateBy(dx, dy);
 		} else if (s instanceof Polygon2D) {
 			((Polygon2D) s).translateBy(dx, dy);
 		}

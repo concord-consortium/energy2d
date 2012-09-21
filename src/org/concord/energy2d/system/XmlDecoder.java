@@ -68,6 +68,7 @@ class XmlDecoder extends DefaultHandler {
 	private byte graphDataType;
 	private boolean ruler;
 	private boolean grid;
+	private boolean snapToGrid;
 	private boolean isotherm;
 	private boolean streamline;
 	private boolean colorPalette;
@@ -162,6 +163,7 @@ class XmlDecoder extends DefaultHandler {
 		box.view.setGraphDataType(graphDataType);
 		box.view.setRulerOn(ruler);
 		box.view.setGridOn(grid);
+		box.view.setSnapToGrid(snapToGrid);
 		box.view.setGridSize(gridSize);
 		box.view.setIsothermOn(isotherm);
 		box.view.setStreamlineOn(streamline);
@@ -737,6 +739,8 @@ class XmlDecoder extends DefaultHandler {
 			heatFluxLines = Boolean.parseBoolean(str);
 		} else if (qName == "grid") {
 			grid = Boolean.parseBoolean(str);
+		} else if (qName == "snap_to_grid") {
+			snapToGrid = Boolean.parseBoolean(str);
 		} else if (qName == "grid_size") {
 			gridSize = Integer.parseInt(str);
 		} else if (qName == "color_palette") {
@@ -911,6 +915,7 @@ class XmlDecoder extends DefaultHandler {
 		graphDataType = 0;
 		ruler = false;
 		grid = false;
+		snapToGrid = false;
 		gridSize = 10;
 		isotherm = false;
 		streamline = false;

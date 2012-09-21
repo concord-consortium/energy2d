@@ -1,8 +1,6 @@
 package org.concord.energy2d.model;
 
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -437,9 +435,14 @@ public class Model2D {
 				e.height *= scale;
 				if (!bound.intersects(e.getBounds2D()))
 					out = true;
-			} else if (s instanceof Area) {
-				((Area) s).transform(AffineTransform.getScaleInstance(scale, scale));
-				if (!bound.intersects(s.getBounds2D()))
+			} else if (s instanceof Ring2D) {
+				Ring2D a = (Ring2D) s;
+				float x = scale * a.getX();
+				float y = ly - scale * (ly - a.getY());
+				float innerDiameter = a.getInnerDiameter() * scale;
+				float outerDiameter = a.getOuterDiameter() * scale;
+				a.setRing(x, y, innerDiameter, outerDiameter);
+				if (!bound.intersects(a.getBounds2D()))
 					out = true;
 			} else if (s instanceof Polygon2D) {
 				Polygon2D g = (Polygon2D) s;

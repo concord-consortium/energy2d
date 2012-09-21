@@ -178,6 +178,7 @@ class XmlEncoder {
 		if (box.view.isGridOn()) {
 			sb.append("<grid>true</grid>\n");
 		}
+		sb.append("<snap_to_grid>" + box.view.isSnapToGrid() + "</snap_to_grid>\n");
 		sb.append("<grid_size>" + box.view.getGridSize() + "</grid_size>\n");
 		if (box.view.getGraphDataType() > 0) {
 			sb.append("<graph_data_type>" + box.view.getGraphDataType() + "</graph_data_type>\n");

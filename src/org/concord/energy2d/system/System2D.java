@@ -1021,7 +1021,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 				@Override
 				public void handlePreferences(ApplicationEvent e) {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "No preference window yet.");
+					new PreferencesDialog(box, true).setVisible(true);
 					e.setHandled(true);
 				}
 

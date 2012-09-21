@@ -11,6 +11,7 @@ import javax.swing.JComponent;
  * @author Charles Xie
  * 
  */
+
 class GridRenderer {
 
 	final static byte X_LINE = 0;
@@ -55,9 +56,6 @@ class GridRenderer {
 	}
 
 	void render(JComponent c, Graphics2D g) {
-
-		if (!c.isVisible())
-			return;
 
 		int w = c.getWidth();
 		int h = c.getHeight();

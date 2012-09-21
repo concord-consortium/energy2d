@@ -129,6 +129,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private BufferedImage bimg;
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
+	private SpotlightRenderer spotlightRenderer;
 	private ColorPalette colorPalette;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
@@ -144,6 +145,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGraph;
 	private boolean showColorPalette;
 	private boolean showGrid;
+	private boolean snapToGrid;
 	private byte gridLine = -1;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
@@ -182,6 +184,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Point mousePressedPoint = new Point(-1, -1);
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
+	private Point mouseDraggedPoint = new Point(-1, -1);
 	private String errorMessage;
 	private DecimalFormat formatter = new DecimalFormat("#####.#####");
 	private Color lightColor = new Color(255, 255, 255, 128);
@@ -733,6 +736,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return showGrid;
 	}
 
+	public void setSnapToGrid(boolean b) {
+		snapToGrid = b;
+		if (b && spotlightRenderer == null)
+			spotlightRenderer = new SpotlightRenderer(nx, ny);
+	}
+
+	public boolean isSnapToGrid() {
+		return snapToGrid;
+	}
+
 	public void setGridSize(int gridSize) {
 		if (gridRenderer == null)
 			gridRenderer = new GridRenderer(nx, ny);
@@ -1229,9 +1242,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 		if (showGrid && gridRenderer != null)
 			gridRenderer.render(this, g);
-		if (rulerRenderer != null) {
+		if (rulerRenderer != null)
 			rulerRenderer.render(this, g);
-		}
 		if (showColorPalette && heatMapType != HEATMAP_NONE) {
 			g.setStroke(thinStroke);
 			switch (heatMapType) {
@@ -1408,6 +1420,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 						break;
 					}
+				}
+			}
+		}
+
+		if (snapToGrid) {
+			if (actionMode == RECTANGLE_MODE || actionMode == ELLIPSE_MODE || actionMode == POLYGON_MODE) {
+				if (mouseBeingDragged) {
+					spotlightRenderer.render(this, g, mouseDraggedPoint.x, mouseDraggedPoint.y);
+				} else {
+					spotlightRenderer.render(this, g, mouseMovedPoint.x, mouseMovedPoint.y);
 				}
 			}
 		}
@@ -2430,6 +2452,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				e.consume();
 				return;
 			}
+			if (snapToGrid) {
+				mousePressedPoint.x = getXOnGrid(mousePressedPoint.x);
+				mousePressedPoint.y = getYOnGrid(mousePressedPoint.y);
+			}
 			break;
 		case POLYGON_MODE:
 			if (showGraph) {
@@ -2476,6 +2502,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		mousePressedTime = System.currentTimeMillis();
 		int x = e.getX();
 		int y = e.getY();
+		mouseDraggedPoint.setLocation(x, y);
 		switch (actionMode) {
 		case SELECT_MODE:
 			if (movingShape != null && selectedManipulable != null) {
@@ -2522,6 +2549,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					} else {
 						if (selectedManipulable instanceof Part) {
 							int k = s.npoints < handle.length ? selectedSpot : (int) ((float) selectedSpot * (float) s.npoints / (float) handle.length);
+							if (k >= s.npoints)
+								k = s.npoints - 1;
 							s.xpoints[k] = x;
 							s.ypoints[k] = y;
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -2583,34 +2612,38 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case RECTANGLE_MODE:
-			if (x > mousePressedPoint.x) {
-				rectangle.width = x - mousePressedPoint.x;
+			if (snapToGrid) {
+				mouseDraggedPoint.x = getXOnGrid(mouseDraggedPoint.x);
+				mouseDraggedPoint.y = getYOnGrid(mouseDraggedPoint.y);
+			}
+			if (mouseDraggedPoint.x > mousePressedPoint.x) {
+				rectangle.width = mouseDraggedPoint.x - mousePressedPoint.x;
 				rectangle.x = mousePressedPoint.x;
 			} else {
-				rectangle.width = mousePressedPoint.x - x;
+				rectangle.width = mousePressedPoint.x - mouseDraggedPoint.x;
 				rectangle.x = mousePressedPoint.x - rectangle.width;
 			}
-			if (y > mousePressedPoint.y) {
-				rectangle.height = y - mousePressedPoint.y;
+			if (mouseDraggedPoint.y > mousePressedPoint.y) {
+				rectangle.height = mouseDraggedPoint.y - mousePressedPoint.y;
 				rectangle.y = mousePressedPoint.y;
 			} else {
-				rectangle.height = mousePressedPoint.y - y;
+				rectangle.height = mousePressedPoint.y - mouseDraggedPoint.y;
 				rectangle.y = mousePressedPoint.y - rectangle.height;
 			}
 			break;
 		case ELLIPSE_MODE:
-			if (x > mousePressedPoint.x) {
-				ellipse.width = x - mousePressedPoint.x;
+			if (mouseDraggedPoint.x > mousePressedPoint.x) {
+				ellipse.width = mouseDraggedPoint.x - mousePressedPoint.x;
 				ellipse.x = mousePressedPoint.x;
 			} else {
-				ellipse.width = mousePressedPoint.x - x;
+				ellipse.width = mousePressedPoint.x - mouseDraggedPoint.x;
 				ellipse.x = mousePressedPoint.x - ellipse.width;
 			}
-			if (y > mousePressedPoint.y) {
-				ellipse.height = y - mousePressedPoint.y;
+			if (mouseDraggedPoint.y > mousePressedPoint.y) {
+				ellipse.height = mouseDraggedPoint.y - mousePressedPoint.y;
 				ellipse.y = mousePressedPoint.y;
 			} else {
-				ellipse.height = mousePressedPoint.y - y;
+				ellipse.height = mousePressedPoint.y - mouseDraggedPoint.y;
 				ellipse.y = mousePressedPoint.y - ellipse.height;
 			}
 			break;
@@ -2775,7 +2808,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 			} else {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The rectangle you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
+				if (rectangle.width > 0 && rectangle.height > 0) // ignore the quick click
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The rectangle you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			rectangle.setRect(-1000, -1000, 0, 0);
 			break;
@@ -2792,7 +2826,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				model.setInitialTemperature();
 				notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 			} else {
-				JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The ellipse you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
+				if (ellipse.width > 0 || ellipse.height > 0)// ignore the quick click
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The ellipse you tried to add was too small!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			ellipse.setFrame(-1000, -1000, 0, 0);
 			break;
@@ -3104,14 +3139,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (!model.isRunning())
 				repaint();
 			break;
-		case POLYGON_MODE:
-			if (!showGraph) {
-				mouseMovedPoint.setLocation(x, y);
-				if (!model.isRunning())
-					repaint();
-			}
-			break;
 		}
+		if (!showGraph && !model.isRunning())
+			repaint();
 		e.consume();
 	}
 
@@ -3231,19 +3261,39 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private float convertPixelToPointX(int x) {
+		if (snapToGrid)
+			return xmin + (xmax - xmin) / nx * Math.round((float) x / (float) getWidth() * nx);
 		return xmin + (xmax - xmin) * (float) x / (float) getWidth();
 	}
 
 	private float convertPixelToPointY(int y) {
+		if (snapToGrid)
+			return ymin + (ymax - ymin) / ny * Math.round((float) y / (float) getHeight() * ny);
 		return ymin + (ymax - ymin) * (float) y / (float) getHeight();
 	}
 
 	private float convertPixelToLengthX(int l) {
+		if (snapToGrid)
+			return (xmax - xmin) / nx * Math.round((float) l / (float) getWidth() * nx);
 		return (xmax - xmin) * (float) l / (float) getWidth();
 	}
 
 	private float convertPixelToLengthY(int l) {
+		if (snapToGrid)
+			return (ymax - ymin) / ny * Math.round((float) l / (float) getHeight() * ny);
 		return (ymax - ymin) * (float) l / (float) getHeight();
+	}
+
+	private int getXOnGrid(int x) {
+		float dx = (float) getWidth() / (float) nx;
+		int ix = Math.round(x / dx);
+		return Math.round(ix * dx);
+	}
+
+	private int getYOnGrid(int y) {
+		float dy = (float) getHeight() / (float) ny;
+		int iy = Math.round(y / dy);
+		return Math.round(iy * dy);
 	}
 
 	public int convertPointToPixelX(float x) {

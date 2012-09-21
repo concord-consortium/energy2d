@@ -505,6 +505,17 @@ class MenuBar extends JMenuBar {
 			}
 		});
 		menu.add(mi);
+		menu.addSeparator();
+
+		mi = new JMenuItem("Preferences");
+		mi.setToolTipText("Set preferences");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PreferencesDialog d = new PreferencesDialog(box, true);
+				d.setVisible(true);
+			}
+		});
+		menu.add(mi);
 
 		// view menu
 
