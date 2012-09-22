@@ -489,6 +489,7 @@ class MenuBar extends JMenuBar {
 					box.model.refreshPowerArray();
 					box.model.refreshTemperatureBoundaryArray();
 				}
+				box.view.setSelectedManipulable(box.view.getSelectedManipulable());
 				box.view.repaint();
 				box.view.notifyManipulationListeners(null, ManipulationEvent.RESIZE);
 			}
