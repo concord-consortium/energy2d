@@ -129,7 +129,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private BufferedImage bimg;
 	private RulerRenderer rulerRenderer;
 	private GridRenderer gridRenderer;
-	private SpotlightRenderer spotlightRenderer;
 	private ColorPalette colorPalette;
 	private GraphRenderer graphRenderer;
 	private ScalarDistributionRenderer temperatureRenderer, thermalEnergyRenderer;
@@ -145,7 +144,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private boolean showGraph;
 	private boolean showColorPalette;
 	private boolean showGrid;
-	private boolean snapToGrid;
+	private boolean snapToGrid = true;
 	private byte gridLine = -1;
 	private boolean clockOn = true;
 	private boolean frankOn = true;
@@ -738,8 +737,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setSnapToGrid(boolean b) {
 		snapToGrid = b;
-		if (b && spotlightRenderer == null)
-			spotlightRenderer = new SpotlightRenderer(nx, ny);
 	}
 
 	public boolean isSnapToGrid() {
@@ -1424,16 +1421,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 
-		if (snapToGrid) {
-			if (actionMode == RECTANGLE_MODE || actionMode == ELLIPSE_MODE || actionMode == POLYGON_MODE) {
-				if (mouseBeingDragged) {
-					spotlightRenderer.render(this, g, mouseDraggedPoint.x, mouseDraggedPoint.y);
-				} else {
-					spotlightRenderer.render(this, g, mouseMovedPoint.x, mouseMovedPoint.y);
-				}
-			}
-		}
-
 		if (errorMessage != null) {
 			g.setColor(Color.red);
 			g.setFont(new Font("Arial", Font.BOLD, 30));
@@ -1664,7 +1651,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		s.setIconHeight(Math.round(getHeight() * h / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
-		float sensingSpotY = (iconH2 - s.getBallDiameterOffset() * 0.5f) / getHeight() * model.getLy();
+		float sensingSpotY = convertPixelToLengthY((int) (iconH2 - s.getBallDiameterOffset() * 0.5f));
 		int shiftH = Math.round(sensingSpotY / model.getLy() * ny);
 		float temp;
 		String str;
@@ -2260,31 +2247,31 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		}
 		boolean keyDown = IS_MAC ? e.isMetaDown() : e.isControlDown();
-		float delta = keyDown ? 1 : 5;
+		float delta = keyDown ? 5 : 1;
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
-			delta *= -(xmax - xmin) / getWidth();
+			delta *= -(xmax - xmin) / nx;
 			if (selectedManipulable != null)
 				translateManipulableBy(selectedManipulable, delta, 0);
 			else if (e.isAltDown())
 				translateAllBy(delta, 0);
 			break;
 		case KeyEvent.VK_RIGHT:
-			delta *= (xmax - xmin) / getWidth();
+			delta *= (xmax - xmin) / nx;
 			if (selectedManipulable != null)
 				translateManipulableBy(selectedManipulable, delta, 0);
 			else if (e.isAltDown())
 				translateAllBy(delta, 0);
 			break;
 		case KeyEvent.VK_DOWN:
-			delta *= (ymax - ymin) / getHeight();
+			delta *= (ymax - ymin) / ny;
 			if (selectedManipulable != null)
 				translateManipulableBy(selectedManipulable, 0, delta);
 			else if (e.isAltDown())
 				translateAllBy(0, delta);
 			break;
 		case KeyEvent.VK_UP:
-			delta *= -(ymax - ymin) / getHeight();
+			delta *= -(ymax - ymin) / ny;
 			if (selectedManipulable != null)
 				translateManipulableBy(selectedManipulable, 0, delta);
 			else if (e.isAltDown())

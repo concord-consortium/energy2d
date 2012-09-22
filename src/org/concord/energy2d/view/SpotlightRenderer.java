@@ -15,12 +15,12 @@ import javax.swing.JComponent;
 class SpotlightRenderer {
 
 	private Stroke stroke1 = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, new float[] { 1.5f }, 0);
-	private Stroke stroke2 = new BasicStroke(2);
-	private Color color1 = new Color(128, 128, 225, 128);
+	private Stroke stroke2 = new BasicStroke(4);
+	private Color color1 = Color.yellow;
 	private Color color2 = new Color(20, 255, 20, 128);
 	private int nx;
 	private int ny;
-	private int size = 5;
+	private int size = 3;
 
 	public SpotlightRenderer(int nx, int ny) {
 		this.nx = nx;
@@ -56,7 +56,7 @@ class SpotlightRenderer {
 		}
 
 		g.setColor(Color.white);
-		g.fillOval(Math.round(ix * dx - 2), Math.round(iy * dy - 2), 4, 4);
+		g.fillOval(Math.round(ix * dx - 3), Math.round(iy * dy - 3), 6, 6);
 
 		g.setColor(color2);
 		g.setStroke(stroke2);

@@ -68,7 +68,7 @@ class XmlDecoder extends DefaultHandler {
 	private byte graphDataType;
 	private boolean ruler;
 	private boolean grid;
-	private boolean snapToGrid;
+	private boolean snapToGrid = true;
 	private boolean isotherm;
 	private boolean streamline;
 	private boolean colorPalette;
@@ -915,7 +915,7 @@ class XmlDecoder extends DefaultHandler {
 		graphDataType = 0;
 		ruler = false;
 		grid = false;
-		snapToGrid = false;
+		snapToGrid = true;
 		gridSize = 10;
 		isotherm = false;
 		streamline = false;

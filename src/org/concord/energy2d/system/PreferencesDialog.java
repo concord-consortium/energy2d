@@ -73,7 +73,8 @@ class PreferencesDialog extends JDialog {
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		box.add(p);
 
-		snapToGridCheckBox = new JCheckBox("Snap to grid", s2d.view.isSnapToGrid());
+		snapToGridCheckBox = new JCheckBox("Snap to computational grid (" + s2d.model.getNx() + " x " + s2d.model.getNy() + ")", s2d.view.isSnapToGrid());
+		snapToGridCheckBox.setToolTipText("Should objects' shapes and coordinates be snapped to the computational grid?");
 		p.add(snapToGridCheckBox);
 
 		pack();
