@@ -2223,7 +2223,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 	}
 
-	// (x0, y0) is the coordinate of the upper-left corner of an Area (if shape is an Area)
+	// (x0, y0) is the coordinate of the upper-left corner of an Area (if shape is an Area). If the shape is a ring2D, w = inner diameter and h = outer diameter
 	void resizeManipulableTo(Manipulable m, float x, float y, float w, float h, float x0, float y0) {
 		Shape s = m.getShape();
 		if (s instanceof Rectangle2D.Float) {
@@ -2232,6 +2232,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (s instanceof Ellipse2D.Float) {
 			Ellipse2D.Float r = (Ellipse2D.Float) s;
 			r.setFrame(x, y, w, h);
+		} else if (s instanceof Ring2D) {
+			Ring2D r = (Ring2D) s;
+			r.setRing(x, y, w, h);
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud) {
 				Cloud c = (Cloud) m;

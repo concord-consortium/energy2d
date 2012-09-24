@@ -38,6 +38,7 @@ import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -62,7 +63,7 @@ class PartModelDialog extends JDialog {
 	private JRadioButton reflectionRadioButton;
 	private JRadioButton transmissionRadioButton;
 	private JTextField emissivityField;
-	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField;
+	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField, innerDiameterField, outerDiameterField;
 	private JCheckBox flipXCheckBox, flipYCheckBox;
 	private JTextField uidField;
 	private JTextField labelField;
@@ -151,6 +152,18 @@ class PartModelDialog extends JDialog {
 				if (hField != null) {
 					height = parse(hField.getText());
 					if (Float.isNaN(height))
+						return;
+				}
+				float innerDiameter = Float.NaN;
+				if (innerDiameterField != null) {
+					innerDiameter = parse(innerDiameterField.getText());
+					if (Float.isNaN(innerDiameter))
+						return;
+				}
+				float outerDiameter = Float.NaN;
+				if (outerDiameterField != null) {
+					outerDiameter = parse(outerDiameterField.getText());
+					if (Float.isNaN(outerDiameter))
 						return;
 				}
 				float degree = Float.NaN;
@@ -255,6 +268,10 @@ class PartModelDialog extends JDialog {
 					if (flipYCheckBox.isSelected()) {
 						p.flipY();
 					}
+				} else if (shape instanceof Ring2D) {
+					if (!Float.isNaN(innerDiameter) && !Float.isNaN(outerDiameter)) {
+						view.resizeManipulableTo(part, xcenter, view.model.getLy() - ycenter, innerDiameter, outerDiameter, 0, 0);
+					}
 				}
 
 				part.setWindAngle((float) Math.toRadians(windAngle));
@@ -319,22 +336,24 @@ class PartModelDialog extends JDialog {
 		p.add(new JLabel("<html><i>m</i></html>"));
 		count++;
 
-		if (part.getShape() instanceof RectangularShape) {
+		Shape shape = part.getShape();
+
+		if (shape instanceof RectangularShape) {
 
 			p.add(new JLabel("Width"));
-			wField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getWidth()));
+			wField = new JTextField(FORMAT.format(shape.getBounds2D().getWidth()));
 			wField.addActionListener(okListener);
 			p.add(wField);
 			p.add(new JLabel("<html><i>m</i></html>"));
 
 			p.add(new JLabel("Height"));
-			hField = new JTextField(FORMAT.format(part.getShape().getBounds2D().getHeight()));
+			hField = new JTextField(FORMAT.format(shape.getBounds2D().getHeight()));
 			hField.addActionListener(okListener);
 			p.add(hField);
 			p.add(new JLabel("<html><i>m</i></html>"));
 			count++;
 
-		} else if (part.getShape() instanceof Polygon2D) {
+		} else if (shape instanceof Polygon2D) {
 
 			p.add(new JLabel("Rotate"));
 			angleField = new JTextField("0");
@@ -373,6 +392,23 @@ class PartModelDialog extends JDialog {
 			scaleYField.addActionListener(okListener);
 			p.add(scaleYField);
 			p.add(new JLabel("Must be > 0"));
+			count++;
+
+		} else if (shape instanceof Ring2D) {
+
+			Ring2D ring = (Ring2D) shape;
+
+			p.add(new JLabel("Inner diameter"));
+			innerDiameterField = new JTextField(FORMAT.format(ring.getInnerDiameter()));
+			innerDiameterField.addActionListener(okListener);
+			p.add(innerDiameterField);
+			p.add(new JLabel("<html><i>m</i></html>"));
+
+			p.add(new JLabel("Outer diameter"));
+			outerDiameterField = new JTextField(FORMAT.format(ring.getOuterDiameter()));
+			outerDiameterField.addActionListener(okListener);
+			p.add(outerDiameterField);
+			p.add(new JLabel("<html><i>m</i></html>"));
 			count++;
 
 		}
