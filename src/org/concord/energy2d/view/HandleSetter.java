@@ -13,6 +13,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Tree;
@@ -61,6 +62,8 @@ class HandleSetter {
 					handle[i].y = view.convertPointToPixelY(point.y) - h;
 				}
 			}
+		} else if (s instanceof Ring2D) {
+			setRectHandles(view, s.getBounds2D(), handle, h);
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud) {
 				Cloud c = (Cloud) m;

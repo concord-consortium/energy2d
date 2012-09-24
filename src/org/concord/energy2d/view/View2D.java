@@ -58,6 +58,7 @@ import org.concord.energy2d.event.GraphListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.math.Polygon2D;
+import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.HeatFluxSensor;
@@ -2166,6 +2167,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Ellipse2D.Float r = (Ellipse2D.Float) s;
 				r.x += dx;
 				r.y += dy;
+			} else if (s instanceof Ring2D) {
+				((Ring2D) s).translateBy(dx, dy);
 			} else if (s instanceof Area) {
 				if (m instanceof Cloud) {
 					((Cloud) m).translateBy(dx, dy);
@@ -2191,6 +2194,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			Ellipse2D.Float r = (Ellipse2D.Float) s;
 			r.x = x - r.width / 2;
 			r.y = y - r.height / 2;
+		} else if (s instanceof Ring2D) {
+			if (m instanceof Part) {
+				Ring2D r = (Ring2D) s;
+				r.setRing(x, y, r.getInnerDiameter(), r.getOuterDiameter());
+			}
 		} else if (s instanceof Area) {
 			if (m instanceof Cloud)
 				((Cloud) m).setLocation((float) (x - s.getBounds2D().getCenterX()), (float) (y - s.getBounds2D().getCenterY()));
@@ -2567,6 +2575,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							float[] a = new float[] { (float) r.getX() + mt.getX(), (float) r.getY() + mt.getY(), (float) r.getWidth(), (float) r.getHeight() };
 							movingShape = new MovingTree(setMovingRect(a, x, y), ((Tree) selectedManipulable).getType());
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+						}
+					} else if (selectedManipulable instanceof Part && movingShape instanceof MovingAnnulus) {
+						MovingAnnulus ma = (MovingAnnulus) movingShape;
+						Rectangle r = ma.getShape().getBounds();
+						if (selectedSpot == -1) {
+							int xc = (int) (x - pressedPointRelative.x - r.getCenterX());
+							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
+							ma.setLocation(xc, yc);
+						} else {
+							// TODO: movingShape = new MovingAnnulus();
+							// setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
 				} else {
@@ -3212,6 +3231,17 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					y[i] = convertPointToPixelY(point.y);
 				}
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
+			} else if (shape instanceof Ring2D) {
+				Ring2D r = (Ring2D) shape;
+				int xc = convertPointToPixelX(r.getX());
+				int yc = convertPointToPixelY(r.getY());
+				int ai = convertPointToPixelX(r.getInnerDiameter());
+				int bi = convertPointToPixelY(r.getInnerDiameter());
+				int ao = convertPointToPixelX(r.getOuterDiameter());
+				int bo = convertPointToPixelY(r.getOuterDiameter());
+				Ellipse2D.Float outer = new Ellipse2D.Float(xc - ao / 2, yc - bo / 2, ao, bo);
+				Ellipse2D.Float inner = new Ellipse2D.Float(xc - ai / 2, yc - bi / 2, ai, bi);
+				movingShape = new MovingAnnulus(outer, inner);
 			}
 		} else if (selectedManipulable instanceof Sensor || selectedManipulable instanceof TextBox) {
 			Rectangle2D.Float r = (Rectangle2D.Float) selectedManipulable.getShape();
