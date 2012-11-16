@@ -493,6 +493,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		} catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), e.getLocalizedMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 		notifyToolBarListener(new ToolBarEvent(ToolBarEvent.FILE_INPUT, this));
 		currentFile = file;
@@ -511,6 +512,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			loadStateApp(System2D.class.getResourceAsStream(name));
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 		notifyToolBarListener(new ToolBarEvent(ToolBarEvent.FILE_INPUT, this));
 		currentModel = name;
