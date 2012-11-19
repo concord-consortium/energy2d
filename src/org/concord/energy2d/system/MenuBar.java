@@ -529,6 +529,8 @@ class MenuBar extends JMenuBar {
 		final JCheckBoxMenuItem miColorPalette = new JCheckBoxMenuItem("Color Palette");
 		final JCheckBoxMenuItem miRuler = new JCheckBoxMenuItem("Ruler");
 		final JCheckBoxMenuItem miGrid = new JCheckBoxMenuItem("Grid");
+		final JMenuItem miIncrGrid = new JMenuItem("Increase Grid Lines");
+		final JMenuItem miDecrGrid = new JMenuItem("Decrease Grid Lines");
 		final JCheckBoxMenuItem miControlPanel = new JCheckBoxMenuItem("Control Panel");
 
 		menu = new JMenu("View");
@@ -549,6 +551,8 @@ class MenuBar extends JMenuBar {
 				MiscUtil.setSelectedSilently(miColorPalette, box.view.isColorPaletteOn());
 				MiscUtil.setSelectedSilently(miRuler, box.view.isRulerOn());
 				MiscUtil.setSelectedSilently(miGrid, box.view.isGridOn());
+				miIncrGrid.setEnabled(box.view.isGridOn());
+				miDecrGrid.setEnabled(box.view.isGridOn());
 				MiscUtil.setSelectedSilently(miControlPanel, box.view.isControlPanelVisible());
 			}
 		});
@@ -663,6 +667,35 @@ class MenuBar extends JMenuBar {
 		});
 		miGrid.setToolTipText("Check if you wish to show grid lines");
 		menu.add(miGrid);
+
+		ks = KeyStroke.getKeyStroke('[', KeyEvent.ALT_MASK);
+		miIncrGrid.setAccelerator(ks);
+		miIncrGrid.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int gridSize = box.view.getGridSize();
+				if (gridSize > 2)
+					box.view.setGridSize(--gridSize);
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		miIncrGrid.setToolTipText("Increase grid lines");
+		menu.add(miIncrGrid);
+
+		ks = KeyStroke.getKeyStroke(']', KeyEvent.ALT_MASK);
+		miDecrGrid.setAccelerator(ks);
+		miDecrGrid.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int gridSize = box.view.getGridSize();
+				if (gridSize < 25)
+					box.view.setGridSize(++gridSize);
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		miDecrGrid.setToolTipText("Decrease grid lines");
+		menu.add(miDecrGrid);
+
 		menu.addSeparator();
 
 		mi = new JMenuItem("More...");
