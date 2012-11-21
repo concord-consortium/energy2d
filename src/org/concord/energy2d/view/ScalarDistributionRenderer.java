@@ -17,7 +17,6 @@ import javax.swing.JComponent;
  */
 class ScalarDistributionRenderer {
 
-	private final static int ERROR_PIXEL = -16777216;
 	private BufferedImage image;
 	private int[] pixels;
 	private int w, h;
@@ -160,12 +159,6 @@ class ScalarDistributionRenderer {
 
 		image.setRGB(0, 0, w, h, pixels, 0, w);
 		g.drawImage(image, 0, 0, view);
-
-		if (pixels[pixels.length / 2] == ERROR_PIXEL) {
-			view.setErrorMessage("FATAL ERROR!");
-		} else {
-			view.setErrorMessage(null);
-		}
 
 	}
 

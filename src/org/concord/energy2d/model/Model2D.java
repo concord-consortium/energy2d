@@ -1154,6 +1154,11 @@ public class Model2D {
 			running = true;
 			while (running) {
 				nextStep();
+				if (fatalErrorOccurred()) {
+					notifyManipulationListeners(ManipulationEvent.STOP);
+					notifyManipulationListeners(ManipulationEvent.FATAL_ERROR_OCCURRED);
+					break;
+				}
 				if (tasks != null)
 					tasks.run();
 			}
@@ -1165,6 +1170,10 @@ public class Model2D {
 				notifyManipulationListeners(ManipulationEvent.REPAINT);
 			}
 		}
+	}
+
+	public boolean fatalErrorOccurred() {
+		return Float.isNaN(t[nx / 2][ny / 2]);
 	}
 
 	public void stop() {

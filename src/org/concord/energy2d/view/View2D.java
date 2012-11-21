@@ -1146,35 +1146,64 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void draw(Graphics2D g) {
+		boolean noFatalError = !model.fatalErrorOccurred();
 		int w = getWidth();
 		int h = getHeight();
 		Stroke stroke = g.getStroke();
-		g.setColor(Color.white);
-		g.fillRect(0, 0, w, h);
-		switch (heatMapType) {
-		case HEATMAP_TEMPERATURE:
-			drawTemperatureField(g);
-			break;
-		case HEATMAP_THERMAL_ENERGY:
-			drawThermalEnergyField(g);
-			break;
+		if (noFatalError) {
+			setErrorMessage(null);
+			g.setColor(Color.white);
+			g.fillRect(0, 0, w, h);
+			switch (heatMapType) {
+			case HEATMAP_TEMPERATURE:
+				drawTemperatureField(g);
+				break;
+			case HEATMAP_THERMAL_ENERGY:
+				drawThermalEnergyField(g);
+				break;
+			}
+		} else {
+			setErrorMessage("FATAL ERROR!");
+			g.setColor(Color.black);
+			g.fillRect(0, 0, w, h);
 		}
 		drawParts(g);
 		drawClouds(g);
 		drawTrees(g);
 		drawTextBoxes(g);
 		drawPictures(g);
-		if (isotherms != null) {
+		if (showGrid && gridRenderer != null)
+			gridRenderer.render(this, g);
+		if (rulerRenderer != null)
+			rulerRenderer.render(this, g);
+		if (showColorPalette && heatMapType != HEATMAP_NONE) {
 			g.setStroke(thinStroke);
-			isotherms.render(g, getSize(), model.getTemperature());
+			switch (heatMapType) {
+			case HEATMAP_TEMPERATURE:
+				colorPalette.render(this, g, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
+				break;
+			case HEATMAP_THERMAL_ENERGY:
+				colorPalette.render(this, g, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
+				break;
+			}
 		}
-		if (showStreamLines && streamlines != null) {
-			g.setStroke(thinStroke);
-			streamlines.render(g, getSize(), model.getXVelocity(), model.getYVelocity());
-		}
-		if (showHeatFluxLines && heatFluxLines != null) {
-			g.setStroke(thinStroke);
-			heatFluxLines.render(g, getSize(), model.getTemperature(), -1);
+		if (noFatalError) {
+			if (isotherms != null) {
+				g.setStroke(thinStroke);
+				isotherms.render(g, getSize(), model.getTemperature());
+			}
+			if (showStreamLines && streamlines != null) {
+				g.setStroke(thinStroke);
+				streamlines.render(g, getSize(), model.getXVelocity(), model.getYVelocity());
+			}
+			if (showHeatFluxLines && heatFluxLines != null) {
+				g.setStroke(thinStroke);
+				heatFluxLines.render(g, getSize(), model.getTemperature(), -1);
+			}
+			if (showVelocity)
+				vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
+			if (showHeatFluxArrows)
+				vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g, heatFluxScale, heatFluxMinimumValueSquare, dotForZeroHeatFlux);
 		}
 		if (selectedManipulable != null) {
 			if (selectedManipulable instanceof Thermometer) {
@@ -1237,25 +1266,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 		}
-		if (showGrid && gridRenderer != null)
-			gridRenderer.render(this, g);
-		if (rulerRenderer != null)
-			rulerRenderer.render(this, g);
-		if (showColorPalette && heatMapType != HEATMAP_NONE) {
-			g.setStroke(thinStroke);
-			switch (heatMapType) {
-			case HEATMAP_TEMPERATURE:
-				colorPalette.render(this, g, temperatureRenderer.getMaximum(), temperatureRenderer.getMinimum());
-				break;
-			case HEATMAP_THERMAL_ENERGY:
-				colorPalette.render(this, g, thermalEnergyRenderer.getMaximum(), thermalEnergyRenderer.getMinimum());
-				break;
-			}
-		}
-		if (showVelocity)
-			vectorFieldRenderer.renderVectors(model.getXVelocity(), model.getYVelocity(), this, g);
-		if (showHeatFluxArrows)
-			vectorFieldRenderer.renderHeatFlux(model.getTemperature(), model.getConductivity(), this, g, heatFluxScale, heatFluxMinimumValueSquare, dotForZeroHeatFlux);
 		drawPhotons(g);
 		showSunOrMoon(g);
 		drawThermometers(g);
@@ -1426,7 +1436,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.setFont(new Font("Arial", Font.BOLD, 30));
 			FontMetrics fm = g.getFontMetrics();
 			g.drawString(errorMessage, w / 2 - fm.stringWidth(errorMessage) / 2, h / 2);
-			notifyManipulationListeners(null, ManipulationEvent.STOP);
 		}
 
 	}
