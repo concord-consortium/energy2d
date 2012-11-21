@@ -756,7 +756,7 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 			view.repaint();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "<html>The current time steplength is " + model.getTimeStep() + " s.<br>Usually it should be less than 1 s for convection simulations.<br>Reduce it in the Properties Window and then reset the simulation.", "Fatal error", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(view), "<html>The current time steplength is " + model.getTimeStep() + " s.<br>Reduce it in the Properties Window and then reset the simulation.<br>(Usually it should be less than 1 s for convection simulations.)", "Fatal error", JOptionPane.INFORMATION_MESSAGE);
 					Action propertyAction = view.getActionMap().get("Property");
 					if (propertyAction != null)
 						propertyAction.actionPerformed(null);
