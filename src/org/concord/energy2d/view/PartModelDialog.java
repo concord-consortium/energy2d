@@ -215,14 +215,14 @@ class PartModelDialog extends JDialog {
 					}
 				}
 
+				float temperature = parse(temperatureField.getText());
+				float power = parse(powerField.getText());
+				if (Float.isNaN(temperature))
+					return;
+				part.setTemperature(temperature);
 				if (notHeatSourceRadioButton.isSelected() || constantTemperatureRadioButton.isSelected()) {
-					float temperature = parse(temperatureField.getText());
-					if (Float.isNaN(temperature))
-						return;
-					part.setTemperature(temperature);
 					part.setPower(0);
 				} else if (powerRadioButton.isSelected()) {
-					float power = parse(powerField.getText());
 					if (Float.isNaN(power))
 						return;
 					part.setPower(power);
@@ -431,6 +431,7 @@ class PartModelDialog extends JDialog {
 					powerLabel.setText("Power density");
 					powerLabel.setEnabled(false);
 					powerField.setEnabled(false);
+					powerField.setText("0");
 				}
 			}
 		});
@@ -446,6 +447,7 @@ class PartModelDialog extends JDialog {
 					powerLabel.setText("Power density");
 					powerLabel.setEnabled(false);
 					powerField.setEnabled(false);
+					powerField.setText("0");
 				}
 			}
 		});
@@ -461,6 +463,7 @@ class PartModelDialog extends JDialog {
 					powerLabel.setText("<html><u><font color=blue>Power density</font></u></html>");
 					powerLabel.setEnabled(true);
 					powerField.setEnabled(true);
+					powerField.setText(FORMAT.format(part.getPower()));
 				}
 			}
 		});

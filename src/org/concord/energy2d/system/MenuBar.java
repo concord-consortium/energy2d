@@ -782,6 +782,23 @@ class MenuBar extends JMenuBar {
 		templates.put("Solar Heating: Thermostat", "models/thermostat1.e2d");
 		createMenu(box, subMenu, templates);
 
+		subMenu = new JMenu("Industrial Applications");
+		menu.add(subMenu);
+
+		templates.put("Solar Oven", "models/solar-oven.e2d");
+		templates.put("Heat Fins", "models/fin1.e2d");
+		templates.put("Coaxial Cable", "models/cable.e2d");
+		createMenu(box, subMenu, templates);
+
+		subMenu = new JMenu("Earth Science");
+		menu.add(subMenu);
+
+		templates.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
+		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
+		templates.put("USA Isotherm", "models/usa-isotherm.e2d");
+		templates.put("Mantle Convection", "models/mantle.e2d");
+		createMenu(box, subMenu, templates);
+
 		subMenu = new JMenu("Boundary Conditions");
 		menu.add(subMenu);
 
@@ -793,12 +810,7 @@ class MenuBar extends JMenuBar {
 		menu.add(subMenu);
 
 		templates.put("Ray Optics", "models/ray-optics.e2d");
-		templates.put("Solar Oven", "models/solar-oven.e2d");
 		templates.put("Thermoregulation", "models/thermoregulation.e2d");
-		templates.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
-		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
-		templates.put("USA Isotherm", "models/usa-isotherm.e2d");
-		templates.put("Mantle Convection", "models/mantle.e2d");
 		createMenu(box, subMenu, templates);
 
 		menu.addSeparator();
