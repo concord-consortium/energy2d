@@ -563,7 +563,7 @@ public class Part extends Manipulable {
 		xml += "<constant_temperature>" + constantTemperature + "</constant_temperature>\n";
 		if (power != 0)
 			xml += "<power>" + power + "</power>\n";
-		if (windSpeed > 0) {
+		if (windSpeed != 0) {
 			xml += "<wind_speed>" + windSpeed + "</wind_speed>\n";
 		}
 		if (windAngle != 0) {
