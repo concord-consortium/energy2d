@@ -1595,8 +1595,10 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					vx = model.getXVelocity()[ix][iy];
 					vy = model.getYVelocity()[ix][iy];
 					if (!Float.isNaN(vx) && !Float.isNaN(vy)) {
-						if (model.isRunning())
-							a.setAngle((a.getAngle() + (float) Math.hypot(vx, vy) * iconW2 * model.getTimeStep()) % (float) (2 * Math.PI));
+						if (model.isRunning()) {
+							float direction = Math.signum(model.getVorticity(ix, iy));
+							a.setAngle((a.getAngle() + (float) Math.hypot(vx, vy) * direction * iconW2 * model.getTimeStep()) % (float) (2 * Math.PI));
+						}
 						if (a.getLabel() != null)
 							centerString(a.getLabel(), g, (int) (x + iconW2), y + s.getIconHeight() + 12, false);
 						s.setAngle(a.getAngle());

@@ -1489,6 +1489,26 @@ public class Model2D {
 		return new float[] { u[i][j], v[i][j] };
 	}
 
+	public float getVorticityAt(float x, float y) {
+		return getVorticity(Math.round(x / deltaX), Math.round(y / deltaY));
+	}
+
+	public float getVorticity(int i, int j) {
+		if (i < 1)
+			i = 1;
+		else if (i > nx - 2)
+			i = nx - 2;
+		if (j < 1)
+			j = 1;
+		else if (j > ny - 2)
+			j = ny - 2;
+		if (!fluidity[i][j])
+			return 0;
+		float du_dy = (u[i][j + 1] - u[i][j - 1]) / deltaY;
+		float dv_dx = (v[i + 1][j] - v[i - 1][j]) / deltaX;
+		return 0.5f * (du_dy - dv_dx);
+	}
+
 	public float[][] getStreamFunction() {
 		return fluidSolver.getStreamFunction(u, v);
 	}
