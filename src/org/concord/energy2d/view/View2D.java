@@ -1862,7 +1862,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
 							g.fill(multigon);
 						} else {
-							drawStatus(g, p, cx / multigon.npoints, cy / multigon.npoints);
+							drawStatus(g, p, cx / n, cy / n);
 						}
 					} else if (fp instanceof Texture) {
 						setPaint(g, (Texture) fp, p.isFilled());
@@ -1878,8 +1878,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.setFont(labelFont);
 						FontMetrics fm = g.getFontMetrics();
 						int labelWidth = fm.stringWidth(label);
-						cx /= multigon.npoints;
-						cy /= multigon.npoints;
+						cx /= n;
+						cy /= n;
 						float x1 = cx - labelWidth / 2;
 						float y1 = cy + fm.getHeight() / 4;
 						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
