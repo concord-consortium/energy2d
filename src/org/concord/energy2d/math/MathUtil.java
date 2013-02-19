@@ -77,31 +77,29 @@ public class MathUtil {
 		if (n < 3)
 			throw new IllegalArgumentException("Polygon must have at least three vertices.");
 
-		final float tension = 0.5f; // the default Catmull-Rom tension parameter
-
 		GeneralPath path = new GeneralPath();
 		path.moveTo(poly.xpoints[n - 1], poly.ypoints[n - 1]);
 
 		float u;
-		float px, py;
+		float sx, sy;
 		int index;
 		float invStep = 1f / steps;
-		float[] xcr = new float[4];
-		float[] ycr = new float[4];
+		float[] px = new float[4];
+		float[] py = new float[4];
 
 		for (int i = 0; i < n; i++) {
 
 			for (int j = 0; j < 4; j++) { // Initialize points m-2, m-1, m, m+1
 				index = (i + j - 2 + n) % n;
-				xcr[j] = poly.xpoints[index];
-				ycr[j] = poly.ypoints[index];
+				px[j] = poly.xpoints[index];
+				py[j] = poly.ypoints[index];
 			}
 
 			for (int k = 0; k < steps; k++) {
 				u = k * invStep;
-				px = getBendingFunction(-2, u, tension) * xcr[0] + getBendingFunction(-1, u, tension) * xcr[1] + getBendingFunction(0, u, tension) * xcr[2] + getBendingFunction(1, u, tension) * xcr[3];
-				py = getBendingFunction(-2, u, tension) * ycr[0] + getBendingFunction(-1, u, tension) * ycr[1] + getBendingFunction(0, u, tension) * ycr[2] + getBendingFunction(1, u, tension) * ycr[3];
-				path.lineTo(px, py);
+				sx = catmullrom(-2, u) * px[0] + catmullrom(-1, u) * px[1] + catmullrom(0, u) * px[2] + catmullrom(1, u) * px[3];
+				sy = catmullrom(-2, u) * py[0] + catmullrom(-1, u) * py[1] + catmullrom(0, u) * py[2] + catmullrom(1, u) * py[3];
+				path.lineTo(sx * 0.5f, sy * 0.5f);
 			}
 		}
 
@@ -112,26 +110,18 @@ public class MathUtil {
 	}
 
 	// Catmull-Rom spline function
-	private static float getBendingFunction(int i, float u, float tension) {
-
-		if (i < -2 || i > 1)
-			throw new IllegalArgumentException("i cannot be " + i);
-		if (u < 0 || u > 1)
-			throw new IllegalArgumentException("u=" + u + " is outside [0,1]");
-
+	private static float catmullrom(int i, float u) {
 		switch (i) {
 		case -2:
-			return u * tension * (-1 + u * (2 - u));
+			return u * (u * (2 - u) - 1);
 		case -1:
-			return 1 + u * u * ((tension - 3) + (2 - tension) * u);
+			return u * u * (3 * u - 5) + 2;
 		case 0:
-			return u * (tension + u * ((3 - 2 * tension) + (tension - 2) * u));
+			return u * ((4 - 3 * u) * u + 1);
 		case 1:
-			return tension * u * u * (-1 + u);
+			return u * u * (u - 1);
 		}
-
 		return 0;
-
 	}
 
 }
