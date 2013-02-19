@@ -27,6 +27,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
@@ -91,6 +92,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte RECTANGLE_MODE = 1;
 	public final static byte ELLIPSE_MODE = 2;
 	public final static byte POLYGON_MODE = 3;
+	public final static byte CURVE_MODE = 4;
 	public final static byte THERMOMETER_MODE = 11;
 	public final static byte HEATING_MODE = 21;
 
@@ -180,6 +182,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Rectangle rectangle = new Rectangle();
 	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
 	private Polygon polygon = new Polygon();
+	private GeneralPath curve = new GeneralPath();
 	private Point mousePressedPoint = new Point(-1, -1);
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
@@ -461,6 +464,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case RECTANGLE_MODE:
 		case ELLIPSE_MODE:
 		case POLYGON_MODE:
+		case CURVE_MODE:
 			setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			break;
 		case THERMOMETER_MODE:
@@ -1363,6 +1367,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.fillOval((int) (mouseMovedPoint.x + dx * i), (int) (mouseMovedPoint.y + dy * i), 2, 2);
 				}
 			}
+			break;
+		case CURVE_MODE:
 			break;
 		}
 

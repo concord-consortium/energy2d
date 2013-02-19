@@ -106,6 +106,21 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		add(x);
 		bg.add(x);
 
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/curve.png")));
+		x.setToolTipText("Draw a curved body");
+		x.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				box.view.setActionMode(View2D.CURVE_MODE);
+			}
+		});
+		x.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MiscUtil.setSelectedSilently(graphButton, false);
+			}
+		});
+		add(x);
+		bg.add(x);
+
 		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/thermometer.png")));
 		x.setToolTipText("Add a thermometer");
 		x.addItemListener(new ItemListener() {
