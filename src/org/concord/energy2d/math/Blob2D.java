@@ -5,6 +5,7 @@
 
 package org.concord.energy2d.math;
 
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -14,24 +15,24 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * A curved body made of splines (by default, Catmull-Rom). For efficiency, the splines will not be automatically recalculated when the points are modified.
+ * A blob made of splines (by default, Catmull-Rom) going through a set of points. For efficiency, the splines will not be automatically recalculated when the points are modified.
  * 
- * The update() method must be called before doing anything. It is up to the developer to determine when to call the method.
+ * The update() method must be called before doing anything. It is up to the developer to determine when is the optimal time to call the method.
  * 
  * @author Charles Xie
  * 
  */
-public class Spline2D implements Shape {
+public class Blob2D implements Shape {
 
 	private Point2D.Float[] points;
 	private GeneralPath path;
-	private int steps = 10;
+	private int steps = 20;
 	private float invStep = 1f / steps;
 	private float[] px = new float[4];
 	private float[] py = new float[4];
 
 	/** the coordinates of the points */
-	public Spline2D(float[] x, float[] y) {
+	public Blob2D(float[] x, float[] y) {
 		if (x.length != y.length)
 			throw new IllegalArgumentException("the number of x coodinates must be equal to that of the y coordinates.");
 		if (x.length < 3)
@@ -40,9 +41,19 @@ public class Spline2D implements Shape {
 		for (int i = 0; i < x.length; i++)
 			setPoint(i, x[i], y[i]);
 		path = new GeneralPath();
+		update();
 	}
 
-	public Spline2D duplicate() {
+	/** converted from a polygon */
+	public Blob2D(Polygon p) {
+		points = new Point2D.Float[p.npoints];
+		for (int i = 0; i < points.length; i++)
+			setPoint(i, p.xpoints[i], p.ypoints[i]);
+		path = new GeneralPath();
+		update();
+	}
+
+	public Blob2D duplicate() {
 		int n = points.length;
 		float[] x = new float[n];
 		float[] y = new float[n];
@@ -50,7 +61,11 @@ public class Spline2D implements Shape {
 			x[i] = points[i].x;
 			y[i] = points[i].y;
 		}
-		return new Spline2D(x, y);
+		return new Blob2D(x, y);
+	}
+
+	public GeneralPath getPath() {
+		return path;
 	}
 
 	public void update() {

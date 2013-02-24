@@ -106,11 +106,11 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		add(x);
 		bg.add(x);
 
-		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/curve.png")));
-		x.setToolTipText("Draw a curved body");
+		x = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/blob.png")));
+		x.setToolTipText("Draw a blob");
 		x.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				box.view.setActionMode(View2D.CURVE_MODE);
+				box.view.setActionMode(View2D.BLOB_MODE);
 			}
 		});
 		x.addActionListener(new ActionListener() {
@@ -118,7 +118,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 				MiscUtil.setSelectedSilently(graphButton, false);
 			}
 		});
-		//add(x);
+		add(x);
 		bg.add(x);
 
 		heatingButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/heat.png")));

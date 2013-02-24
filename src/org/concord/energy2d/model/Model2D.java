@@ -15,6 +15,7 @@ import java.util.ListIterator;
 
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
+import org.concord.energy2d.math.Blob2D;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 
@@ -849,6 +850,18 @@ public class Model2D {
 
 	public Part addPolygonPart(float[] x, float[] y, float t) {
 		Part p = addPolygonPart(x, y);
+		p.setTemperature(t);
+		return p;
+	}
+
+	public Part addBlobPart(float[] x, float[] y) {
+		Part p = new Part(new Blob2D(x, y));
+		addPart(p);
+		return p;
+	}
+
+	public Part addBlobPart(float[] x, float[] y, float t) {
+		Part p = addBlobPart(x, y);
 		p.setTemperature(t);
 		return p;
 	}

@@ -58,6 +58,7 @@ import org.concord.energy2d.event.GraphEvent;
 import org.concord.energy2d.event.GraphListener;
 import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
+import org.concord.energy2d.math.Blob2D;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Anemometer;
@@ -92,7 +93,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte RECTANGLE_MODE = 1;
 	public final static byte ELLIPSE_MODE = 2;
 	public final static byte POLYGON_MODE = 3;
-	public final static byte CURVE_MODE = 4;
+	public final static byte BLOB_MODE = 4;
 	public final static byte THERMOMETER_MODE = 11;
 	public final static byte HEATING_MODE = 21;
 
@@ -182,7 +183,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Rectangle rectangle = new Rectangle();
 	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
 	private Polygon polygon = new Polygon();
-	private GeneralPath curve = new GeneralPath();
+	private Blob2D blob;
 	private Point mousePressedPoint = new Point(-1, -1);
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
@@ -464,7 +465,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case RECTANGLE_MODE:
 		case ELLIPSE_MODE:
 		case POLYGON_MODE:
-		case CURVE_MODE:
+		case BLOB_MODE:
 			setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			break;
 		case THERMOMETER_MODE:
@@ -1368,7 +1369,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 			break;
-		case CURVE_MODE:
+		case BLOB_MODE:
+			if (blob != null) {
+				g.setColor(TRANSLUCENT_GRAY);
+				g.fill(blob.getPath());
+				g.setColor(Color.white);
+				g.draw(blob.getPath());
+			}
 			break;
 		}
 
@@ -1876,6 +1883,54 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					g.setColor(Color.black);
 					g.draw(multigon);
+					String label = p.getLabel();
+					if (label != null) {
+						String partLabel = p.getLabel(label, model);
+						if (partLabel != null)
+							label = partLabel;
+						g.setFont(labelFont);
+						FontMetrics fm = g.getFontMetrics();
+						int labelWidth = fm.stringWidth(label);
+						cx /= n;
+						cy /= n;
+						float x1 = cx - labelWidth / 2;
+						float y1 = cy + fm.getHeight() / 4;
+						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+						g.drawString(label, x1, y1);
+					}
+				} else if (s instanceof Blob2D) {
+					Blob2D b = (Blob2D) s;
+					int n = b.getPointCount();
+					if (multigon == null)
+						multigon = new Polygon();
+					else
+						multigon.reset();
+					int x, y;
+					Point2D.Float v;
+					int cx = 0, cy = 0;
+					for (int i = 0; i < n; i++) {
+						v = b.getPoint(i);
+						x = convertPointToPixelX(v.x);
+						y = convertPointToPixelY(v.y);
+						multigon.addPoint(x, y);
+						cx += x;
+						cy += y;
+					}
+					GeneralPath path = new Blob2D(multigon).getPath();
+					FillPattern fp = p.getFillPattern();
+					if (fp instanceof ColorFill) {
+						if (p.isFilled()) {
+							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+							g.fill(path);
+						} else {
+							drawStatus(g, p, cx / n, cy / n);
+						}
+					} else if (fp instanceof Texture) {
+						setPaint(g, (Texture) fp, p.isFilled());
+						g.fill(path);
+					}
+					g.setColor(Color.black);
+					g.draw(path);
 					String label = p.getLabel();
 					if (label != null) {
 						String partLabel = p.getLabel(label, model);
@@ -2491,6 +2546,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			if (e.getClickCount() < 2)
 				addPolygonPoint(x, y);
+			break;
+		case BLOB_MODE:
+			if (showGraph) {
+				e.consume();
+				return;
+			}
+			if (e.getClickCount() < 2)
+				addBlobPoint(x, y);
 			break;
 		case HEATING_MODE:
 			runHeatingThread = true;
@@ -3178,6 +3241,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	}
 
 	private void addPolygonPoint(int x, int y) {
+		int n = polygon.npoints;
+		if (n > 0) {
+			int dx = x - polygon.xpoints[n - 1];
+			int dy = y - polygon.ypoints[n - 1];
+			if (dx * dx + dy * dy > 9)
+				polygon.addPoint(x, y);
+		} else {
+			polygon.addPoint(x, y);
+		}
+	}
+
+	private void addBlobPoint(int x, int y) {
 		int n = polygon.npoints;
 		if (n > 0) {
 			int dx = x - polygon.xpoints[n - 1];
