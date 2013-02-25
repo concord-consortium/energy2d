@@ -2279,7 +2279,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (s instanceof Polygon2D) {
 				((Polygon2D) s).translateBy(dx, dy);
 			} else if (s instanceof Blob2D) {
-				((Blob2D) s).translateBy(dx, dy);
+				Blob2D b = (Blob2D) s;
+				b.translateBy(dx, dy);
+				b.update();
 			}
 			notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 		}
@@ -2337,6 +2339,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Blob2D b = (Blob2D) s;
 				Point2D.Float center = b.getCenter();
 				b.translateBy((float) (xc - center.x), (float) (yc - center.y));
+				b.update();
 			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
@@ -2708,6 +2711,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						xc = x - pressedPointRelative.x - xc;
 						yc = y - pressedPointRelative.y - yc;
 						b.translateBy((int) xc, (int) yc);
+						b.update();
 						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					} else {
 						if (selectedManipulable instanceof Part) {
@@ -2715,6 +2719,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							if (k >= n)
 								k = n - 1;
 							b.setPoint(k, x, y);
+							b.update();
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
@@ -2929,6 +2934,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 									for (int i = 0; i < n; i++) {
 										b.setPoint(i, convertPixelToPointX((int) b0.getPoint(i).x), convertPixelToPointY((int) b0.getPoint(i).y));
 									}
+									b.update();
 									setSelectedManipulable(selectedManipulable);
 									notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
 								}

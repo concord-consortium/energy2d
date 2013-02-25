@@ -27,7 +27,7 @@ class MovingBlob implements MovingShape {
 	}
 
 	public void render(Graphics2D g) {
-		g.draw(blob);
+		g.draw(blob.getPath());
 	}
 
 }

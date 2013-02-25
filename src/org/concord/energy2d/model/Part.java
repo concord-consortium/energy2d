@@ -122,6 +122,13 @@ public class Part extends Manipulable {
 			float dx = x - (float) r.getCenterX();
 			float dy = y - (float) r.getCenterY();
 			((Polygon2D) s).translateBy(dx, dy);
+		} else if (s instanceof Blob2D) {
+			s = ((Blob2D) s).duplicate();
+			Rectangle2D r = s.getBounds2D();
+			float dx = x - (float) r.getCenterX();
+			float dy = y - (float) r.getCenterY();
+			((Blob2D) s).translateBy(dx, dy);
+			((Blob2D) s).update();
 		}
 		Part p = new Part(s);
 		p.filled = filled;
