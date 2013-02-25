@@ -44,6 +44,19 @@ public class Blob2D implements Shape {
 		update();
 	}
 
+	/** the coordinates of the points */
+	public Blob2D(int[] x, int[] y) {
+		if (x.length != y.length)
+			throw new IllegalArgumentException("the number of x coodinates must be equal to that of the y coordinates.");
+		if (x.length < 3)
+			throw new IllegalArgumentException("the number of points must be no less than 3.");
+		points = new Point2D.Float[x.length];
+		for (int i = 0; i < x.length; i++)
+			setPoint(i, x[i], y[i]);
+		path = new GeneralPath();
+		update();
+	}
+
 	/** converted from a polygon */
 	public Blob2D(Polygon p) {
 		points = new Point2D.Float[p.npoints];

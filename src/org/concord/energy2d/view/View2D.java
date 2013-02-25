@@ -183,7 +183,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private Rectangle rectangle = new Rectangle();
 	private Ellipse2D.Float ellipse = new Ellipse2D.Float();
 	private Polygon polygon = new Polygon();
-	private Blob2D blob;
 	private Point mousePressedPoint = new Point(-1, -1);
 	private Point mouseReleasedPoint = new Point(-1, -1);
 	private Point mouseMovedPoint = new Point(-1, -1);
@@ -1339,22 +1338,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		case RECTANGLE_MODE:
 			g.setColor(TRANSLUCENT_GRAY);
 			g.fill(rectangle);
-			g.setColor(Color.white);
+			g.setColor(Color.WHITE);
 			g.draw(rectangle);
 			break;
 		case ELLIPSE_MODE:
 			g.setColor(TRANSLUCENT_GRAY);
 			g.fill(ellipse);
-			g.setColor(Color.white);
+			g.setColor(Color.WHITE);
 			g.draw(ellipse);
 			break;
 		case POLYGON_MODE:
 			g.setColor(TRANSLUCENT_GRAY);
 			g.fill(polygon);
-			g.setColor(Color.white);
+			g.setColor(Color.WHITE);
 			g.draw(polygon);
 			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
-				g.setColor(Color.green);
+				g.setColor(Color.GREEN);
 				g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, mouseReleasedPoint.x, mouseReleasedPoint.y);
 				int np = polygon.npoints;
 				if (np > 1) { // draw a dotted line to show what will be a complete polygon if double-clicking
@@ -1370,11 +1369,34 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case BLOB_MODE:
-			if (blob != null) {
-				g.setColor(TRANSLUCENT_GRAY);
-				g.fill(blob.getPath());
-				g.setColor(Color.white);
-				g.draw(blob.getPath());
+			if (mouseMovedPoint.x >= 0 && mouseMovedPoint.y >= 0 && mouseReleasedPoint.x >= 0 && mouseReleasedPoint.y >= 0) {
+				if (polygon.npoints == 1) {
+					g.setColor(Color.WHITE);
+					g.drawLine(mouseMovedPoint.x, mouseMovedPoint.y, polygon.xpoints[0], polygon.ypoints[0]);
+				} else if (polygon.npoints >= 2) {
+					boolean tooClose = false;
+					for (int i = 0; i < polygon.npoints; i++) {
+						if (mouseMovedPoint.distanceSq(polygon.xpoints[i], polygon.ypoints[i]) < 100) {
+							tooClose = true;
+							break;
+						}
+					}
+					if (tooClose) {
+						if (polygon.npoints >= 3)
+							drawBlobFromPolygon(g, polygon);
+					} else {
+						Polygon p2 = new Polygon(polygon.xpoints, polygon.ypoints, polygon.npoints);
+						p2.addPoint(mouseMovedPoint.x, mouseMovedPoint.y);
+						drawBlobFromPolygon(g, p2);
+					}
+				}
+			} else {
+				if (polygon.npoints >= 3)
+					drawBlobFromPolygon(g, polygon);
+			}
+			g.setColor(Color.YELLOW);
+			for (int i = 0; i < polygon.npoints; i++) {
+				g.fillOval(polygon.xpoints[i] - 2, polygon.ypoints[i] - 2, 4, 4);
 			}
 			break;
 		}
@@ -1451,6 +1473,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			g.drawString(errorMessage, w / 2 - fm.stringWidth(errorMessage) / 2, h / 2);
 		}
 
+	}
+
+	private void drawBlobFromPolygon(Graphics2D g, Polygon p) {
+		Blob2D blob = new Blob2D(p);
+		g.setColor(TRANSLUCENT_GRAY);
+		g.fill(blob.getPath());
+		g.setColor(Color.WHITE);
+		g.draw(blob.getPath());
 	}
 
 	private void drawButtonInfo(Graphics2D g, String s, Symbol button) {
@@ -2248,6 +2278,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			} else if (s instanceof Polygon2D) {
 				((Polygon2D) s).translateBy(dx, dy);
+			} else if (s instanceof Blob2D) {
+				((Blob2D) s).translateBy(dx, dy);
 			}
 			notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
 		}
@@ -2278,17 +2310,33 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		} else if (s instanceof Polygon2D) {
 			Shape shape = movingShape.getShape();
 			if (shape instanceof Polygon) {
-				Polygon polygon = (Polygon) shape;
+				Polygon poly = (Polygon) shape;
 				float xc = 0, yc = 0;
-				for (int i = 0; i < polygon.npoints; i++) {
-					xc += polygon.xpoints[i];
-					yc += polygon.ypoints[i];
+				for (int i = 0; i < poly.npoints; i++) {
+					xc += poly.xpoints[i];
+					yc += poly.ypoints[i];
 				}
-				xc = convertPixelToPointX((int) (xc / polygon.npoints));
-				yc = convertPixelToPointY((int) (yc / polygon.npoints));
+				xc = convertPixelToPointX((int) (xc / poly.npoints));
+				yc = convertPixelToPointY((int) (yc / poly.npoints));
 				Polygon2D p = (Polygon2D) s;
 				Point2D.Float center = p.getCenter();
 				p.translateBy((float) (xc - center.x), (float) (yc - center.y));
+			}
+		} else if (s instanceof Blob2D) {
+			Shape shape = movingShape.getShape();
+			if (shape instanceof Blob2D) {
+				Blob2D blob = (Blob2D) shape;
+				float xc = 0, yc = 0;
+				int n = blob.getPointCount();
+				for (int i = 0; i < n; i++) {
+					xc += blob.getPoint(i).x;
+					yc += blob.getPoint(i).y;
+				}
+				xc = convertPixelToPointX((int) (xc / n));
+				yc = convertPixelToPointY((int) (yc / n));
+				Blob2D b = (Blob2D) s;
+				Point2D.Float center = b.getCenter();
+				b.translateBy((float) (xc - center.x), (float) (yc - center.y));
 			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.TRANSLATE);
@@ -2646,6 +2694,30 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
 					}
+				} else if (shape instanceof Blob2D) {
+					Blob2D b = (Blob2D) shape;
+					int n = b.getPointCount();
+					if (selectedSpot == -1) {
+						float xc = 0, yc = 0;
+						for (int i = 0; i < n; i++) {
+							xc += b.getPoint(i).x;
+							yc += b.getPoint(i).y;
+						}
+						xc /= n;
+						yc /= n;
+						xc = x - pressedPointRelative.x - xc;
+						yc = y - pressedPointRelative.y - yc;
+						b.translateBy((int) xc, (int) yc);
+						setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					} else {
+						if (selectedManipulable instanceof Part) {
+							int k = n < handle.length ? selectedSpot : (int) ((float) selectedSpot * (float) n / (float) handle.length);
+							if (k >= n)
+								k = n - 1;
+							b.setPoint(k, x, y);
+							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+						}
+					}
 				} else if (shape instanceof Area) {
 					if (selectedManipulable instanceof Cloud && movingShape instanceof MovingCloud) {
 						MovingCloud mc = (MovingCloud) movingShape;
@@ -2842,6 +2914,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 									notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
 								}
 							}
+						} else if (shape instanceof Blob2D) {
+							if (selectedSpot == -1) {
+								float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
+								float y2 = convertPixelToPointY((int) (y - pressedPointRelative.y));
+								translateManipulableTo(selectedManipulable, x2, y2);
+								setSelectedManipulable(selectedManipulable);
+							} else {
+								Shape s = selectedManipulable.getShape();
+								if (s instanceof Blob2D) {
+									Blob2D b = (Blob2D) s;
+									Blob2D b0 = (Blob2D) shape;
+									int n = b0.getPointCount();
+									for (int i = 0; i < n; i++) {
+										b.setPoint(i, convertPixelToPointX((int) b0.getPoint(i).x), convertPixelToPointY((int) b0.getPoint(i).y));
+									}
+									setSelectedManipulable(selectedManipulable);
+									notifyManipulationListeners(selectedManipulable, ManipulationEvent.RESIZE);
+								}
+							}
 						} else if (shape instanceof Area) {
 							if (selectedSpot == -1) {
 								float x2 = convertPixelToPointX((int) (x - pressedPointRelative.x));
@@ -2927,6 +3018,29 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
 				} else {
 					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The polygon must be at least a triangle!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				polygon.reset();
+			}
+			break;
+		case BLOB_MODE:
+			if (e.getClickCount() >= 2) {
+				resetMousePoints();
+				int n = polygon.npoints;
+				if (n >= 3) {
+					float[] px = new float[n];
+					float[] py = new float[n];
+					for (int i = 0; i < n; i++) {
+						px[i] = convertPixelToPointX(polygon.xpoints[i]);
+						py[i] = convertPixelToPointY(polygon.ypoints[i]);
+					}
+					model.addBlobPart(px, py, model.getBackgroundTemperature() + 20);
+					model.refreshPowerArray();
+					model.refreshTemperatureBoundaryArray();
+					model.refreshMaterialPropertyArrays();
+					model.setInitialTemperature();
+					notifyManipulationListeners(model.getPart(model.getPartCount() - 1), ManipulationEvent.OBJECT_ADDED);
+				} else {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(this), "The blob must contain at least three points!", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				polygon.reset();
 			}
@@ -3243,9 +3357,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void addPolygonPoint(int x, int y) {
 		int n = polygon.npoints;
 		if (n > 0) {
-			int dx = x - polygon.xpoints[n - 1];
-			int dy = y - polygon.ypoints[n - 1];
-			if (dx * dx + dy * dy > 9)
+			boolean tooClose = false;
+			int dx = 0;
+			int dy = 0;
+			for (int i = 0; i < n; i++) {
+				dx = x - polygon.xpoints[i];
+				dy = y - polygon.ypoints[i];
+				if (dx * dx + dy * dy < 16) {
+					tooClose = true;
+					break;
+				}
+			}
+			if (!tooClose)
 				polygon.addPoint(x, y);
 		} else {
 			polygon.addPoint(x, y);
@@ -3255,9 +3378,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private void addBlobPoint(int x, int y) {
 		int n = polygon.npoints;
 		if (n > 0) {
-			int dx = x - polygon.xpoints[n - 1];
-			int dy = y - polygon.ypoints[n - 1];
-			if (dx * dx + dy * dy > 9)
+			boolean tooClose = false;
+			int dx = 0;
+			int dy = 0;
+			for (int i = 0; i < n; i++) {
+				dx = x - polygon.xpoints[i];
+				dy = y - polygon.ypoints[i];
+				if (dx * dx + dy * dy < 100) {
+					tooClose = true;
+					break;
+				}
+			}
+			if (!tooClose)
 				polygon.addPoint(x, y);
 		} else {
 			polygon.addPoint(x, y);
@@ -3304,6 +3436,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					y[i] = convertPointToPixelY(point.y);
 				}
 				movingShape = new MovingPolygon(new Polygon(x, y, n));
+			} else if (shape instanceof Blob2D) {
+				Blob2D b = (Blob2D) shape;
+				int n = b.getPointCount();
+				int[] x = new int[n];
+				int[] y = new int[n];
+				Point2D.Float point;
+				for (int i = 0; i < n; i++) {
+					point = b.getPoint(i);
+					x[i] = convertPointToPixelX(point.x);
+					y[i] = convertPointToPixelY(point.y);
+				}
+				movingShape = new MovingBlob(new Blob2D(x, y));
 			} else if (shape instanceof Ring2D) {
 				Ring2D r = (Ring2D) shape;
 				int xc = convertPointToPixelX(r.getX());

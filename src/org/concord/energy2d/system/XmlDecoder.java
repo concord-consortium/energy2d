@@ -362,6 +362,30 @@ class XmlDecoder extends DefaultHandler {
 					part = box.model.addPolygonPart(x, y);
 				}
 			}
+		} else if (qName == "blob") {
+			if (attrib != null) {
+				int count = -1;
+				String points = null;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "count") {
+						count = Integer.parseInt(attribValue);
+					} else if (attribName == "points") {
+						points = attribValue;
+					}
+				}
+				if (count > 0 && points != null) {
+					float[] v = Scripter.parseArray(count * 2, points);
+					float[] x = new float[count];
+					float[] y = new float[count];
+					for (int i = 0; i < count; i++) {
+						x[i] = v[2 * i];
+						y[i] = v[2 * i + 1];
+					}
+					part = box.model.addBlobPart(x, y);
+				}
+			}
 		} else if (qName == "temperature_at_border") {
 			if (attrib != null) {
 				float left = Float.NaN, right = Float.NaN, upper = Float.NaN, lower = Float.NaN;

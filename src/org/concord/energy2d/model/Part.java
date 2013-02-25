@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 
+import org.concord.energy2d.math.Blob2D;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.util.ColorFill;
@@ -543,6 +544,17 @@ public class Part extends Manipulable {
 				xml += p2d.x + ", " + p2d.y + ", ";
 			}
 			p2d = p.getVertex(n - 1);
+			xml += p2d.x + ", " + p2d.y + "\"/>\n";
+		} else if (getShape() instanceof Blob2D) {
+			Blob2D b = (Blob2D) getShape();
+			xml += "<blob count=\"" + b.getPointCount() + "\" points=\"";
+			int n = b.getPointCount();
+			Point2D.Float p2d;
+			for (int i = 0; i < n - 1; i++) {
+				p2d = b.getPoint(i);
+				xml += p2d.x + ", " + p2d.y + ", ";
+			}
+			p2d = b.getPoint(n - 1);
 			xml += p2d.x + ", " + p2d.y + "\"/>\n";
 		} else if (getShape() instanceof Ring2D) {
 			Ring2D ring = (Ring2D) getShape();
