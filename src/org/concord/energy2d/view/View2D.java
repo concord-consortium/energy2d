@@ -105,6 +105,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public final static byte MOUSE_READ_THERMAL_ENERGY = 2;
 	public final static byte MOUSE_READ_VELOCITY = 3;
 	public final static byte MOUSE_READ_HEAT_FLUX = 4;
+	public final static byte MOUSE_READ_COORDINATES = 5;
 
 	public final static byte RAINBOW = 0;
 	public final static byte IRON = 1;
@@ -126,6 +127,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private final static DecimalFormat TEMPERATURE_FORMAT = new DecimalFormat("###.#");
 	private final static DecimalFormat VELOCITY_FORMAT = new DecimalFormat("#.####");
 	private final static DecimalFormat HEAT_FLUX_FORMAT = new DecimalFormat("###.##");
+	private final static DecimalFormat COORDINATES_FORMAT = new DecimalFormat("###.###");
 	private Font smallFont = new Font(null, Font.PLAIN, 10);
 	private Font sensorReadingFont = new Font(null, Font.PLAIN, 10);
 	private Font labelFont = new Font("Arial", Font.PLAIN | Font.BOLD, 14);
@@ -166,7 +168,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private int nx, ny;
 	private float time;
 	private JPopupMenu popupMenu;
-	private Rectangle[] handle = new Rectangle[8];
+	private Rectangle[] handle = new Rectangle[16];
 	private boolean mouseBeingDragged;
 	private MovingShape movingShape;
 	private Point pressedPointRelative = new Point();
@@ -509,6 +511,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			pictures.clear();
 		for (Rectangle h : handle)
 			h.x = h.y = 0;
+		selectedSpot = -1;
 	}
 
 	public void addTextBox(TextBox t) {
@@ -1438,6 +1441,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				} else {
 					switch (mouseReadType) {
+					case MOUSE_READ_COORDINATES:
+						float coorx = convertPixelToPointX(mouseMovedPoint.x);
+						float coory = model.getLy() - convertPixelToPointY(mouseMovedPoint.y);
+						drawMouseReadString(g, "(" + COORDINATES_FORMAT.format(coorx) + ", " + COORDINATES_FORMAT.format(coory) + ") m");
+						break;
 					case MOUSE_READ_TEMPERATURE:
 						float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
 						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');

@@ -165,7 +165,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		add(graphButton);
 		addSeparator(new Dimension(10, 0));
 
-		mouseReadComboBox = new JComboBox(new String[] { "Mouse: Default", "Mouse: Temperature", "Mouse: Energy", "Mouse: Velocity", "Mouse: Heat Flux" });
+		mouseReadComboBox = new JComboBox(new String[] { "Mouse: Default", "Mouse: Temperature", "Mouse: Energy", "Mouse: Velocity", "Mouse: Heat Flux", "Mouse: Coordinates" });
 		mouseReadComboBox.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
 		mouseReadComboBox.setMaximumSize(new Dimension(150, 32));
 		mouseReadComboBox.addItemListener(new ItemListener() {
