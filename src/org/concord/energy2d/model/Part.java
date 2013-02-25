@@ -446,6 +446,14 @@ public class Part extends Manipulable {
 				return true;
 			}
 
+		} else if (shape instanceof Blob2D) {
+
+			Blob2D b = (Blob2D) shape;
+			if (b.contains(p.getX(), p.getY())) {
+				reflect(b, p, timeStep);
+				return true;
+			}
+
 		} else if (shape instanceof Ellipse2D.Float) {
 
 			Ellipse2D.Float e = (Ellipse2D.Float) shape;
@@ -497,6 +505,23 @@ public class Part extends Manipulable {
 		}
 		v1 = r.getVertex(n - 1);
 		v2 = r.getVertex(0);
+		line.setLine(v1, v2);
+		reflectFromLine(p, line, timeStep);
+	}
+
+	private static void reflect(Blob2D b, Photon p, float timeStep) {
+		int n = b.getPathPointCount();
+		Point2D.Float v1, v2;
+		Line2D.Float line = new Line2D.Float();
+		for (int i = 0; i < n - 1; i++) {
+			v1 = b.getPathPoint(i);
+			v2 = b.getPathPoint(i + 1);
+			line.setLine(v1, v2);
+			if (reflectFromLine(p, line, timeStep))
+				return;
+		}
+		v1 = b.getPathPoint(n - 1);
+		v2 = b.getPathPoint(0);
 		line.setLine(v1, v2);
 		reflectFromLine(p, line, timeStep);
 	}

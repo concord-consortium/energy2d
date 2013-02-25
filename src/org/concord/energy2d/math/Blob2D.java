@@ -13,6 +13,8 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A blob made of splines (by default, Catmull-Rom) going through a set of points. For efficiency, the splines will not be automatically recalculated when the points are modified.
@@ -30,6 +32,7 @@ public class Blob2D implements Shape {
 	private float invStep = 1f / steps;
 	private float[] px = new float[4];
 	private float[] py = new float[4];
+	private List<Point2D.Float> pathPoints;
 
 	/** the coordinates of the points */
 	public Blob2D(float[] x, float[] y) {
@@ -41,6 +44,7 @@ public class Blob2D implements Shape {
 		for (int i = 0; i < x.length; i++)
 			setPoint(i, x[i], y[i]);
 		path = new GeneralPath();
+		pathPoints = new ArrayList<Point2D.Float>();
 		update();
 	}
 
@@ -54,6 +58,7 @@ public class Blob2D implements Shape {
 		for (int i = 0; i < x.length; i++)
 			setPoint(i, x[i], y[i]);
 		path = new GeneralPath();
+		pathPoints = new ArrayList<Point2D.Float>();
 		update();
 	}
 
@@ -63,6 +68,7 @@ public class Blob2D implements Shape {
 		for (int i = 0; i < points.length; i++)
 			setPoint(i, p.xpoints[i], p.ypoints[i]);
 		path = new GeneralPath();
+		pathPoints = new ArrayList<Point2D.Float>();
 		update();
 	}
 
@@ -83,8 +89,10 @@ public class Blob2D implements Shape {
 
 	public void update() {
 		path.reset();
+		pathPoints.clear();
 		int n = points.length;
 		path.moveTo(points[n - 1].x, points[n - 1].y);
+		pathPoints.add(new Point2D.Float(points[n - 1].x, points[n - 1].y));
 		float u;
 		float sx, sy;
 		int index;
@@ -98,10 +106,23 @@ public class Blob2D implements Shape {
 				u = k * invStep;
 				sx = catmullrom(-2, u) * px[0] + catmullrom(-1, u) * px[1] + catmullrom(0, u) * px[2] + catmullrom(1, u) * px[3];
 				sy = catmullrom(-2, u) * py[0] + catmullrom(-1, u) * py[1] + catmullrom(0, u) * py[2] + catmullrom(1, u) * py[3];
-				path.lineTo(sx * 0.5f, sy * 0.5f);
+				sx *= 0.5f;
+				sy *= 0.5f;
+				path.lineTo(sx, sy);
+				pathPoints.add(new Point2D.Float(sx, sy));
 			}
 		}
 		path.closePath();
+	}
+
+	public int getPathPointCount() {
+		return pathPoints.size();
+	}
+
+	public Point2D.Float getPathPoint(int i) {
+		if (i < 0 || i >= pathPoints.size())
+			throw new IllegalArgumentException("index is out of bound.");
+		return pathPoints.get(i);
 	}
 
 	public void setPoint(int i, float x, float y) {

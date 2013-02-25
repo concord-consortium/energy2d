@@ -12,6 +12,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
+import org.concord.energy2d.math.Blob2D;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Cloud;
@@ -58,6 +59,28 @@ class HandleSetter {
 				float k = (float) n / (float) handle.length;
 				for (int i = 0; i < handle.length; i++) {
 					point = p.getVertex((int) (i * k));
+					handle[i].x = view.convertPointToPixelX(point.x) - h;
+					handle[i].y = view.convertPointToPixelY(point.y) - h;
+				}
+			}
+		} else if (s instanceof Blob2D) {
+			Blob2D b = (Blob2D) s;
+			int n = b.getPointCount();
+			Point2D.Float point;
+			if (n <= handle.length) {
+				for (int i = 0; i < handle.length; i++) {
+					if (i < n) {
+						point = b.getPoint(i);
+						handle[i].x = view.convertPointToPixelX(point.x) - h;
+						handle[i].y = view.convertPointToPixelY(point.y) - h;
+					} else {
+						handle[i].x = handle[i].y = -100;
+					}
+				}
+			} else {
+				float k = (float) n / (float) handle.length;
+				for (int i = 0; i < handle.length; i++) {
+					point = b.getPoint((int) (i * k));
 					handle[i].x = view.convertPointToPixelX(point.x) - h;
 					handle[i].y = view.convertPointToPixelY(point.y) - h;
 				}
