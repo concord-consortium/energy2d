@@ -19,18 +19,18 @@ import javax.swing.JOptionPane;
  * @author Charles Xie
  * 
  */
-final class UpdateManager {
+final class UpdateAnnouncer {
 
 	private final static String HOME = "http://energy.concord.org/energy2d/";
 
-	static void showUpdateReminder(System2D box) {
+	static void showMessage(System2D box) {
 		String s = getJarLocation();
 		if (!s.endsWith(".jar"))
 			return;
 		if (new File(s).lastModified() >= checkTimeStamp(HOME + "energy2d.jar"))
 			return;
-		String msg = "An update is available. Do you want to download the update now?";
-		if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), msg, "Update Notice", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		String msg = "An update is available. Do you want to download it now?";
+		if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), msg, "Update Energy2D", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			Helper.openBrowser(HOME + "download.html");
 			System.exit(0);
 		}
@@ -67,7 +67,9 @@ final class UpdateManager {
 		return jarLocation;
 	}
 
-	// Mac OS X returns java.class.path like : /Users/user/energy2d.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
+	/*
+	 * Mac OS X's Java 1.5.0_06 implementation returns things like : /Users/user/energy2d.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/.compatibility/14compatibility.jar
+	 */
 	private static String validateJarLocationOnMacOSX(String jarLocation) {
 		int i = jarLocation.indexOf(".jar:/");
 		if (i != -1)

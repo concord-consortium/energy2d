@@ -1065,7 +1065,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 		}
 
 		if (!launchedByJWS)
-			UpdateManager.showUpdateReminder(box);
+			UpdateAnnouncer.showMessage(box);
 
 	}
+
 }
