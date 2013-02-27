@@ -787,6 +787,7 @@ class MenuBar extends JMenuBar {
 		menu.add(subMenu);
 
 		templates.put("Solar Oven", "models/solar-oven.e2d");
+		templates.put("Trombe Wall", "models/trombe-wall-closeup.e2d");
 		templates.put("Heat Fins", "models/fin1.e2d");
 		templates.put("Coaxial Cable", "models/cable.e2d");
 		createMenu(box, subMenu, templates);

@@ -52,6 +52,7 @@ import org.concord.energy2d.event.ManipulationEvent;
 import org.concord.energy2d.event.ManipulationListener;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
+import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Model2D;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.model.Thermometer;
@@ -716,6 +717,8 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 				model.removeAnemometer((Anemometer) target);
 			else if (target instanceof Thermometer)
 				model.removeThermometer((Thermometer) target);
+			else if (target instanceof HeatFluxSensor)
+				model.removeHeatFluxSensor((HeatFluxSensor) target);
 			else if (target instanceof TextBox)
 				view.removeTextBox((TextBox) target);
 			else if (target instanceof Cloud)
