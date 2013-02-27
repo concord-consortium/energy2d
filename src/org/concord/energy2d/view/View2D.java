@@ -3342,6 +3342,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private void processComponentResized(ComponentEvent e) {
 		graphRenderer.setFrame(50, 50, getWidth() - 100, getHeight() - 100);
+		if (selectedManipulable != null)
+			setSelectedManipulable(selectedManipulable);
+		repaint();
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {

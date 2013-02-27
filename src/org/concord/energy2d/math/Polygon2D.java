@@ -6,7 +6,6 @@
 package org.concord.energy2d.math;
 
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
@@ -19,7 +18,7 @@ import java.awt.geom.Rectangle2D;
  * @author Charles Xie
  * 
  */
-public class Polygon2D implements Shape {
+public class Polygon2D implements TransformableShape {
 
 	private Point2D.Float[] vertex;
 	private GeneralPath path;
@@ -47,7 +46,7 @@ public class Polygon2D implements Shape {
 		return new Polygon2D(x, y);
 	}
 
-	private void updatePath() {
+	private void update() {
 		path.reset();
 		path.moveTo(vertex[0].x, vertex[0].y);
 		for (int i = 1; i < vertex.length; i++)
@@ -163,12 +162,12 @@ public class Polygon2D implements Shape {
 	}
 
 	public boolean intersects(Rectangle r) {
-		updatePath();
+		update();
 		return path.intersects(r);
 	}
 
 	public boolean contains(double x, double y) {
-		updatePath();
+		update();
 		return path.contains(x, y);
 	}
 
@@ -224,32 +223,32 @@ public class Polygon2D implements Shape {
 	}
 
 	public boolean contains(Rectangle2D r) {
-		updatePath();
+		update();
 		return path.contains(r);
 	}
 
 	public boolean contains(double x, double y, double w, double h) {
-		updatePath();
+		update();
 		return path.contains(x, y, w, h);
 	}
 
 	public PathIterator getPathIterator(AffineTransform at) {
-		updatePath();
+		update();
 		return path.getPathIterator(at);
 	}
 
 	public PathIterator getPathIterator(AffineTransform at, double flatness) {
-		updatePath();
+		update();
 		return path.getPathIterator(at, flatness);
 	}
 
 	public boolean intersects(Rectangle2D r) {
-		updatePath();
+		update();
 		return intersects(r);
 	}
 
 	public boolean intersects(double x, double y, double w, double h) {
-		updatePath();
+		update();
 		return intersects(x, y, w, h);
 	}
 

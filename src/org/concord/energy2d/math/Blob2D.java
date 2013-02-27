@@ -7,7 +7,6 @@ package org.concord.energy2d.math;
 
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
@@ -24,7 +23,7 @@ import java.util.List;
  * @author Charles Xie
  * 
  */
-public class Blob2D implements Shape {
+public class Blob2D implements TransformableShape {
 
 	private Point2D.Float[] points;
 	private GeneralPath path;

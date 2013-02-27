@@ -709,44 +709,44 @@ class MenuBar extends JMenuBar {
 
 		// template menu
 
-		menu = new JMenu("Templates");
+		menu = new JMenu("Examples");
 		add(menu);
 
 		JMenu subMenu = new JMenu("Heat and Temperature");
 		menu.add(subMenu);
 
-		LinkedHashMap<String, String> templates = new LinkedHashMap<String, String>();
-		templates.put("Thermal Equilibrium Between Identical Objects", "models/identical-heat-capacity.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Specific Heats", "models/different-specific-heat1.e2d");
-		templates.put("Thermal Equilibrium Between Objects with Different Densities", "models/different-density1.e2d");
-		templates.put("The Effect of Thermal Conductivity on Equilibration Speed", "models/different-conductivity.e2d");
-		templates.put("The Zeroth Law of Thermodynamics", "models/zeroth.e2d");
-		templates.put("The First Law of Thermodynamics", "models/conservation-of-energy.e2d");
-		createMenu(box, subMenu, templates);
+		LinkedHashMap<String, String> examples = new LinkedHashMap<String, String>();
+		examples.put("Thermal Equilibrium Between Identical Objects", "models/identical-heat-capacity.e2d");
+		examples.put("Thermal Equilibrium Between Objects with Different Specific Heats", "models/different-specific-heat1.e2d");
+		examples.put("Thermal Equilibrium Between Objects with Different Densities", "models/different-density1.e2d");
+		examples.put("The Effect of Thermal Conductivity on Equilibration Speed", "models/different-conductivity.e2d");
+		examples.put("The Zeroth Law of Thermodynamics", "models/zeroth.e2d");
+		examples.put("The First Law of Thermodynamics", "models/conservation-of-energy.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Conduction");
 		menu.add(subMenu);
 
-		templates.put("Comparing Thermal Conductivities", "models/conduction1.e2d");
-		templates.put("Comparing Conduction Areas", "models/conduction2.e2d");
-		templates.put("Comparing Temperature Differences", "models/conduction3.e2d");
-		templates.put("Comparing Conducting Distances", "models/conduction4.e2d");
-		templates.put("Comparing Specific Heats", "models/conduction5.e2d");
-		templates.put("The Series Circuit Analogy", "models/series-circuit-analogy.e2d");
-		templates.put("The Parallel Circuit Analogy", "models/parallel-circuit-analogy.e2d");
-		templates.put("Thermal Bridge", "models/thermal-bridge.e2d");
-		templates.put("Why We Feel Hot or Cold When Touching Something", "models/hand.e2d");
-		templates.put("Wood Spoon vs. Metal Spoon", "models/spoon.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Comparing Thermal Conductivities", "models/conduction1.e2d");
+		examples.put("Comparing Conduction Areas", "models/conduction2.e2d");
+		examples.put("Comparing Temperature Differences", "models/conduction3.e2d");
+		examples.put("Comparing Conducting Distances", "models/conduction4.e2d");
+		examples.put("Comparing Specific Heats", "models/conduction5.e2d");
+		examples.put("The Series Circuit Analogy", "models/series-circuit-analogy.e2d");
+		examples.put("The Parallel Circuit Analogy", "models/parallel-circuit-analogy.e2d");
+		examples.put("Thermal Bridge", "models/thermal-bridge.e2d");
+		examples.put("Why We Feel Hot or Cold When Touching Something", "models/hand.e2d");
+		examples.put("Wood Spoon vs. Metal Spoon", "models/spoon.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Convection");
 		menu.add(subMenu);
 
-		templates.put("Natural Convection", "models/natural-convection.e2d");
-		templates.put("Natural Convection with Different Temperatures", "models/natural-convection-temperature.e2d");
-		templates.put("Comparing Natural Convection and Conduction", "models/compare-convection-conduction.e2d");
-		templates.put("Comparing Forced Convection and Conduction", "models/forced-convection.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Natural Convection", "models/natural-convection.e2d");
+		examples.put("Natural Convection with Different Temperatures", "models/natural-convection-temperature.e2d");
+		examples.put("Comparing Natural Convection and Conduction", "models/compare-convection-conduction.e2d");
+		examples.put("Comparing Forced Convection and Conduction", "models/forced-convection.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Radiation");
 		menu.add(subMenu);
@@ -762,58 +762,58 @@ class MenuBar extends JMenuBar {
 		subMenu = new JMenu("Fluid Dynamics");
 		menu.add(subMenu);
 
-		templates.put("Bénard Cell", "models/benard-cell.e2d");
-		templates.put("Lid-Driven Cavity", "models/lid-driven-cavity.e2d");
-		templates.put("Smoke in Wind", "models/smoke-in-wind.e2d");
-		templates.put("Laminar/Turbulent Flow", "models/reynolds.e2d");
-		templates.put("Von Kármán Vortex Street", "models/vortex-street.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Bénard Cell", "models/benard-cell.e2d");
+		examples.put("Lid-Driven Cavity", "models/lid-driven-cavity.e2d");
+		examples.put("Smoke in Wind", "models/smoke-in-wind.e2d");
+		examples.put("Laminar/Turbulent Flow", "models/reynolds.e2d");
+		examples.put("Von Kármán Vortex Street", "models/vortex-street.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Building Energy Analysis");
 		menu.add(subMenu);
 
-		templates.put("Internal Heating", "models/internal-heater.e2d");
-		templates.put("Thermostats", "models/thermostat2.e2d");
-		templates.put("Infiltration", "models/infiltration.e2d");
-		templates.put("Wind Effect", "models/wind-effect.e2d");
-		templates.put("Solar Heating: Gable Roof", "models/solar-heating-gable-roof.e2d");
-		templates.put("Solar Heating: Shed Roof", "models/solar-heating-skillion-roof.e2d");
-		templates.put("Solar Heating: Two Stories", "models/solar-heating-two-story.e2d");
-		templates.put("Solar Heating: Convection", "models/solar-heating-convection.e2d");
-		templates.put("Solar Heating: Thermostat", "models/thermostat1.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Internal Heating", "models/internal-heater.e2d");
+		examples.put("Thermostats", "models/thermostat2.e2d");
+		examples.put("Infiltration", "models/infiltration.e2d");
+		examples.put("Wind Effect", "models/wind-effect.e2d");
+		examples.put("Solar Heating: Gable Roof", "models/solar-heating-gable-roof.e2d");
+		examples.put("Solar Heating: Shed Roof", "models/solar-heating-skillion-roof.e2d");
+		examples.put("Solar Heating: Two Stories", "models/solar-heating-two-story.e2d");
+		examples.put("Solar Heating: Convection", "models/solar-heating-convection.e2d");
+		examples.put("Solar Heating: Thermostat", "models/thermostat1.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Industrial Applications");
 		menu.add(subMenu);
 
-		templates.put("Solar Oven", "models/solar-oven.e2d");
-		templates.put("Trombe Wall", "models/trombe-wall-closeup.e2d");
-		templates.put("Heat Fins", "models/fin1.e2d");
-		templates.put("Coaxial Cable", "models/cable.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Solar Oven", "models/solar-oven.e2d");
+		examples.put("Trombe Wall", "models/trombe-wall-closeup.e2d");
+		examples.put("Heat Fins", "models/fin1.e2d");
+		examples.put("Coaxial Cable", "models/cable.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Earth Science");
 		menu.add(subMenu);
 
-		templates.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
-		templates.put("Sun & Clouds", "models/solar-cycles.e2d");
-		templates.put("USA Isotherm", "models/usa-isotherm.e2d");
-		templates.put("Mantle Convection", "models/mantle.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Solar Cycles", "models/solar-cycles-shadow.e2d");
+		examples.put("Sun & Clouds", "models/solar-cycles.e2d");
+		examples.put("USA Isotherm", "models/usa-isotherm.e2d");
+		examples.put("Mantle Convection", "models/mantle.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Boundary Conditions");
 		menu.add(subMenu);
 
-		templates.put("Fixed Temperature Boundary", "models/fixed-temperature-boundary.e2d");
-		templates.put("Fixed Heat Flux Boundary", "models/fixed-flux-boundary.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Fixed Temperature Boundary", "models/fixed-temperature-boundary.e2d");
+		examples.put("Fixed Heat Flux Boundary", "models/fixed-flux-boundary.e2d");
+		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Miscellaneous");
 		menu.add(subMenu);
 
-		templates.put("Ray Optics", "models/ray-optics.e2d");
-		templates.put("Thermoregulation", "models/thermoregulation.e2d");
-		createMenu(box, subMenu, templates);
+		examples.put("Ray Optics", "models/ray-optics.e2d");
+		examples.put("Thermoregulation", "models/thermoregulation.e2d");
+		createMenu(box, subMenu, examples);
 
 		menu.addSeparator();
 		if (!System.getProperty("os.name").startsWith("Linux")) {

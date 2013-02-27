@@ -37,8 +37,10 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import org.concord.energy2d.event.ManipulationEvent;
+import org.concord.energy2d.math.Blob2D;
 import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
+import org.concord.energy2d.math.TransformableShape;
 import org.concord.energy2d.model.Part;
 import org.concord.energy2d.util.MiscUtil;
 
@@ -234,39 +236,53 @@ class PartModelDialog extends JDialog {
 					if (!Float.isNaN(width) && !Float.isNaN(height)) {
 						view.resizeManipulableTo(part, xcenter - 0.5f * width, view.model.getLy() - ycenter - 0.5f * height, width, height, 0, 0);
 					}
-				} else if (shape instanceof Polygon2D) {
-					Polygon2D p = (Polygon2D) shape;
+				} else if (shape instanceof TransformableShape) {
+					TransformableShape s = (TransformableShape) shape;
 					if (!Float.isNaN(xcenter) && !Float.isNaN(ycenter)) {
-						p.flipY();
-						p.translateBy(xcenter - p.getCenter().x, ycenter - p.getCenter().y);
+						s.flipY();
+						s.translateBy(xcenter - s.getCenter().x, ycenter - s.getCenter().y);
 						float ly = view.model.getLy();
-						int n = p.getVertexCount();
-						Point2D.Float v;
-						for (int i = 0; i < n; i++) {
-							v = p.getVertex(i);
-							v.y = ly - v.y;
+						if (s instanceof Polygon2D) {
+							Polygon2D p = (Polygon2D) s;
+							int n = p.getVertexCount();
+							Point2D.Float v;
+							for (int i = 0; i < n; i++) {
+								v = p.getVertex(i);
+								v.y = ly - v.y;
+							}
+						} else if (s instanceof Blob2D) {
+							Blob2D b = (Blob2D) s;
+							int n = b.getPointCount();
+							Point2D.Float v;
+							for (int i = 0; i < n; i++) {
+								v = b.getPoint(i);
+								v.y = ly - v.y;
+							}
 						}
 					}
 					if (!Float.isNaN(degree) && degree != 0) {
-						p.rotateBy(degree);
+						s.rotateBy(degree);
 					}
 					if (!Float.isNaN(scaleX) && scaleX != 1) {
-						p.scaleX(scaleX);
+						s.scaleX(scaleX);
 					}
 					if (!Float.isNaN(scaleY) && scaleY != 1) {
-						p.scaleY(scaleY);
+						s.scaleY(scaleY);
 					}
 					if (!Float.isNaN(shearX) && shearX != 0) {
-						p.shearX(shearX);
+						s.shearX(shearX);
 					}
 					if (!Float.isNaN(shearY) && shearY != 0) {
-						p.shearY(shearY);
+						s.shearY(shearY);
 					}
 					if (flipXCheckBox.isSelected()) {
-						p.flipX();
+						s.flipX();
 					}
 					if (flipYCheckBox.isSelected()) {
-						p.flipY();
+						s.flipY();
+					}
+					if (s instanceof Blob2D) {
+						((Blob2D) s).update();
 					}
 				} else if (shape instanceof Ring2D) {
 					if (!Float.isNaN(innerDiameter) && !Float.isNaN(outerDiameter)) {
@@ -353,7 +369,7 @@ class PartModelDialog extends JDialog {
 			p.add(new JLabel("<html><i>m</i></html>"));
 			count++;
 
-		} else if (shape instanceof Polygon2D) {
+		} else if (shape instanceof TransformableShape) {
 
 			p.add(new JLabel("Rotate"));
 			angleField = new JTextField("0");
