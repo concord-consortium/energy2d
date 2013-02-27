@@ -149,7 +149,7 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 </part>
-<part><rectangle x="1.9" y="1.9499991" width="0.1" height="1.6"/><thermal_conductivity>0.1</thermal_conductivity>
+<part><rectangle x="1.9499999" y="1.9499991" width="0.1" height="1.6"/><thermal_conductivity>0.1</thermal_conductivity>
 <specific_heat>1000.0</specific_heat>
 <density>10.0</density>
 <transmission>0.0</transmission>
@@ -201,8 +201,8 @@
 <thermometer label="T1" x="2.95" y="3.65"/>
 <thermometer label="T2" x="3.05" y="1.8000001"/>
 <thermometer label="T3" x="1.775" y="2.8249986"/>
-<anemometer x="2.7" y="3.65"/>
-<anemometer x="2.75" y="1.85"/>
+<anemometer label="A1" x="2.3000004" y="3.65"/>
+<anemometer label="A2" x="2.3000004" y="1.8499999"/>
 </sensor>
 <controller>
 </controller>

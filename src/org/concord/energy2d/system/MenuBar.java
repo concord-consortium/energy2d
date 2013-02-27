@@ -746,6 +746,7 @@ class MenuBar extends JMenuBar {
 		examples.put("Natural Convection with Different Temperatures", "models/natural-convection-temperature.e2d");
 		examples.put("Comparing Natural Convection and Conduction", "models/compare-convection-conduction.e2d");
 		examples.put("Comparing Forced Convection and Conduction", "models/forced-convection.e2d");
+		examples.put("Stack Effect", "models/stack-effect.e2d");
 		createMenu(box, subMenu, examples);
 
 		subMenu = new JMenu("Radiation");
