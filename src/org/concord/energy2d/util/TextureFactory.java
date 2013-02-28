@@ -14,6 +14,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * @author Charles Xie
@@ -28,6 +29,7 @@ public final class TextureFactory {
 	public final static byte SMALL = 101;
 	public final static byte MEDIUM = 102;
 	public final static byte LARGE = 103;
+	public final static byte HUGE = 104;
 
 	public final static byte POLKA = 1;
 	public final static byte MOSIAC = 2;
@@ -50,11 +52,48 @@ public final class TextureFactory {
 	public final static byte HORIZONTAL_LATTICE = 19;
 	public final static byte TRIANGLE_HALF = 20;
 	public final static byte DICE = 21;
-	public final static byte WAVE = 22;
+	public final static byte DIAGONAL_CROSS = 22;
 
-	final static byte[] STYLE_ARRAY = new byte[] { POLKA, POLKA, MOSIAC, MOSIAC, POSITIVE, NEGATIVE, STARRY, CIRCULAR, HORIZONTAL_STRIPE, HORIZONTAL_STRIPE, VERTICAL_STRIPE, VERTICAL_STRIPE, DIAGONAL_UP_STRIPE, DIAGONAL_UP_STRIPE, DIAGONAL_DOWN_STRIPE, DIAGONAL_DOWN_STRIPE, GRID, GRID, HORIZONTAL_BRICK, HORIZONTAL_BRICK, DENSITY50, DENSITY25, DENSITY5, DENSITY95, DENSITY5, DENSITY95, CIRCLE_CONTACT, CIRCLE_CONTACT, CIRCLE_SEPARATE, CIRCLE_SEPARATE, HORIZONTAL_LATTICE, HORIZONTAL_LATTICE, DICE, DICE, TRIANGLE_HALF, WAVE };
+	final static ArrayList<TextureCode> textureList = new ArrayList<TextureCode>();
 
-	final static byte[] SIZE_ARRAY = new byte[] { SMALL, MEDIUM, SMALL, MEDIUM, MEDIUM, MEDIUM, LARGE, LARGE, SMALL, MEDIUM, SMALL, MEDIUM, MEDIUM, LARGE, MEDIUM, LARGE, SMALL, MEDIUM, MEDIUM, LARGE, SMALL, SMALL, SMALL, SMALL, LARGE, LARGE, MEDIUM, LARGE, MEDIUM, LARGE, MEDIUM, LARGE, MEDIUM, LARGE, MEDIUM, LARGE };
+	static {
+		textureList.add(new TextureCode(POLKA, SMALL));
+		textureList.add(new TextureCode(POLKA, MEDIUM));
+		textureList.add(new TextureCode(MOSIAC, SMALL));
+		textureList.add(new TextureCode(MOSIAC, MEDIUM));
+		textureList.add(new TextureCode(POSITIVE, MEDIUM));
+		textureList.add(new TextureCode(NEGATIVE, MEDIUM));
+		textureList.add(new TextureCode(STARRY, LARGE));
+		textureList.add(new TextureCode(CIRCULAR, LARGE));
+		textureList.add(new TextureCode(HORIZONTAL_STRIPE, SMALL));
+		textureList.add(new TextureCode(HORIZONTAL_STRIPE, MEDIUM));
+		textureList.add(new TextureCode(VERTICAL_STRIPE, SMALL));
+		textureList.add(new TextureCode(VERTICAL_STRIPE, MEDIUM));
+		textureList.add(new TextureCode(DIAGONAL_UP_STRIPE, MEDIUM));
+		textureList.add(new TextureCode(DIAGONAL_UP_STRIPE, LARGE));
+		textureList.add(new TextureCode(DIAGONAL_DOWN_STRIPE, MEDIUM));
+		textureList.add(new TextureCode(DIAGONAL_DOWN_STRIPE, LARGE));
+		textureList.add(new TextureCode(GRID, SMALL));
+		textureList.add(new TextureCode(GRID, MEDIUM));
+		textureList.add(new TextureCode(HORIZONTAL_BRICK, MEDIUM));
+		textureList.add(new TextureCode(HORIZONTAL_BRICK, LARGE));
+		textureList.add(new TextureCode(DENSITY50, SMALL));
+		textureList.add(new TextureCode(DENSITY25, SMALL));
+		textureList.add(new TextureCode(DENSITY5, SMALL));
+		textureList.add(new TextureCode(DENSITY95, SMALL));
+		textureList.add(new TextureCode(DENSITY5, LARGE));
+		textureList.add(new TextureCode(DENSITY95, LARGE));
+		textureList.add(new TextureCode(CIRCLE_CONTACT, MEDIUM));
+		textureList.add(new TextureCode(CIRCLE_CONTACT, LARGE));
+		textureList.add(new TextureCode(CIRCLE_SEPARATE, MEDIUM));
+		textureList.add(new TextureCode(CIRCLE_SEPARATE, MEDIUM));
+		textureList.add(new TextureCode(HORIZONTAL_LATTICE, MEDIUM));
+		textureList.add(new TextureCode(HORIZONTAL_LATTICE, LARGE));
+		textureList.add(new TextureCode(DICE, MEDIUM));
+		textureList.add(new TextureCode(DIAGONAL_CROSS, LARGE));
+		textureList.add(new TextureCode(DIAGONAL_CROSS, MEDIUM));
+		textureList.add(new TextureCode(TRIANGLE_HALF, MEDIUM));
+	}
 
 	private static Rectangle r = new Rectangle();
 
@@ -289,12 +328,12 @@ public final class TextureFactory {
 			g.fillPolygon(triangle);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case WAVE:
+		case DIAGONAL_CROSS:
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
-			g.drawLine(0, 0, w / 2, h / 2);
-			g.drawLine(w / 2, h / 2, w, 0);
+			g.drawLine(0, 0, w, h);
+			g.drawLine(w, 0, 0, h);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		}

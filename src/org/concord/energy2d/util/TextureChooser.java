@@ -173,7 +173,7 @@ public class TextureChooser extends JTabbedPane {
 
 		JPanel p = new JPanel(new BorderLayout(10, 10));
 
-		int size = TextureFactory.STYLE_ARRAY.length;
+		int size = TextureFactory.textureList.size();
 		int grid = (int) Math.sqrt(size + 0.0001);
 
 		JPanel texturePanel = new JPanel(new GridLayout(grid, grid * grid < size ? grid + 1 : grid, 2, 2));
@@ -182,7 +182,8 @@ public class TextureChooser extends JTabbedPane {
 		pp = new TexturePanel[size];
 		int cell = 10;
 		for (int i = 0; i < pp.length; i++) {
-			switch (TextureFactory.SIZE_ARRAY[i]) {
+			TextureCode tc = TextureFactory.textureList.get(i);
+			switch (tc.size) {
 			case TextureFactory.SMALL:
 				cell = 4;
 				break;
@@ -192,8 +193,11 @@ public class TextureChooser extends JTabbedPane {
 			case TextureFactory.LARGE:
 				cell = 12;
 				break;
+			case TextureFactory.HUGE:
+				cell = 24;
+				break;
 			}
-			pp[i] = new TexturePanel(TextureFactory.STYLE_ARRAY[i], cell, cell);
+			pp[i] = new TexturePanel(tc.style, cell, cell);
 			texturePanel.add(pp[i]);
 			final int ii = i;
 			pp[i].addMouseListener(new MouseAdapter() {
