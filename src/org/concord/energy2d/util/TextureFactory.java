@@ -92,7 +92,7 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(DICE, MEDIUM));
 		textureList.add(new TextureCode(DIAGONAL_CROSS, LARGE));
 		textureList.add(new TextureCode(DIAGONAL_CROSS, MEDIUM));
-		textureList.add(new TextureCode(TRIANGLE_HALF, MEDIUM));
+		textureList.add(new TextureCode(TRIANGLE_HALF, SMALL));
 	}
 
 	private static Rectangle r = new Rectangle();
@@ -168,11 +168,11 @@ public final class TextureFactory {
 		case DENSITY50:
 			g.setColor(c1);
 			g.fillRect(0, 0, w, h);
-			for (int i = 0; i < w / 2; i++) {
-				for (int j = 0; j < h / 2; j++) {
-					g.setColor(c2);
-					g.fillRect(2 * i + 1, 2 * j, 1, 1);
-					g.fillRect(2 * i, 2 * j + 1, 1, 1);
+			g.setColor(c2);
+			for (int i = 0; i < w / 4; i++) {
+				for (int j = 0; j < h / 4; j++) {
+					g.fillRect(4 * i + 1, 4 * j, 2, 2);
+					g.fillRect(4 * i, 4 * j + 1, 2, 2);
 				}
 			}
 			r.setBounds(0, 0, w, h);

@@ -20,6 +20,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -46,7 +48,6 @@ public class TextureChooser extends JTabbedPane {
 
 	public TextureChooser() {
 		super();
-		setPreferredSize(new Dimension(300, 300));
 		addTab("Texture", createTexturePanel());
 	}
 
@@ -173,10 +174,55 @@ public class TextureChooser extends JTabbedPane {
 
 		JPanel p = new JPanel(new BorderLayout(10, 10));
 
-		int size = TextureFactory.textureList.size();
-		int grid = (int) Math.sqrt(size + 0.0001);
+		final int size = TextureFactory.textureList.size();
+		final int grid = (int) Math.sqrt(size + 0.0001);
 
-		JPanel texturePanel = new JPanel(new GridLayout(grid, grid * grid < size ? grid + 1 : grid, 2, 2));
+		final JPanel texturePanel = new JPanel(new GridLayout(grid, grid * grid < size ? grid + 1 : grid, 2, 2));
+		texturePanel.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				int iSelected = -1;
+				for (int k = 0; k < pp.length; k++) {
+					if (pp[k].isSelected())
+						iSelected = k;
+				}
+				if (iSelected == -1)
+					return;
+				switch (e.getKeyCode()) {
+				case KeyEvent.VK_UP:
+					if (iSelected >= grid) {
+						pp[iSelected].setSelected(false);
+						iSelected -= grid;
+						pp[iSelected].setSelected(true);
+						texturePanel.repaint();
+					}
+					break;
+				case KeyEvent.VK_DOWN:
+					if (iSelected < size - grid) {
+						pp[iSelected].setSelected(false);
+						iSelected += grid;
+						pp[iSelected].setSelected(true);
+						texturePanel.repaint();
+					}
+					break;
+				case KeyEvent.VK_LEFT:
+					if (iSelected > 0) {
+						pp[iSelected].setSelected(false);
+						iSelected--;
+						pp[iSelected].setSelected(true);
+						texturePanel.repaint();
+					}
+					break;
+				case KeyEvent.VK_RIGHT:
+					if (iSelected < size - 1) {
+						pp[iSelected].setSelected(false);
+						iSelected++;
+						pp[iSelected].setSelected(true);
+						texturePanel.repaint();
+					}
+					break;
+				}
+			}
+		});
 		p.add(texturePanel, BorderLayout.CENTER);
 
 		pp = new TexturePanel[size];
@@ -194,7 +240,7 @@ public class TextureChooser extends JTabbedPane {
 				cell = 12;
 				break;
 			case TextureFactory.HUGE:
-				cell = 24;
+				cell = 36;
 				break;
 			}
 			pp[i] = new TexturePanel(tc.style, cell, cell);
@@ -206,6 +252,7 @@ public class TextureChooser extends JTabbedPane {
 						pp[k].setSelected(k == ii);
 						pp[k].repaint();
 					}
+					texturePanel.requestFocusInWindow();
 				}
 			});
 		}
@@ -291,6 +338,7 @@ public class TextureChooser extends JTabbedPane {
 			this.style = style;
 			this.cellWidth = cellWidth;
 			this.cellHeight = cellHeight;
+			setPreferredSize(new Dimension(36, 36));
 		}
 
 		public void setStyle(byte i) {
