@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 public final class TextureFactory {
 
-	private final static BasicStroke xxxx = new BasicStroke(.5f);
-	private final static BasicStroke thin = new BasicStroke(1.f);
+	private final static BasicStroke ultrathin = new BasicStroke(.5f);
+	private final static BasicStroke thin = new BasicStroke(1);
 
 	public final static byte SMALL = 101;
 	public final static byte MEDIUM = 102;
@@ -86,7 +86,7 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(CIRCLE_CONTACT, MEDIUM));
 		textureList.add(new TextureCode(CIRCLE_CONTACT, LARGE));
 		textureList.add(new TextureCode(CIRCLE_SEPARATE, MEDIUM));
-		textureList.add(new TextureCode(CIRCLE_SEPARATE, MEDIUM));
+		textureList.add(new TextureCode(CIRCLE_SEPARATE, LARGE));
 		textureList.add(new TextureCode(HORIZONTAL_LATTICE, MEDIUM));
 		textureList.add(new TextureCode(HORIZONTAL_LATTICE, LARGE));
 		textureList.add(new TextureCode(DICE, MEDIUM));
@@ -247,7 +247,7 @@ public final class TextureFactory {
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
-			g.setStroke(xxxx);
+			g.setStroke(ultrathin);
 			g.drawLine(0, h - 1, w - 1, 0);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
@@ -255,7 +255,7 @@ public final class TextureFactory {
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
-			g.setStroke(xxxx);
+			g.setStroke(ultrathin);
 			g.drawLine(0, 0, w, h);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
