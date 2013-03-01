@@ -45,26 +45,19 @@ public final class TextureFactory {
 	public final static byte HORIZONTAL_BRICK = 12;
 	public final static byte DENSITY50 = 13;
 	public final static byte DENSITY25 = 14;
-	public final static byte DENSITY5 = 15;
+	public final static byte CONCRETE = 15;
 	public final static byte DENSITY95 = 16;
-	public final static byte CIRCLE_CONTACT = 17;
-	public final static byte CIRCLE_SEPARATE = 18;
+	public final static byte SINGLE_CIRCLE = 17;
+	public final static byte DOUBLE_CIRCLES = 18;
 	public final static byte HORIZONTAL_LATTICE = 19;
 	public final static byte TRIANGLE_HALF = 20;
 	public final static byte DICE = 21;
 	public final static byte DIAGONAL_CROSS = 22;
+	public final static byte STONE = 23;
 
 	final static ArrayList<TextureCode> textureList = new ArrayList<TextureCode>();
 
 	static {
-		textureList.add(new TextureCode(POLKA, SMALL));
-		textureList.add(new TextureCode(POLKA, MEDIUM));
-		textureList.add(new TextureCode(MOSIAC, SMALL));
-		textureList.add(new TextureCode(MOSIAC, MEDIUM));
-		textureList.add(new TextureCode(POSITIVE, MEDIUM));
-		textureList.add(new TextureCode(NEGATIVE, MEDIUM));
-		textureList.add(new TextureCode(STARRY, LARGE));
-		textureList.add(new TextureCode(CIRCULAR, LARGE));
 		textureList.add(new TextureCode(HORIZONTAL_STRIPE, SMALL));
 		textureList.add(new TextureCode(HORIZONTAL_STRIPE, MEDIUM));
 		textureList.add(new TextureCode(VERTICAL_STRIPE, SMALL));
@@ -79,20 +72,28 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(HORIZONTAL_BRICK, LARGE));
 		textureList.add(new TextureCode(DENSITY50, SMALL));
 		textureList.add(new TextureCode(DENSITY25, SMALL));
-		textureList.add(new TextureCode(DENSITY5, SMALL));
 		textureList.add(new TextureCode(DENSITY95, SMALL));
-		textureList.add(new TextureCode(DENSITY5, LARGE));
 		textureList.add(new TextureCode(DENSITY95, LARGE));
-		textureList.add(new TextureCode(CIRCLE_CONTACT, MEDIUM));
-		textureList.add(new TextureCode(CIRCLE_CONTACT, LARGE));
-		textureList.add(new TextureCode(CIRCLE_SEPARATE, MEDIUM));
-		textureList.add(new TextureCode(CIRCLE_SEPARATE, LARGE));
+		textureList.add(new TextureCode(SINGLE_CIRCLE, MEDIUM));
+		textureList.add(new TextureCode(SINGLE_CIRCLE, LARGE));
+		textureList.add(new TextureCode(DOUBLE_CIRCLES, MEDIUM));
+		textureList.add(new TextureCode(DOUBLE_CIRCLES, LARGE));
 		textureList.add(new TextureCode(HORIZONTAL_LATTICE, MEDIUM));
 		textureList.add(new TextureCode(HORIZONTAL_LATTICE, LARGE));
 		textureList.add(new TextureCode(DICE, MEDIUM));
 		textureList.add(new TextureCode(DIAGONAL_CROSS, LARGE));
 		textureList.add(new TextureCode(DIAGONAL_CROSS, MEDIUM));
 		textureList.add(new TextureCode(TRIANGLE_HALF, SMALL));
+		textureList.add(new TextureCode(POLKA, SMALL));
+		textureList.add(new TextureCode(POLKA, MEDIUM));
+		textureList.add(new TextureCode(MOSIAC, SMALL));
+		textureList.add(new TextureCode(MOSIAC, MEDIUM));
+		textureList.add(new TextureCode(POSITIVE, MEDIUM));
+		textureList.add(new TextureCode(NEGATIVE, MEDIUM));
+		textureList.add(new TextureCode(STARRY, LARGE));
+		textureList.add(new TextureCode(CIRCULAR, LARGE));
+		textureList.add(new TextureCode(CONCRETE, HUGE));
+		textureList.add(new TextureCode(STONE, HUGE));
 	}
 
 	private static Rectangle r = new Rectangle();
@@ -188,14 +189,37 @@ public final class TextureFactory {
 			}
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case DENSITY5:
-			x = w / 2 + 1;
-			y = h / 2 + 1;
-			g.setColor(c1);
-			g.fillRect(0, 0, w, h);
+		case CONCRETE:
 			g.setColor(c2);
-			g.fillRect(1, y, 1, 1);
-			g.fillRect(x, 1, 1, 1);
+			g.fillRect(0, 0, w, h);
+			g.setColor(c1);
+			g.drawOval(5, 8, 6, 5);
+			g.drawOval(15, 20, 5, 6);
+			g.drawOval(25, 10, 4, 4);
+			g.drawOval(27, 29, 4, 3);
+			g.drawOval(3, 26, 3, 5);
+			g.drawRect(4, 14, 1, 1);
+			g.drawRect(17, 32, 1, 1);
+			g.drawRect(5, 26, 1, 1);
+			g.drawRect(13, 27, 1, 1);
+			g.drawRect(24, 24, 1, 1);
+			g.drawRect(21, 2, 1, 1);
+			g.drawRect(17, 5, 1, 1);
+			g.drawRect(22, 15, 1, 1);
+			g.drawRect(9, 27, 1, 1);
+			g.drawRect(31, 8, 1, 1);
+			g.drawRect(11, 15, 1, 1);
+			g.drawRect(18, 11, 1, 1);
+			g.drawRect(23, 8, 1, 1);
+			g.drawRect(3, 5, 1, 1);
+			g.drawRect(8, 17, 1, 1);
+			g.drawRect(31, 19, 1, 1);
+			g.drawRect(11, 31, 1, 1);
+			g.drawRect(8, 4, 1, 1);
+			g.drawRect(3, 19, 1, 1);
+			g.drawRect(22, 27, 1, 1);
+			g.drawRect(3, 33, 1, 1);
+			g.drawRect(23, 17, 1, 1);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		case DENSITY95:
@@ -281,14 +305,14 @@ public final class TextureFactory {
 			g.drawLine(x, y, x, h);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case CIRCLE_CONTACT:
+		case SINGLE_CIRCLE:
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
 			g.drawOval(0, 0, w, h);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case CIRCLE_SEPARATE:
+		case DOUBLE_CIRCLES:
 			x = w / 4;
 			y = h / 4;
 			g.setColor(c2);
@@ -334,6 +358,26 @@ public final class TextureFactory {
 			g.setColor(c1);
 			g.drawLine(0, 0, w, h);
 			g.drawLine(w, 0, 0, h);
+			r.setBounds(0, 0, w, h);
+			return new TexturePaint(bi, r);
+		case STONE:
+			g.setColor(c2);
+			g.fillRect(0, 0, w, h);
+			g.setColor(c1);
+			g.drawLine(5, 0, 6, 7);
+			g.drawLine(6, 7, 0, 10);
+			g.drawLine(6, 7, 18, 10);
+			g.drawLine(18, 10, 23, 0);
+			g.drawLine(18, 10, 20, 21);
+			g.drawLine(20, 21, 20, 30);
+			g.drawLine(20, 21, 35, 20);
+			g.drawLine(35, 20, 30, 35);
+			g.drawLine(35, 20, 35, 9);
+			g.drawLine(35, 9, 29, 0);
+			g.drawLine(20, 30, 23, 35);
+			g.drawLine(20, 30, 9, 30);
+			g.drawLine(9, 30, 5, 35);
+			g.drawLine(9, 30, 0, 20);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		}
