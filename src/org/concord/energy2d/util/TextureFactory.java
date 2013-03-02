@@ -53,7 +53,7 @@ public final class TextureFactory {
 	public final static byte TRIANGLE_HALF = 20;
 	public final static byte DICE = 21;
 	public final static byte DIAGONAL_CROSS = 22;
-	public final static byte STONE = 23;
+	public final static byte STONE_WALL = 23;
 
 	final static ArrayList<TextureCode> textureList = new ArrayList<TextureCode>();
 
@@ -93,7 +93,7 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(STARRY, LARGE));
 		textureList.add(new TextureCode(CIRCULAR, LARGE));
 		textureList.add(new TextureCode(CONCRETE, HUGE));
-		textureList.add(new TextureCode(STONE, HUGE));
+		textureList.add(new TextureCode(STONE_WALL, HUGE));
 	}
 
 	private static Rectangle r = new Rectangle();
@@ -360,24 +360,32 @@ public final class TextureFactory {
 			g.drawLine(w, 0, 0, h);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case STONE:
+		case STONE_WALL:
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
 			g.drawLine(5, 0, 6, 7);
 			g.drawLine(6, 7, 0, 10);
-			g.drawLine(6, 7, 18, 10);
-			g.drawLine(18, 10, 23, 0);
-			g.drawLine(18, 10, 20, 21);
-			g.drawLine(20, 21, 20, 30);
-			g.drawLine(20, 21, 35, 20);
-			g.drawLine(35, 20, 30, 35);
-			g.drawLine(35, 20, 35, 9);
+			g.drawLine(6, 7, 16, 9);
+			g.drawLine(16, 9, 23, 0);
+			g.drawLine(16, 9, 15, 18);
+			g.drawLine(15, 18, 20, 22);
+			g.drawLine(15, 18, 4, 25);
+			g.drawLine(4, 25, 0, 20);
+			g.drawLine(4, 25, 8, 30);
+			g.drawLine(9, 30, 4, 35);
+			g.drawLine(9, 30, 19, 31);
+			g.drawLine(19, 31, 23, 35);
+			g.drawLine(19, 31, 20, 22);
+			g.drawLine(20, 22, 29, 18);
+			g.drawLine(29, 18, 31, 11);
+			g.drawLine(31, 11, 19, 6);
+			g.drawLine(31, 11, 35, 9);
+			g.drawLine(35, 9, 35, 19);
 			g.drawLine(35, 9, 29, 0);
-			g.drawLine(20, 30, 23, 35);
-			g.drawLine(20, 30, 9, 30);
-			g.drawLine(9, 30, 5, 35);
-			g.drawLine(9, 30, 0, 20);
+			g.drawLine(29, 0, 23, 0);
+			g.drawLine(35, 19, 29, 35);
+			g.drawLine(35, 19, 29, 18);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		}
