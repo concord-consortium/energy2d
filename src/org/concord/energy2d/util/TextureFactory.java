@@ -12,7 +12,10 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.TexturePaint;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -396,6 +399,86 @@ public final class TextureFactory {
 			return new TexturePaint(bi, r);
 		}
 		return null;
+	}
+
+	/** draw special representations such as standard fill patterns for insulations */
+	public static void renderSpecialCases(Shape s, Texture tex, Graphics2D g) {
+		if (s instanceof Rectangle) {
+			Rectangle r = (Rectangle) s;
+			if (tex.getStyle() == TextureFactory.INSULATION) {
+				g.setColor(new Color(tex.getForeground()));
+				int m = 20; // default number of repeats
+				int minLength = 20;
+				Arc2D.Float arc = new Arc2D.Float();
+				Line2D.Float line = new Line2D.Float();
+				if (r.width > r.height) {
+					float a = (float) r.width / (float) m;
+					if (a < minLength) {
+						m = Math.round((float) r.width / (float) minLength);
+						a = (float) r.width / (float) m;
+					}
+					float b = (float) r.height / 3f;
+					arc.width = a;
+					arc.height = b;
+					float u = r.x;
+					for (int i = 0; i < m; i++) {
+						arc.x = u;
+						arc.y = r.y;
+						arc.start = 0;
+						arc.extent = 180;
+						g.draw(arc);
+						line.x1 = u;
+						line.y1 = r.y + b * 0.5f;
+						line.x2 = u + a * 0.5f;
+						line.y2 = r.y + r.height - b * 0.5f;
+						g.draw(line);
+						line.x1 = u + a;
+						g.draw(line);
+						arc.x = u - a * 0.5f;
+						arc.y = r.y + r.height - b;
+						arc.extent = -91;
+						g.draw(arc);
+						arc.x = u + a * 0.5f;
+						arc.start = 270;
+						g.draw(arc);
+						u += a;
+					}
+				} else {
+					float a = (float) r.height / (float) m;
+					if (a < minLength) {
+						m = Math.round((float) r.height / (float) minLength);
+						a = (float) r.height / (float) m;
+					}
+					float b = (float) r.width / 3f;
+					arc.width = b;
+					arc.height = a;
+					float v = r.y;
+					for (int i = 0; i < m; i++) {
+						arc.y = v;
+						arc.x = r.x;
+						arc.start = 90;
+						arc.extent = 180;
+						g.draw(arc);
+						line.y1 = v;
+						line.x1 = r.x + b * 0.5f;
+						line.y2 = v + a * 0.5f;
+						line.x2 = r.x + r.width - b * 0.5f;
+						g.draw(line);
+						line.y1 = v + a;
+						g.draw(line);
+						arc.y = v - a * 0.5f;
+						arc.x = r.x + r.width - b;
+						arc.start = 0;
+						arc.extent = -91;
+						g.draw(arc);
+						arc.y = v + a * 0.5f;
+						arc.start = 90;
+						g.draw(arc);
+						v += a;
+					}
+				}
+			}
+		}
 	}
 
 }
