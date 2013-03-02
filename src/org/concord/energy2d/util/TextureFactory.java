@@ -43,10 +43,10 @@ public final class TextureFactory {
 	public final static byte DIAGONAL_DOWN_STRIPE = 10;
 	public final static byte GRID = 11;
 	public final static byte HORIZONTAL_BRICK = 12;
-	public final static byte DENSITY50 = 13;
-	public final static byte DENSITY25 = 14;
+	public final static byte INSULATION = 13;
+	public final static byte FINE_SCREEN = 14;
 	public final static byte CONCRETE = 15;
-	public final static byte DENSITY95 = 16;
+	public final static byte DOT_ARRAY = 16;
 	public final static byte SINGLE_CIRCLE = 17;
 	public final static byte DOUBLE_CIRCLES = 18;
 	public final static byte HORIZONTAL_LATTICE = 19;
@@ -70,10 +70,10 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(GRID, MEDIUM));
 		textureList.add(new TextureCode(HORIZONTAL_BRICK, MEDIUM));
 		textureList.add(new TextureCode(HORIZONTAL_BRICK, LARGE));
-		textureList.add(new TextureCode(DENSITY50, SMALL));
-		textureList.add(new TextureCode(DENSITY25, SMALL));
-		textureList.add(new TextureCode(DENSITY95, SMALL));
-		textureList.add(new TextureCode(DENSITY95, LARGE));
+		textureList.add(new TextureCode(CONCRETE, HUGE));
+		textureList.add(new TextureCode(STONE_WALL, HUGE));
+		textureList.add(new TextureCode(DOT_ARRAY, SMALL));
+		textureList.add(new TextureCode(DOT_ARRAY, LARGE));
 		textureList.add(new TextureCode(SINGLE_CIRCLE, MEDIUM));
 		textureList.add(new TextureCode(SINGLE_CIRCLE, LARGE));
 		textureList.add(new TextureCode(DOUBLE_CIRCLES, MEDIUM));
@@ -92,8 +92,8 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(NEGATIVE, MEDIUM));
 		textureList.add(new TextureCode(STARRY, LARGE));
 		textureList.add(new TextureCode(CIRCULAR, LARGE));
-		textureList.add(new TextureCode(CONCRETE, HUGE));
-		textureList.add(new TextureCode(STONE_WALL, HUGE));
+		textureList.add(new TextureCode(FINE_SCREEN, MEDIUM));
+		textureList.add(new TextureCode(INSULATION, MEDIUM));
 	}
 
 	private static Rectangle r = new Rectangle();
@@ -166,24 +166,12 @@ public final class TextureFactory {
 			g.drawLine(w / 2 - 1, 2, w / 2 + 1, 2);
 			r.setBounds(0, 0, w - 2, h - 2);
 			return new TexturePaint(bi, r);
-		case DENSITY50:
-			g.setColor(c1);
-			g.fillRect(0, 0, w, h);
+		case FINE_SCREEN:
 			g.setColor(c2);
-			for (int i = 0; i < w / 4; i++) {
-				for (int j = 0; j < h / 4; j++) {
-					g.fillRect(4 * i + 1, 4 * j, 2, 2);
-					g.fillRect(4 * i, 4 * j + 1, 2, 2);
-				}
-			}
-			r.setBounds(0, 0, w, h);
-			return new TexturePaint(bi, r);
-		case DENSITY25:
-			g.setColor(c1);
 			g.fillRect(0, 0, w, h);
+			g.setColor(c1);
 			for (int i = 0; i < w / 2; i++) {
 				for (int j = 0; j < h / 2; j++) {
-					g.setColor(c2);
 					g.fillRect(2 * i, 2 * j, 1, 1);
 				}
 			}
@@ -222,7 +210,7 @@ public final class TextureFactory {
 			g.drawRect(23, 17, 1, 1);
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
-		case DENSITY95:
+		case DOT_ARRAY:
 			x = w / 2 + 1;
 			y = h / 2 + 1;
 			g.setColor(c2);
@@ -233,16 +221,15 @@ public final class TextureFactory {
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		case STARRY:
-			g.setColor(c1);
+			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
+			g.setColor(c1);
 			for (int i = 0; i < w / 2; i++) {
 				for (int j = 0; j < h / 2; j++) {
-					g.setColor(c2);
 					g.fillRect(2 * i + 1, 2 * j, 1, 1);
 					g.fillRect(2 * i, 2 * j + 1, 1, 1);
 				}
 			}
-			g.setColor(c2);
 			x = w / 2 + 2;
 			y = h / 2 + 2;
 			g.drawLine(1, y, 3, y);
@@ -374,6 +361,7 @@ public final class TextureFactory {
 			g.drawLine(4, 25, 0, 20);
 			g.drawLine(4, 25, 8, 30);
 			g.drawLine(9, 30, 4, 35);
+			g.drawLine(4, 35, 0, 33);
 			g.drawLine(9, 30, 19, 31);
 			g.drawLine(19, 31, 23, 35);
 			g.drawLine(19, 31, 20, 22);
@@ -381,11 +369,24 @@ public final class TextureFactory {
 			g.drawLine(29, 18, 31, 11);
 			g.drawLine(31, 11, 19, 6);
 			g.drawLine(31, 11, 35, 9);
-			g.drawLine(35, 9, 35, 19);
+			g.drawLine(35, 20, 29, 27);
+			g.drawLine(29, 27, 35, 33);
 			g.drawLine(35, 9, 29, 0);
 			g.drawLine(29, 0, 23, 0);
-			g.drawLine(35, 19, 29, 35);
+			g.drawLine(35, 33, 29, 35);
 			g.drawLine(35, 19, 29, 18);
+			r.setBounds(0, 0, w, h);
+			return new TexturePaint(bi, r);
+		case INSULATION:
+			g.setColor(c2);
+			g.fillRect(0, 0, w, h);
+			g.setColor(c1);
+			for (int i = 0; i < w / 4; i++) {
+				for (int j = 0; j < h / 4; j++) {
+					g.fillRect(4 * i + 1, 4 * j, 2, 2);
+					g.fillRect(4 * i, 4 * j + 1, 2, 2);
+				}
+			}
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
 		}
