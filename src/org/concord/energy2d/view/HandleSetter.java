@@ -126,6 +126,9 @@ class HandleSetter {
 		handle[LEFT].y = view.convertPointToPixelY((float) bound.getCenterY()) - h;
 		handle[RIGHT].x = view.convertPointToPixelX((float) bound.getMaxX()) - h;
 		handle[RIGHT].y = view.convertPointToPixelY((float) bound.getCenterY()) - h;
+		for (int i = RIGHT + 1; i < handle.length; i++) {
+			handle[i].x = handle[i].y = -100;
+		}
 	}
 
 }
