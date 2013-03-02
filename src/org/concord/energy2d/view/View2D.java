@@ -25,9 +25,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
@@ -1840,8 +1842,47 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							drawStatus(g, p, x + w / 2, y + h / 2);
 						}
 					} else if (fp instanceof Texture) {
-						setPaint(g, (Texture) fp, p.isFilled());
-						g.fillRect(x, y, w, h);
+						Texture tex = (Texture) fp;
+						if (tex.getStyle() == TextureFactory.INSULATION) { // special case: draw standard insulation representation
+							if (p.isFilled()) {
+								g.setColor(getPartColor(p, new Color(tex.getBackground())));
+								g.fillRect(x, y, w, h);
+							}
+							g.setColor(new Color(tex.getForeground()));
+							int m = 20;
+							float a = (float) w / (float) m;
+							float b = (float) h / 3f;
+							Arc2D.Float arc = new Arc2D.Float();
+							Line2D.Float line = new Line2D.Float();
+							arc.width = a;
+							arc.height = b;
+							float u = x;
+							for (int i = 0; i < m; i++) {
+								arc.x = u;
+								arc.y = y;
+								arc.start = 0;
+								arc.extent = 180;
+								g.draw(arc);
+								line.x1 = u;
+								line.y1 = y + b * 0.5f;
+								line.x2 = u + a * 0.5f;
+								line.y2 = y + h - b * 0.5f;
+								g.draw(line);
+								line.x1 = u + a;
+								g.draw(line);
+								arc.x = u - a * 0.5f;
+								arc.y = y + h - b;
+								arc.extent = -91;
+								g.draw(arc);
+								arc.x = u + a * 0.5f;
+								arc.start = 270;
+								g.draw(arc);
+								u += a;
+							}
+						} else {
+							setPaint(g, (Texture) fp, p.isFilled());
+							g.fillRect(x, y, w, h);
+						}
 					}
 					g.setColor(Color.black);
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);

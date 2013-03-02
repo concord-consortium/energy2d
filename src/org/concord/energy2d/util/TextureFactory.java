@@ -93,7 +93,7 @@ public final class TextureFactory {
 		textureList.add(new TextureCode(STARRY, LARGE));
 		textureList.add(new TextureCode(CIRCULAR, LARGE));
 		textureList.add(new TextureCode(FINE_SCREEN, MEDIUM));
-		textureList.add(new TextureCode(INSULATION, MEDIUM));
+		textureList.add(new TextureCode(INSULATION, HUGE));
 	}
 
 	private static Rectangle r = new Rectangle();
@@ -381,11 +381,16 @@ public final class TextureFactory {
 			g.setColor(c2);
 			g.fillRect(0, 0, w, h);
 			g.setColor(c1);
-			for (int i = 0; i < w / 4; i++) {
-				for (int j = 0; j < h / 4; j++) {
-					g.fillRect(4 * i + 1, 4 * j, 2, 2);
-					g.fillRect(4 * i, 4 * j + 1, 2, 2);
-				}
+			int a = w / 3;
+			int b = h / 3;
+			int u = 0;
+			for (int i = 0; i < 3; i++) {
+				g.drawArc(u, 0, a, b, 0, 180);
+				g.drawLine(u, b / 2, u + a / 2, h - b / 2);
+				g.drawLine(u + a / 2, h - b / 2, u + a, b / 2);
+				g.drawArc(u - a / 2, h - b, a, b, 0, -91);
+				g.drawArc(u + a / 2, h - b, a, b, 180, 91);
+				u += a;
 			}
 			r.setBounds(0, 0, w, h);
 			return new TexturePaint(bi, r);
