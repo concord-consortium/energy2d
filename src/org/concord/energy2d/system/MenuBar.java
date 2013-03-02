@@ -735,6 +735,7 @@ class MenuBar extends JMenuBar {
 		examples.put("The Series Circuit Analogy", "models/series-circuit-analogy.e2d");
 		examples.put("The Parallel Circuit Analogy", "models/parallel-circuit-analogy.e2d");
 		examples.put("Thermal Bridge", "models/thermal-bridge.e2d");
+		examples.put("Thermal Ghosting", "models/ghosting.e2d");
 		examples.put("Why We Feel Hot or Cold When Touching Something", "models/hand.e2d");
 		examples.put("Wood Spoon vs. Metal Spoon", "models/spoon.e2d");
 		createMenu(box, subMenu, examples);
