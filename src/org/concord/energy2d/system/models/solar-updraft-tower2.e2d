@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
 <links>
-<next_sim>solar-updraft-tower2.e2d</next_sim>
+<next_sim>solar-updraft-tower3.e2d</next_sim>
+<prev_sim>solar-updraft-tower.e2d</prev_sim>
 </links>
 <model>
 <timestep>0.5</timestep>
@@ -38,7 +39,7 @@
 <label>Ground</label>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="5.4" y="1.6000001" width="0.2" height="5.6"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="5.4" y="4.65" width="0.2" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -71,7 +72,7 @@
 </texture>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="4.4" y="1.6000001" width="0.2" height="5.6"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="4.4" y="4.6499977" width="0.2" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -149,7 +150,7 @@
 <control_panel>true</control_panel>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>100.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Solar Updraft Tower-linebreak-(Tall)" face="Arial" size="18" style="0" color="ffffff" x="0.5" y="9.7"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Solar Updraft Tower-linebreak-(Short)" face="Arial" size="18" style="0" color="ffffff" x="0.5" y="9.7"/>
 <text string="Glazing" face="Arial" size="12" style="0" color="ffffff" x="1.5000001" y="3.15"/>
 <text string="Glazing" face="Arial" size="12" style="0" color="ffffff" x="7.9" y="3.15"/>
 <text string="Absorber" face="Arial" size="12" style="1" color="ffffff" x="4.65" y="1.95"/>
