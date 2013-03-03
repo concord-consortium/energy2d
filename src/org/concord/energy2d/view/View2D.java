@@ -2523,48 +2523,50 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			e.consume();
 			return;
 		}
-		if (startIcon != null && startIcon.contains(x, y)) {
-			startIcon.setPressed(!runToggle); // must do this before notification because the event handler may also set the run toggle
-			notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
-			repaint();
-			e.consume();
-			return;
-		}
-		if (resetIcon != null && resetIcon.contains(x, y)) {
-			notifyManipulationListeners(null, ManipulationEvent.RESET);
-			repaint();
-			e.consume();
-			return;
-		}
-		if (nextIcon != null && nextIcon.contains(x, y) && !nextIcon.isDisabled()) {
-			Action a = getActionMap().get("Next_Simulation");
-			if (a != null)
-				a.actionPerformed(null);
-			e.consume();
-			return;
-		}
-		if (prevIcon != null && prevIcon.contains(x, y) && !prevIcon.isDisabled()) {
-			Action a = getActionMap().get("Previous_Simulation");
-			if (a != null)
-				a.actionPerformed(null);
-			e.consume();
-			return;
-		}
-		if (graphIcon != null && graphIcon.contains(x, y)) {
-			setGraphOn(!showGraph);
-			notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
-			repaint();
-			e.consume();
-			return;
-		}
-		if (modeIcon != null && modeIcon.contains(x, y)) {
-			modeIcon.setPressed(!modeIcon.isPressed());
-			setActionMode(modeIcon.isPressed() ? HEATING_MODE : SELECT_MODE);
-			notifyManipulationListeners(null, modeIcon.isPressed() ? ManipulationEvent.HEATING_MODE_CHOSEN : ManipulationEvent.SELECT_MODE_CHOSEN);
-			mouseMovedPoint.setLocation(x, y);
-			repaint();
-			e.consume();
-			return;
+		if (showControlPanel) {
+			if (startIcon != null && startIcon.contains(x, y)) {
+				startIcon.setPressed(!runToggle); // must do this before notification because the event handler may also set the run toggle
+				notifyManipulationListeners(null, runToggle ? ManipulationEvent.STOP : ManipulationEvent.RUN);
+				repaint();
+				e.consume();
+				return;
+			}
+			if (resetIcon != null && resetIcon.contains(x, y)) {
+				notifyManipulationListeners(null, ManipulationEvent.RESET);
+				repaint();
+				e.consume();
+				return;
+			}
+			if (nextIcon != null && nextIcon.contains(x, y) && !nextIcon.isDisabled()) {
+				Action a = getActionMap().get("Next_Simulation");
+				if (a != null)
+					a.actionPerformed(null);
+				e.consume();
+				return;
+			}
+			if (prevIcon != null && prevIcon.contains(x, y) && !prevIcon.isDisabled()) {
+				Action a = getActionMap().get("Previous_Simulation");
+				if (a != null)
+					a.actionPerformed(null);
+				e.consume();
+				return;
+			}
+			if (graphIcon != null && graphIcon.contains(x, y)) {
+				setGraphOn(!showGraph);
+				notifyGraphListeners(showGraph ? GraphEvent.GRAPH_OPENED : GraphEvent.GRAPH_CLOSED);
+				repaint();
+				e.consume();
+				return;
+			}
+			if (modeIcon != null && modeIcon.contains(x, y)) {
+				modeIcon.setPressed(!modeIcon.isPressed());
+				setActionMode(modeIcon.isPressed() ? HEATING_MODE : SELECT_MODE);
+				notifyManipulationListeners(null, modeIcon.isPressed() ? ManipulationEvent.HEATING_MODE_CHOSEN : ManipulationEvent.SELECT_MODE_CHOSEN);
+				mouseMovedPoint.setLocation(x, y);
+				repaint();
+				e.consume();
+				return;
+			}
 		}
 		if (showGraph && graphRenderer.buttonContains(x, y)) {
 			e.consume();
