@@ -1442,24 +1442,24 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				} else {
 					switch (mouseReadType) {
 					case MOUSE_READ_COORDINATES:
-						float coorx = convertPixelToPointX(mouseMovedPoint.x);
-						float coory = model.getLy() - convertPixelToPointY(mouseMovedPoint.y);
+						float coorx = convertPixelToPointXPrecisely(mouseMovedPoint.x);
+						float coory = model.getLy() - convertPixelToPointYPrecisely(mouseMovedPoint.y);
 						drawMouseReadString(g, "(" + COORDINATES_FORMAT.format(coorx) + ", " + COORDINATES_FORMAT.format(coory) + ") m");
 						break;
 					case MOUSE_READ_TEMPERATURE:
-						float pointValue = model.getTemperatureAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						float pointValue = model.getTemperatureAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
 						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
 						break;
 					case MOUSE_READ_THERMAL_ENERGY:
-						pointValue = model.getThermalEnergyAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						pointValue = model.getThermalEnergyAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
 						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " J");
 						break;
 					case MOUSE_READ_VELOCITY:
-						float[] velocity = model.getVelocityAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						float[] velocity = model.getVelocityAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
 						drawMouseReadString(g, "(" + VELOCITY_FORMAT.format(velocity[0]) + ", " + VELOCITY_FORMAT.format(-velocity[1]) + ") m/s");
 						break;
 					case MOUSE_READ_HEAT_FLUX:
-						float[] heatFlux = model.getHeatFluxAt(convertPixelToPointX(mouseMovedPoint.x), convertPixelToPointY(mouseMovedPoint.y));
+						float[] heatFlux = model.getHeatFluxAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
 						drawMouseReadString(g, HEAT_FLUX_FORMAT.format(Math.hypot(heatFlux[0], heatFlux[1])) + ": (" + HEAT_FLUX_FORMAT.format(heatFlux[0]) + ", " + HEAT_FLUX_FORMAT.format(-heatFlux[1]) + ") W/m^2");
 						break;
 					case MOUSE_READ_DEFAULT:
@@ -1713,7 +1713,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		s.setIconHeight(Math.round(getHeight() * h / (ymax - ymin)));
 		float iconW2 = s.getIconWidth() * 0.5f;
 		float iconH2 = s.getIconHeight() * 0.5f;
-		float sensingSpotY = convertPixelToLengthY((int) (iconH2 - s.getBallDiameterOffset() * 0.5f));
+		float sensingSpotY = convertPixelToLengthYPrecisely((int) (iconH2 - s.getBallDiameterOffset() * 0.5f));
 		int shiftH = Math.round(sensingSpotY / model.getLy() * ny);
 		float temp;
 		String str;
@@ -2143,8 +2143,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	private void selectManipulable(int x, int y) {
 		setSelectedManipulable(null);
-		float rx = convertPixelToPointX(x);
-		float ry = convertPixelToPointY(y);
+		float rx = convertPixelToPointXPrecisely(x);
+		float ry = convertPixelToPointYPrecisely(y);
 		// always prefer to select a thermometer
 		int n = model.getThermometers().size();
 		if (n > 0) {
@@ -2336,8 +2336,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					xc += poly.xpoints[i];
 					yc += poly.ypoints[i];
 				}
-				xc = convertPixelToPointX((int) (xc / poly.npoints));
-				yc = convertPixelToPointY((int) (yc / poly.npoints));
+				xc = convertPixelToPointXPrecisely((int) (xc / poly.npoints));
+				yc = convertPixelToPointYPrecisely((int) (yc / poly.npoints));
 				Polygon2D p = (Polygon2D) s;
 				Point2D.Float center = p.getCenter();
 				p.translateBy((float) (xc - center.x), (float) (yc - center.y));
@@ -2352,8 +2352,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					xc += blob.getPoint(i).x;
 					yc += blob.getPoint(i).y;
 				}
-				xc = convertPixelToPointX((int) (xc / n));
-				yc = convertPixelToPointY((int) (yc / n));
+				xc = convertPixelToPointXPrecisely((int) (xc / n));
+				yc = convertPixelToPointYPrecisely((int) (yc / n));
 				Blob2D b = (Blob2D) s;
 				Point2D.Float center = b.getCenter();
 				b.translateBy((float) (xc - center.x), (float) (yc - center.y));
@@ -2626,8 +2626,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			break;
 		case HEATING_MODE:
 			runHeatingThread = true;
-			heatingX = convertPixelToPointX(x);
-			heatingY = convertPixelToPointY(y);
+			heatingX = convertPixelToPointXPrecisely(x);
+			heatingY = convertPixelToPointYPrecisely(y);
 			new Thread(new Runnable() {
 				public void run() {
 					while (runHeatingThread) {
@@ -2820,8 +2820,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case HEATING_MODE:
-			heatingX = convertPixelToPointX(x);
-			heatingY = convertPixelToPointY(y);
+			heatingX = convertPixelToPointXPrecisely(x);
+			heatingY = convertPixelToPointYPrecisely(y);
 			break;
 		}
 		if (!model.isRunning())
@@ -3254,8 +3254,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 			if (iSpot == -1) {
-				float rx = convertPixelToPointX(x);
-				float ry = convertPixelToPointY(y);
+				float rx = convertPixelToPointXPrecisely(x);
+				float ry = convertPixelToPointYPrecisely(y);
 				boolean contained = false;
 				// prioritize sensor selection
 				synchronized (model.getThermometers()) {
@@ -3521,28 +3521,44 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
+	private float convertPixelToPointXPrecisely(int x) {
+		return xmin + (xmax - xmin) * (float) x / (float) getWidth();
+	}
+
+	private float convertPixelToPointYPrecisely(int y) {
+		return ymin + (ymax - ymin) * (float) y / (float) getHeight();
+	}
+
+	private float convertPixelToLengthXPrecisely(int l) {
+		return (xmax - xmin) * (float) l / (float) getWidth();
+	}
+
+	private float convertPixelToLengthYPrecisely(int l) {
+		return (ymax - ymin) * (float) l / (float) getHeight();
+	}
+
 	private float convertPixelToPointX(int x) {
 		if (snapToGrid)
 			return xmin + (xmax - xmin) / nx * Math.round((float) x / (float) getWidth() * nx);
-		return xmin + (xmax - xmin) * (float) x / (float) getWidth();
+		return convertPixelToPointXPrecisely(x);
 	}
 
 	private float convertPixelToPointY(int y) {
 		if (snapToGrid)
 			return ymin + (ymax - ymin) / ny * Math.round((float) y / (float) getHeight() * ny);
-		return ymin + (ymax - ymin) * (float) y / (float) getHeight();
+		return convertPixelToPointYPrecisely(y);
 	}
 
 	private float convertPixelToLengthX(int l) {
 		if (snapToGrid)
 			return (xmax - xmin) / nx * Math.round((float) l / (float) getWidth() * nx);
-		return (xmax - xmin) * (float) l / (float) getWidth();
+		return convertPixelToLengthXPrecisely(l);
 	}
 
 	private float convertPixelToLengthY(int l) {
 		if (snapToGrid)
 			return (ymax - ymin) / ny * Math.round((float) l / (float) getHeight() * ny);
-		return (ymax - ymin) * (float) l / (float) getHeight();
+		return convertPixelToLengthYPrecisely(l);
 	}
 
 	private int getXOnGrid(int x) {
