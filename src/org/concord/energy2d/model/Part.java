@@ -165,6 +165,7 @@ public class Part extends Manipulable {
 			((Polygon2D) s).translateBy(dx, dy);
 		} else if (s instanceof Blob2D) {
 			((Blob2D) s).translateBy(dx, dy);
+			((Blob2D) s).update();
 		}
 	}
 
