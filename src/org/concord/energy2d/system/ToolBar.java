@@ -163,6 +163,9 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 			}
 		});
 		add(graphButton);
+
+		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomin.png"))));
+		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomout.png"))));
 		addSeparator(new Dimension(10, 0));
 
 		mouseReadComboBox = new JComboBox(new String[] { "Mouse: Default", "Mouse: Temperature", "Mouse: Energy", "Mouse: Velocity", "Mouse: Heat Flux", "Mouse: Coordinates" });
