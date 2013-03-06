@@ -558,6 +558,8 @@ class Scripter2D extends Scripter {
 						mode = View2D.ELLIPSE_MODE;
 					} else if ("polygon".equalsIgnoreCase(t[1])) {
 						mode = View2D.POLYGON_MODE;
+					} else if ("blob".equalsIgnoreCase(t[1])) {
+						mode = View2D.BLOB_MODE;
 					} else if ("heating".equalsIgnoreCase(t[1])) {
 						mode = View2D.HEATING_MODE;
 					} else if ("thermometer".equalsIgnoreCase(t[1])) {
@@ -773,6 +775,8 @@ class Scripter2D extends Scripter {
 						s2d.view.setMouseReadType(View2D.MOUSE_READ_VELOCITY);
 					else if ("HEAT_FLUX".equalsIgnoreCase(t[1]))
 						s2d.view.setMouseReadType(View2D.MOUSE_READ_HEAT_FLUX);
+					else if ("COORDINATES".equalsIgnoreCase(t[1]))
+						s2d.view.setMouseReadType(View2D.MOUSE_READ_COORDINATES);
 					else
 						showError(ci, "mouse read type not supported");
 				} else if (t[0].equalsIgnoreCase("isotherm_resolution")) {
