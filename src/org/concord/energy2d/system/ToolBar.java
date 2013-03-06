@@ -14,6 +14,8 @@ import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -161,8 +163,51 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		});
 		add(graphButton);
 
-		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomin.png"))));
-		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomout.png"))));
+		JButton button = new JButton(new ImageIcon(ToolBar.class.getResource("resources/zoomin.png")));
+		button.setToolTipText("Half the size of the simulation box");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (box.model.getTime() > 0) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Sorry, the simulation must be reset before this action can be taken.", "Cannot zoom now", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				float lx = box.model.getLx();
+				float ly = box.model.getLy();
+				box.model.setLx(lx * 0.5f);
+				box.model.setLy(ly * 0.5f);
+				box.model.translateAllBy(0, -ly * 0.5f); // fix the y-flip problem
+				box.view.setArea(0, lx * 0.5f, 0, ly * 0.5f);
+				box.model.refreshPowerArray();
+				box.model.refreshTemperatureBoundaryArray();
+				box.model.refreshMaterialPropertyArrays();
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		add(button);
+
+		button = new JButton(new ImageIcon(ToolBar.class.getResource("resources/zoomout.png")));
+		button.setToolTipText("Double the size of the simulation box");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (box.model.getTime() > 0) {
+					JOptionPane.showMessageDialog(JOptionPane.getFrameForComponent(box.view), "Sorry, the simulation must be reset before this action can be taken.", "Cannot zoom now", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				float lx = box.model.getLx();
+				float ly = box.model.getLy();
+				box.model.setLx(2 * lx);
+				box.model.setLy(2 * ly);
+				box.model.translateAllBy(0, ly); // fix the y-flip problem
+				box.view.setArea(0, 2 * lx, 0, 2 * ly);
+				box.model.refreshPowerArray();
+				box.model.refreshTemperatureBoundaryArray();
+				box.model.refreshMaterialPropertyArrays();
+				box.view.repaint();
+				box.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
+			}
+		});
+		add(button);
 
 	}
 
