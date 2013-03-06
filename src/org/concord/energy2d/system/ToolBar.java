@@ -6,7 +6,6 @@
 
 package org.concord.energy2d.system;
 
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,6 @@ import java.awt.event.ItemListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -35,7 +33,6 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 	private JToggleButton graphButton;
 	private JToggleButton selectButton;
 	private JToggleButton heatingButton;
-	private JComboBox mouseReadComboBox;
 
 	private System2D box;
 
@@ -166,19 +163,6 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 
 		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomin.png"))));
 		// add(new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/zoomout.png"))));
-		addSeparator(new Dimension(10, 0));
-
-		mouseReadComboBox = new JComboBox(new String[] { "Mouse: Default", "Mouse: Temperature", "Mouse: Energy", "Mouse: Velocity", "Mouse: Heat Flux", "Mouse: Coordinates" });
-		mouseReadComboBox.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
-		mouseReadComboBox.setMaximumSize(new Dimension(150, 32));
-		mouseReadComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					box.view.setMouseReadType((byte) ((JComboBox) e.getSource()).getSelectedIndex());
-				}
-			}
-		});
-		add(mouseReadComboBox);
 
 	}
 
@@ -205,9 +189,6 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 			break;
 		case ManipulationEvent.SENSOR_ADDED:
 			graphButton.setEnabled(true);
-			break;
-		case ManipulationEvent.MOUSE_READ_CHANGED:
-			mouseReadComboBox.setSelectedIndex(box.view.getMouseReadType());
 			break;
 		}
 	}

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -35,6 +36,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.event.PopupMenuEvent;
@@ -624,6 +626,91 @@ class MenuBar extends JMenuBar {
 		miStreamline.setToolTipText("Check if you wish to show streamlines");
 		menu.add(miStreamline);
 
+		final JRadioButtonMenuItem miMouseDefafult = new JRadioButtonMenuItem("Default");
+		final JRadioButtonMenuItem miMouseTemperature = new JRadioButtonMenuItem("Temperature");
+		final JRadioButtonMenuItem miMouseEnergy = new JRadioButtonMenuItem("Thermal Energy");
+		final JRadioButtonMenuItem miMouseVelocity = new JRadioButtonMenuItem("Velocity");
+		final JRadioButtonMenuItem miMouseHeatFlux = new JRadioButtonMenuItem("Heat Flux");
+		final JRadioButtonMenuItem miMouseCoordinates = new JRadioButtonMenuItem("Coordinates");
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(miMouseDefafult);
+		bg.add(miMouseTemperature);
+		bg.add(miMouseEnergy);
+		bg.add(miMouseVelocity);
+		bg.add(miMouseHeatFlux);
+		bg.add(miMouseCoordinates);
+
+		final JMenu mouseMenu = new JMenu("Mouse Reading");
+		mouseMenu.setToolTipText("Select a property the value of which at a mouse position will be shown when it moves");
+		mouseMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			}
+
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				JRadioButtonMenuItem x = (JRadioButtonMenuItem) mouseMenu.getMenuComponent(box.view.getMouseReadType());
+				MiscUtil.setSelectedSilently(x, true);
+			}
+		});
+		menu.add(mouseMenu);
+		menu.addSeparator();
+
+		miMouseDefafult.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 0);
+				}
+			}
+		});
+		mouseMenu.add(miMouseDefafult);
+
+		miMouseTemperature.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 1);
+				}
+			}
+		});
+		mouseMenu.add(miMouseTemperature);
+
+		miMouseEnergy.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 2);
+				}
+			}
+		});
+		mouseMenu.add(miMouseEnergy);
+
+		miMouseVelocity.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 3);
+				}
+			}
+		});
+		mouseMenu.add(miMouseVelocity);
+
+		miMouseHeatFlux.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 4);
+				}
+			}
+		});
+		mouseMenu.add(miMouseHeatFlux);
+
+		miMouseCoordinates.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					box.view.setMouseReadType((byte) 5);
+				}
+			}
+		});
+		mouseMenu.add(miMouseCoordinates);
+
 		miColorPalette.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				JCheckBoxMenuItem src = (JCheckBoxMenuItem) e.getSource();
@@ -645,6 +732,8 @@ class MenuBar extends JMenuBar {
 		});
 		miControlPanel.setToolTipText("Check if you wish to show the built-in control panel");
 		menu.add(miControlPanel);
+
+		menu.addSeparator();
 
 		miRuler.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
