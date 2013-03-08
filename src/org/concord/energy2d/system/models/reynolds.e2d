@@ -29,10 +29,16 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.02</wind_speed>
+<texture><texture_fg>-7f7f80</texture_fg>
+<texture_bg>-1000000</texture_bg>
+<texture_style>19</texture_style>
+<texture_width>12</texture_width>
+<texture_height>12</texture_height>
+</texture>
 <filled>false</filled>
 <label>V=2</label>
 </part>
-<part><rectangle x="0.05000019" y="2.4000003" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.05000019" y="2.4000003" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -41,8 +47,14 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>9</texture_style>
+<texture_width>8</texture_width>
+<texture_height>8</texture_height>
+</texture>
 </part>
-<part><rectangle x="0.05000019" y="4.7000003" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.05000019" y="4.7000003" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -51,6 +63,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>9</texture_style>
+<texture_width>8</texture_width>
+<texture_height>8</texture_height>
+</texture>
 </part>
 <part><rectangle x="0.099999994" y="0.45000005" width="0.5" height="1.8"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -62,10 +80,16 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.01</wind_speed>
+<texture><texture_fg>-7f7f80</texture_fg>
+<texture_bg>-1000000</texture_bg>
+<texture_style>19</texture_style>
+<texture_width>12</texture_width>
+<texture_height>12</texture_height>
+</texture>
 <filled>false</filled>
 <label>V=1</label>
 </part>
-<part><rectangle x="0.05000019" y="-0.049999997" width="9.9" height="0.3"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.05000019" y="-0.049999997" width="9.9" height="0.3"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -74,8 +98,14 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>23</texture_style>
+<texture_width>36</texture_width>
+<texture_height>36</texture_height>
+</texture>
 </part>
-<part><rectangle x="0.07495928" y="7.1000004" width="9.9" height="0.2"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.07495928" y="7.1000004" width="9.9" height="0.2"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -84,6 +114,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>9</texture_style>
+<texture_width>8</texture_width>
+<texture_height>8</texture_height>
+</texture>
 </part>
 <part><rectangle x="0.099999994" y="5.100001" width="0.5" height="1.8"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -95,6 +131,12 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.05</wind_speed>
+<texture><texture_fg>-7f7f80</texture_fg>
+<texture_bg>-1000000</texture_bg>
+<texture_style>19</texture_style>
+<texture_width>12</texture_width>
+<texture_height>12</texture_height>
+</texture>
 <filled>false</filled>
 <label>V=5</label>
 </part>
@@ -131,7 +173,7 @@
 <constant_temperature>true</constant_temperature>
 <label>%temperature</label>
 </part>
-<part><rectangle x="0.016638935" y="9.483334" width="9.9001665" height="0.48333332"/><thermal_conductivity>0.0010</thermal_conductivity>
+<part><rectangle x="0.016638935" y="9.483334" width="9.9001665" height="0.48333332"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -140,6 +182,12 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<texture><texture_fg>-1000000</texture_fg>
+<texture_bg>-7f7f80</texture_bg>
+<texture_style>23</texture_style>
+<texture_width>36</texture_width>
+<texture_height>36</texture_height>
+</texture>
 </part>
 <part><rectangle x="0.099999994" y="7.5000005" width="0.5" height="1.8"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
@@ -151,6 +199,12 @@
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
 <wind_speed>0.1</wind_speed>
+<texture><texture_fg>-7f7f80</texture_fg>
+<texture_bg>-1000000</texture_bg>
+<texture_style>19</texture_style>
+<texture_width>12</texture_width>
+<texture_height>12</texture_height>
+</texture>
 <filled>false</filled>
 <label>V=10</label>
 </part>
@@ -187,10 +241,11 @@
 </model>
 <view>
 <grid>true</grid>
+<snap_to_grid>true</snap_to_grid>
 <grid_size>10</grid_size>
 <color_palette_type>1</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Stronger wind is more likely to cause turbulent flow." face="Arial" size="14" style="0" color="ffffff" x="2.777778" y="0.45634925"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Stronger wind is more likely to cause turbulent flow." face="Arial" size="14" style="1" color="ffffff" x="0.17780018" y="0.4563"/>
 </view>
 </state>
