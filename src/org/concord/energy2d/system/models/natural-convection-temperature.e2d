@@ -50,9 +50,9 @@
 <constant_temperature>false</constant_temperature>
 <texture><texture_fg>-1000000</texture_fg>
 <texture_bg>-7f7f80</texture_bg>
-<texture_style>10</texture_style>
-<texture_width>10</texture_width>
-<texture_height>10</texture_height>
+<texture_style>13</texture_style>
+<texture_width>36</texture_width>
+<texture_height>36</texture_height>
 </texture>
 <label>Insulator</label>
 <draggable>false</draggable>
@@ -144,11 +144,12 @@
 </controller>
 </model>
 <view>
+<snap_to_grid>true</snap_to_grid>
 <grid_size>10</grid_size>
 <ruler>true</ruler>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="A hotter surface loses more heat -linebreak-through convection." face="Arial" size="14" style="0" color="ffffff" x="0.64814824" y="1.1111106"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="A hotter surface loses more heat -linebreak-through convection." face="Arial" size="14" style="0" color="ffffff" x="0.64814824" y="1.1111106"/>
 </view>
 </state>

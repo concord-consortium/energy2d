@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>0.25</timestep>
 <viewupdate_interval>10</viewupdate_interval>
@@ -48,9 +50,9 @@
 <constant_temperature>false</constant_temperature>
 <texture><texture_fg>-1000000</texture_fg>
 <texture_bg>-7f7f80</texture_bg>
-<texture_style>10</texture_style>
-<texture_width>10</texture_width>
-<texture_height>10</texture_height>
+<texture_style>13</texture_style>
+<texture_width>36</texture_width>
+<texture_height>36</texture_height>
 </texture>
 <label>Insulator</label>
 <draggable>false</draggable>
@@ -147,12 +149,13 @@
 </controller>
 </model>
 <view>
+<snap_to_grid>true</snap_to_grid>
 <grid_size>10</grid_size>
 <ruler>true</ruler>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Air" face="Arial" size="14" style="1" color="ffffff" x="2.367725" y="5.7606"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Air" face="Arial" size="14" style="1" color="ffffff" x="2.367725" y="5.7606"/>
 <text string="Can you tell the difference between heat transfer-linebreak-through air and solid (convection vs. conduction)?" face="Arial" size="14" style="0" color="ffffff" x="0.6018519" y="1.3888882"/>
 </view>
 </state>
