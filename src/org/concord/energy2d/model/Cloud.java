@@ -24,7 +24,7 @@ public class Cloud extends Manipulable {
 	private float x; // the x coordinate of the upper-left corner
 	private float y; // the y coordinate of the upper-left corner
 	private float speed; // clouds only move in the horizontal direction
-	private Color color = Color.white;
+	private Color color = Color.WHITE;
 	private Rectangle2D.Float boundingBox;
 
 	/** Construct a cloud based on the specified bounding box, which must start from (0, 0). If not, the (x, y) will be ignored. */
@@ -144,7 +144,7 @@ public class Cloud extends Manipulable {
 		String label = getLabel();
 		if (label != null && !label.trim().equals(""))
 			xml += " label=\"" + label + "\"";
-		if (!Color.white.equals(color))
+		if (!Color.WHITE.equals(color))
 			xml += " color=\"" + Integer.toHexString(0x00ffffff & color.getRGB()) + "\"";
 		xml += " x=\"" + x + "\"";
 		xml += " y=\"" + y + "\"";

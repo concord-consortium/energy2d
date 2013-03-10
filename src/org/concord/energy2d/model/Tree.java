@@ -28,7 +28,7 @@ public class Tree extends Manipulable {
 	private byte type = PINE;
 	private float x; // the x coordinate of the upper-left corner
 	private float y; // the y coordinate of the upper-left corner
-	private Color color = Color.green.darker();
+	private Color color = Color.GREEN.darker();
 	private Rectangle2D.Float boundingBox;
 
 	/** Construct a tree based on the specified bounding box, which must start from (0, 0). If not, the (x, y) will be ignored. */
@@ -157,7 +157,7 @@ public class Tree extends Manipulable {
 		String label = getLabel();
 		if (label != null && !label.trim().equals(""))
 			xml += " label=\"" + label + "\"";
-		if (!Color.green.equals(color))
+		if (!Color.GREEN.darker().equals(color))
 			xml += " color=\"" + Integer.toHexString(0x00ffffff & color.getRGB()) + "\"";
 		xml += " x=\"" + x + "\"";
 		xml += " y=\"" + y + "\"";

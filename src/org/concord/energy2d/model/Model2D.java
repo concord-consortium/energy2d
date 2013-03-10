@@ -78,6 +78,7 @@ public class Model2D {
 	private List<Anemometer> anemometers;
 	private List<Thermometer> thermometers;
 	private List<Thermostat> thermostats;
+	private List<Fan> fans;
 	private List<Part> parts;
 	private List<Photon> photons;
 	private List<Cloud> clouds;
@@ -135,6 +136,7 @@ public class Model2D {
 		anemometers = Collections.synchronizedList(new ArrayList<Anemometer>());
 		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
+		fans = Collections.synchronizedList(new ArrayList<Fan>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
 		trees = Collections.synchronizedList(new ArrayList<Tree>());
@@ -310,7 +312,7 @@ public class Model2D {
 	}
 
 	public void addCloud(Cloud c) {
-		if (c != null)
+		if (c != null && !clouds.contains(c))
 			clouds.add(c);
 	}
 
@@ -323,7 +325,7 @@ public class Model2D {
 	}
 
 	public void addTree(Tree t) {
-		if (t != null)
+		if (t != null && !trees.contains(t))
 			trees.add(t);
 	}
 
@@ -333,6 +335,39 @@ public class Model2D {
 
 	public List<Tree> getTrees() {
 		return trees;
+	}
+
+	// fans
+
+	public void addFan(Fan f) {
+		if (f != null && !fans.contains(f))
+			fans.add(f);
+	}
+
+	public void removeFan(Fan f) {
+		fans.remove(f);
+	}
+
+	public List<Fan> getFans() {
+		return fans;
+	}
+
+	public Fan getFan(String uid) {
+		if (uid == null)
+			return null;
+		synchronized (fans) {
+			for (Fan f : fans) {
+				if (uid.equals(f.getUid()))
+					return f;
+			}
+		}
+		return null;
+	}
+
+	public Fan getFan(int i) {
+		if (i < 0 || i >= fans.size())
+			return null;
+		return fans.get(i);
 	}
 
 	private void setGridCellSize() {

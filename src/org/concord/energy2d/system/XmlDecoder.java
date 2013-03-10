@@ -10,6 +10,7 @@ import org.concord.energy2d.model.Boundary;
 import org.concord.energy2d.model.Cloud;
 import org.concord.energy2d.model.Constants;
 import org.concord.energy2d.model.DirichletThermalBoundary;
+import org.concord.energy2d.model.Fan;
 import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.MassBoundary;
 import org.concord.energy2d.model.SimpleMassBoundary;
@@ -572,12 +573,47 @@ class XmlDecoder extends DefaultHandler {
 					}
 				}
 			}
+		} else if (qName == "fan") {
+			if (attrib != null) {
+				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN, speed = 0;
+				String uid = null, label = null;
+				Color color = Color.GRAY;
+				for (int i = 0, n = attrib.getLength(); i < n; i++) {
+					attribName = attrib.getQName(i).intern();
+					attribValue = attrib.getValue(i);
+					if (attribName == "x") {
+						x = Float.parseFloat(attribValue);
+					} else if (attribName == "y") {
+						y = Float.parseFloat(attribValue);
+					} else if (attribName == "width") {
+						w = Float.parseFloat(attribValue);
+					} else if (attribName == "height") {
+						h = Float.parseFloat(attribValue);
+					} else if (attribName == "speed") {
+						speed = Float.parseFloat(attribValue);
+					} else if (attribName == "uid") {
+						uid = attribValue;
+					} else if (attribName == "label") {
+						label = attribValue;
+					} else if (attribName == "color") {
+						color = new Color(Integer.parseInt(attribValue, 16));
+					}
+				}
+				if (!Float.isNaN(x) && !Float.isNaN(y) && !Float.isNaN(w) && !Float.isNaN(h)) {
+					Fan f = new Fan(new Rectangle2D.Float(x, y, w, h));
+					f.setSpeed(speed);
+					f.setUid(uid);
+					f.setLabel(label);
+					f.setColor(color);
+					box.model.addFan(f);
+				}
+			}
 		} else if (qName == "cloud") {
 			if (attrib != null) {
 				float x = Float.NaN, y = Float.NaN, w = Float.NaN, h = Float.NaN;
 				float speed = 0;
 				String label = null, uid = null;
-				Color color = Color.white;
+				Color color = Color.WHITE;
 				for (int i = 0, n = attrib.getLength(); i < n; i++) {
 					attribName = attrib.getQName(i).intern();
 					attribValue = attrib.getValue(i);

@@ -25,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -63,6 +64,7 @@ import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
+import org.concord.energy2d.model.Fan;
 import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Model2D;
@@ -336,7 +338,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.05f;
 				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.025f;
-				setSelectedManipulable(addCloud(x, y, model.getLx() * 0.3f, model.getLx() * 0.1f, 0));
+				setSelectedManipulable(addCloud(x, y, model.getLx() * 0.3f, model.getLy() * 0.1f, 0));
 				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
 				repaint();
 			}
@@ -349,7 +351,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.025f;
 				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.05f;
-				setSelectedManipulable(addTree(x, y, model.getLx() * 0.1f, model.getLx() * 0.2f, Tree.PINE));
+				setSelectedManipulable(addTree(x, y, model.getLx() * 0.1f, model.getLy() * 0.2f, Tree.PINE));
 				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
 				repaint();
 			}
@@ -357,6 +359,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a.putValue(Action.NAME, "Tree");
 		a.putValue(Action.SHORT_DESCRIPTION, "Insert a tree where the mouse last clicked");
 		getActionMap().put("Insert Tree", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.025f;
+				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.05f;
+				setSelectedManipulable(addFan(x, y, model.getLx() * 0.05f, model.getLy() * 0.1f));
+				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
+				repaint();
+			}
+		};
+		a.putValue(Action.NAME, "Fan");
+		a.putValue(Action.SHORT_DESCRIPTION, "Insert a fan where the mouse last clicked");
+		getActionMap().put("Insert Fan", a);
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -1179,6 +1194,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawTrees(g);
 		drawTextBoxes(g);
 		drawPictures(g);
+		drawFans(g);
 		if (showGrid && gridRenderer != null)
 			gridRenderer.render(this, g);
 		if (rulerRenderer != null)
@@ -1576,7 +1592,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				Area a = Tree.getShape(r, t.getType());
 				g.setColor(t.getColor());
 				g.fill(a);
-				g.setColor(selectedManipulable == t ? Color.yellow : Color.gray);
+				g.setColor(selectedManipulable == t ? Color.YELLOW : Color.GRAY);
 				g.draw(a);
 				if (t == selectedManipulable)
 					HandleSetter.setRects(this, selectedManipulable, handle);
@@ -1586,6 +1602,49 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					String label = t.getLabel();
 					FontMetrics fm = g.getFontMetrics();
 					g.drawString(label, (int) r.getCenterX() - fm.stringWidth(label) / 2, (int) r.getCenterY() + fm.getHeight());
+				}
+			}
+		}
+	}
+
+	private void drawFans(Graphics2D g) {
+		if (model.getFans().isEmpty())
+			return;
+		Rectangle2D.Float r;
+		int x, y, w, h;
+		Arc2D.Float a = new Arc2D.Float();
+		g.setStroke(moderateStroke);
+		synchronized (model.getFans()) {
+			for (Fan f : model.getFans()) {
+				r = (Rectangle2D.Float) f.getShape();
+				x = convertPointToPixelX(r.x);
+				y = convertPointToPixelY(r.y);
+				w = convertLengthToPixelX(r.width);
+				h = convertLengthToPixelY(r.height);
+				g.setColor(f.getColor());
+				if (r.height > r.width) {
+					int deg = (int) Math.round(Math.toDegrees(Math.asin(h / Math.hypot(w, h))));
+					a.setArc(x, y, w, h, deg, 180 - 2 * deg, Arc2D.PIE);
+					g.fill(a);
+					a.setArc(x, y, w, h, -deg, 2 * deg - 180, Arc2D.PIE);
+					g.fill(a);
+					g.fillRect(x, y + h / 2 - 2, w / 2, 4);
+					g.setColor(selectedManipulable == f ? Color.YELLOW : Color.GRAY.brighter());
+					a.setArc(x, y, w, h, deg, 180 - 2 * deg, Arc2D.PIE);
+					g.draw(a);
+					a.setArc(x, y, w, h, -deg, 2 * deg - 180, Arc2D.PIE);
+					g.draw(a);
+					g.drawRect(x, y + h / 2 - 2, w / 2, 4);
+				} else {
+				}
+				if (f == selectedManipulable)
+					HandleSetter.setRects(this, selectedManipulable, handle);
+				if (f.getLabel() != null) {
+					g.setFont(labelFont);
+					g.setColor(getContrastColor(x + w / 2, y + h / 2));
+					String label = f.getLabel();
+					FontMetrics fm = g.getFontMetrics();
+					g.drawString(label, x + w / 2 - fm.stringWidth(label) / 2, y + h / 2 + fm.getHeight());
 				}
 			}
 		}
@@ -3129,6 +3188,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		a.setCenter(x, y);
 		model.addAnemometer(a);
 		return a;
+	}
+
+	private Fan addFan(float x, float y, float w, float h) {
+		Fan fan = new Fan(new Rectangle2D.Float(x, y, w, h));
+		model.addFan(fan);
+		return fan;
 	}
 
 	private static String getFormattedTime(float time) {

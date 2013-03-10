@@ -8,7 +8,7 @@
 <task uid="MOVE_SUN" enabled="false" script="movesun 4 20;" description="" interval="100"/>
 </tasks>
 <sunny>true</sunny><sun_angle>2.4260077</sun_angle>
-<solar_power_density>0.0</solar_power_density>
+<solar_power_density>0.001</solar_power_density>
 <solar_ray_count>100</solar_ray_count>
 <solar_ray_speed>0.002</solar_ray_speed>
 <photon_emission_interval>5</photon_emission_interval>
@@ -27,8 +27,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>false</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -39,12 +40,13 @@
 <texture_height>8</texture_height>
 </texture>
 </part>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.0" y="8.0" width="10.0" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -60,8 +62,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -72,12 +75,13 @@
 <texture_height>36</texture_height>
 </texture>
 </part>
-<part><rectangle x="2.0" y="3.5" width="0.7" height="1.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="1.9999999" y="3.5" width="0.7" height="1.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -92,8 +96,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -108,8 +113,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>0.0</reflection>
-<absorption>1.0</absorption>
+<reflection>1.0</reflection>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -120,78 +126,85 @@
 <texture_height>36</texture_height>
 </texture>
 </part>
-<part><polygon count="118" vertices="5.4876013, 8.052296, 5.4606004, 8.034296, 5.433601, 8.025296, 5.4426017, 7.881295, 5.4426017, 7.8092966, 5.3886013, 7.6742964, 5.379602, 7.5752964, 5.3616004, 7.5122967, 5.3616004, 7.440296, 5.3436017, 7.296296, 5.2986007, 7.2782965, 5.2986007, 7.161296, 5.2626004, 7.053296, 5.253601, 6.9722977, 5.253601, 6.8822956, 5.280602, 6.810296, 5.3076015, 6.756296, 5.3256, 6.720296, 5.3256, 6.675296, 5.334601, 6.603297, 5.3076015, 6.5492964, 5.2986007, 6.5942965, 5.2896013, 6.603297, 5.2896013, 6.6842966, 5.280602, 6.7472963, 5.2266016, 6.9902964, 5.2446017, 7.008298, 5.2446017, 7.0712976, 5.235601, 7.0892963, 5.2266016, 7.0802965, 5.217601, 7.053296, 5.2086015, 7.0802965, 5.235601, 7.107296, 5.253601, 7.1252956, 5.1906013, 7.107296, 5.172601, 7.0442963, 5.1906013, 6.9722977, 5.1996007, 6.7472963, 5.2086015, 6.702297, 5.217601, 6.6482964, 5.217601, 6.603297, 5.1996007, 6.5852957, 5.1996007, 6.468297, 5.2086015, 6.3962955, 5.235601, 6.324295, 5.3076015, 6.3062963, 5.3076015, 6.1982956, 5.3436017, 6.0632954, 5.370601, 6.027295, 5.3886013, 6.0002956, 5.4246016, 5.991297, 5.451601, 5.991297, 5.469601, 6.0002956, 5.5056014, 6.0182962, 5.5236015, 6.036296, 5.550601, 6.0632954, 5.5956006, 6.1982956, 5.6046014, 6.2432966, 5.6046014, 6.3062963, 5.649601, 6.315296, 5.703602, 6.4502964, 5.685601, 6.5942965, 5.676602, 6.6302967, 5.694601, 6.6932964, 5.703602, 6.7382975, 5.694601, 6.9722977, 5.7216015, 7.0262966, 5.703602, 7.0802965, 5.649601, 7.107296, 5.6586003, 7.0892963, 5.694601, 7.0712976, 5.703602, 7.0442963, 5.676602, 7.0352974, 5.676602, 7.062297, 5.6586003, 7.0712976, 5.6586003, 7.008298, 5.667601, 6.9362974, 5.6226015, 6.711298, 5.6226015, 6.612296, 5.5956006, 6.666297, 5.5956006, 6.6842966, 5.6136007, 6.765297, 5.6226015, 6.8282967, 5.6406016, 6.873296, 5.6406016, 6.954296, 5.6406016, 6.999297, 5.6406016, 7.053296, 5.631601, 7.116295, 5.6136007, 7.206296, 5.577602, 7.2872953, 5.5866013, 7.3322964, 5.5866013, 7.3682966, 5.6046014, 7.449295, 5.5866013, 7.701296, 5.5866013, 7.7552958, 5.5956006, 7.8182955, 5.6406016, 7.9172955, 5.649601, 7.9622965, 5.577602, 7.989296, 5.550601, 7.9082966, 5.5416017, 7.8722963, 5.5146008, 7.800296, 5.5236015, 7.737296, 5.5236015, 7.701296, 5.5056014, 7.6202955, 5.4966006, 7.557296, 5.4966006, 7.5122967, 5.4966006, 7.449295, 5.478602, 7.4312963, 5.4606004, 7.440296, 5.4606004, 7.4852953, 5.478602, 7.539296, 5.478602, 7.602297, 5.4876013, 7.800296, 5.5056014, 7.845295, 5.5146008, 7.935296, 5.5416017, 7.9712963, 5.532601, 8.016295"/>
+<part><polygon count="118" vertices="5.495701, 8.009417, 5.4632998, 7.987817, 5.4309, 7.9770164, 5.4417014, 7.8042164, 5.4417014, 7.7178183, 5.3769007, 7.5558176, 5.3661017, 7.4370174, 5.3444996, 7.361418, 5.3444996, 7.2750177, 5.3229012, 7.1022177, 5.2689, 7.080618, 5.2689, 6.940217, 5.2257, 6.8106174, 5.2149005, 6.713419, 5.2149005, 6.6054173, 5.2473016, 6.519017, 5.2797008, 6.454218, 5.3012996, 6.4110174, 5.3012996, 6.3570175, 5.3121004, 6.2706184, 5.2797008, 6.205818, 5.2689, 6.259818, 5.258101, 6.2706184, 5.258101, 6.367818, 5.2473016, 6.4434175, 5.1825013, 6.735018, 5.204101, 6.7566195, 5.204101, 6.832219, 5.1933002, 6.853818, 5.1825013, 6.8430176, 5.1717, 6.8106174, 5.160901, 6.8430176, 5.1933002, 6.8754177, 5.2149005, 6.8970165, 5.139301, 6.8754177, 5.1177006, 6.799818, 5.139301, 6.713419, 5.1501, 6.4434175, 5.160901, 6.3894186, 5.1717, 6.3246174, 5.1717, 6.2706184, 5.1501, 6.249017, 5.1501, 6.1086187, 5.160901, 6.022217, 5.1933002, 5.935816, 5.2797008, 5.914218, 5.2797008, 5.7846165, 5.3229012, 5.622617, 5.3553004, 5.5794163, 5.3769007, 5.547017, 5.420101, 5.5362177, 5.4525003, 5.5362177, 5.4741006, 5.547017, 5.517301, 5.568618, 5.5389013, 5.5902176, 5.5713005, 5.622617, 5.6253, 5.7846165, 5.636101, 5.8386183, 5.636101, 5.914218, 5.6901007, 5.9250174, 5.7549014, 6.087018, 5.7333007, 6.259818, 5.7225018, 6.3030186, 5.7441006, 6.3786182, 5.7549014, 6.432619, 5.7441006, 6.713419, 5.776501, 6.7782183, 5.7549014, 6.8430176, 5.6901007, 6.8754177, 5.7008996, 6.853818, 5.7441006, 6.832219, 5.7549014, 6.799818, 5.7225018, 6.7890186, 5.7225018, 6.821419, 5.7008996, 6.832219, 5.7008996, 6.7566195, 5.7117004, 6.6702194, 5.657701, 6.40022, 5.657701, 6.281418, 5.6253, 6.346218, 5.6253, 6.367818, 5.6469, 6.4650183, 5.657701, 6.540618, 5.6793013, 6.594617, 5.6793013, 6.6918173, 5.6793013, 6.745819, 5.6793013, 6.8106174, 5.6685004, 6.886216, 5.6469, 6.994217, 5.6037016, 7.0914164, 5.614501, 7.145418, 5.614501, 7.1886177, 5.636101, 7.285816, 5.614501, 7.588217, 5.614501, 7.653017, 5.6253, 7.7286167, 5.6793013, 7.847417, 5.6901007, 7.901417, 5.6037016, 7.933817, 5.5713005, 7.8366184, 5.560501, 7.793418, 5.5281, 7.707017, 5.5389013, 7.6314173, 5.5389013, 7.588217, 5.517301, 7.4910164, 5.5065002, 7.4154167, 5.5065002, 7.361418, 5.5065002, 7.285816, 5.4849014, 7.2642174, 5.4632998, 7.2750177, 5.4632998, 7.3290167, 5.4849014, 7.393818, 5.4849014, 7.4694185, 5.495701, 7.707017, 5.517301, 7.761016, 5.5281, 7.8690166, 5.560501, 7.912217, 5.5497003, 7.966216"/>
 <thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>ff0000</color>
 </part>
-<part><rectangle x="2.2" y="4.8" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="4.825" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>cccccc</color>
 </part>
-<part><rectangle x="2.2" y="5.25" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="5.275" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>cccccc</color>
 </part>
-<part><rectangle x="2.2" y="5.65" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="5.6749997" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>cccccc</color>
 </part>
-<part><rectangle x="2.1999998" y="6.05" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="6.075" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>cccccc</color>
 </part>
-<part><rectangle x="2.2" y="6.45" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="6.475" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
 <color>cccccc</color>
 </part>
-<part><rectangle x="2.2" y="6.85" width="0.4" height="0.1"/><thermal_conductivity>1.0</thermal_conductivity>
+<part><rectangle x="2.2" y="6.875" width="0.4" height="0.05"/><thermal_conductivity>1.0</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
@@ -203,17 +216,7 @@
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
-<absorption>0.0</absorption>
-<emissivity>0.0</emissivity>
-<temperature>20.0</temperature>
-<constant_temperature>false</constant_temperature>
-<color>ffffff</color>
-</part>
-<part><rectangle x="2.5500002" y="4.4500003" width="0.1" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
-<specific_heat>1300.0</specific_heat>
-<density>25.0</density>
-<transmission>1.0</transmission>
-<reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
@@ -225,6 +228,7 @@
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
@@ -237,6 +241,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
@@ -248,6 +253,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
@@ -261,7 +267,8 @@
 </part>
 </structure>
 <environment>
-<tree color="b200" x="0.19999999" y="6.0" width="1.0" height="2.0" type="1"/>
+<tree color="b200" x="0.6" y="7.0" width="0.8" height="1.0" type="1"/>
+<tree color="b200" x="0.1" y="6.2000003" width="0.90000004" height="1.8000001" type="1"/>
 </environment>
 <sensor>
 </sensor>
@@ -276,9 +283,9 @@
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>10.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
 <graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><clock>false</clock>
-<text string="Natural daylighting" face="Arial" size="14" style="1" color="ffffff" border="true" x="4.55" y="5.1"/>
-<text string="Press &apos;Q&apos; or &apos;W&apos; to change the sun angle" face="Arial" size="12" style="0" color="ffffff" x="0.4" y="9.6"/>
-<text string="Reflector-linebreak-Window" face="Arial" size="12" style="0" color="0" x="2.9499998" y="4.449999"/>
+<text string="Natural daylighting" face="Arial" size="14" style="1" color="ffffff" border="true" x="0.35000002" y="9.799999"/>
+<text string="Press &apos;Q&apos; or &apos;W&apos; to change the sun angle" face="Arial" size="12" style="0" color="ffffff" x="0.24999997" y="9.349999"/>
+<text string="Light-linebreak-Shelves" face="Arial" size="12" style="0" color="0" x="2.7500002" y="4.45"/>
 <text string="Regular-linebreak-Window" face="Arial" size="12" style="0" color="0" x="7.65" y="4.45"/>
 </view>
 </state>
