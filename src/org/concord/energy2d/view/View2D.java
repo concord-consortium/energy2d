@@ -2783,6 +2783,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				} else {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
 				}
+				if (e.isAltDown()) {
+					// TODO: move everything if nothing is selected
+				}
 			}
 			break;
 		case RECTANGLE_MODE:

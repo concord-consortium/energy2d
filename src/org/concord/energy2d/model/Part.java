@@ -58,13 +58,12 @@ public class Part extends Manipulable {
 	// density kg/m^3. The default value is foam's.
 	private float density = 25f;
 
+	// optical properties
 	private float absorption = 1;
-
 	private float transmission;
-
 	private float reflection;
-
 	private float emissivity;
+	private boolean scattering;
 
 	private float windSpeed;
 	private float windAngle;
@@ -141,6 +140,7 @@ public class Part extends Manipulable {
 		p.density = density;
 		p.absorption = absorption;
 		p.reflection = reflection;
+		p.scattering = scattering;
 		p.transmission = transmission;
 		p.emissivity = emissivity;
 		p.windAngle = windAngle;
@@ -217,6 +217,14 @@ public class Part extends Manipulable {
 		return reflection;
 	}
 
+	public void setScattering(boolean scattering) {
+		this.scattering = scattering;
+	}
+
+	public boolean getScattering() {
+		return scattering;
+	}
+
 	public void setConstantTemperature(boolean b) {
 		constantTemperature = b;
 	}
@@ -273,7 +281,7 @@ public class Part extends Manipulable {
 		return density;
 	}
 
-	boolean absorb(Photon p) {
+	boolean contains(Photon p) {
 		return getShape().contains(p.getX(), p.getY());
 	}
 
@@ -315,6 +323,23 @@ public class Part extends Manipulable {
 			}
 			v1 = r.getVertex(n - 1);
 			v2 = r.getVertex(0);
+			line.setLine(v1, v2);
+			radiate(model, line);
+		}
+
+		else if (shape instanceof Blob2D) {
+			Blob2D r = (Blob2D) shape;
+			int n = r.getPointCount();
+			// must follow the clockwise direction in setting lines
+			Point2D.Float v1, v2;
+			for (int i = 0; i < n - 1; i++) {
+				v1 = r.getPoint(i);
+				v2 = r.getPoint(i + 1);
+				line.setLine(v1, v2);
+				radiate(model, line);
+			}
+			v1 = r.getPoint(n - 1);
+			v2 = r.getPoint(0);
 			line.setLine(v1, v2);
 			radiate(model, line);
 		}
@@ -604,6 +629,7 @@ public class Part extends Manipulable {
 		xml += "<density>" + density + "</density>\n";
 		xml += "<transmission>" + transmission + "</transmission>\n";
 		xml += "<reflection>" + reflection + "</reflection>\n";
+		xml += "<scattering>" + scattering + "</scattering>\n";
 		xml += "<absorption>" + absorption + "</absorption>\n";
 		xml += "<emissivity>" + emissivity + "</emissivity>\n";
 		xml += "<temperature>" + temperature + "</temperature>\n";

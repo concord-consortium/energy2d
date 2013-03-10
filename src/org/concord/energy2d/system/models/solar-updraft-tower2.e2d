@@ -21,11 +21,12 @@
 <mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
 </boundary>
 <structure>
-<part><rectangle x="-0.099999905" y="8.0" width="10.2" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="0.0" y="8.0" width="10.0" height="2.0"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>true</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -36,7 +37,6 @@
 <texture_width>12</texture_width>
 <texture_height>12</texture_height>
 </texture>
-<label>Ground</label>
 <draggable>false</draggable>
 </part>
 <part><rectangle x="5.4" y="4.65" width="0.2" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
@@ -44,6 +44,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>true</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -60,6 +61,7 @@
 <density>10.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -72,11 +74,12 @@
 </texture>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="4.4" y="4.6499977" width="0.2" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
+<part><rectangle x="4.4" y="4.649998" width="0.2" height="2.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>true</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -93,6 +96,7 @@
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -104,6 +108,7 @@
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -116,6 +121,7 @@
 <density>10.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>

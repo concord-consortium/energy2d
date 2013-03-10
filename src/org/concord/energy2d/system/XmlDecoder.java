@@ -95,6 +95,7 @@ class XmlDecoder extends DefaultHandler {
 	private float partEmissivity = Float.NaN;
 	private float partAbsorption = Float.NaN;
 	private float partReflection = Float.NaN;
+	private boolean partScattering;
 	private float partTransmission = Float.NaN;
 	private float partTemperature = Float.NaN;
 	private float partWindSpeed;
@@ -811,6 +812,8 @@ class XmlDecoder extends DefaultHandler {
 			partAbsorption = Float.parseFloat(str);
 		} else if (qName == "reflection") {
 			partReflection = Float.parseFloat(str);
+		} else if (qName == "scattering") {
+			partScattering = Boolean.parseBoolean(str);
 		} else if (qName == "transmission") {
 			partTransmission = Float.parseFloat(str);
 		} else if (qName == "temperature") {
@@ -863,6 +866,7 @@ class XmlDecoder extends DefaultHandler {
 					part.setReflection(partReflection);
 				if (!Float.isNaN(partTransmission))
 					part.setTransmission(partTransmission);
+				part.setScattering(partScattering);
 				part.setWindAngle(partWindAngle);
 				part.setWindSpeed(partWindSpeed);
 				part.setConstantTemperature(partConstantTemperature);
@@ -892,6 +896,7 @@ class XmlDecoder extends DefaultHandler {
 		partAbsorption = Float.NaN;
 		partReflection = Float.NaN;
 		partTransmission = Float.NaN;
+		partScattering = false;
 		partWindSpeed = 0;
 		partWindAngle = 0;
 		partVisible = true;

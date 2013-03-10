@@ -108,20 +108,27 @@ class RaySolver2D {
 					remove = false;
 					synchronized (model.getParts()) {
 						for (Part part : model.getParts()) {
-							if (Math.abs(part.getReflection() - 1) < 0.001f) { // in current implementation, reflection is either 1 or 0
-								if (part.reflect(p, timeStep))
-									break;
-							} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) { // in current implementation, absorption is either 1 or 0
-								if (part.absorb(p)) {
-									i = Math.min(nx, Math.round(p.getX() * idx));
-									j = Math.min(ny, Math.round(p.getY() * idy));
-									if (i < 0)
-										i = 0;
-									if (j < 0)
-										j = 0;
-									q[i][j] = p.getEnergy() * factor;
+							if (part.getScattering()) {
+								if (part.contains(p)) {
 									remove = true;
 									break;
+								}
+							} else {
+								if (Math.abs(part.getReflection() - 1) < 0.001f) { // in current implementation, reflection is either 1 or 0
+									if (part.reflect(p, timeStep))
+										break;
+								} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) { // in current implementation, absorption is either 1 or 0
+									if (part.contains(p)) {
+										i = Math.min(nx, Math.round(p.getX() * idx));
+										j = Math.min(ny, Math.round(p.getY() * idy));
+										if (i < 0)
+											i = 0;
+										if (j < 0)
+											j = 0;
+										q[i][j] = p.getEnergy() * factor;
+										remove = true;
+										break;
+									}
 								}
 							}
 						}

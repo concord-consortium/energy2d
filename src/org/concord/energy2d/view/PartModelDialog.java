@@ -64,6 +64,7 @@ class PartModelDialog extends JDialog {
 	private JRadioButton absorptionRadioButton;
 	private JRadioButton reflectionRadioButton;
 	private JRadioButton transmissionRadioButton;
+	private JRadioButton scatteringRadioButton;
 	private JTextField emissivityField;
 	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField, innerDiameterField, outerDiameterField;
 	private JCheckBox flipXCheckBox, flipYCheckBox;
@@ -92,10 +93,11 @@ class PartModelDialog extends JDialog {
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// currently, a photon is either absorbed, reflected, or transmitted.
-				int absorption = absorptionRadioButton.isSelected() ? 1 : 0;
-				int reflection = reflectionRadioButton.isSelected() ? 1 : 0;
-				int transmission = transmissionRadioButton.isSelected() ? 1 : 0;
+				// currently, a photon is either absorbed, reflected, or transmitted. Scattering is a special case of reflection.
+				boolean scatter = scatteringRadioButton.isSelected();
+				int absorption = scatter ? 0 : (absorptionRadioButton.isSelected() ? 1 : 0);
+				int reflection = scatter ? 1 : (reflectionRadioButton.isSelected() ? 1 : 0);
+				int transmission = scatter ? 0 : (transmissionRadioButton.isSelected() ? 1 : 0);
 
 				float emissivity = parse(emissivityField.getText());
 				if (Float.isNaN(emissivity))
@@ -298,6 +300,7 @@ class PartModelDialog extends JDialog {
 				part.setAbsorption(absorption);
 				part.setReflection(reflection);
 				part.setTransmission(transmission);
+				part.setScattering(scatter);
 				part.setEmissivity(emissivity);
 				part.setLabel(labelField.getText());
 				part.setUid(uid);
@@ -572,7 +575,8 @@ class PartModelDialog extends JDialog {
 
 		// optics
 
-		p = new JPanel(new FlowLayout());
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Interaction with light"));
 		pp = new JPanel(new BorderLayout());
 		pp.add(p, BorderLayout.NORTH);
 		tabbedPane.add(pp, "Optical");
@@ -583,13 +587,21 @@ class PartModelDialog extends JDialog {
 		p.add(absorptionRadioButton);
 		bg.add(absorptionRadioButton);
 
-		reflectionRadioButton = new JRadioButton("Reflection", Math.abs(part.getReflection() - 1) < 0.01);
+		reflectionRadioButton = new JRadioButton("Reflection", part.getScattering() ? false : Math.abs(part.getReflection() - 1) < 0.01);
 		p.add(reflectionRadioButton);
 		bg.add(reflectionRadioButton);
 
 		transmissionRadioButton = new JRadioButton("Transmission", Math.abs(part.getTransmission() - 1) < 0.01);
 		p.add(transmissionRadioButton);
 		bg.add(transmissionRadioButton);
+
+		scatteringRadioButton = new JRadioButton("Scattering", part.getScattering());
+		p.add(scatteringRadioButton);
+		bg.add(scatteringRadioButton);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Radiation"));
+		pp.add(p, BorderLayout.CENTER);
 
 		p.add(new JLabel("Emissivity:"));
 		emissivityField = new JTextField(FORMAT.format(part.getEmissivity()), 10);
