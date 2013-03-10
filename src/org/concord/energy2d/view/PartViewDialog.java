@@ -107,7 +107,9 @@ class PartViewDialog extends JDialog {
 		textureChooser = new TextureChooser();
 		FillPattern fp = part.getFillPattern();
 		if (fp instanceof ColorFill) {
-			colorChooser.setColor(((ColorFill) fp).getColor());
+			Color bgColor = ((ColorFill) fp).getColor();
+			colorChooser.setColor(bgColor);
+			textureChooser.setSelectedBackgroundColor(bgColor);
 		} else if (fp instanceof Texture) {
 			Texture texture = (Texture) fp;
 			textureChooser.setSelectedBackgroundColor(new Color(texture.getBackground()));

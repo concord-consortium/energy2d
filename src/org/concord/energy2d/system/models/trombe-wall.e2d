@@ -6,9 +6,9 @@
 <model>
 <timestep>1.0</timestep>
 <viewupdate_interval>10</viewupdate_interval>
-<sunny>true</sunny><sun_angle>2.6179938</sun_angle>
+<sunny>true</sunny><sun_angle>2.6005406</sun_angle>
 <solar_power_density>50000.0</solar_power_density>
-<solar_ray_count>48</solar_ray_count>
+<solar_ray_count>60</solar_ray_count>
 <solar_ray_speed>0.04</solar_ray_speed>
 <photon_emission_interval>5</photon_emission_interval>
 <z_heat_diffusivity>0.0</z_heat_diffusivity><background_conductivity>1.0</background_conductivity>
@@ -25,7 +25,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<absorption>1.0</absorption>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -41,7 +42,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<absorption>1.0</absorption>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -58,6 +60,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -74,7 +77,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<absorption>1.0</absorption>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -91,7 +95,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<absorption>1.0</absorption>
+<scattering>true</scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -108,6 +113,7 @@
 <density>25.0</density>
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -119,6 +125,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -131,6 +138,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>true</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -141,6 +149,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
+<scattering>true</scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -151,6 +160,7 @@
 <density>10.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -167,6 +177,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -185,7 +196,7 @@
 <sensor>
 <thermometer label="T1" x="3.2" y="6.700001"/>
 <thermometer label="T2" x="2.8" y="4.5"/>
-<thermometer label="T3" x="1.7" y="6.2000003"/>
+<thermometer label="T3" x="1.8000001" y="6.0000005"/>
 <anemometer label="A1" x="2.2000003" y="6.9"/>
 <anemometer label="A2" x="2.2000003" y="5.1"/>
 <anemometer label="A3" x="5.5" y="5.2"/>
@@ -200,7 +211,7 @@
 <color_palette_type>0</color_palette_type>
 <control_panel>true</control_panel>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
-<maximum_temperature>100.0</maximum_temperature>
+<maximum_temperature>50.0</maximum_temperature>
 <graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Trombe Wall" face="Arial" size="18" style="0" color="ffffff" x="0.55" y="9.7"/>
 </view>
 </state>
