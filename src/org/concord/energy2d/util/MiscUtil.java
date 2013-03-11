@@ -229,7 +229,12 @@ public final class MiscUtil {
 
 	/** get the contrast color with the same alpha value */
 	public static Color getContrastColor(Color c) {
-		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue(), c.getAlpha());
+		return getContrastColor(c, c.getAlpha());
+	}
+
+	/** get the contrast color with the same alpha value */
+	public static Color getContrastColor(Color c, int alpha) {
+		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue(), alpha);
 	}
 
 	public static Color parseRGBColor(String str) {

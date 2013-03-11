@@ -1876,9 +1876,9 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						}
 						bgColor = bgColor.darker();
 						bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 128);
-						Color fgColor = MiscUtil.getContrastColor(bgColor);
-						// float rotation = 0.1f * p.getWindSpeed() * model.getTime();
-						float rotation = (float) (Math.PI / 12.0);
+						Color fgColor = MiscUtil.getContrastColor(bgColor, 255);
+						float rotation = p.getWindSpeed() * model.getTime();
+						// float rotation = (float) (Math.PI / 12.0);
 						Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), p.getWindAngle(), (float) Math.abs(Math.sin(rotation)));
 						g.setColor(bgColor);
 						g.fill(a);
