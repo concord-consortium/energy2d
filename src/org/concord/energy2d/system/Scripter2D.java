@@ -1129,6 +1129,9 @@ class Scripter2D extends Scripter {
 		} else if (s == "reflection") {
 			part.setReflection(z);
 			arrayUpdateRequested = true;
+		} else if (s == "scattering") {
+			part.setScattering(z == 1);
+			arrayUpdateRequested = true;
 		} else if (s == "emissivity") {
 			part.setEmissivity(z);
 			arrayUpdateRequested = true;

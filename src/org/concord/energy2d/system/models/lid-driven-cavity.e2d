@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>0.1</timestep>
 <viewupdate_interval>10</viewupdate_interval>
@@ -22,11 +24,13 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
 <constant_temperature>true</constant_temperature>
 <wind_speed>0.5</wind_speed>
+<color>c0ff00</color>
 </part>
 </structure>
 <environment>
@@ -42,10 +46,11 @@
 </controller>
 </model>
 <view>
+<snap_to_grid>true</snap_to_grid>
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>40.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><text string="Lid-driven cavity" face="Arial" size="14" style="0" color="ffffff" border="true" x="4.2659" y="5.5688"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Lid-driven cavity" face="Arial" size="14" style="0" color="ffffff" border="true" x="4.2659" y="5.5688"/>
 </view>
 </state>
