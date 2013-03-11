@@ -109,13 +109,11 @@ class RaySolver2D {
 					synchronized (model.getParts()) {
 						for (Part part : model.getParts()) {
 							if (part.getScattering()) {
-								if (part.contains(p)) {
-									remove = true;
+								if (part.reflect(p, timeStep, true))
 									break;
-								}
 							} else {
 								if (Math.abs(part.getReflection() - 1) < 0.001f) { // in current implementation, reflection is either 1 or 0
-									if (part.reflect(p, timeStep))
+									if (part.reflect(p, timeStep, false))
 										break;
 								} else if (Math.abs(part.getAbsorption() - 1) < 0.001f) { // in current implementation, absorption is either 1 or 0
 									if (part.contains(p)) {

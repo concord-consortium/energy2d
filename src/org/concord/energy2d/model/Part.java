@@ -439,11 +439,11 @@ public class Part extends Manipulable {
 		}
 	}
 
-	boolean reflect(Photon p, float timeStep) {
+	boolean reflect(Photon p, float timeStep, boolean scatter) {
 
 		Shape shape = getShape();
 
-		if (shape instanceof Rectangle2D.Float) {
+		if (shape instanceof Rectangle2D.Float) { // simpler case, faster implementation
 
 			Rectangle2D.Float r = (Rectangle2D.Float) shape;
 			float x0 = r.x;
@@ -453,15 +453,31 @@ public class Part extends Manipulable {
 			if (p.getX() < x1 && p.getX() > x0 && p.getY() < y1 && p.getY() > y0) {
 				float dx = p.getVx() * timeStep;
 				if (p.getX() - dx < x0) {
-					p.setVx(-Math.abs(p.getVx()));
+					if (scatter) {
+						p.setAngle((float) (Math.PI * (0.5 + Math.random())));
+					} else {
+						p.setVx(-Math.abs(p.getVx()));
+					}
 				} else if (p.getX() - dx > x1) {
-					p.setVx(Math.abs(p.getVx()));
+					if (scatter) {
+						p.setAngle((float) (Math.PI * (0.5 - Math.random())));
+					} else {
+						p.setVx(Math.abs(p.getVx()));
+					}
 				}
 				float dy = p.getVy() * timeStep;
 				if (p.getY() - dy < y0) {
-					p.setVy(-Math.abs(p.getVy()));
+					if (scatter) {
+						p.setAngle((float) (Math.PI * (1 + Math.random())));
+					} else {
+						p.setVy(-Math.abs(p.getVy()));
+					}
 				} else if (p.getY() - dy > y1) {
-					p.setVy(Math.abs(p.getVy()));
+					if (scatter) {
+						p.setAngle((float) (Math.PI * Math.random()));
+					} else {
+						p.setVy(Math.abs(p.getVy()));
+					}
 				}
 				return true;
 			}
@@ -470,7 +486,7 @@ public class Part extends Manipulable {
 
 			Polygon2D r = (Polygon2D) shape;
 			if (r.contains(p.getX(), p.getY())) {
-				reflect(r, p, timeStep);
+				reflect(r, p, timeStep, scatter);
 				return true;
 			}
 
@@ -478,7 +494,7 @@ public class Part extends Manipulable {
 
 			Blob2D b = (Blob2D) shape;
 			if (b.contains(p.getX(), p.getY())) {
-				reflect(b, p, timeStep);
+				reflect(b, p, timeStep, scatter);
 				return true;
 			}
 
@@ -486,7 +502,7 @@ public class Part extends Manipulable {
 
 			Ellipse2D.Float e = (Ellipse2D.Float) shape;
 			if (e.contains(p.getX(), p.getY())) {
-				reflect(e, p, timeStep);
+				reflect(e, p, timeStep, scatter);
 				return true;
 			}
 
@@ -496,7 +512,7 @@ public class Part extends Manipulable {
 
 	}
 
-	private static void reflect(Ellipse2D.Float e, Photon p, float timeStep) {
+	private static void reflect(Ellipse2D.Float e, Photon p, float timeStep, boolean scatter) {
 		float a = e.width * 0.5f;
 		float b = e.height * 0.5f;
 		float x = e.x + a;
@@ -513,14 +529,14 @@ public class Part extends Manipulable {
 		Line2D.Float line = new Line2D.Float();
 		for (int i = 0; i < polygonize - 1; i++) {
 			line.setLine(vx[i], vy[i], vx[i + 1], vy[i + 1]);
-			if (reflectFromLine(p, line, timeStep))
+			if (reflectFromLine(p, line, timeStep, scatter))
 				return;
 		}
 		line.setLine(vx[polygonize - 1], vy[polygonize - 1], vx[0], vy[0]);
-		reflectFromLine(p, line, timeStep);
+		reflectFromLine(p, line, timeStep, scatter);
 	}
 
-	private static void reflect(Polygon2D r, Photon p, float timeStep) {
+	private static void reflect(Polygon2D r, Photon p, float timeStep, boolean scatter) {
 		int n = r.getVertexCount();
 		Point2D.Float v1, v2;
 		Line2D.Float line = new Line2D.Float();
@@ -528,16 +544,16 @@ public class Part extends Manipulable {
 			v1 = r.getVertex(i);
 			v2 = r.getVertex(i + 1);
 			line.setLine(v1, v2);
-			if (reflectFromLine(p, line, timeStep))
+			if (reflectFromLine(p, line, timeStep, scatter))
 				return;
 		}
 		v1 = r.getVertex(n - 1);
 		v2 = r.getVertex(0);
 		line.setLine(v1, v2);
-		reflectFromLine(p, line, timeStep);
+		reflectFromLine(p, line, timeStep, scatter);
 	}
 
-	private static void reflect(Blob2D b, Photon p, float timeStep) {
+	private static void reflect(Blob2D b, Photon p, float timeStep, boolean scatter) {
 		int n = b.getPathPointCount();
 		Point2D.Float v1, v2;
 		Line2D.Float line = new Line2D.Float();
@@ -545,16 +561,16 @@ public class Part extends Manipulable {
 			v1 = b.getPathPoint(i);
 			v2 = b.getPathPoint(i + 1);
 			line.setLine(v1, v2);
-			if (reflectFromLine(p, line, timeStep))
+			if (reflectFromLine(p, line, timeStep, scatter))
 				return;
 		}
 		v1 = b.getPathPoint(n - 1);
 		v2 = b.getPathPoint(0);
 		line.setLine(v1, v2);
-		reflectFromLine(p, line, timeStep);
+		reflectFromLine(p, line, timeStep, scatter);
 	}
 
-	private static boolean reflectFromLine(Photon p, Line2D.Float line, float timeStep) {
+	private static boolean reflectFromLine(Photon p, Line2D.Float line, float timeStep, boolean scatter) {
 		float x1 = p.getX();
 		float y1 = p.getY();
 		float x2 = p.getX() - p.getVx() * timeStep;
@@ -567,12 +583,22 @@ public class Part extends Manipulable {
 			float r12 = 1.0f / (float) Math.hypot(x1 - x2, y1 - y2);
 			float sin = (y2 - y1) * r12;
 			float cos = (x2 - x1) * r12;
-			// velocity component parallel to the line
-			float u = p.getVx() * cos + p.getVy() * sin;
-			// velocity component perpendicular to the line
-			float w = p.getVy() * cos - p.getVx() * sin;
-			p.setVx(u * cos + w * sin);
-			p.setVy(u * sin - w * cos);
+			if (scatter) {
+				double angle = -Math.PI * Math.random(); // remember internally the y-axis points downward
+				double cos1 = Math.cos(angle);
+				double sin1 = Math.sin(angle);
+				double cos2 = cos1 * cos - sin1 * sin;
+				double sin2 = sin1 * cos + cos1 * sin;
+				p.setVx((float) (p.getSpeed() * cos2));
+				p.setVy((float) (p.getSpeed() * sin2));
+			} else {
+				// velocity component parallel to the line
+				float u = p.getVx() * cos + p.getVy() * sin;
+				// velocity component perpendicular to the line
+				float w = p.getVy() * cos - p.getVx() * sin;
+				p.setVx(u * cos + w * sin);
+				p.setVy(u * sin - w * cos);
+			}
 			return true;
 		}
 		return false;

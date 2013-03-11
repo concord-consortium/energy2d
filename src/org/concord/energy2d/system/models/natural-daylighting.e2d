@@ -44,9 +44,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>1.0</reflection>
-<scattering>true</scattering>
-<absorption>0.0</absorption>
+<reflection>0.0</reflection>
+<scattering>false</scattering>
+<absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -62,9 +62,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>1.0</reflection>
-<scattering>true</scattering>
-<absorption>0.0</absorption>
+<reflection>0.0</reflection>
+<scattering>false</scattering>
+<absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -79,9 +79,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>1.0</reflection>
-<scattering>true</scattering>
-<absorption>0.0</absorption>
+<reflection>0.0</reflection>
+<scattering>false</scattering>
+<absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -96,9 +96,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>1.0</reflection>
-<scattering>true</scattering>
-<absorption>0.0</absorption>
+<reflection>0.0</reflection>
+<scattering>false</scattering>
+<absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -113,9 +113,9 @@
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
-<reflection>1.0</reflection>
-<scattering>true</scattering>
-<absorption>0.0</absorption>
+<reflection>0.0</reflection>
+<scattering>false</scattering>
+<absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>20.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -267,8 +267,8 @@
 </part>
 </structure>
 <environment>
-<tree color="b200" x="0.6" y="7.0" width="0.8" height="1.0" type="1"/>
-<tree color="b200" x="0.1" y="6.2000003" width="0.90000004" height="1.8000001" type="1"/>
+<tree x="0.6" y="7.0" width="0.8" height="1.0" type="1"/>
+<tree x="0.1" y="6.2000003" width="0.90000004" height="1.8000001" type="1"/>
 </environment>
 <sensor>
 </sensor>

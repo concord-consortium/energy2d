@@ -8,6 +8,8 @@ package org.concord.energy2d.model;
 /**
  * This is NOT really a photon in strict physics sense. It is just a particle for modeling the traveling of light energy.
  * 
+ * @author Charles Xie
+ * 
  * */
 
 public class Photon {
@@ -31,13 +33,18 @@ public class Photon {
 		setAngle(angle);
 	}
 
+	/** This is not really the speed of light, just a number that represents the speed of the light animation. */
+	public float getSpeed() {
+		return c;
+	}
+
 	public float getEnergy() {
 		return energy;
 	}
 
-	private void setAngle(float angle) {
-		vx = (float) Math.cos(angle) * c;
-		vy = (float) Math.sin(angle) * c;
+	void setAngle(float angle) {
+		vx = (float) (Math.cos(angle) * c);
+		vy = (float) (Math.sin(angle) * c);
 	}
 
 	public float getVx() {
