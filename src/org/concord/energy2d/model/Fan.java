@@ -7,6 +7,8 @@
 package org.concord.energy2d.model;
 
 import java.awt.Color;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -22,6 +24,20 @@ public class Fan extends Manipulable {
 
 	public Fan(Rectangle2D.Float shape) {
 		super(shape);
+	}
+
+	public static Area getShape(Rectangle2D.Float r, float speed) {
+		int deg = (int) Math.round(Math.toDegrees(Math.asin(r.height / Math.hypot(r.width, r.height))));
+		if (r.height > r.width) {
+			Area a = new Area(new Arc2D.Float(r, deg, 180 - 2 * deg, Arc2D.PIE));
+			a.add(new Area(new Arc2D.Float(r, -deg, 2 * deg - 180, Arc2D.PIE)));
+			a.add(new Area(new Rectangle2D.Float(speed >= 0 ? r.x : r.x + r.width * 0.5f, r.y + r.height * 0.5f - 2, r.width * 0.5f, 4)));
+			return a;
+		}
+		Area a = new Area(new Arc2D.Float(r, deg, -2 * deg, Arc2D.PIE));
+		a.add(new Area(new Arc2D.Float(r, 180 - deg, 2 * deg, Arc2D.PIE)));
+		a.add(new Area(new Rectangle2D.Float(r.x + r.width * 0.5f - 2, speed > 0 ? r.y : r.y + r.height * 0.5f, 4, r.height * 0.5f)));
+		return a;
 	}
 
 	public void setColor(Color color) {
