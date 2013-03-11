@@ -227,8 +227,9 @@ public final class MiscUtil {
 		throw new NumberFormatException("hex color code error");
 	}
 
+	/** get the contrast color with the same alpha value */
 	public static Color getContrastColor(Color c) {
-		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
+		return new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue(), c.getAlpha());
 	}
 
 	public static Color parseRGBColor(String str) {

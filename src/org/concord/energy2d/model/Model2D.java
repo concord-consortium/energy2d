@@ -78,7 +78,6 @@ public class Model2D {
 	private List<Anemometer> anemometers;
 	private List<Thermometer> thermometers;
 	private List<Thermostat> thermostats;
-	private List<Fan> fans;
 	private List<Part> parts;
 	private List<Photon> photons;
 	private List<Cloud> clouds;
@@ -136,7 +135,6 @@ public class Model2D {
 		anemometers = Collections.synchronizedList(new ArrayList<Anemometer>());
 		thermometers = Collections.synchronizedList(new ArrayList<Thermometer>());
 		thermostats = Collections.synchronizedList(new ArrayList<Thermostat>());
-		fans = Collections.synchronizedList(new ArrayList<Fan>());
 		photons = Collections.synchronizedList(new ArrayList<Photon>());
 		clouds = Collections.synchronizedList(new ArrayList<Cloud>());
 		trees = Collections.synchronizedList(new ArrayList<Tree>());
@@ -335,39 +333,6 @@ public class Model2D {
 
 	public List<Tree> getTrees() {
 		return trees;
-	}
-
-	// fans
-
-	public void addFan(Fan f) {
-		if (f != null && !fans.contains(f))
-			fans.add(f);
-	}
-
-	public void removeFan(Fan f) {
-		fans.remove(f);
-	}
-
-	public List<Fan> getFans() {
-		return fans;
-	}
-
-	public Fan getFan(String uid) {
-		if (uid == null)
-			return null;
-		synchronized (fans) {
-			for (Fan f : fans) {
-				if (uid.equals(f.getUid()))
-					return f;
-			}
-		}
-		return null;
-	}
-
-	public Fan getFan(int i) {
-		if (i < 0 || i >= fans.size())
-			return null;
-		return fans.get(i);
 	}
 
 	private void setGridCellSize() {
@@ -927,12 +892,6 @@ public class Model2D {
 					return true;
 			}
 		}
-		synchronized (fans) {
-			for (Fan f : fans) {
-				if (uid.equals(f.getUid()))
-					return true;
-			}
-		}
 		synchronized (thermometers) {
 			for (Thermometer t : thermometers) {
 				if (uid.equals(t.getUid()))
@@ -1025,21 +984,6 @@ public class Model2D {
 								vWind[i][j] = (float) (windSpeed * Math.sin(p.getWindAngle()));
 							}
 							break;
-						}
-					}
-				}
-				if (!fans.isEmpty()) {
-					Rectangle2D.Float r = null;
-					synchronized (fans) {
-						for (Fan f : fans) {
-							r = (Rectangle2D.Float) f.getShape();
-							if (r.contains(x, y)) {
-								if (r.width < r.height) {
-									uWind[i][j] += (float) f.getSpeed();
-								} else {
-									vWind[i][j] += (float) f.getSpeed();
-								}
-							}
 						}
 					}
 				}
@@ -1157,7 +1101,6 @@ public class Model2D {
 
 	public void clear() {
 		parts.clear();
-		fans.clear();
 		photons.clear();
 		anemometers.clear();
 		thermometers.clear();

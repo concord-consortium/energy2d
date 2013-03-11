@@ -63,7 +63,6 @@ import org.concord.energy2d.math.Polygon2D;
 import org.concord.energy2d.math.Ring2D;
 import org.concord.energy2d.model.Anemometer;
 import org.concord.energy2d.model.Cloud;
-import org.concord.energy2d.model.Fan;
 import org.concord.energy2d.model.HeatFluxSensor;
 import org.concord.energy2d.model.Manipulable;
 import org.concord.energy2d.model.Model2D;
@@ -361,20 +360,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				float x = mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.025f;
-				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.05f;
-				setSelectedManipulable(addFan(x, y, model.getLx() * 0.05f, model.getLy() * 0.1f));
-				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
-				model.refreshMaterialPropertyArrays();
-				repaint();
-			}
-		};
-		a.putValue(Action.NAME, "Fan");
-		a.putValue(Action.SHORT_DESCRIPTION, "Insert a fan where the mouse last clicked");
-		getActionMap().put("Insert Fan", a);
-
-		a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
 				setSelectedManipulable(addThermometer(mouseReleasedPoint.x > 0 ? convertPixelToPointX(mouseReleasedPoint.x) : model.getLx() * 0.5f, mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.5f));
 				notifyManipulationListeners(null, ManipulationEvent.SENSOR_ADDED);
 				repaint();
@@ -558,11 +543,25 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public TextBox getTextBoxByUid(String uid) {
 		if (uid == null)
 			return null;
-		for (TextBox t : textBoxes) {
-			if (uid.equals(t.getUid()))
-				return t;
+		synchronized (textBoxes) {
+			for (TextBox t : textBoxes) {
+				if (uid.equals(t.getUid()))
+					return t;
+			}
 		}
 		return null;
+	}
+
+	public boolean isUidUsed(String uid) {
+		if (uid == null || uid.trim().equals(""))
+			throw new IllegalArgumentException("UID cannot be null or an empty string.");
+		synchronized (textBoxes) {
+			for (TextBox t : textBoxes) {
+				if (uid.equals(t.getUid()))
+					return true;
+			}
+		}
+		return model.isUidUsed(uid);
 	}
 
 	public void addPicture(Icon image, int x, int y) {
@@ -1194,7 +1193,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		drawTrees(g);
 		drawTextBoxes(g);
 		drawPictures(g);
-		drawFans(g);
 		if (showGrid && gridRenderer != null)
 			gridRenderer.render(this, g);
 		if (rulerRenderer != null)
@@ -1607,37 +1605,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		}
 	}
 
-	private void drawFans(Graphics2D g) {
-		if (model.getFans().isEmpty())
-			return;
-		Rectangle2D.Float r;
-		int x, y, w, h;
-		g.setStroke(moderateStroke);
-		synchronized (model.getFans()) {
-			for (Fan f : model.getFans()) {
-				r = (Rectangle2D.Float) f.getShape();
-				x = convertPointToPixelX(r.x);
-				y = convertPointToPixelY(r.y);
-				w = convertLengthToPixelX(r.width);
-				h = convertLengthToPixelY(r.height);
-				g.setColor(f.getColor());
-				Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), f.getSpeed());
-				g.fill(a);
-				g.setColor(selectedManipulable == f ? Color.YELLOW : Color.GRAY.brighter());
-				g.draw(a);
-				if (f == selectedManipulable)
-					HandleSetter.setRects(this, selectedManipulable, handle);
-				if (f.getLabel() != null) {
-					g.setFont(labelFont);
-					g.setColor(getContrastColor(x + w / 2, y + h / 2));
-					String label = f.getLabel();
-					FontMetrics fm = g.getFontMetrics();
-					g.drawString(label, x + w / 2 - fm.stringWidth(label) / 2, y + h / 2 + fm.getHeight());
-				}
-			}
-		}
-	}
-
 	void setErrorMessage(String message) {
 		this.errorMessage = message;
 	}
@@ -1900,7 +1867,23 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							g.fillRect(x, y, w, h);
 						}
 					}
-					g.setColor(Color.black);
+					if (p.getWindSpeed() != 0) {
+						Color bgColor = g.getColor();
+						if (fp instanceof ColorFill) {
+							bgColor = ((ColorFill) fp).getColor();
+						} else if (fp instanceof Texture) {
+							bgColor = new Color(((Texture) fp).getBackground());
+						}
+						bgColor = bgColor.darker();
+						bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 180);
+						Color fgColor = MiscUtil.getContrastColor(bgColor);
+						Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), (float) Math.abs(Math.sin(0.1f * p.getWindSpeed() * model.getTime())));
+						g.setColor(bgColor);
+						g.fill(a);
+						g.setColor(fgColor);
+						g.draw(a);
+					}
+					g.setColor(Color.BLACK);
 					g.drawRect(x - 1, y - 1, w + 2, h + 2);
 					String label = p.getLabel();
 					if (label != null) {
@@ -2260,18 +2243,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					TextBox t = textBoxes.get(i);
 					if (t.contains(rx, ry)) {
 						setSelectedManipulable(t);
-						return;
-					}
-				}
-			}
-		}
-		n = model.getFans().size();
-		if (n > 0) {
-			synchronized (model.getFans()) {
-				for (int i = n - 1; i >= 0; i--) { // later added, higher priority
-					Fan f = model.getFan(i);
-					if (f.contains(rx, ry)) {
-						setSelectedManipulable(f);
 						return;
 					}
 				}
@@ -2838,18 +2809,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							// TODO: movingShape = new MovingAnnulus();
 							// setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 						}
-					} else if (selectedManipulable instanceof Fan && movingShape instanceof MovingFan) {
-						MovingFan mf = (MovingFan) movingShape;
-						Rectangle2D.Float r = mf.getBounds();
-						if (selectedSpot == -1) {
-							int xc = (int) (x - pressedPointRelative.x - r.getCenterX());
-							int yc = (int) (y - pressedPointRelative.y - r.getCenterY());
-							mf.setLocation(xc, yc);
-						} else {
-							float[] a = new float[] { (float) r.getX() + mf.getX(), (float) r.getY() + mf.getY(), (float) r.getWidth(), (float) r.getHeight() };
-							movingShape = new MovingFan(setMovingRect(a, x, y), ((Fan) selectedManipulable).getSpeed());
-							setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-						}
 					}
 				} else {
 					showTip("<html><font color=red>The selected object is not draggable!</font></html>", x, y, 500);
@@ -3058,16 +3017,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 									Point p = ((MovingTree) movingShape).getLocation();
 									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
 									setSelectedManipulable(selectedManipulable);
-								} else if (selectedManipulable instanceof Fan && movingShape instanceof MovingFan) {
-									Rectangle2D r = ((MovingFan) movingShape).getBounds();
-									float x2 = convertPixelToPointX((int) r.getX());
-									float y2 = convertPixelToPointY((int) r.getY());
-									float w2 = convertPixelToLengthX((int) r.getWidth());
-									float h2 = convertPixelToLengthY((int) r.getHeight());
-									Point p = ((MovingFan) movingShape).getLocation();
-									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
-									model.refreshMaterialPropertyArrays();
-									setSelectedManipulable(selectedManipulable);
 								}
 							}
 						}
@@ -3212,12 +3161,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return a;
 	}
 
-	private Fan addFan(float x, float y, float w, float h) {
-		Fan fan = new Fan(new Rectangle2D.Float(x, y, w, h));
-		model.addFan(fan);
-		return fan;
-	}
-
 	private static String getFormattedTime(float time) {
 		String s = "";
 		if (time > 120 && time < 12000)
@@ -3303,7 +3246,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		switch (actionMode) {
 		case SELECT_MODE:
 			int iSpot = -1;
-			if (!showGraph && (selectedManipulable instanceof Part || selectedManipulable instanceof Fan || selectedManipulable instanceof Cloud || selectedManipulable instanceof Tree)) {
+			if (!showGraph && (selectedManipulable instanceof Part || selectedManipulable instanceof Cloud || selectedManipulable instanceof Tree)) {
 				for (int i = 0; i < handle.length; i++) {
 					if (handle[i].x < -10 || handle[i].y < -10)
 						continue;
@@ -3391,19 +3334,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 					if (!draggable)
 						contained = false;
-					if (!contained) {
-						synchronized (model.getFans()) {
-							for (Fan f : model.getFans()) {
-								if (f.contains(rx, ry)) {
-									contained = true;
-									draggable = f.isDraggable();
-									break;
-								}
-							}
-						}
-						if (!draggable)
-							contained = false;
-					}
 					if (!contained) {
 						synchronized (model.getClouds()) {
 							for (Cloud c : model.getClouds()) {
@@ -3623,16 +3553,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				setAnchorPointForRectangularShape(selectedSpot, x, y, r.width, r.height);
 			movingShape = new MovingTree(r, ((Tree) selectedManipulable).getType());
 			((MovingTree) movingShape).setLocation(x, y);
-		} else if (selectedManipulable instanceof Fan) {
-			Fan f = (Fan) selectedManipulable;
-			Rectangle2D.Float r = (Rectangle2D.Float) f.getShape();
-			int a = convertPointToPixelX(r.x);
-			int b = convertPointToPixelY(r.y);
-			int c = convertLengthToPixelX(r.width);
-			int d = convertLengthToPixelY(r.height);
-			if (anchor)
-				setAnchorPointForRectangularShape(selectedSpot, a, b, c, d);
-			movingShape = new MovingFan(new Rectangle2D.Float(a, b, c, d), f.getSpeed());
 		}
 	}
 

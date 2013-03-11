@@ -71,7 +71,7 @@ class AnemometerDialog extends JDialog {
 				if (uid != null) {
 					uid = uid.trim();
 					if (!uid.equals("") && !uid.equals(anemometer.getUid())) {
-						if (view.model.isUidUsed(uid)) {
+						if (view.isUidUsed(uid)) {
 							JOptionPane.showMessageDialog(owner, "UID: " + uid + " has been taken.", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
