@@ -365,6 +365,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				float y = mouseReleasedPoint.y > 0 ? convertPixelToPointY(mouseReleasedPoint.y) : model.getLy() * 0.05f;
 				setSelectedManipulable(addFan(x, y, model.getLx() * 0.05f, model.getLy() * 0.1f));
 				notifyManipulationListeners(null, ManipulationEvent.OBJECT_ADDED);
+				model.refreshMaterialPropertyArrays();
 				repaint();
 			}
 		};
@@ -2444,8 +2445,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				t.setDimension(w, h);
 				t.setX(x0 + x);
 				t.setY(y0 + y);
-			} else if (m instanceof Fan) {
-				System.out.println(m);
 			}
 		}
 		notifyManipulationListeners(m, ManipulationEvent.RESIZE);
@@ -3067,6 +3066,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 									float h2 = convertPixelToLengthY((int) r.getHeight());
 									Point p = ((MovingFan) movingShape).getLocation();
 									resizeManipulableTo(selectedManipulable, x2, y2, w2, h2, convertPixelToPointX(p.x), convertPixelToPointY(p.y));
+									model.refreshMaterialPropertyArrays();
 									setSelectedManipulable(selectedManipulable);
 								}
 							}

@@ -927,6 +927,12 @@ public class Model2D {
 					return true;
 			}
 		}
+		synchronized (fans) {
+			for (Fan f : fans) {
+				if (uid.equals(f.getUid()))
+					return true;
+			}
+		}
 		synchronized (thermometers) {
 			for (Thermometer t : thermometers) {
 				if (uid.equals(t.getUid()))
@@ -990,7 +996,7 @@ public class Model2D {
 	public void refreshMaterialPropertyArrays() {
 		Part p = null;
 		int count = parts.size();
-		float x, y, windSpeed;
+		float x, y, windSpeed = 0;
 		boolean initial = indexOfStep == 0;
 		maximumHeatCapacity = backgroundDensity * backgroundSpecificHeat;
 		float heatCapacity = 0;
@@ -1019,6 +1025,21 @@ public class Model2D {
 								vWind[i][j] = (float) (windSpeed * Math.sin(p.getWindAngle()));
 							}
 							break;
+						}
+					}
+				}
+				if (!fans.isEmpty()) {
+					Rectangle2D.Float r = null;
+					synchronized (fans) {
+						for (Fan f : fans) {
+							r = (Rectangle2D.Float) f.getShape();
+							if (r.contains(x, y)) {
+								if (r.width < r.height) {
+									uWind[i][j] += (float) f.getSpeed();
+								} else {
+									vWind[i][j] += (float) f.getSpeed();
+								}
+							}
 						}
 					}
 				}
@@ -1136,6 +1157,7 @@ public class Model2D {
 
 	public void clear() {
 		parts.clear();
+		fans.clear();
 		photons.clear();
 		anemometers.clear();
 		thermometers.clear();

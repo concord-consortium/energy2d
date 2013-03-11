@@ -19,7 +19,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class Fan extends Manipulable {
 
-	private float speed;
+	private float speed = 0.01f;
 	private Color color = Color.GRAY;
 
 	public Fan(Rectangle2D.Float shape) {
