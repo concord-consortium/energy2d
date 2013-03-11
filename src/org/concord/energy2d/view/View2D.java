@@ -1661,7 +1661,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					vy = model.getYVelocity()[ix][iy];
 					if (!Float.isNaN(vx) && !Float.isNaN(vy)) {
 						if (model.isRunning()) {
-							float direction = Math.signum(model.getVorticity(ix, iy));
+							float direction = Math.signum(model.getVorticity(ix, iy, Sensor.NINE_POINT));
 							a.setAngle((a.getAngle() + (float) Math.hypot(vx, vy) * direction * iconW2 * model.getTimeStep()) % (float) (2 * Math.PI));
 						}
 						if (a.getLabel() != null)
@@ -1875,9 +1875,11 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							bgColor = new Color(((Texture) fp).getBackground());
 						}
 						bgColor = bgColor.darker();
-						bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 180);
+						bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 128);
 						Color fgColor = MiscUtil.getContrastColor(bgColor);
-						Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), (float) Math.abs(Math.sin(0.1f * p.getWindSpeed() * model.getTime())));
+						// float rotation = 0.1f * p.getWindSpeed() * model.getTime();
+						float rotation = (float) (Math.PI / 12.0);
+						Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), p.getWindAngle(), (float) Math.abs(Math.sin(rotation)));
 						g.setColor(bgColor);
 						g.fill(a);
 						g.setColor(fgColor);

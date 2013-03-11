@@ -15,14 +15,14 @@ import java.awt.geom.Rectangle2D;
  */
 class Fan {
 
-	static Area getShape(Rectangle2D.Float r, float speed, float delta) {
+	static Area getShape(Rectangle2D.Float r, float speed, float angle, float delta) {
 		if (r.height > r.width) {
 			float d1 = 0.5f * r.height * delta;
 			float d2 = d1 * 2;
 			float deg = Math.round(Math.toDegrees(0.5 * Math.asin(r.height / Math.hypot(r.width, r.height))));
 			Area a = new Area(new Arc2D.Float(r.x + r.width / 4, r.y + d1, r.width / 2, r.height - d2, deg, 180 - 2 * deg, Arc2D.PIE));
 			a.add(new Area(new Arc2D.Float(r.x + r.width / 4, r.y + d1, r.width / 2, r.height - d2, -deg, 2 * deg - 180, Arc2D.PIE)));
-			a.add(new Area(new Rectangle2D.Float(speed >= 0 ? r.x : r.x + r.width * 0.5f, r.y + r.height * 0.5f - 5, r.width * 0.5f, 10)));
+			a.add(new Area(new Rectangle2D.Float(speed * Math.cos(angle) >= 0 ? r.x : r.x + r.width * 0.5f, r.y + r.height * (0.5f - 0.025f), r.width * 0.5f, 0.05f * r.height)));
 			return a;
 		}
 		float d1 = 0.5f * r.width * delta;
@@ -30,7 +30,7 @@ class Fan {
 		float deg = Math.round(Math.toDegrees(0.5 * Math.asin(r.width / Math.hypot(r.width, r.height))));
 		Area a = new Area(new Arc2D.Float(r.x + d1, r.y + r.height / 4, r.width - d2, r.height / 2, deg, -2 * deg, Arc2D.PIE));
 		a.add(new Area(new Arc2D.Float(r.x + d1, r.y + r.height / 4, r.width - d2, r.height / 2, 180 - deg, 2 * deg, Arc2D.PIE)));
-		a.add(new Area(new Rectangle2D.Float(r.x + r.width * 0.5f - 5, speed > 0 ? r.y : r.y + r.height * 0.5f, 10, r.height * 0.5f)));
+		a.add(new Area(new Rectangle2D.Float(r.x + r.width * (0.5f - 0.025f), speed * Math.sin(angle) > 0 ? r.y : r.y + r.height * 0.5f, 0.05f * r.width, r.height * 0.5f)));
 		return a;
 	}
 

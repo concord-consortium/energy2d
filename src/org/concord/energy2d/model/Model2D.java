@@ -1522,6 +1522,31 @@ public class Model2D {
 		return 0.5f * (du_dy - dv_dx);
 	}
 
+	public float getVorticity(int i, int j, byte stencil) {
+		switch (stencil) {
+		case Sensor.FIVE_POINT:
+			float vor = getVorticity(i, j);
+			vor += getVorticity(i - 1, j);
+			vor += getVorticity(i + 1, j);
+			vor += getVorticity(i, j - 1);
+			vor += getVorticity(i, j + 1);
+			return vor / 5;
+		case Sensor.NINE_POINT:
+			vor = getVorticity(i, j);
+			vor += getVorticity(i - 1, j);
+			vor += getVorticity(i + 1, j);
+			vor += getVorticity(i, j - 1);
+			vor += getVorticity(i, j + 1);
+			vor += getVorticity(i - 1, j - 1);
+			vor += getVorticity(i - 1, j + 1);
+			vor += getVorticity(i + 1, j - 1);
+			vor += getVorticity(i + 1, j + 1);
+			return vor / 9;
+		default:
+			return getVorticity(i, j);
+		}
+	}
+
 	public float[][] getStreamFunction() {
 		return fluidSolver.getStreamFunction(u, v);
 	}
