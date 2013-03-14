@@ -28,7 +28,7 @@ class GraphRenderer {
 	final static byte Y_FIT_BUTTON = 5;
 	final static byte Y_SELECTION_BUTTON = 6;
 
-	final static String[] DATA_TYPES = new String[] { "Temperature (" + '\u2103' + ")", "Heat flux (W/m^2)", "Wind speed (m/s)" };
+	final static String[] DATA_TYPES = new String[] { "Temperature (" + '\u2103' + ")", "Temperature (" + '\u2109' + ")", "Heat flux (W/m^2)", "Wind speed (m/s)" };
 
 	private byte dataType = 0;
 	private String xLabel = "Time (hr)";

@@ -9,11 +9,13 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import org.concord.energy2d.event.ManipulationEvent;
 
@@ -24,7 +26,7 @@ import org.concord.energy2d.event.ManipulationEvent;
 class PreferencesDialog extends JDialog {
 
 	private JCheckBox snapToGridCheckBox;
-	private JCheckBox fahrenheitCheckBox;
+	private JRadioButton celsiusRadioButton, fahrenheitRadioButton;
 	private ActionListener okListener;
 
 	PreferencesDialog(final System2D s2d, boolean modal) {
@@ -43,7 +45,7 @@ class PreferencesDialog extends JDialog {
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				s2d.view.setSnapToGrid(snapToGridCheckBox.isSelected());
-				s2d.view.setFahrenheitUsed(fahrenheitCheckBox.isSelected());
+				s2d.view.setFahrenheitUsed(fahrenheitRadioButton.isSelected());
 				s2d.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				s2d.view.repaint();
 				dispose();
@@ -73,7 +75,7 @@ class PreferencesDialog extends JDialog {
 		panel.add(box, BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setBorder(BorderFactory.createTitledBorder("Edit"));
+		p.setBorder(BorderFactory.createTitledBorder("Edit Mode"));
 		box.add(p);
 
 		snapToGridCheckBox = new JCheckBox("Snap to computational grid (" + s2d.model.getNx() + " x " + s2d.model.getNy() + ")", s2d.view.isSnapToGrid());
@@ -81,16 +83,22 @@ class PreferencesDialog extends JDialog {
 		p.add(snapToGridCheckBox);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p.setBorder(BorderFactory.createTitledBorder("Unit"));
+		p.setBorder(BorderFactory.createTitledBorder("Temperature Unit"));
 		box.add(p);
 
-		fahrenheitCheckBox = new JCheckBox("Use Fahrenheit", s2d.view.getFahrenheitUsed());
-		fahrenheitCheckBox.setToolTipText("Should we use Fahrenheit instead of Celsius?");
-		p.add(fahrenheitCheckBox);
+		ButtonGroup bg = new ButtonGroup();
+		celsiusRadioButton = new JRadioButton("Celsius (" + '\u2103' + ")", !s2d.view.getFahrenheitUsed());
+		celsiusRadioButton.setToolTipText("Use Celsius");
+		p.add(celsiusRadioButton);
+		bg.add(celsiusRadioButton);
+
+		fahrenheitRadioButton = new JRadioButton("Fahrenheit (" + '\u2109' + ")", s2d.view.getFahrenheitUsed());
+		fahrenheitRadioButton.setToolTipText("Use Fahrenheit");
+		p.add(fahrenheitRadioButton);
+		bg.add(fahrenheitRadioButton);
 
 		pack();
 		setLocationRelativeTo(s2d.view);
 
 	}
-
 }

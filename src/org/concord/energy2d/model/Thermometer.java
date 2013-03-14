@@ -25,6 +25,10 @@ public class Thermometer extends Sensor {
 		return new Thermometer(x, y);
 	}
 
+	public float getCurrentDataInFahrenheit() {
+		return getCurrentData() * 1.8f + 32;
+	}
+
 	@Override
 	public String toXml() {
 		String xml = "<thermometer";

@@ -1316,7 +1316,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			if (model.getTime() > graphRenderer.getXmax())
 				graphRenderer.doubleXmax();
 			switch (graphRenderer.getDataType()) {
-			case 0: // temperature
+			case 0: // temperature (Celsius)
 				if (!model.getThermometers().isEmpty()) {
 					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
 					synchronized (model.getThermometers()) {
@@ -1331,7 +1331,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				}
 				break;
-			case 1: // heat flux
+			case 1: // temperature (Fahrenheit)
+				if (!model.getThermometers().isEmpty()) {
+					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
+					synchronized (model.getThermometers()) {
+						for (Thermometer t : model.getThermometers()) {
+							if (t.getCurrentDataInFahrenheit() > graphRenderer.getYmax() + dy) { // allow overshot above max
+								graphRenderer.increaseYmax();
+							} else if (t.getCurrentDataInFahrenheit() < graphRenderer.getYmin() - dy) { // allow overshot below min
+								graphRenderer.decreaseYmin();
+							}
+							graphRenderer.drawData(g, t.getData(), t.getLabel(), selectedManipulable == t);
+						}
+					}
+				}
+				break;
+			case 2: // heat flux
 				if (!model.getHeatFluxSensors().isEmpty()) {
 					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
 					synchronized (model.getHeatFluxSensors()) {
@@ -1346,7 +1361,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					}
 				}
 				break;
-			case 2: // wind speed
+			case 3: // wind speed
 				if (!model.getAnemometers().isEmpty()) {
 					float dy = (graphRenderer.getYmax() - graphRenderer.getYmin()) * 0.05f;
 					synchronized (model.getAnemometers()) {
