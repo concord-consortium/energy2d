@@ -257,6 +257,16 @@ public class System2D extends JApplet implements MwService, ManipulationListener
 
 		a = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				PreferencesDialog d = new PreferencesDialog(System2D.this, true);
+				d.setVisible(true);
+			}
+		};
+		a.putValue(Action.NAME, "Preferences");
+		a.putValue(Action.SHORT_DESCRIPTION, "Open the Preferences Dialog");
+		view.getActionMap().put("Preferences", a);
+
+		a = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
 				if (nextSim != null) {
 					try {
 						loadSim(nextSim);

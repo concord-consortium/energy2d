@@ -1097,6 +1097,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 		});
 		popupMenu.add(mi);
+
+		mi = new JMenuItem("Preferences...");
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Action a = getActionMap().get("Preferences");
+				if (a != null)
+					a.actionPerformed(e);
+			}
+		});
+		popupMenu.add(mi);
 		popupMenu.addSeparator();
 
 		JMenu subMenu = new JMenu("Help");
