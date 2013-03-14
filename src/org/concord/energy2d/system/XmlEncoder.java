@@ -183,6 +183,9 @@ class XmlEncoder {
 		if (box.view.getGraphDataType() > 0) {
 			sb.append("<graph_data_type>" + box.view.getGraphDataType() + "</graph_data_type>\n");
 		}
+		if (box.view.getFahrenheitUsed()) {
+			sb.append("<fahrenheit_used>true</fahrenheit_used>\n");
+		}
 		if (box.view.isRulerOn()) {
 			sb.append("<ruler>true</ruler>\n");
 		}

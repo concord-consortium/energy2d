@@ -143,6 +143,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	private float heatFluxScale = VectorDistributionRenderer.getDefaultScale();
 	private boolean dotForZeroHeatFlux;
 	private ThermostatRenderer thermostatRenderer;
+	private boolean fahrenheitUsed;
 	private boolean showIsotherm;
 	private boolean showStreamLines;
 	private boolean showVelocity;
@@ -681,6 +682,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	public void setFahrenheitUsed(boolean b) {
+		fahrenheitUsed = b;
+	}
+
+	public boolean getFahrenheitUsed() {
+		return fahrenheitUsed;
 	}
 
 	public void setControlPanelVisible(boolean b) {
@@ -1462,7 +1471,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						break;
 					case MOUSE_READ_TEMPERATURE:
 						float pointValue = model.getTemperatureAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
-						drawMouseReadString(g, TEMPERATURE_FORMAT.format(pointValue) + " " + '\u2103');
+						drawMouseReadString(g, TEMPERATURE_FORMAT.format(fahrenheitUsed ? pointValue * 1.8 + 32 : pointValue) + " " + (fahrenheitUsed ? '\u2109' : '\u2103'));
 						break;
 					case MOUSE_READ_THERMAL_ENERGY:
 						pointValue = model.getThermalEnergyAt(convertPixelToPointXPrecisely(mouseMovedPoint.x), convertPixelToPointYPrecisely(mouseMovedPoint.y));
@@ -1747,7 +1756,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 					temp = model.getTemperature(Math.round(nx * rx), Math.round(ny * ry) + shiftH, t.getStencil());
 					if (!Float.isNaN(temp)) {
 						t.setSensingSpotY(sensingSpotY);
-						str = TEMPERATURE_FORMAT.format(temp) + '\u2103';
+						str = TEMPERATURE_FORMAT.format(fahrenheitUsed ? temp * 1.8 + 32 : temp) + (fahrenheitUsed ? '\u2109' : '\u2103');
 						centerString(str, g, (int) (x + iconW2), y - 5, true);
 						if (t.getLabel() != null)
 							centerString(t.getLabel(), g, (int) (x + iconW2), y + s.getIconHeight() + 12, false);
@@ -3181,7 +3190,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				for (Thermometer t : model.getThermometers()) {
 					float[] data = graphRenderer.getData(t.getData(), x, y);
 					if (data != null) {
-						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
+						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(fahrenheitUsed ? data[1] * 1.8 + 32 : data[1]) + " " + (fahrenheitUsed ? '\u2109' : '\u2103') + ")";
 						if (t.getLabel() == null)
 							return s;
 						return t.getLabel() + ": " + s;

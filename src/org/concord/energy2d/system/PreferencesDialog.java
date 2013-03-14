@@ -24,6 +24,7 @@ import org.concord.energy2d.event.ManipulationEvent;
 class PreferencesDialog extends JDialog {
 
 	private JCheckBox snapToGridCheckBox;
+	private JCheckBox fahrenheitCheckBox;
 	private ActionListener okListener;
 
 	PreferencesDialog(final System2D s2d, boolean modal) {
@@ -42,6 +43,7 @@ class PreferencesDialog extends JDialog {
 		okListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				s2d.view.setSnapToGrid(snapToGridCheckBox.isSelected());
+				s2d.view.setFahrenheitUsed(fahrenheitCheckBox.isSelected());
 				s2d.view.notifyManipulationListeners(null, ManipulationEvent.PROPERTY_CHANGE);
 				s2d.view.repaint();
 				dispose();
@@ -71,11 +73,20 @@ class PreferencesDialog extends JDialog {
 		panel.add(box, BorderLayout.CENTER);
 
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Edit"));
 		box.add(p);
 
 		snapToGridCheckBox = new JCheckBox("Snap to computational grid (" + s2d.model.getNx() + " x " + s2d.model.getNy() + ")", s2d.view.isSnapToGrid());
 		snapToGridCheckBox.setToolTipText("Should objects' shapes and coordinates be snapped to the computational grid?");
 		p.add(snapToGridCheckBox);
+
+		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p.setBorder(BorderFactory.createTitledBorder("Unit"));
+		box.add(p);
+
+		fahrenheitCheckBox = new JCheckBox("Use Fahrenheit", s2d.view.getFahrenheitUsed());
+		fahrenheitCheckBox.setToolTipText("Should we use Fahrenheit instead of Celsius?");
+		p.add(fahrenheitCheckBox);
 
 		pack();
 		setLocationRelativeTo(s2d.view);
