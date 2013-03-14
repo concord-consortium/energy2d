@@ -1217,6 +1217,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (rulerRenderer != null)
 			rulerRenderer.render(this, g);
 		if (showColorPalette && heatMapType != HEATMAP_NONE) {
+			colorPalette.setUseFahrenheit(fahrenheitUsed);
 			g.setStroke(thinStroke);
 			switch (heatMapType) {
 			case HEATMAP_TEMPERATURE:
@@ -1341,7 +1342,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 							} else if (t.getCurrentDataInFahrenheit() < graphRenderer.getYmin() - dy) { // allow overshot below min
 								graphRenderer.decreaseYmin();
 							}
-							graphRenderer.drawData(g, t.getData(), t.getLabel(), selectedManipulable == t);
+							graphRenderer.drawTransformedData(g, t.getData(), t.getLabel(), selectedManipulable == t, 1.8f, 32);
 						}
 					}
 				}
@@ -3215,7 +3216,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				for (Thermometer t : model.getThermometers()) {
 					float[] data = graphRenderer.getData(t.getData(), x, y);
 					if (data != null) {
-						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(fahrenheitUsed ? data[1] * 1.8 + 32 : data[1]) + " " + (fahrenheitUsed ? '\u2109' : '\u2103') + ")";
+						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2103' + ")";
 						if (t.getLabel() == null)
 							return s;
 						return t.getLabel() + ": " + s;
@@ -3224,6 +3225,19 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			}
 			break;
 		case 1:
+			synchronized (model.getThermometers()) {
+				for (Thermometer t : model.getThermometers()) {
+					float[] data = graphRenderer.getTransformedData(t.getData(), x, y, 1.8f, 32);
+					if (data != null) {
+						String s = "(" + getFormattedTime(data[0]) + ", " + TEMPERATURE_FORMAT.format(data[1]) + " " + '\u2109' + ")";
+						if (t.getLabel() == null)
+							return s;
+						return t.getLabel() + ": " + s;
+					}
+				}
+			}
+			break;
+		case 2:
 			synchronized (model.getHeatFluxSensors()) {
 				for (HeatFluxSensor f : model.getHeatFluxSensors()) {
 					float[] data = graphRenderer.getData(f.getData(), x, y);
@@ -3236,7 +3250,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				}
 			}
 			break;
-		case 2:
+		case 3:
 			synchronized (model.getAnemometers()) {
 				for (Anemometer a : model.getAnemometers()) {
 					float[] data = graphRenderer.getData(a.getData(), x, y);

@@ -771,6 +771,25 @@ public class Model2D {
 			}
 			break;
 		case 1:
+			if (!thermometers.isEmpty()) {
+				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
+				float min, max;
+				synchronized (thermometers) {
+					for (Thermometer t : thermometers) {
+						min = t.getDataMinimum() * 1.8f + 32;
+						if (Float.isNaN(min)) // no data has been collected
+							return null;
+						max = t.getDataMaximum() * 1.8f + 32;
+						if (bounds[0] > min)
+							bounds[0] = min;
+						if (bounds[1] < max)
+							bounds[1] = max;
+					}
+				}
+				return bounds;
+			}
+			break;
+		case 2:
 			if (!heatFluxSensors.isEmpty()) {
 				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
 				float min, max;
@@ -789,7 +808,7 @@ public class Model2D {
 				return bounds;
 			}
 			break;
-		case 2:
+		case 3:
 			if (!anemometers.isEmpty()) {
 				float[] bounds = new float[] { Float.MAX_VALUE, -Float.MAX_VALUE };
 				float min, max;

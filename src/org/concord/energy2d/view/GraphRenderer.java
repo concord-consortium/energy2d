@@ -407,6 +407,45 @@ class GraphRenderer {
 
 	}
 
+	void drawTransformedData(Graphics2D g, List<TimedData> data, String label, boolean highlight, float a, float b) {
+
+		g.setStroke(curveStroke);
+		g.setColor(highlight ? Color.yellow : fgColor);
+
+		int n = data.size();
+		if (n > 0) {
+			int m = Math.max(1, (int) (n / w));
+			TimedData d = data.get(0);
+			float t1 = d.getTime();
+			float v1 = a * d.getValue() + b;
+			float t2, v2;
+			int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+			float scaleX = w / xmax;
+			float scaleY = h / (ymax - ymin);
+			synchronized (data) {
+				for (int i = m; i <= n - m; i += m) {
+					x1 = (int) (x + t1 * scaleX);
+					y1 = (int) (y + h - (v1 - ymin) * scaleY);
+					if (x1 > x + w)
+						break;
+					d = data.get(i);
+					t2 = d.getTime();
+					v2 = a * d.getValue() + b;
+					x2 = (int) (x + t2 * scaleX);
+					y2 = (int) (y + h - (v2 - ymin) * scaleY);
+					g.drawLine(x1, y1, x2, y2);
+					t1 = t2;
+					v1 = v2;
+				}
+			}
+			if (label != null) {
+				g.setFont(labelFont);
+				g.drawString(label, x2 + 5, y2);
+			}
+		}
+
+	}
+
 	float[] getData(List<TimedData> data, int rx, int ry) {
 		if (!data.isEmpty()) {
 			float t, v;
@@ -417,6 +456,26 @@ class GraphRenderer {
 				for (TimedData d : data) {
 					t = d.getTime();
 					v = d.getValue();
+					dx = (int) (x + t * scaleX) - rx;
+					dy = (int) (y + h - (v - ymin) * scaleY) - ry;
+					if (dx * dx + dy * dy < 100)
+						return new float[] { t, v };
+				}
+			}
+		}
+		return null;
+	}
+
+	float[] getTransformedData(List<TimedData> data, int rx, int ry, float a, float b) {
+		if (!data.isEmpty()) {
+			float t, v;
+			int dx = 0, dy = 0;
+			float scaleX = w / xmax;
+			float scaleY = h / (ymax - ymin);
+			synchronized (data) {
+				for (TimedData d : data) {
+					t = d.getTime();
+					v = d.getValue() * a + b;
 					dx = (int) (x + t * scaleX) - rx;
 					dy = (int) (y + h - (v - ymin) * scaleY) - ry;
 					if (dx * dx + dy * dy < 100)

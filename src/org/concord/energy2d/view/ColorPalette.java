@@ -30,6 +30,7 @@ class ColorPalette {
 	private float rx, ry, rw, rh;
 	private int labelCount = 5;
 	private int w, h, x, y;
+	private boolean fahrenheitUsed;
 
 	ColorPalette(short[][] rgbScale) {
 		this.rgbScale = rgbScale;
@@ -46,6 +47,10 @@ class ColorPalette {
 		default:
 			return RAINBOW_RGB;
 		}
+	}
+
+	void setUseFahrenheit(boolean b) {
+		fahrenheitUsed = b;
 	}
 
 	void setRect(float rx, float ry, float rw, float rh) {
@@ -101,7 +106,11 @@ class ColorPalette {
 			g.draw3DRect(x, y, w, h, true);
 			String s = null;
 			for (int i = 0; i < labelCount + 1; i++) {
-				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				if (fahrenheitUsed) {
+					s = Math.round((min + i * (max - min) / labelCount) * 1.8 + 32) + "\u2109";
+				} else {
+					s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				}
 				g.drawString(s, x + w + 15, y + h * (float) i / (float) labelCount + 2.5f);
 			}
 		} else {
@@ -114,7 +123,11 @@ class ColorPalette {
 			String s = null;
 			FontMetrics fm = g.getFontMetrics();
 			for (int i = 0; i < labelCount + 1; i++) {
-				s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				if (fahrenheitUsed) {
+					s = Math.round((min + i * (max - min) / labelCount) * 1.8 + 32) + "\u2109";
+				} else {
+					s = (int) (min + i * (max - min) / labelCount) + "\u2103";
+				}
 				g.drawString(s, x + w * (float) i / (float) labelCount - fm.stringWidth(s) * 0.5f, y + h + 15);
 			}
 		}
