@@ -185,6 +185,13 @@ class GraphRenderer {
 		yLabel = DATA_TYPES[dataType];
 	}
 
+	void previous() {
+		dataType--;
+		if (dataType < 0)
+			dataType = (byte) (DATA_TYPES.length - 1);
+		yLabel = DATA_TYPES[dataType];
+	}
+
 	void setDataType(byte dataType) {
 		this.dataType = (byte) Math.min(DATA_TYPES.length - 1, dataType);
 		yLabel = DATA_TYPES[this.dataType];

@@ -686,6 +686,13 @@ public class View2D extends JPanel implements PropertyChangeListener {
 
 	public void setFahrenheitUsed(boolean b) {
 		fahrenheitUsed = b;
+		if (graphRenderer != null) {
+			if (getGraphDataType() <= 1) {
+				graphRenderer.setDataType((byte) (b ? 1 : 0));
+				if (model.getTime() > 0) // when the range can be determined
+					autofitGraph();
+			}
+		}
 	}
 
 	public boolean getFahrenheitUsed() {
@@ -2946,13 +2953,18 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {
 				graphRenderer.decreaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_FIT_BUTTON, x, y)) {
-				float[] bounds = model.getSensorDataBounds(getGraphDataType());
-				if (bounds != null && bounds[0] < bounds[1]) {
-					graphRenderer.setYmin(bounds[0]);
-					graphRenderer.setYmax(bounds[1]);
-				}
+				autofitGraph();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON, x, y)) {
-				graphRenderer.next();
+				if (e.isShiftDown()) {
+					graphRenderer.previous();
+				} else {
+					graphRenderer.next();
+				}
+				if (getGraphDataType() == 0)
+					setFahrenheitUsed(false);
+				else if (getGraphDataType() == 1)
+					setFahrenheitUsed(true);
+				autofitGraph();
 			}
 			repaint();
 			e.consume();
@@ -3154,6 +3166,14 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		e.consume();
 		movingShape = null;
 		mouseBeingDragged = false;
+	}
+
+	private void autofitGraph() {
+		float[] bounds = model.getSensorDataBounds(getGraphDataType());
+		if (bounds != null && bounds[0] < bounds[1]) {
+			graphRenderer.setYmin(bounds[0]);
+			graphRenderer.setYmax(bounds[1]);
+		}
 	}
 
 	public void addThermometer(float x, float y, String label) {
