@@ -26,7 +26,8 @@ class GraphRenderer {
 	final static byte Y_EXPAND_BUTTON = 3;
 	final static byte Y_SHRINK_BUTTON = 4;
 	final static byte Y_FIT_BUTTON = 5;
-	final static byte Y_SELECTION_BUTTON = 6;
+	final static byte Y_SELECTION_BUTTON_LEFT_ARROW = 6;
+	final static byte Y_SELECTION_BUTTON_RIGHT_ARROW = 7;
 
 	final static String[] DATA_TYPES = new String[] { "Temperature (" + '\u2103' + ")", "Temperature (" + '\u2109' + ")", "Heat flux (W/m^2)", "Wind speed (m/s)" };
 
@@ -52,7 +53,7 @@ class GraphRenderer {
 	private Rectangle yExpandButton, yShrinkButton;
 	private Rectangle ySelectButton;
 	private Rectangle yFitButton;
-	private Polygon spinButton;
+	private Polygon[] arrowButtons;
 	private Point mouseMovedPoint;
 
 	GraphRenderer(int x, int y, int w, int h) {
@@ -63,7 +64,7 @@ class GraphRenderer {
 		yShrinkButton = new Rectangle();
 		ySelectButton = new Rectangle();
 		yFitButton = new Rectangle();
-		spinButton = new Polygon();
+		arrowButtons = new Polygon[] { new Polygon(), new Polygon() };
 		setFrame(x, y, w, h);
 	}
 
@@ -173,8 +174,10 @@ class GraphRenderer {
 			return yShrinkButton.contains(rx, ry);
 		case Y_FIT_BUTTON:
 			return yFitButton.contains(rx, ry);
-		case Y_SELECTION_BUTTON:
-			return ySelectButton.contains(rx, ry);
+		case Y_SELECTION_BUTTON_LEFT_ARROW:
+			return new Rectangle(ySelectButton.x, ySelectButton.y, ySelectButton.width / 2, ySelectButton.height).contains(rx, ry);
+		case Y_SELECTION_BUTTON_RIGHT_ARROW:
+			return new Rectangle(ySelectButton.x + ySelectButton.width / 2, ySelectButton.y, ySelectButton.width / 2, ySelectButton.height).contains(rx, ry);
 		default:
 			return false;
 		}
@@ -201,20 +204,26 @@ class GraphRenderer {
 		return dataType;
 	}
 
-	private void centerString(String s, Graphics2D g, int x, int y, Shape shape) {
+	private void centerString(String s, Graphics2D g, int x, int y, Shape[] shapes) {
 		int stringWidth = g.getFontMetrics().stringWidth(s);
-		if (shape == spinButton) {
+		if (shapes == arrowButtons) {
 			Color oldColor = g.getColor();
 			g.setColor(Color.lightGray);
-			ySelectButton.setBounds(x - stringWidth / 2 - 5, y - 10, stringWidth + 20, 16);
+			ySelectButton.setBounds(x - stringWidth / 2 - 20, y - 10, stringWidth + 40, 16);
 			g.fill3DRect(ySelectButton.x, ySelectButton.y, ySelectButton.width, ySelectButton.height, true);
 			g.setColor(oldColor);
-			int x2 = x + stringWidth / 2 + 2;
-			spinButton.reset();
-			spinButton.addPoint(x2, y - 6);
-			spinButton.addPoint(x2 + 10, y - 6);
-			spinButton.addPoint(x2 + 5, y);
-			g.fillPolygon(spinButton);
+			int x2 = x - stringWidth / 2 - 15;
+			arrowButtons[0].reset();
+			arrowButtons[0].addPoint(x2 + 10, y - 6);
+			arrowButtons[0].addPoint(x2 + 10, y);
+			arrowButtons[0].addPoint(x2 + 4, y - 3);
+			g.fillPolygon(arrowButtons[0]);
+			x2 = x + stringWidth / 2 + 5;
+			arrowButtons[1].reset();
+			arrowButtons[1].addPoint(x2 + 4, y - 6);
+			arrowButtons[1].addPoint(x2 + 4, y);
+			arrowButtons[1].addPoint(x2 + 10, y - 3);
+			g.fillPolygon(arrowButtons[1]);
 		}
 		g.drawString(s, x - stringWidth / 2, y);
 	}
@@ -332,7 +341,7 @@ class GraphRenderer {
 				g.drawLine(x, k, x + 2, k);
 			}
 		}
-		centerString(yLabel, g, x + 50, y + 10, spinButton);
+		centerString(yLabel, g, x + 70, y + 10, arrowButtons);
 
 		if (mouseMovedPoint != null)
 			drawButtonInfo(g);

@@ -31,6 +31,7 @@
 <constant_temperature>true</constant_temperature>
 <wind_speed>0.5</wind_speed>
 <color>c0ff00</color>
+<visible>false</visible>
 </part>
 </structure>
 <environment>

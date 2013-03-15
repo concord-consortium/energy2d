@@ -1837,237 +1837,243 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		g.setStroke(moderateStroke);
 		synchronized (parts) {
 			for (Part p : parts) {
-				if (!p.isVisible())
-					continue;
-				Shape s = p.getShape();
-				if (s instanceof Ellipse2D.Float) {
-					Ellipse2D.Float e = (Ellipse2D.Float) s;
-					int x = convertPointToPixelX(e.x);
-					int y = convertPointToPixelY(e.y);
-					int w = convertLengthToPixelX(e.width);
-					int h = convertLengthToPixelY(e.height);
-					FillPattern fillPattern = p.getFillPattern();
-					if (fillPattern instanceof ColorFill) {
-						if (p.isFilled()) {
-							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
-							g.fillOval(x, y, w, h);
-						} else {
-							drawStatus(g, p, x + w / 2, y + h / 2);
-						}
-					} else if (fillPattern instanceof Texture) {
-						setPaint(g, (Texture) fillPattern, p.isFilled());
-						g.fillOval(x, y, w, h);
-					}
-					g.setColor(Color.black);
-					g.drawOval(x - 1, y - 1, w + 2, h + 2);
-					String label = p.getLabel();
-					if (label != null) {
-						String partLabel = p.getLabel(label, model);
-						if (partLabel != null)
-							label = partLabel;
-						g.setFont(labelFont);
-						FontMetrics fm = g.getFontMetrics();
-						int labelWidth = fm.stringWidth(label);
-						float x0 = x + 0.5f * w;
-						float y0 = y + 0.5f * h;
-						float x1 = x0 - labelWidth / 2;
-						float y1 = y0 + fm.getHeight() / 4;
-						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
-						if (w < h * 0.25f) {
-							g.rotate(Math.PI * 0.5, x0, y0);
-							g.drawString(label, x1, y1);
-							g.rotate(-Math.PI * 0.5, x0, y0);
-						} else {
-							g.drawString(label, x1, y1);
-						}
-					}
-				} else if (s instanceof Rectangle2D.Float) {
-					Rectangle2D.Float r = (Rectangle2D.Float) s;
-					int x = convertPointToPixelX(r.x);
-					int y = convertPointToPixelY(r.y);
-					int w = convertLengthToPixelX(r.width);
-					int h = convertLengthToPixelY(r.height);
-					FillPattern fp = p.getFillPattern();
-					if (fp instanceof ColorFill) {
-						if (p.isFilled()) {
-							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
-							g.fillRect(x, y, w, h);
-						} else {
-							drawStatus(g, p, x + w / 2, y + h / 2);
-						}
-					} else if (fp instanceof Texture) {
-						Texture tex = (Texture) fp;
-						if (tex.getStyle() == TextureFactory.INSULATION) { // special case: draw standard insulation representation
-							Rectangle r2 = new Rectangle(x, y, w, h);
+				if (p.isVisible()) {
+					Shape s = p.getShape();
+					if (s instanceof Ellipse2D.Float) {
+						Ellipse2D.Float e = (Ellipse2D.Float) s;
+						int x = convertPointToPixelX(e.x);
+						int y = convertPointToPixelY(e.y);
+						int w = convertLengthToPixelX(e.width);
+						int h = convertLengthToPixelY(e.height);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
 							if (p.isFilled()) {
-								g.setColor(getPartColor(p, new Color(tex.getBackground())));
-								g.fill(r2);
+								g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+								g.fillOval(x, y, w, h);
+							} else {
+								drawStatus(g, p, x + w / 2, y + h / 2);
 							}
-							TextureFactory.renderSpecialCases(r2, tex, g);
-						} else {
-							setPaint(g, (Texture) fp, p.isFilled());
-							g.fillRect(x, y, w, h);
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern, p.isFilled());
+							g.fillOval(x, y, w, h);
 						}
-					}
-					if (p.getWindSpeed() != 0) {
-						Color bgColor = g.getColor();
+						g.setColor(Color.black);
+						g.drawOval(x - 1, y - 1, w + 2, h + 2);
+						String label = p.getLabel();
+						if (label != null) {
+							String partLabel = p.getLabel(label, model);
+							if (partLabel != null)
+								label = partLabel;
+							g.setFont(labelFont);
+							FontMetrics fm = g.getFontMetrics();
+							int labelWidth = fm.stringWidth(label);
+							float x0 = x + 0.5f * w;
+							float y0 = y + 0.5f * h;
+							float x1 = x0 - labelWidth / 2;
+							float y1 = y0 + fm.getHeight() / 4;
+							g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+							if (w < h * 0.25f) {
+								g.rotate(Math.PI * 0.5, x0, y0);
+								g.drawString(label, x1, y1);
+								g.rotate(-Math.PI * 0.5, x0, y0);
+							} else {
+								g.drawString(label, x1, y1);
+							}
+						}
+					} else if (s instanceof Rectangle2D.Float) {
+						Rectangle2D.Float r = (Rectangle2D.Float) s;
+						int x = convertPointToPixelX(r.x);
+						int y = convertPointToPixelY(r.y);
+						int w = convertLengthToPixelX(r.width);
+						int h = convertLengthToPixelY(r.height);
+						FillPattern fp = p.getFillPattern();
 						if (fp instanceof ColorFill) {
-							bgColor = ((ColorFill) fp).getColor();
+							if (p.isFilled()) {
+								g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+								g.fillRect(x, y, w, h);
+							} else {
+								drawStatus(g, p, x + w / 2, y + h / 2);
+							}
 						} else if (fp instanceof Texture) {
-							bgColor = new Color(((Texture) fp).getBackground());
+							Texture tex = (Texture) fp;
+							if (tex.getStyle() == TextureFactory.INSULATION) { // special case: draw standard insulation representation
+								Rectangle r2 = new Rectangle(x, y, w, h);
+								if (p.isFilled()) {
+									g.setColor(getPartColor(p, new Color(tex.getBackground())));
+									g.fill(r2);
+								}
+								TextureFactory.renderSpecialCases(r2, tex, g);
+							} else {
+								setPaint(g, (Texture) fp, p.isFilled());
+								g.fillRect(x, y, w, h);
+							}
 						}
-						bgColor = bgColor.darker();
-						bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 128);
-						Color fgColor = MiscUtil.getContrastColor(bgColor, 255);
-						float rotation = p.getWindSpeed() * model.getTime();
-						// float rotation = (float) (Math.PI / 12.0);
-						Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), p.getWindAngle(), (float) Math.abs(Math.sin(rotation)));
-						g.setColor(bgColor);
-						g.fill(a);
-						g.setColor(fgColor);
-						g.draw(a);
-					}
-					g.setColor(Color.BLACK);
-					g.drawRect(x - 1, y - 1, w + 2, h + 2);
-					String label = p.getLabel();
-					if (label != null) {
-						String partLabel = p.getLabel(label, model);
-						if (partLabel != null)
-							label = partLabel;
-						g.setFont(labelFont);
-						FontMetrics fm = g.getFontMetrics();
-						int labelWidth = fm.stringWidth(label);
-						float x0 = x + 0.5f * w;
-						float y0 = y + 0.5f * h;
-						float x1 = x0 - labelWidth / 2;
-						float y1 = y0 + fm.getHeight() / 4;
-						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
-						if (w < h * 0.25f) {
-							g.rotate(Math.PI * 0.5, x0, y0);
-							g.drawString(label, x1, y1);
-							g.rotate(-Math.PI * 0.5, x0, y0);
-						} else {
-							g.drawString(label, x1, y1);
+						g.setColor(Color.BLACK);
+						g.drawRect(x - 1, y - 1, w + 2, h + 2);
+						String label = p.getLabel();
+						if (label != null) {
+							String partLabel = p.getLabel(label, model);
+							if (partLabel != null)
+								label = partLabel;
+							g.setFont(labelFont);
+							FontMetrics fm = g.getFontMetrics();
+							int labelWidth = fm.stringWidth(label);
+							float x0 = x + 0.5f * w;
+							float y0 = y + 0.5f * h;
+							float x1 = x0 - labelWidth / 2;
+							float y1 = y0 + fm.getHeight() / 4;
+							g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+							if (w < h * 0.25f) {
+								g.rotate(Math.PI * 0.5, x0, y0);
+								g.drawString(label, x1, y1);
+								g.rotate(-Math.PI * 0.5, x0, y0);
+							} else {
+								g.drawString(label, x1, y1);
+							}
 						}
-					}
-				} else if (s instanceof Area) {
-					if (scale == null)
-						scale = new AffineTransform();
-					scale.setToScale(getWidth() / (xmax - xmin), getHeight() / (ymax - ymin));
-					Area area = (Area) s;
-					area.transform(scale);
-					FillPattern fillPattern = p.getFillPattern();
-					if (fillPattern instanceof ColorFill) {
-						if (p.isFilled()) {
-							g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+					} else if (s instanceof Area) {
+						if (scale == null)
+							scale = new AffineTransform();
+						scale.setToScale(getWidth() / (xmax - xmin), getHeight() / (ymax - ymin));
+						Area area = (Area) s;
+						area.transform(scale);
+						FillPattern fillPattern = p.getFillPattern();
+						if (fillPattern instanceof ColorFill) {
+							if (p.isFilled()) {
+								g.setColor(getPartColor(p, ((ColorFill) fillPattern).getColor()));
+								g.fill(area);
+							} else {
+								Rectangle bounds = area.getBounds();
+								drawStatus(g, p, (int) bounds.getCenterX(), (int) bounds.getCenterY());
+							}
+						} else if (fillPattern instanceof Texture) {
+							setPaint(g, (Texture) fillPattern, p.isFilled());
 							g.fill(area);
-						} else {
-							Rectangle bounds = area.getBounds();
-							drawStatus(g, p, (int) bounds.getCenterX(), (int) bounds.getCenterY());
 						}
-					} else if (fillPattern instanceof Texture) {
-						setPaint(g, (Texture) fillPattern, p.isFilled());
-						g.fill(area);
-					}
-					g.setColor(Color.black);
-					g.draw(area);
-					scale.setToScale((xmax - xmin) / getWidth(), (ymax - ymin) / getHeight());
-					area.transform(scale);
-				} else if (s instanceof Polygon2D) {
-					Polygon2D q = (Polygon2D) s;
-					int n = q.getVertexCount();
-					if (multigon == null)
-						multigon = new Polygon();
-					else
-						multigon.reset();
-					int x, y;
-					Point2D.Float v;
-					int cx = 0, cy = 0;
-					for (int i = 0; i < n; i++) {
-						v = q.getVertex(i);
-						x = convertPointToPixelX(v.x);
-						y = convertPointToPixelY(v.y);
-						multigon.addPoint(x, y);
-						cx += x;
-						cy += y;
-					}
-					FillPattern fp = p.getFillPattern();
-					if (fp instanceof ColorFill) {
-						if (p.isFilled()) {
-							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+						g.setColor(Color.black);
+						g.draw(area);
+						scale.setToScale((xmax - xmin) / getWidth(), (ymax - ymin) / getHeight());
+						area.transform(scale);
+					} else if (s instanceof Polygon2D) {
+						Polygon2D q = (Polygon2D) s;
+						int n = q.getVertexCount();
+						if (multigon == null)
+							multigon = new Polygon();
+						else
+							multigon.reset();
+						int x, y;
+						Point2D.Float v;
+						int cx = 0, cy = 0;
+						for (int i = 0; i < n; i++) {
+							v = q.getVertex(i);
+							x = convertPointToPixelX(v.x);
+							y = convertPointToPixelY(v.y);
+							multigon.addPoint(x, y);
+							cx += x;
+							cy += y;
+						}
+						FillPattern fp = p.getFillPattern();
+						if (fp instanceof ColorFill) {
+							if (p.isFilled()) {
+								g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+								g.fill(multigon);
+							} else {
+								drawStatus(g, p, cx / n, cy / n);
+							}
+						} else if (fp instanceof Texture) {
+							setPaint(g, (Texture) fp, p.isFilled());
 							g.fill(multigon);
-						} else {
-							drawStatus(g, p, cx / n, cy / n);
 						}
-					} else if (fp instanceof Texture) {
-						setPaint(g, (Texture) fp, p.isFilled());
-						g.fill(multigon);
-					}
-					g.setColor(Color.black);
-					g.draw(multigon);
-					String label = p.getLabel();
-					if (label != null) {
-						String partLabel = p.getLabel(label, model);
-						if (partLabel != null)
-							label = partLabel;
-						g.setFont(labelFont);
-						FontMetrics fm = g.getFontMetrics();
-						int labelWidth = fm.stringWidth(label);
-						cx /= n;
-						cy /= n;
-						float x1 = cx - labelWidth / 2;
-						float y1 = cy + fm.getHeight() / 4;
-						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
-						g.drawString(label, x1, y1);
-					}
-				} else if (s instanceof Blob2D) {
-					Blob2D b = (Blob2D) s;
-					int n = b.getPointCount();
-					if (multigon == null)
-						multigon = new Polygon();
-					else
-						multigon.reset();
-					int x, y;
-					Point2D.Float v;
-					int cx = 0, cy = 0;
-					for (int i = 0; i < n; i++) {
-						v = b.getPoint(i);
-						x = convertPointToPixelX(v.x);
-						y = convertPointToPixelY(v.y);
-						multigon.addPoint(x, y);
-						cx += x;
-						cy += y;
-					}
-					GeneralPath path = new Blob2D(multigon).getPath();
-					FillPattern fp = p.getFillPattern();
-					if (fp instanceof ColorFill) {
-						if (p.isFilled()) {
-							g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+						g.setColor(Color.black);
+						g.draw(multigon);
+						String label = p.getLabel();
+						if (label != null) {
+							String partLabel = p.getLabel(label, model);
+							if (partLabel != null)
+								label = partLabel;
+							g.setFont(labelFont);
+							FontMetrics fm = g.getFontMetrics();
+							int labelWidth = fm.stringWidth(label);
+							cx /= n;
+							cy /= n;
+							float x1 = cx - labelWidth / 2;
+							float y1 = cy + fm.getHeight() / 4;
+							g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+							g.drawString(label, x1, y1);
+						}
+					} else if (s instanceof Blob2D) {
+						Blob2D b = (Blob2D) s;
+						int n = b.getPointCount();
+						if (multigon == null)
+							multigon = new Polygon();
+						else
+							multigon.reset();
+						int x, y;
+						Point2D.Float v;
+						int cx = 0, cy = 0;
+						for (int i = 0; i < n; i++) {
+							v = b.getPoint(i);
+							x = convertPointToPixelX(v.x);
+							y = convertPointToPixelY(v.y);
+							multigon.addPoint(x, y);
+							cx += x;
+							cy += y;
+						}
+						GeneralPath path = new Blob2D(multigon).getPath();
+						FillPattern fp = p.getFillPattern();
+						if (fp instanceof ColorFill) {
+							if (p.isFilled()) {
+								g.setColor(getPartColor(p, ((ColorFill) fp).getColor()));
+								g.fill(path);
+							} else {
+								drawStatus(g, p, cx / n, cy / n);
+							}
+						} else if (fp instanceof Texture) {
+							setPaint(g, (Texture) fp, p.isFilled());
 							g.fill(path);
-						} else {
-							drawStatus(g, p, cx / n, cy / n);
 						}
+						g.setColor(Color.black);
+						g.draw(path);
+						String label = p.getLabel();
+						if (label != null) {
+							String partLabel = p.getLabel(label, model);
+							if (partLabel != null)
+								label = partLabel;
+							g.setFont(labelFont);
+							FontMetrics fm = g.getFontMetrics();
+							int labelWidth = fm.stringWidth(label);
+							cx /= n;
+							cy /= n;
+							float x1 = cx - labelWidth / 2;
+							float y1 = cy + fm.getHeight() / 4;
+							g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
+							g.drawString(label, x1, y1);
+						}
+					}
+				}
+				if (p.getWindSpeed() != 0) {
+					FillPattern fp = p.getFillPattern();
+					Color bgColor = g.getColor();
+					if (fp instanceof ColorFill) {
+						bgColor = ((ColorFill) fp).getColor();
 					} else if (fp instanceof Texture) {
-						setPaint(g, (Texture) fp, p.isFilled());
-						g.fill(path);
+						bgColor = new Color(((Texture) fp).getBackground());
 					}
-					g.setColor(Color.black);
-					g.draw(path);
-					String label = p.getLabel();
-					if (label != null) {
-						String partLabel = p.getLabel(label, model);
-						if (partLabel != null)
-							label = partLabel;
-						g.setFont(labelFont);
-						FontMetrics fm = g.getFontMetrics();
-						int labelWidth = fm.stringWidth(label);
-						cx /= n;
-						cy /= n;
-						float x1 = cx - labelWidth / 2;
-						float y1 = cy + fm.getHeight() / 4;
-						g.setColor(getContrastColor(Math.round(x1), Math.round(y1)));
-						g.drawString(label, x1, y1);
-					}
+					bgColor = bgColor.darker();
+					bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 128);
+					Color fgColor = MiscUtil.getContrastColor(bgColor, 255);
+					float rotation = p.getWindSpeed() * model.getTime();
+					// float rotation = (float) (Math.PI / 12.0);
+					Rectangle2D r = p.getShape().getBounds2D();
+					int x = convertPointToPixelX((float) r.getX());
+					int y = convertPointToPixelY((float) r.getY());
+					int w = convertLengthToPixelX((float) r.getWidth());
+					int h = convertLengthToPixelY((float) r.getHeight());
+					Area a = Fan.getShape(new Rectangle2D.Float(x, y, w, h), p.getWindSpeed(), p.getWindAngle(), (float) Math.abs(Math.sin(rotation)));
+					g.setColor(bgColor);
+					g.fill(a);
+					g.setColor(fgColor);
+					g.draw(a);
 				}
 			}
 		}
@@ -2954,12 +2960,15 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				graphRenderer.decreaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_FIT_BUTTON, x, y)) {
 				autofitGraph();
-			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON, x, y)) {
-				if (e.isShiftDown()) {
-					graphRenderer.previous();
-				} else {
-					graphRenderer.next();
-				}
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON_LEFT_ARROW, x, y)) {
+				graphRenderer.previous();
+				if (getGraphDataType() == 0)
+					setFahrenheitUsed(false);
+				else if (getGraphDataType() == 1)
+					setFahrenheitUsed(true);
+				autofitGraph();
+			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON_RIGHT_ARROW, x, y)) {
+				graphRenderer.next();
 				if (getGraphDataType() == 0)
 					setFahrenheitUsed(false);
 				else if (getGraphDataType() == 1)
