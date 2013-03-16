@@ -1861,7 +1861,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.drawOval(x - 1, y - 1, w + 2, h + 2);
 						String label = p.getLabel();
 						if (label != null) {
-							String partLabel = p.getLabel(label, model);
+							String partLabel = p.getLabel(label, model, fahrenheitUsed);
 							if (partLabel != null)
 								label = partLabel;
 							g.setFont(labelFont);
@@ -1912,7 +1912,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.drawRect(x - 1, y - 1, w + 2, h + 2);
 						String label = p.getLabel();
 						if (label != null) {
-							String partLabel = p.getLabel(label, model);
+							String partLabel = p.getLabel(label, model, fahrenheitUsed);
 							if (partLabel != null)
 								label = partLabel;
 							g.setFont(labelFont);
@@ -1988,7 +1988,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.draw(multigon);
 						String label = p.getLabel();
 						if (label != null) {
-							String partLabel = p.getLabel(label, model);
+							String partLabel = p.getLabel(label, model, fahrenheitUsed);
 							if (partLabel != null)
 								label = partLabel;
 							g.setFont(labelFont);
@@ -2036,7 +2036,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 						g.draw(path);
 						String label = p.getLabel();
 						if (label != null) {
-							String partLabel = p.getLabel(label, model);
+							String partLabel = p.getLabel(label, model, fahrenheitUsed);
 							if (partLabel != null)
 								label = partLabel;
 							g.setFont(labelFont);
