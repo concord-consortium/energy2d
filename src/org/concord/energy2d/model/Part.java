@@ -64,6 +64,7 @@ public class Part extends Manipulable {
 	private float reflection;
 	private float emissivity;
 	private boolean scattering;
+	private boolean invisibleScattering;
 
 	private float windSpeed;
 	private float windAngle;
@@ -141,6 +142,7 @@ public class Part extends Manipulable {
 		p.absorption = absorption;
 		p.reflection = reflection;
 		p.scattering = scattering;
+		p.invisibleScattering = invisibleScattering;
 		p.transmission = transmission;
 		p.emissivity = emissivity;
 		p.windAngle = windAngle;
@@ -223,6 +225,14 @@ public class Part extends Manipulable {
 
 	public boolean getScattering() {
 		return scattering;
+	}
+
+	public void setInvisibleScattering(boolean invisibleScattering) {
+		this.invisibleScattering = invisibleScattering;
+	}
+
+	public boolean getInvisibleScattering() {
+		return invisibleScattering;
 	}
 
 	public void setConstantTemperature(boolean b) {
@@ -656,6 +666,7 @@ public class Part extends Manipulable {
 		xml += "<transmission>" + transmission + "</transmission>\n";
 		xml += "<reflection>" + reflection + "</reflection>\n";
 		xml += "<scattering>" + scattering + "</scattering>\n";
+		xml += "<invisible_scattering>" + invisibleScattering + "</invisible_scattering>\n";
 		xml += "<absorption>" + absorption + "</absorption>\n";
 		xml += "<emissivity>" + emissivity + "</emissivity>\n";
 		xml += "<temperature>" + temperature + "</temperature>\n";

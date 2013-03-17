@@ -64,7 +64,8 @@ class PartModelDialog extends JDialog {
 	private JRadioButton absorptionRadioButton;
 	private JRadioButton reflectionRadioButton;
 	private JRadioButton transmissionRadioButton;
-	private JRadioButton scatteringRadioButton;
+	private JRadioButton visibleScatteringRadioButton;
+	private JRadioButton invisibleScatteringRadioButton;
 	private JTextField emissivityField;
 	private JTextField xField, yField, wField, hField, angleField, scaleXField, scaleYField, shearXField, shearYField, innerDiameterField, outerDiameterField;
 	private JCheckBox flipXCheckBox, flipYCheckBox;
@@ -94,10 +95,11 @@ class PartModelDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				// currently, a photon is either absorbed, reflected, or transmitted. Scattering is a special case of reflection.
-				boolean scatter = scatteringRadioButton.isSelected();
-				int absorption = scatter ? 0 : (absorptionRadioButton.isSelected() ? 1 : 0);
-				int reflection = scatter ? 1 : (reflectionRadioButton.isSelected() ? 1 : 0);
-				int transmission = scatter ? 0 : (transmissionRadioButton.isSelected() ? 1 : 0);
+				boolean scatter = visibleScatteringRadioButton.isSelected();
+				boolean invisibleScatter = invisibleScatteringRadioButton.isSelected();
+				int absorption = (scatter || invisibleScatter) ? 0 : (absorptionRadioButton.isSelected() ? 1 : 0);
+				int reflection = (scatter || invisibleScatter) ? 1 : (reflectionRadioButton.isSelected() ? 1 : 0);
+				int transmission = (scatter || invisibleScatter) ? 0 : (transmissionRadioButton.isSelected() ? 1 : 0);
 
 				float emissivity = parse(emissivityField.getText());
 				if (Float.isNaN(emissivity))
@@ -301,6 +303,7 @@ class PartModelDialog extends JDialog {
 				part.setReflection(reflection);
 				part.setTransmission(transmission);
 				part.setScattering(scatter);
+				part.setInvisibleScattering(invisibleScatter);
 				part.setEmissivity(emissivity);
 				part.setLabel(labelField.getText());
 				part.setUid(uid);
@@ -587,7 +590,7 @@ class PartModelDialog extends JDialog {
 		p.add(absorptionRadioButton);
 		bg.add(absorptionRadioButton);
 
-		reflectionRadioButton = new JRadioButton("Reflection", part.getScattering() ? false : Math.abs(part.getReflection() - 1) < 0.01);
+		reflectionRadioButton = new JRadioButton("Reflection", (part.getScattering() || part.getInvisibleScattering()) ? false : Math.abs(part.getReflection() - 1) < 0.01);
 		p.add(reflectionRadioButton);
 		bg.add(reflectionRadioButton);
 
@@ -595,9 +598,13 @@ class PartModelDialog extends JDialog {
 		p.add(transmissionRadioButton);
 		bg.add(transmissionRadioButton);
 
-		scatteringRadioButton = new JRadioButton("Scattering", part.getScattering());
-		p.add(scatteringRadioButton);
-		bg.add(scatteringRadioButton);
+		visibleScatteringRadioButton = new JRadioButton("Scattering (visible)", part.getScattering());
+		p.add(visibleScatteringRadioButton);
+		bg.add(visibleScatteringRadioButton);
+
+		invisibleScatteringRadioButton = new JRadioButton("Scattering (invisible)", part.getInvisibleScattering());
+		p.add(invisibleScatteringRadioButton);
+		bg.add(invisibleScatteringRadioButton);
 
 		p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p.setBorder(BorderFactory.createTitledBorder("Radiation"));

@@ -25,7 +25,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -42,7 +43,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -61,7 +63,8 @@
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
 <scattering>false</scattering>
-<absorption>1.0</absorption>
+<invisible_scattering>true</invisible_scattering>
+<absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
@@ -77,7 +80,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -88,14 +92,14 @@
 <texture_width>10</texture_width>
 <texture_height>10</texture_height>
 </texture>
-<label>Ground</label>
 </part>
 <part><rectangle x="8.5" y="3.5" width="0.5" height="4.5"/><thermal_conductivity>0.001</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -114,6 +118,7 @@
 <transmission>1.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
+<invisible_scattering>false</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -126,6 +131,7 @@
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
+<invisible_scattering>false</invisible_scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -138,7 +144,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -149,7 +156,8 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
-<scattering>true</scattering>
+<scattering>false</scattering>
+<invisible_scattering>true</invisible_scattering>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -161,6 +169,7 @@
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
+<invisible_scattering>false</invisible_scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -178,6 +187,7 @@
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
+<invisible_scattering>false</invisible_scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>

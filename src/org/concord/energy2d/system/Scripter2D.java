@@ -1135,6 +1135,9 @@ class Scripter2D extends Scripter {
 		} else if (s == "scattering") {
 			part.setScattering(z == 1);
 			arrayUpdateRequested = true;
+		} else if (s == "invisible_scattering") {
+			part.setInvisibleScattering(z == 1);
+			arrayUpdateRequested = true;
 		} else if (s == "emissivity") {
 			part.setEmissivity(z);
 			arrayUpdateRequested = true;
