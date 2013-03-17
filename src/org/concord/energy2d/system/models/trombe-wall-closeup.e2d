@@ -198,17 +198,17 @@
 </texture>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="2.5" y="-0.049999908" width="2.6" height="0.15"/><thermal_conductivity>1.0E-9</thermal_conductivity>
+<part><rectangle x="2.6999998" y="-0.049999908" width="2.6" height="0.15"/><thermal_conductivity>1.0E-9</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>1.0</reflection>
 <scattering>true</scattering>
+<scattering_visible>false</scattering_visible>
 <absorption>0.0</absorption>
 <emissivity>0.0</emissivity>
-<temperature>20.0</temperature>
+<temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
-<visible>false</visible>
 <draggable>false</draggable>
 </part>
 </structure>
