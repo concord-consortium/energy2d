@@ -133,13 +133,15 @@ abstract class HeatSolver2D {
 			float fS = b.getFluxAtBorder(Boundary.LOWER);
 			float fW = b.getFluxAtBorder(Boundary.LEFT);
 			float fE = b.getFluxAtBorder(Boundary.RIGHT);
+			// very small conductivity at the border could cause strange behaviors (e.g., huge number of isotherm lines), so impose a minimum
+			float minConductivity = 0.001f;
 			for (int i = 0; i < nx; i++) {
-				t[i][0] = t[i][1] + fN * deltaY / conductivity[i][0];
-				t[i][ny1] = t[i][ny2] - fS * deltaY / conductivity[i][ny1];
+				t[i][0] = t[i][1] + fN * deltaY / Math.max(conductivity[i][0], minConductivity);
+				t[i][ny1] = t[i][ny2] - fS * deltaY / Math.max(conductivity[i][ny1], minConductivity);
 			}
 			for (int j = 0; j < ny; j++) {
-				t[0][j] = t[1][j] - fW * deltaX / conductivity[0][j];
-				t[nx1][j] = t[nx2][j] + fE * deltaX / conductivity[nx1][j];
+				t[0][j] = t[1][j] - fW * deltaX / Math.max(conductivity[0][j], minConductivity);
+				t[nx1][j] = t[nx2][j] + fE * deltaX / Math.max(conductivity[nx1][j], minConductivity);
 			}
 		}
 

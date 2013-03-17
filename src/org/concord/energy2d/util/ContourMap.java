@@ -52,7 +52,7 @@ public class ContourMap {
 		this.ny = func[0].length;
 		this.size = size;
 		g.setColor(color);
-		for (int x = 0; x < nx - step; x += step)
+		for (int x = 0; x < nx - step; x += step) {
 			for (int y = 0; y < ny - step; y += step) {
 				connect(g, x, y, x + step, y, x, y + step, x + step, y + step);
 				connect(g, x, y, x + step, y, x, y, x, y + step);
@@ -61,6 +61,7 @@ public class ContourMap {
 				connect(g, x, y, x, y + step, x, y + step, x + step, y + step);
 				connect(g, x + step, y, x + step, y + step, x, y + step, x + step, y + step);
 			}
+		}
 	}
 
 	// draw a contour line between (x1, y1) - (x2, y2) and (x3, y3) - (x4, y4) if applicable

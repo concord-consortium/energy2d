@@ -7,7 +7,7 @@
 <measurement_interval>50</measurement_interval>
 <viewupdate_interval>10</viewupdate_interval>
 <tasks>
-<task uid="AUTO_PAUSE" script="stop; message &lt;html&gt;This simulation was designed to automatically stop here.&lt;/html&gt;" description="Automatically pause the simulation at the given frequency." interval="2880"/>
+<task uid="AUTO_PAUSE" script="stop; message &lt;html&gt;This simulation was designed to automatically stop here.&lt;/html&gt;" description="Automatically pause the simulation at the given frequency." interval="3600"/>
 </tasks>
 <sun_angle>1.5707964</sun_angle>
 <solar_power_density>2000.0</solar_power_density>
@@ -19,11 +19,11 @@
 <thermal_buoyancy>0.0</thermal_buoyancy>
 <buoyancy_approximation>1</buoyancy_approximation>
 <boundary>
-<flux_at_border upper="0.0" lower="0.0" left="0.0" right="-2.0"/>
-<mass_flow_at_border upper="0" lower="0" left="0" right="0"/>
+<flux_at_border upper="0.0" lower="0.0" left="0.0" right="0.0"/>
+<mass_flow_at_border upper="0" lower="0" left="0" right="1"/>
 </boundary>
 <structure>
-<part><rectangle x="0.0" y="0.0" width="0.2" height="5.0"/><thermal_conductivity>0.08</thermal_conductivity>
+<part><rectangle x="0.0" y="0.20000005" width="0.2" height="4.6"/><thermal_conductivity>0.08</thermal_conductivity>
 <specific_heat>1300.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
@@ -63,8 +63,8 @@
 <visible>false</visible>
 <draggable>false</draggable>
 </part>
-<part><rectangle x="0.0" y="4.9" width="10.0" height="0.2"/><thermal_conductivity>1.0E-9</thermal_conductivity>
-<specific_heat>1300.0</specific_heat>
+<part><rectangle x="0.0" y="4.85" width="10.0" height="0.3"/><thermal_conductivity>1.0E-9</thermal_conductivity>
+<specific_heat>1000.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
@@ -81,27 +81,27 @@
 </texture>
 <draggable>false</draggable>
 </part>
-<part><ellipse x="2.5" y="7.5" a="1.0" b="1.0"/><thermal_conductivity>10.0</thermal_conductivity>
-<specific_heat>1300.0</specific_heat>
+<part><ellipse x="2.5" y="7.5" a="1.0" b="1.0"/><thermal_conductivity>1.0</thermal_conductivity>
+<specific_heat>2000.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
-<temperature>30.0</temperature>
+<temperature>50.0</temperature>
 <constant_temperature>false</constant_temperature>
 <filled>false</filled>
 </part>
-<part><ellipse x="2.5" y="2.5" a="1.0" b="1.0"/><thermal_conductivity>10.0</thermal_conductivity>
-<specific_heat>1300.0</specific_heat>
+<part><ellipse x="2.5" y="2.5" a="1.0" b="1.0"/><thermal_conductivity>1.0</thermal_conductivity>
+<specific_heat>2000.0</specific_heat>
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
 <scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
-<temperature>30.0</temperature>
+<temperature>50.0</temperature>
 <constant_temperature>false</constant_temperature>
 <filled>false</filled>
 </part>
@@ -123,9 +123,8 @@
 <grid_size>10</grid_size>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
-<maximum_temperature>40.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="No fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.5" y="0.5"/>
-<text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.5" y="5.75"/>
-<text string="This model automatically stops at 0.4 hour." face="Arial" size="14" style="0" color="ffffff" x="1.4285712" y="0.535715"/>
+<maximum_temperature>60.0</maximum_temperature>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Temperature (℃)</graph_ylabel><text string="Fan" face="Arial" size="12" style="0" color="ffffff" border="true" x="0.35" y="7.65"/>
+<text string="This model automatically stops at 30 minutes." face="Arial" size="14" style="0" color="ffffff" x="0.30000004" y="0.6999998"/>
 </view>
 </state>
