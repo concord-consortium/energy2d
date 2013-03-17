@@ -31,6 +31,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<uid>GROUND</uid>
 <texture><texture_fg>-1</texture_fg>
 <texture_bg>-cccccd</texture_bg>
 <texture_style>9</texture_style>
@@ -49,6 +50,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<uid>CHIMNEY_RIGHT</uid>
 <texture><texture_fg>-1000000</texture_fg>
 <texture_bg>-7f7f80</texture_bg>
 <texture_style>12</texture_style>
@@ -84,6 +86,7 @@
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
 <constant_temperature>false</constant_temperature>
+<uid>CHIMNEY_LEFT</uid>
 <texture><texture_fg>-1000000</texture_fg>
 <texture_bg>-7f7f80</texture_bg>
 <texture_style>12</texture_style>
