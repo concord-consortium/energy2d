@@ -252,6 +252,6 @@
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
-<graph_xlabel>Time</graph_xlabel><graph_ylabel>Wind speed (m/s)</graph_ylabel><graph_data_range>0.0 50.0 0.0 50.0 0.0 100.0 1.0414254E-5 0.49106702</graph_data_range><text string="Where are the energy leaks?" face="Verdana" size="14" style="1" color="ffffff" border="true" x="3.4060845" y="9.68254"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Wind speed (m/s)</graph_ylabel><graph_ymin>0.001975522</graph_ymin><graph_ymax>0.3436307</graph_ymax><text string="Where are the energy leaks?" face="Verdana" size="14" style="1" color="ffffff" border="true" x="3.4060845" y="9.68254"/>
 </view>
 </state>

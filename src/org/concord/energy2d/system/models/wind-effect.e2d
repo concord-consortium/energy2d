@@ -164,6 +164,6 @@
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
 <velocity>true</velocity>
-<graph_xlabel>Time</graph_xlabel><graph_ylabel>Wind speed (m/s)</graph_ylabel><graph_data_range>0.0 50.0 0.0 36.335636 0.0 100.0 1.0414254E-5 0.24984054</graph_data_range><text string="East Wind &gt;&gt;&gt;" face="Arial" size="14" style="0" color="ffffff" x="0.5556" y="9.4907"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Wind speed (m/s)</graph_ylabel><graph_ymin>8.4436254E-4</graph_ymin><graph_ymax>0.17540655</graph_ymax><text string="East Wind &gt;&gt;&gt;" face="Arial" size="14" style="0" color="ffffff" x="0.5556" y="9.4907"/>
 </view>
 </state>

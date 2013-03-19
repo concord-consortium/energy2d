@@ -670,8 +670,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		if (graphRenderer.getDataType() == 0) {
 			graphRenderer.setYmin(getMinimumTemperature());
 			graphRenderer.setYmax(getMaximumTemperature());
-		} else {
-			graphRenderer.setDataRange();
 		}
 		setActionMode(SELECT_MODE);
 		if (modeIcon != null)
@@ -853,16 +851,20 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return graphRenderer.getLabelY();
 	}
 
-	public void setGraphDataRange(int i, float ymin, float ymax) {
-		graphRenderer.setDataRange(i, ymin, ymax);
+	public void setGraphYmin(float ymin) {
+		graphRenderer.setYmin(ymin);
 	}
 
-	public DataRange getGraphDataRange(int i) {
-		return graphRenderer.getDataRange(i);
+	public float getGraphYmin() {
+		return graphRenderer.getYmin();
 	}
 
-	public String getGraphDataRange() {
-		return graphRenderer.getDataRangeString();
+	public void setGraphYmax(float ymax) {
+		graphRenderer.setYmax(ymax);
+	}
+
+	public float getGraphYmax() {
+		return graphRenderer.getYmax();
 	}
 
 	public void setVectorStroke(Stroke s) {
@@ -2971,7 +2973,7 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_EXPAND_BUTTON, x, y)) {
 				graphRenderer.doubleXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.X_SHRINK_BUTTON, x, y)) {
-				graphRenderer.halfXmax();
+				graphRenderer.halveXmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_EXPAND_BUTTON, x, y)) {
 				graphRenderer.increaseYmax();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SHRINK_BUTTON, x, y)) {

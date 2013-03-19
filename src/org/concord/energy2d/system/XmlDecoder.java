@@ -88,7 +88,7 @@ class XmlDecoder extends DefaultHandler {
 	private float minimumTemperature;
 	private float maximumTemperature = 50;
 	private String graphXLabel, graphYLabel;
-	private String graphDataRange;
+	private float graphYmin = 0, graphYmax = 50;
 
 	// part properties
 	private float partThermalConductivity = Float.NaN;
@@ -193,13 +193,10 @@ class XmlDecoder extends DefaultHandler {
 			box.view.setGraphXLabel(graphXLabel);
 		if (graphYLabel != null)
 			box.view.setGraphYLabel(graphYLabel);
-		if (graphDataRange != null) {
-			String[] dr = graphDataRange.split("\\s");
-			if (dr.length >= 8) { // skip the temperature range (C and F) for now
-				box.view.setGraphDataRange(2, Float.parseFloat(dr[4]), Float.parseFloat(dr[5]));
-				box.view.setGraphDataRange(3, Float.parseFloat(dr[6]), Float.parseFloat(dr[7]));
-			}
-		}
+		if (graphYmin != 0)
+			box.view.setGraphYmin(graphYmin);
+		if (graphYmax != 0)
+			box.view.setGraphYmax(graphYmax);
 
 		// since we don't know the width and height of the model until now, we have to fix the locations and the sizes of
 		// the sensors, since they are relative to the size of the model.
@@ -809,8 +806,10 @@ class XmlDecoder extends DefaultHandler {
 			graphXLabel = str;
 		} else if (qName == "graph_ylabel") {
 			graphYLabel = str;
-		} else if (qName == "graph_data_range") {
-			graphDataRange = str;
+		} else if (qName == "graph_ymin") {
+			graphYmin = Float.parseFloat(str);
+		} else if (qName == "graph_ymax") {
+			graphYmax = Float.parseFloat(str);
 		} else if (qName == "uid") {
 			partUid = str;
 		} else if (qName == "label") {
@@ -982,7 +981,8 @@ class XmlDecoder extends DefaultHandler {
 		maximumTemperature = 50;
 		graphXLabel = null;
 		graphYLabel = null;
-		graphDataRange = null;
+		graphYmin = 0;
+		graphYmax = 50;
 		heatMapType = View2D.HEATMAP_TEMPERATURE;
 
 	}

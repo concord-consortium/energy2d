@@ -34,7 +34,6 @@ class GraphRenderer {
 	private byte dataType = 0;
 	private String xLabel = "Time (hr)";
 	private String yLabel = DATA_TYPES[0];
-	private DataRange[] dataRanges = new DataRange[DATA_TYPES.length];
 	private final static DecimalFormat FORMAT = new DecimalFormat("##.##");
 	private Font smallFont = new Font(null, Font.PLAIN, 9);
 	private Font labelFont = new Font(null, Font.PLAIN | Font.BOLD, 12);
@@ -58,8 +57,6 @@ class GraphRenderer {
 	private Point mouseMovedPoint;
 
 	GraphRenderer(int x, int y, int w, int h) {
-		for (int i = 0; i < dataRanges.length; i++)
-			dataRanges[i] = new DataRange(0, 50);
 		closeButton = new Rectangle();
 		xExpandButton = new Rectangle();
 		xShrinkButton = new Rectangle();
@@ -108,7 +105,7 @@ class GraphRenderer {
 		xmax *= 2;
 	}
 
-	void halfXmax() {
+	void halveXmax() {
 		xmax *= 0.5f;
 	}
 
@@ -123,7 +120,6 @@ class GraphRenderer {
 
 	void decreaseYmin() {
 		ymin -= yIncrement;
-		dataRanges[dataType].min = ymin;
 	}
 
 	void setYmax(float ymax) {
@@ -137,40 +133,10 @@ class GraphRenderer {
 
 	void increaseYmax() {
 		ymax += yIncrement;
-		dataRanges[dataType].max = ymax;
 	}
 
 	void decreaseYmax() {
 		ymax -= yIncrement;
-		dataRanges[dataType].max = ymax;
-	}
-
-	void setDataRange(int i, float ymin, float ymax) {
-		if (i < 0 || i >= dataRanges.length)
-			return;
-		dataRanges[i].min = ymin;
-		dataRanges[i].max = ymax;
-		if (i == dataType)
-			setDataRange();
-	}
-
-	DataRange getDataRange(int i) {
-		if (i < 0 || i >= dataRanges.length)
-			return null;
-		return dataRanges[i];
-	}
-
-	void setDataRange() {
-		setYmin(dataRanges[dataType].min);
-		setYmax(dataRanges[dataType].max);
-	}
-
-	String getDataRangeString() {
-		String s = "";
-		for (DataRange d : dataRanges) {
-			s += d.toString() + " ";
-		}
-		return s.trim();
 	}
 
 	void setFrame(int x, int y, int w, int h) {
@@ -220,7 +186,6 @@ class GraphRenderer {
 	void next() {
 		dataType = (byte) ((dataType + 1) % DATA_TYPES.length);
 		yLabel = DATA_TYPES[dataType];
-		setDataRange();
 	}
 
 	void previous() {
@@ -228,13 +193,11 @@ class GraphRenderer {
 		if (dataType < 0)
 			dataType = (byte) (DATA_TYPES.length - 1);
 		yLabel = DATA_TYPES[dataType];
-		setDataRange();
 	}
 
 	void setDataType(byte dataType) {
 		this.dataType = (byte) Math.min(DATA_TYPES.length - 1, dataType);
 		yLabel = DATA_TYPES[this.dataType];
-		setDataRange();
 	}
 
 	byte getDataType() {
