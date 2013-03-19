@@ -849,6 +849,22 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return graphRenderer.getLabelY();
 	}
 
+	public void setGraphYmin(float ymin) {
+		graphRenderer.setYmin(ymin);
+	}
+
+	public float getGraphYmin() {
+		return graphRenderer.getYmin();
+	}
+
+	public void setGraphYmax(float ymax) {
+		graphRenderer.setYmax(ymax);
+	}
+
+	public float getGraphYmax() {
+		return graphRenderer.getYmax();
+	}
+
 	public void setVectorStroke(Stroke s) {
 		if (vectorFieldRenderer == null)
 			vectorFieldRenderer = new VectorDistributionRenderer(this, nx, ny);

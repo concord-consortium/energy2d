@@ -226,6 +226,10 @@ class XmlEncoder {
 		}
 		sb.append("<graph_xlabel>" + box.view.getGraphXLabel() + "</graph_xlabel>");
 		sb.append("<graph_ylabel>" + box.view.getGraphYLabel() + "</graph_ylabel>");
+		if (box.view.getGraphDataType() > 1) { // non-temperature graph (temperature graph uses minimum and maximum temperatures for the heat map)
+			sb.append("<graph_ymin>" + box.view.getGraphYmin() + "</graph_ymin>");
+			sb.append("<graph_ymax>" + box.view.getGraphYmax() + "</graph_ymax>");
+		}
 		if (!box.view.isClockOn()) {
 			sb.append("<clock>false</clock>\n");
 		}

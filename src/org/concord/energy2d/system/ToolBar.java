@@ -152,6 +152,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		bg.add(x);
 
 		graphButton = new JToggleButton(new ImageIcon(ToolBar.class.getResource("resources/graph.png")));
+		graphButton.setEnabled(false);
 		graphButton.setToolTipText("Show or hide graphs");
 		graphButton.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -164,7 +165,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 		add(graphButton);
 
 		JButton button = new JButton(new ImageIcon(ToolBar.class.getResource("resources/zoomin.png")));
-		button.setToolTipText("Half the size of the simulation box");
+		button.setToolTipText("Halve the size of the simulation box");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (box.model.getTime() > 0) {
@@ -222,7 +223,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 	public void manipulationOccured(ManipulationEvent e) {
 		switch (e.getType()) {
 		case ManipulationEvent.GRAPH:
-			MiscUtil.setSelectedSilently(graphButton, !box.model.getThermometers().isEmpty());
+			MiscUtil.setSelectedSilently(graphButton, box.model.hasSensor());
 			break;
 		case ManipulationEvent.OBJECT_ADDED:
 		case ManipulationEvent.SELECT_MODE_CHOSEN:
@@ -246,7 +247,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 					selectButton.doClick();
 					selectButton.requestFocusInWindow();
 					MiscUtil.setSelectedSilently(graphButton, box.view.isGraphOn());
-					graphButton.setEnabled(!box.model.getThermometers().isEmpty());
+					graphButton.setEnabled(box.model.hasSensor());
 				}
 			});
 			break;
@@ -257,6 +258,7 @@ class ToolBar extends JToolBar implements GraphListener, ToolBarListener, Manipu
 			selectButton.doClick();
 			if (graphButton.isSelected())
 				MiscUtil.setSelectedSilently(graphButton, false);
+			graphButton.setEnabled(false);
 			break;
 		}
 	}

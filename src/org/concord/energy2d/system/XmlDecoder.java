@@ -86,8 +86,9 @@ class XmlDecoder extends DefaultHandler {
 	private boolean clock = true;
 	private boolean smooth = true;
 	private float minimumTemperature;
-	private float maximumTemperature = 40;
+	private float maximumTemperature = 50;
 	private String graphXLabel, graphYLabel;
+	private float graphYmin = 0, graphYmax = 50;
 
 	// part properties
 	private float partThermalConductivity = Float.NaN;
@@ -192,6 +193,12 @@ class XmlDecoder extends DefaultHandler {
 			box.view.setGraphXLabel(graphXLabel);
 		if (graphYLabel != null)
 			box.view.setGraphYLabel(graphYLabel);
+		if (box.view.getGraphDataType() > 1) { // non-temperature graph (temperature graph uses minimum and maximum temperatures for the heat map)
+			if (graphYmin != 0)
+				box.view.setGraphYmin(graphYmin);
+			if (graphYmax != 50)
+				box.view.setGraphYmax(graphYmax);
+		}
 
 		// since we don't know the width and height of the model until now, we have to fix the locations and the sizes of
 		// the sensors, since they are relative to the size of the model.
@@ -801,6 +808,10 @@ class XmlDecoder extends DefaultHandler {
 			graphXLabel = str;
 		} else if (qName == "graph_ylabel") {
 			graphYLabel = str;
+		} else if (qName == "graph_ymin") {
+			graphYmin = Float.parseFloat(str);
+		} else if (qName == "graph_ymax") {
+			graphYmax = Float.parseFloat(str);
 		} else if (qName == "uid") {
 			partUid = str;
 		} else if (qName == "label") {
@@ -969,9 +980,11 @@ class XmlDecoder extends DefaultHandler {
 		controlPanel = false;
 		smooth = true;
 		minimumTemperature = 0;
-		maximumTemperature = 40;
+		maximumTemperature = 50;
 		graphXLabel = null;
 		graphYLabel = null;
+		graphYmin = 0;
+		graphYmax = 50;
 		heatMapType = View2D.HEATMAP_TEMPERATURE;
 
 	}
