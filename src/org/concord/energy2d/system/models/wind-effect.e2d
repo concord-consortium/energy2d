@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state>
+<links>
+</links>
 <model>
 <timestep>0.1</timestep>
 <viewupdate_interval>10</viewupdate_interval>
@@ -24,6 +26,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -37,6 +40,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -50,6 +54,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -61,6 +66,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -72,6 +78,7 @@
 <density>1.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -83,6 +90,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -93,6 +101,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -103,6 +112,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>50.0</temperature>
@@ -114,6 +124,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -126,6 +137,7 @@
 <density>25.0</density>
 <transmission>0.0</transmission>
 <reflection>0.0</reflection>
+<scattering>false</scattering>
 <absorption>1.0</absorption>
 <emissivity>0.0</emissivity>
 <temperature>0.0</temperature>
@@ -144,11 +156,14 @@
 </controller>
 </model>
 <view>
+<snap_to_grid>true</snap_to_grid>
 <grid_size>10</grid_size>
+<graph_data_type>3</graph_data_type>
+<fahrenheit_used>true</fahrenheit_used>
 <color_palette_type>0</color_palette_type>
 <color_palette_x>0.0</color_palette_x><color_palette_y>0.0</color_palette_y><color_palette_w>0.0</color_palette_w><color_palette_h>0.0</color_palette_h><minimum_temperature>0.0</minimum_temperature>
 <maximum_temperature>50.0</maximum_temperature>
 <velocity>true</velocity>
-<graph_xlabel>Time</graph_xlabel><text string="East Wind &gt;&gt;&gt;" face="Arial" size="14" style="0" color="ffffff" x="0.5556" y="9.4907"/>
+<graph_xlabel>Time</graph_xlabel><graph_ylabel>Wind speed (m/s)</graph_ylabel><graph_data_range>0.0 50.0 0.0 36.335636 0.0 100.0 1.0414254E-5 0.24984054</graph_data_range><text string="East Wind &gt;&gt;&gt;" face="Arial" size="14" style="0" color="ffffff" x="0.5556" y="9.4907"/>
 </view>
 </state>
