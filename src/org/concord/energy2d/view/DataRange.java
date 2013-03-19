@@ -6,12 +6,17 @@ package org.concord.energy2d.view;
  */
 class DataRange {
 
-	float min = 0;
-	float max = 50;
+	public float min = 0;
+	public float max = 50;
 
-	DataRange(float min, float max) {
+	public DataRange(float min, float max) {
 		this.min = min;
 		this.max = max;
 	}
-	
+
+	@Override
+	public String toString() {
+		return min + " " + max;
+	}
+
 }

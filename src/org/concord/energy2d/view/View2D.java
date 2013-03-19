@@ -667,8 +667,12 @@ public class View2D extends JPanel implements PropertyChangeListener {
 			startIcon.setPressed(false);
 		setSelectedManipulable(null);
 		setTime(0);
-		graphRenderer.setYmin(getMinimumTemperature());
-		graphRenderer.setYmax(getMaximumTemperature());
+		if (graphRenderer.getDataType() == 0) {
+			graphRenderer.setYmin(getMinimumTemperature());
+			graphRenderer.setYmax(getMaximumTemperature());
+		} else {
+			graphRenderer.setDataRange();
+		}
 		setActionMode(SELECT_MODE);
 		if (modeIcon != null)
 			modeIcon.setPressed(false);
@@ -849,20 +853,16 @@ public class View2D extends JPanel implements PropertyChangeListener {
 		return graphRenderer.getLabelY();
 	}
 
-	public void setGraphYmin(float ymin) {
-		graphRenderer.setYmin(ymin);
+	public void setGraphDataRange(int i, float ymin, float ymax) {
+		graphRenderer.setDataRange(i, ymin, ymax);
 	}
 
-	public float getGraphYmin() {
-		return graphRenderer.getYmin();
+	public DataRange getGraphDataRange(int i) {
+		return graphRenderer.getDataRange(i);
 	}
 
-	public void setGraphYmax(float ymax) {
-		graphRenderer.setYmax(ymax);
-	}
-
-	public float getGraphYmax() {
-		return graphRenderer.getYmax();
+	public String getGraphDataRange() {
+		return graphRenderer.getDataRangeString();
 	}
 
 	public void setVectorStroke(Stroke s) {
@@ -1018,7 +1018,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setMinimumTemperature(float min) {
 		temperatureRenderer.setMinimum(min);
 		thermalEnergyRenderer.setMinimum(min);
-		graphRenderer.setYmin(min);
+		if (getGraphDataType() == 0)
+			graphRenderer.setYmin(min);
 	}
 
 	public float getMinimumTemperature() {
@@ -1028,7 +1029,8 @@ public class View2D extends JPanel implements PropertyChangeListener {
 	public void setMaximumTemperature(float max) {
 		temperatureRenderer.setMaximum(max);
 		thermalEnergyRenderer.setMaximum(max);
-		graphRenderer.setYmax(max);
+		if (getGraphDataType() == 0)
+			graphRenderer.setYmax(max);
 	}
 
 	public float getMaximumTemperature() {

@@ -115,7 +115,6 @@ class GraphRenderer {
 	void setYmin(float ymin) {
 		this.ymin = ymin;
 		yIncrement = (ymax - ymin) * 0.1f;
-		dataRanges[dataType].min = ymin;
 	}
 
 	float getYmin() {
@@ -130,7 +129,6 @@ class GraphRenderer {
 	void setYmax(float ymax) {
 		this.ymax = ymax;
 		yIncrement = (ymax - ymin) * 0.1f;
-		dataRanges[dataType].max = ymax;
 	}
 
 	float getYmax() {
@@ -144,6 +142,35 @@ class GraphRenderer {
 
 	void decreaseYmax() {
 		ymax -= yIncrement;
+		dataRanges[dataType].max = ymax;
+	}
+
+	void setDataRange(int i, float ymin, float ymax) {
+		if (i < 0 || i >= dataRanges.length)
+			return;
+		dataRanges[i].min = ymin;
+		dataRanges[i].max = ymax;
+		if (i == dataType)
+			setDataRange();
+	}
+
+	DataRange getDataRange(int i) {
+		if (i < 0 || i >= dataRanges.length)
+			return null;
+		return dataRanges[i];
+	}
+
+	void setDataRange() {
+		setYmin(dataRanges[dataType].min);
+		setYmax(dataRanges[dataType].max);
+	}
+
+	String getDataRangeString() {
+		String s = "";
+		for (DataRange d : dataRanges) {
+			s += d.toString() + " ";
+		}
+		return s.trim();
 	}
 
 	void setFrame(int x, int y, int w, int h) {
@@ -193,6 +220,7 @@ class GraphRenderer {
 	void next() {
 		dataType = (byte) ((dataType + 1) % DATA_TYPES.length);
 		yLabel = DATA_TYPES[dataType];
+		setDataRange();
 	}
 
 	void previous() {
@@ -200,11 +228,13 @@ class GraphRenderer {
 		if (dataType < 0)
 			dataType = (byte) (DATA_TYPES.length - 1);
 		yLabel = DATA_TYPES[dataType];
+		setDataRange();
 	}
 
 	void setDataType(byte dataType) {
 		this.dataType = (byte) Math.min(DATA_TYPES.length - 1, dataType);
 		yLabel = DATA_TYPES[this.dataType];
+		setDataRange();
 	}
 
 	byte getDataType() {
