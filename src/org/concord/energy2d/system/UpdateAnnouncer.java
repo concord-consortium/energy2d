@@ -31,7 +31,7 @@ final class UpdateAnnouncer {
 			return;
 		String msg = "An update is available. Do you want to download it now?";
 		if (JOptionPane.showConfirmDialog(JOptionPane.getFrameForComponent(box.view), msg, "Update Energy2D", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			Helper.openBrowser(HOME + "download.html");
+			Helper.openBrowser(HOME + "update.html");
 			System.exit(0);
 		}
 	}
