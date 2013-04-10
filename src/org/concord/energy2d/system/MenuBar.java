@@ -208,6 +208,9 @@ class MenuBar extends JMenuBar {
 				e2dFileChooser.setAccessory(null);
 				if (e2dFileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					File file = e2dFileChooser.getSelectedFile();
+					if (!file.toString().endsWith(".e2d")) {
+						file = new File(file.toString() + ".e2d");
+					}
 					if (file.exists()) {
 						box.loadFile(file);
 					} else {
