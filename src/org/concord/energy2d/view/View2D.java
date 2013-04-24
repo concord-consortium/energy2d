@@ -2989,10 +2989,6 @@ public class View2D extends JPanel implements PropertyChangeListener {
 				autofitGraph();
 			} else if (graphRenderer.buttonContains(GraphRenderer.Y_SELECTION_BUTTON_RIGHT_ARROW, x, y)) {
 				graphRenderer.next();
-				if (getGraphDataType() == 0)
-					setFahrenheitUsed(false);
-				else if (getGraphDataType() == 1)
-					setFahrenheitUsed(true);
 				autofitGraph();
 			}
 			repaint();
